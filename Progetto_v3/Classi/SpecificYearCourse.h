@@ -14,25 +14,27 @@
 
 typedef struct {
     Professor prof;
-    hours assignedHours;
-    bool mainProf;
+    hours assignedHours; ///ore assegnate ad ogni prof
+    bool mainProf; ///titolare del corso?
     
 } professor;
+
+///per ogni oggetto studente(in cui avrò matricola, nome, cognome e email) verrà tenuta traccia
 typedef struct {
     Student stud;
-    int _startEnrolYear;
-    int _endEnrolYear;
-    int _grade;
-    bool _passed;
+    int _startEnrolYear; ///inizio corso di studi
+    int _endEnrolYear; ///fine corso di studi
+    int _grade;   ///voto
+    bool _passed; ///promosso o bocciato
     
 } student;
 
 class SpecificYearCourse : public Course {
 private:
-    int _startYear;
-    int _endYear;
-    bool _active;
-    int _paralleleCours;
+    int _startYear;    ///anno di inizio
+    int _endYear;    ///anno di fine
+    bool _active;    ///attivo o non attivo?
+    int _paralleleCours;    ///numero di corsi in parallelo
     // per ogni corso in parallelo ho un vettore dei prof e stud
     //key num del corso in parallelo
     //value vettore delle struct prof o stud

@@ -8,12 +8,13 @@
 #include <map>
 #include <list>
 #include "Course.h"
+
 class StudyCourse {
 protected:
-    std::string _name;
+    std::string _name; ///nome del corso di studi
     bool _bachelor; ///magistrale?
-    std::map<std::string,Course> _courses;
-    std::list<Course> _stoppedCourses;
+    std::map<std::string,Course> _courses; ///per ogni "_name" associa un oggetto corso che comprende i vari corsi specifici di ogni corso di studi
+    std::list<Course> _stoppedCourses; ///lista corsi spenti
 };
 
 

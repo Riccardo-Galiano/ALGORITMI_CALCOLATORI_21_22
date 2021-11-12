@@ -12,11 +12,12 @@
 
 class University {
 public:
+
+    University();
+
     int getNewStudentId();
 
     int getNewProfessorId();
-
-    University();
 
     bool insertStuds(const std::string &fileIn);
 

@@ -10,13 +10,9 @@
 
 class UniversityMember {
 public:
-    UniversityMember(int, std::string, std::string, std::string);
 
-protected:
-    std::string _name;
-    std::string _surname;
-    int _id;
-public:
+    UniversityMember(const int &, const std::string &, const std::string &,const  std::string &);
+
     const std::string &getName() const;
 
     const std::string &getSurname() const;
@@ -26,6 +22,9 @@ public:
     const std::string &getEmail() const;
 
 protected:
+    std::string _name;
+    std::string _surname;
+    int _id;
     std::string _email;
 };
 
