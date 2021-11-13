@@ -16,9 +16,9 @@ University::University() {
 }
 
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
-std::vector<std::string> splittedLine(const std::string &s) {
+std::vector<std::string> splittedLine(const std::string &s,char delimiter ) {
 
-    char delimiter = ';';
+
     std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector
     std::istringstream line(s); // mi serve per per poter manipolare le stringhe
     std::string token; //buffer di appoggio per salvare l'informazione appena ricavata
@@ -33,8 +33,10 @@ std::vector<std::string> splittedLine(const std::string &s) {
 }
 
 
+
+
 /// come faccio a creare il file se non lo trovo?
-///non è meglio avere come parametro della readStudents il nome del file?
+
 void University::readStudents() {
     std::ifstream fileIn("../Sources/db_studenti.txt");
     if (!fileIn.is_open()) {
@@ -48,7 +50,7 @@ void University::readStudents() {
 
 
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
-        tokens = splittedLine(line);
+        tokens = splittedLine(line,';');
 
         std::stringstream ss(tokens[0]); //manipolo la stringa della matricola
         ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
@@ -73,7 +75,7 @@ bool University::insertStuds(const std::string &fileIn) {
     std::string line; //stringa di appoggio
     std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione split
     while (std::getline(fIn, line)) {
-        tokens = splittedLine(line);
+        tokens = splittedLine(line,';');
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
         _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1], tokens[2]))); //inserisco il nuovo studente nella mappatura interna
     }
@@ -111,7 +113,7 @@ void University::readProfessor() {
     char c;
     int nMatr;
     while (std::getline(fileIn, line)) {
-        tokens = splittedLine(line);
+        tokens = splittedLine(line,';');
         std::stringstream ss(tokens[0]);
         ss >> c >> nMatr;
         if (_professors.count(nMatr))
@@ -132,7 +134,7 @@ bool University::insertProfessors(const std::string &fileIn) {
     std::string line;
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
-        tokens = splittedLine(line);
+        tokens = splittedLine(line,';');
         int matr = getNewProfessorId();
         _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
     }
@@ -159,7 +161,7 @@ void University::readClassroom() {
     char c;
     int nCod=0;
     while (std::getline(fileIn, line)) {
-        tokens = splittedLine(line);
+        tokens = splittedLine(line,';');
         std::stringstream ss(tokens[0]);
         ss >> c >> nCod;
 
@@ -185,7 +187,7 @@ bool University::insertClassroom(const std::string &fileIn) {
     std::string line;
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
-        tokens = splittedLine(line);
+        tokens = splittedLine(line,';');
         int id = getNewClassroomId();
         _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[1][0], tokens[2], std::stoi(tokens[3]),std::stoi(tokens[4]))));
     }
@@ -205,4 +207,49 @@ int University::getNewClassroomId() {
     }
     return newRoomId;
 }
+
+
+//primo approccio, da cambiare
+void University::readStudyCourse() {
+     char c;
+    std::ifstream fileIn("../Sources/db_corsi_studi.txt");
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw std::invalid_argument("errore apertura database corsi di studi");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> tokens1;    //accoglierà il vettore con la riga del file scissa
+    std::vector<std::string> tokens2;
+    std::vector<std::string> tokens3;
+    std::vector<std::string> tokens4;
+
+    while(getline(fileIn,line)){
+
+       tokens1 = splittedLine(line,';');
+
+        std::stringstream ss(tokens1[2]);
+        ss>>c>>c;
+        tokens2 = splittedLine(tokens1[2],'}');
+        for(int i = 0; i<tokens2.size();i++){
+            if (i != 0) {
+                std::stringstream s1(tokens1[2]);
+                s1>>c>>c;
+            }
+                tokens3 = splittedLine(tokens2[i], ',');
+
+            }
+        std::stringstream s2(tokens1[3]);
+        s2>>c;
+        for(int i = 0; i<tokens1[3].size();i++)
+        tokens4 = splittedLine(tokens3[i],',');
+
+        ///inserire nella mappa prendendo i tokens giusti
+        }
+
+
+
+    }
+
+}
+
 
