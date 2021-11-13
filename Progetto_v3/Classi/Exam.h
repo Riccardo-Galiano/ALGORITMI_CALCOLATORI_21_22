@@ -10,11 +10,11 @@
 
 class Exam {
 private:
-    int _time;
-    int _enterTime;
-    int _leaveTime;
-    std::string _mode;
-    char _place;
+    int _time; //tempo dell'esame
+    int _enterTime; //tempo per entrare
+    int _leaveTime; //tempo per uscire
+    std::string _mode; //modalità
+    char _place; //luogo
 
 };
 

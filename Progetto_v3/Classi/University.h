@@ -19,9 +19,11 @@ public:
 
     int getNewProfessorId();
 
+    int getNewClassroomId();
+
     bool insertStuds(const std::string &fileIn);
 
-    bool insertProfs(const std::string &fileIn);
+    bool insertProfessors(const std::string &fileIn);
 
     bool insertClassroom(const std::string &fileIn);
 
@@ -36,7 +38,9 @@ private:
 
     void readProfessor();
 
-    int getNewClassroomId();
+    void readClassroom();
+
+
 };
 
 

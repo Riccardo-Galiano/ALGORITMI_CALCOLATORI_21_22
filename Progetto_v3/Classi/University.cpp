@@ -7,9 +7,11 @@
 #include <sstream>
 #include "University.h"
 
+///costruisce la struttura dell'intera università leggendo i file da linea di comando
 University::University() {
     readStudents();
     readProfessor();
+    readClassroom();
 
 }
 
@@ -75,6 +77,7 @@ bool University::insertStuds(const std::string &fileIn) {
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
         _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1], tokens[2]))); //inserisco il nuovo studente nella mappatura interna
     }
+    fIn.close();
     return true;
 }
 
@@ -120,7 +123,7 @@ void University::readProfessor() {
 }
 
 ///identico alla insertStudents(); si evita di commentare per non sporcare il codice
-bool University::insertProfs(const std::string &fileIn) {
+bool University::insertProfessors(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         std::cerr << "rotto\n";
@@ -133,6 +136,7 @@ bool University::insertProfs(const std::string &fileIn) {
         int matr = getNewProfessorId();
         _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
     }
+    fIn.close();
     return true;
 }
 
@@ -145,8 +149,33 @@ int University::getNewProfessorId() {
 
 }
 
+void University::readClassroom() {
+    std::ifstream fileIn("../Sources/db_aule.txt");
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("errore apertura database aule");
+    }
+    std::string line;
+    std::vector<std::string> tokens;
+    char c;
+    int nCod=0;
+    while (std::getline(fileIn, line)) {
+        tokens = splittedLine(line);
+        std::stringstream ss(tokens[0]);
+        ss >> c >> nCod;
 
-/*
+        if (_classroom.count(nCod))
+            throw std::logic_error("due codici uguali");
+        else {
+          //tokens[1][0] prende la stringa vector in posizione 1 e il primo carattere di quest'ultima, migliorare perchè in realtà sappiamo che è un solo carattere
+            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, tokens[1][0], tokens[2], std::stoi(tokens[3]), std::stoi(tokens[4]))));
+
+        }
+    }
+    fileIn.close();
+}
+
+
+
 bool University::insertClassroom(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in); ///piccolezza: abbiamo aperto gli altri file con ifstream, lasciamo fstream per far vedere che conosciamo altro o uniformiamo il codice?
     if (!fIn.is_open()) {
@@ -158,13 +187,15 @@ bool University::insertClassroom(const std::string &fileIn) {
     while (std::getline(fIn, line)) {
         tokens = splittedLine(line);
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], tokens[2])));
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[1][0], tokens[2], std::stoi(tokens[3]),std::stoi(tokens[4]))));
     }
+    fIn.close();
     return true;
-}*/
+}
+
 
 /// potrebbe non esserci niente ad un certo i
-/*int University::getNewClassroomId() {
+int University::getNewClassroomId() {
     int newRoomId = 0;
     for (int i = 0; i < _classroom.size(); i++) {
         if (_classroom.at(i).getId() != newRoomId)
@@ -175,5 +206,3 @@ bool University::insertClassroom(const std::string &fileIn) {
     return newRoomId;
 }
 
-return false;
-}*/

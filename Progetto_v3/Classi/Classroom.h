@@ -6,21 +6,26 @@
 #define PROGETTO_V3_CLASSROOM_H
 
 
-#include <string>
+#include <cstring>
 
 class Classroom {
 public:
-Classroom(int,char,std::string,int,int);
-private:
-    int _id;
+Classroom(int, char, std::string, int, int);
+
 public:
     int getId() const;
+    std::string getName() const;
+    bool getLab() const;
+    int getNSeats() const;
+    int getNExamSeats() const;
 
 private:
-    std::string _name;
-    bool _lab;
-    int _nSeats;
-    int _nExamSeats;
+
+    int _id; //codice identificativo
+    std::string _name; //nome aula
+    bool _lab; //lab o aula?
+    int _nSeats; //capienza massima dell'aula
+    int _nExamSeats; //capienza all'esame
 };
 
 

@@ -6,7 +6,7 @@
 #include "Classroom.h"
 
 
-Classroom::Classroom(int id, char AorL, std::string name, int seats, int examSeats) {
+ Classroom::Classroom(int id, char AorL, std::string name, int seats, int examSeats) {
 _id=id;
 _name=name;
 _nSeats=seats;
@@ -18,8 +18,25 @@ if(AorL=='L'){
 }else{
     throw std::invalid_argument("errore aula o lab");
 }
+
 }
 
 int Classroom::getId() const {
     return _id;
+}
+
+std::string Classroom::getName() const {
+    return _name;
+}
+
+bool Classroom::getLab() const {
+    return _lab;
+}
+
+int Classroom::getNSeats() const {
+    return _nSeats;
+}
+
+int Classroom::getNExamSeats() const {
+    return _nExamSeats;
 }
