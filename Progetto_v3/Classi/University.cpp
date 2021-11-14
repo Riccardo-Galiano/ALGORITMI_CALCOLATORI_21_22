@@ -229,20 +229,20 @@ void University::readStudyCourse() {
     while(getline(fileIn,line)){
 
        tokens1 = splittedLine(line,';');
-
+        //i primi due tokens mi danno matricola e tipo di laurea
         std::stringstream ss(tokens1[2]);
-        ss>>c>>c;
-        tokens2 = splittedLine(tokens1[2],'}');
+        ss>>c>>c; //tolgo la prima parentesi quadra e la parentesi graffa
+        tokens2 = splittedLine(tokens1[2],'}');//splitto il tokens in cui è racchiuso il terzo campo
         for(int i = 0; i<tokens2.size();i++){
-            if (i != 0) {
+            if (i != 0) { //se non è il primo tokens devo togliere l avirgola  ela parentesi graffa
                 std::stringstream s1(tokens1[2]);
                 s1>>c>>c;
             }
                 tokens3 = splittedLine(tokens2[i], ',');
-                std::stringstream s2(tokens1[3]);
-                s2>>c;
+                std::stringstream s2(tokens1[3]); //quarto campo della riga
+                s2>>c;  //tolgo la parentesi quadra
                 for(int j = 0; j<tokens1[3].size();j++)
-                tokens4 = splittedLine(tokens3[j],',');
+                tokens4 = splittedLine(tokens3[j],',');//splitto l'ultimo campo con la virgola
                 
 
             }

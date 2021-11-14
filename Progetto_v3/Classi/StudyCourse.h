@@ -12,10 +12,11 @@
 class StudyCourse {
     StudyCourse(int id, std::string BSorMs);
 protected:
-    std::string _name; ///nome del corso di studi
-    bool _bachelor; ///magistrale?
-    std::map<std::string,Course> _courses; ///per ogni "_name" associa un oggetto corso che comprende i vari corsi specifici di ogni corso di studi
-    std::list<Course> _stoppedCourses; ///lista corsi spenti
+    std::string _name; //nome del corso di studi
+    bool _bachelor; //magistrale?
+    bool _period; //primo o secondo semestre;
+    std::map<std::string,Course> _courses; //per ogni "_name" associa un oggetto corso che comprende i vari corsi specifici di ogni corso di studi
+    std::list<Course> _stoppedCourses; //lista corsi spenti
 };
 
 

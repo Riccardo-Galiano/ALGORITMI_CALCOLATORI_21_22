@@ -33,7 +33,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Progetto_v3" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
   <component name="RunManager">
@@ -59,6 +59,8 @@
       <workItem from="1636802239589" duration="18233000" />
       <workItem from="1636880706688" duration="1986000" />
       <workItem from="1636882732751" duration="19000" />
+      <workItem from="1636900673806" duration="12000" />
+      <workItem from="1636900751951" duration="5000" />
     </task>
     <servers />
   </component>
@@ -70,11 +72,11 @@
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="369" y="55" width="836" height="703" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1636735002476" />
-    <state x="1780" y="112" key="FileChooserDialogImpl" timestamp="1636882748594">
-      <screen x="1366" y="0" width="1366" height="728" />
+    <state x="415" y="134" key="FileChooserDialogImpl" timestamp="1636900684139">
+      <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="1780" y="112" key="FileChooserDialogImpl/0.0.1366.728/1366.0.1366.728@1366.0.1366.728" timestamp="1636882748594" />
-    <state x="415" y="134" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1636733296233" />
+    <state x="415" y="134" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1636900684139" />
     <state width="1370" height="266" key="GridCell.Tab.0.bottom" timestamp="1636821617570">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
