@@ -6,14 +6,14 @@
 #include "Classroom.h"
 
 
- Classroom::Classroom(int id, char AorL, std::string name, int seats, int examSeats) {
+ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int examSeats) {
 _id=id;
 _name=name;
 _nSeats=seats;
 _nExamSeats=examSeats;
-if(AorL=='L'){
+if(AorL == "L"){
     _lab=true;
-}else if(AorL=='A'){
+}else if(AorL == "A"){
     _lab=false;
 }else{
     throw std::invalid_argument("errore aula o lab");

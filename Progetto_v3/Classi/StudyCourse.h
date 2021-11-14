@@ -10,6 +10,7 @@
 #include "Course.h"
 
 class StudyCourse {
+    StudyCourse(int id, std::string BSorMs);
 protected:
     std::string _name; ///nome del corso di studi
     bool _bachelor; ///magistrale?

@@ -80,6 +80,7 @@ bool University::insertStuds(const std::string &fileIn) {
         _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1], tokens[2]))); //inserisco il nuovo studente nella mappatura interna
     }
     fIn.close();
+
     return true;
 }
 
@@ -147,7 +148,7 @@ int University::getNewProfessorId() {
 
 
     Professor p = _professors.at(_students.size()-1);
-    return p.getId()+1; //il nuovo studente avrà la matricola successiva all'ultimo studente iscritto
+    return p.getId()+1; //il nuovo professore avrà la matricola successiva all'ultimo professore iscritto
 
 }
 
@@ -168,8 +169,7 @@ void University::readClassroom() {
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
         else {
-          //tokens[1][0] prende la stringa vector in posizione 1 e il primo carattere di quest'ultima, migliorare perchè in realtà sappiamo che è un solo carattere
-            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, tokens[1][0], tokens[2], std::stoi(tokens[3]), std::stoi(tokens[4]))));
+            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, tokens[1], tokens[2], std::stoi(tokens[3]), std::stoi(tokens[4]))));
 
         }
     }
@@ -189,7 +189,7 @@ bool University::insertClassroom(const std::string &fileIn) {
     while (std::getline(fIn, line)) {
         tokens = splittedLine(line,';');
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[1][0], tokens[2], std::stoi(tokens[3]),std::stoi(tokens[4]))));
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[1], tokens[2], std::stoi(tokens[3]),std::stoi(tokens[4]))));
     }
     fIn.close();
     return true;
@@ -197,21 +197,24 @@ bool University::insertClassroom(const std::string &fileIn) {
 
 
 /// potrebbe non esserci niente ad un certo i
+/// il codice dell'aula può essere riassegnato?
 int University::getNewClassroomId() {
-    int newRoomId = 0;
+    /*int newRoomId = 0;
     for (int i = 0; i < _classroom.size(); i++) {
         if (_classroom.at(i).getId() != newRoomId)
             return newRoomId;
         else
             newRoomId++;
     }
-    return newRoomId;
+    return newRoomId;*/
+    Classroom c = _classroom.at(_classroom.size()-1);
+    return c.getId()+1; //la nuova aula avrà la matricola successiva all'ultima della mappa
 }
 
 
 //primo approccio, da cambiare
 void University::readStudyCourse() {
-     char c;
+    char c;
     std::ifstream fileIn("../Sources/db_corsi_studi.txt");
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
@@ -236,12 +239,14 @@ void University::readStudyCourse() {
                 s1>>c>>c;
             }
                 tokens3 = splittedLine(tokens2[i], ',');
+                std::stringstream s2(tokens1[3]);
+                s2>>c;
+                for(int j = 0; j<tokens1[3].size();j++)
+                tokens4 = splittedLine(tokens3[j],',');
+                
 
             }
-        std::stringstream s2(tokens1[3]);
-        s2>>c;
-        for(int i = 0; i<tokens1[3].size();i++)
-        tokens4 = splittedLine(tokens3[i],',');
+
 
         ///inserire nella mappa prendendo i tokens giusti
         }
@@ -250,6 +255,6 @@ void University::readStudyCourse() {
 
     }
 
-}
+
 
 

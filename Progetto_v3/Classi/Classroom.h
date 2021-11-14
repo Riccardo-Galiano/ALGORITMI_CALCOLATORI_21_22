@@ -10,7 +10,7 @@
 
 class Classroom {
 public:
-Classroom(int, char, std::string, int, int);
+Classroom(int, std::string, std::string, int, int);
 
 public:
     int getId() const;
