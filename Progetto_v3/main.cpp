@@ -104,14 +104,14 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 */
+    University poliTo;
     if (argc != 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");
     }
-    University poliTo;
+
 
     try{
         startProgram(poliTo, argv);
-
     }catch(invalid_argument){
 
     }

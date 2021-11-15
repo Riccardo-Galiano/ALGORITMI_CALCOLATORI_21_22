@@ -12,7 +12,7 @@ University::University() {
     readStudents();
     readProfessor();
     readClassroom();
-
+    readStudyCourse();
 }
 
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
@@ -84,23 +84,15 @@ bool University::insertStuds(const std::string &fileIn) {
     return true;
 }
 
-///mi serve capire qual è la nuova matricola da associare al nuovo studente
+///capisce qual è la nuova matricola da associare al nuovo studente
 int University::getNewStudentId() {
-   // int newStudId = 0;
 
-    ///non mi piace. Associa una vecchia matricola a un nuovo studente
-   /* for (int i = 0; i < _students.size(); i++) {
-        Student s = _students.at(i);
-        if (s.getId() != newStudId)
-            return newStudId;
-        else
-            newStudId++;
-    }
-     return newStudId;*/
+    if(_students.empty())
+        return 1;
 
-    Student s = _students.at(_students.size()-1);
-    return s.getId()+1; //il nuovo studente avrà la matricola successiva all'ultimo studente iscritto
-
+    auto last = _students.rbegin();  //iteratore che punta all'ultimo studente della mappa
+    int toReturn =  last->second.getId()+1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    return toReturn;
 }
 
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice
@@ -145,11 +137,13 @@ bool University::insertProfessors(const std::string &fileIn) {
 
 ///identico alla getNewStudentsId(); si evita di commentare per non sporcare il codice
 int University::getNewProfessorId() {
+    //dobbiamo partire da 1 e non da 0 quindi controllo se è vuoto
+    if(_professors.empty())
+        return 1;
 
-
-    Professor p = _professors.at(_students.size()-1);
-    return p.getId()+1; //il nuovo professore avrà la matricola successiva all'ultimo professore iscritto
-
+    auto last = _professors.rbegin();//creo un iteratore all'ultimo elemento della mappa.
+    int toReturn =  last->second.getId()+1; //leggo l'id corrispondente al professore(second) puntanto dall'iteratore last e sommo 1. Sarà la nuova matricola
+    return toReturn;
 }
 
 void University::readClassroom() {
@@ -165,7 +159,6 @@ void University::readClassroom() {
         tokens = splittedLine(line,';');
         std::stringstream ss(tokens[0]);
         ss >> c >> nCod;
-
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
         else {
@@ -189,7 +182,7 @@ bool University::insertClassroom(const std::string &fileIn) {
     while (std::getline(fIn, line)) {
         tokens = splittedLine(line,';');
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[1], tokens[2], std::stoi(tokens[3]),std::stoi(tokens[4]))));
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),std::stoi(tokens[3]))));
     }
     fIn.close();
     return true;
@@ -199,62 +192,78 @@ bool University::insertClassroom(const std::string &fileIn) {
 /// potrebbe non esserci niente ad un certo i
 /// il codice dell'aula può essere riassegnato?
 int University::getNewClassroomId() {
-    /*int newRoomId = 0;
-    for (int i = 0; i < _classroom.size(); i++) {
-        if (_classroom.at(i).getId() != newRoomId)
-            return newRoomId;
-        else
-            newRoomId++;
-    }
-    return newRoomId;*/
-    Classroom c = _classroom.at(_classroom.size()-1);
-    return c.getId()+1; //la nuova aula avrà la matricola successiva all'ultima della mappa
+    if(_classroom.empty())
+        return 1;
+    auto last = _classroom.rbegin();  //
+    int toReturn =  last->second.getId()+1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    return toReturn;
 }
 
 
-//primo approccio, da cambiare
+
+
 void University::readStudyCourse() {
     char c;
-    std::ifstream fileIn("../Sources/db_corsi_studi.txt");
+    std::ifstream fileIn("../Sources/db_corsi_studio.txt");
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
         throw std::invalid_argument("errore apertura database corsi di studi");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
-    std::vector<std::string> tokens1;    //accoglierà il vettore con la riga del file scissa
-    std::vector<std::string> tokens2;
-    std::vector<std::string> tokens3;
-    std::vector<std::string> tokens4;
+    std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
+    std::vector<std::string> semestri;
+    std::vector<std::string> semestre1;
+    std::vector<std::string> semestre2;
+    std::vector<std::string> corsiSpenti;
+    while(std::getline(fileIn,line)) {
+        ///codice, livello
 
-    while(getline(fileIn,line)){
+        if(line.empty())//non dovrebbe esserci. Sistemare
+            break;
 
-       tokens1 = splittedLine(line,';');
-        //i primi due tokens mi danno matricola e tipo di laurea
-        std::stringstream ss(tokens1[2]);
-        ss>>c>>c; //tolgo la prima parentesi quadra e la parentesi graffa
-        tokens2 = splittedLine(tokens1[2],'}');//splitto il tokens in cui è racchiuso il terzo campo
-        for(int i = 0; i<tokens2.size();i++){
-            if (i != 0) { //se non è il primo tokens devo togliere l avirgola  ela parentesi graffa
-                std::stringstream s1(tokens1[2]);
-                s1>>c>>c;
-            }
-                tokens3 = splittedLine(tokens2[i], ',');
-                std::stringstream s2(tokens1[3]); //quarto campo della riga
-                s2>>c;  //tolgo la parentesi quadra
-                for(int j = 0; j<tokens1[3].size();j++)
-                tokens4 = splittedLine(tokens3[j],',');//splitto l'ultimo campo con la virgola
-                
-
-            }
+        tokens = splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
+        std::stringstream ss(tokens[0]);//manipolo la stringa
+        int codCorso;
+        ss >> c >> codCorso;//in c andrà il carattere A del codice letto. codCorso conterrà i 3 numeri subito dopo A
+        std::string levelCourse = tokens[1];//triennale o magistrale
 
 
-        ///inserire nella mappa prendendo i tokens giusti
+        ///devo leggere i semestri
+        std::vector<int> posSem;
+
+        //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
+        std::size_t found = tokens[2].find_first_of("{}");
+        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            found = tokens[2].find_first_of("{}", found + 1);//continuo a controllare la stringa
         }
 
+        for (int i = 0; i < posSem.size()-1; i=i+2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+            int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
+            semestri.push_back(tokens[2].substr(posStart, len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
 
+        }
 
+        ///leggo i semestri spenti.
+        std::string corsiSpentiSenzaQuadre;
+        corsiSpentiSenzaQuadre = tokens[3].substr(1,tokens[3].size()-2);    //salvo la stringa senza le quadre
+        corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
+
+        //versione compatta senza creare stringa corsiSpentiSenzaQuadre, meno chiaro ma più compatto
+        //corsiSpenti = splittedLine(tokens[3].substr(1,tokens[3].size()-2), ',');
+
+        ///creo StudyCourse
+        bool isBachelor = false;
+        if(levelCourse.compare("BS")==0)
+            isBachelor=true;
+        StudyCourse sc(codCorso,isBachelor);
+        //carico corsi e semestri letti nello studycourse
+       // sc.addCourse()...
+        _studyCourse.insert(std::pair<int,StudyCourse>(codCorso,sc));
     }
 
+    fileIn.close();
+}
 
 
 

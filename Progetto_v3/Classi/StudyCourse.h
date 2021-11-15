@@ -10,13 +10,13 @@
 #include "Course.h"
 
 class StudyCourse {
-    StudyCourse(int id, std::string BSorMs);
+public:
+    StudyCourse(int id, bool isBachelor);
+    bool addCourse(int year, int semester, Course course);
 protected:
-    std::string _name; //nome del corso di studi
-    bool _bachelor; //magistrale?
-    bool _period; //primo o secondo semestre;
-    std::map<std::string,Course> _courses; //per ogni "_name" associa un oggetto corso che comprende i vari corsi specifici di ogni corso di studi
-    std::list<Course> _stoppedCourses; //lista corsi spenti
+    int _id; //codice del corso di studi
+    bool _isBachelor; //magistrale?
+    std::map<std::string,std::vector<Course>> _semesters; //key: "yy-semester", value: vettore di courses
 };
 
 
