@@ -204,6 +204,7 @@ int University::getNewClassroomId() {
 
 void University::readStudyCourse() {
     char c;
+    int i;
     std::ifstream fileIn("../Sources/db_corsi_studio.txt");
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
@@ -212,9 +213,8 @@ void University::readStudyCourse() {
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
     std::vector<std::string> semestri;
-    std::vector<std::string> semestre1;
-    std::vector<std::string> semestre2;
     std::vector<std::string> corsiSpenti;
+
     while(std::getline(fileIn,line)) {
         ///codice, livello
 
@@ -238,7 +238,7 @@ void University::readStudyCourse() {
             found = tokens[2].find_first_of("{}", found + 1);//continuo a controllare la stringa
         }
 
-        for (int i = 0; i < posSem.size()-1; i=i+2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size()-1; i=i+2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(tokens[2].substr(posStart, len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
 
@@ -256,10 +256,21 @@ void University::readStudyCourse() {
         bool isBachelor = false;
         if(levelCourse.compare("BS")==0)
             isBachelor=true;
-        StudyCourse sc(codCorso,isBachelor);
+        StudyCourse SCourse(codCorso,isBachelor);
         //carico corsi e semestri letti nello studycourse
-       // sc.addCourse()...
-        _studyCourse.insert(std::pair<int,StudyCourse>(codCorso,sc));
+        int year=0, numSemester=1;
+        for(i = 0; i<semestri.size(); i++) {
+            if(i%2==0){//se primo semestre aggiorno anno e mi trovo al primo semestre
+                year++;
+                numSemester = 1;
+            }else{//se secondo semestre mi trovo al secondo anno ma al secondo semestre
+
+                numSemester = 2;
+            }
+            SCourse.addSemesterCourses(year,numSemester,semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+         }
+        SCourse.addOffCourses(corsiSpenti);
+        _studyCourse.insert(std::pair<int,StudyCourse>(codCorso,SCourse));
     }
 
     fileIn.close();
