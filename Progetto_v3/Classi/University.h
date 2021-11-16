@@ -23,19 +23,19 @@ public:
 
     const int getNewClassroomId() const;
 
-    const int getNewStudyCourse() const;
+    const int getNewStudyCourseId() const;
 
-    const int getNewCourse()const;
+    const int getNewCourseId()const;
 
     bool insertStuds(const std::string &fileIn);
 
     bool insertProfessors(const std::string &fileIn);
 
-    bool insertClassroom(const std::string &fileIn);
+    bool insertClassrooms(const std::string &fileIn);
 
-    bool insertStudyCourse(const std::string &fileIn);
+    bool insertStudyCourses(const std::string &fileIn);
 
-    bool insertCourse(const std::string &fileIn);
+    bool insertCourses(const std::string &fileIn);
 
 private:
     /// annoInizio-annoAccademico

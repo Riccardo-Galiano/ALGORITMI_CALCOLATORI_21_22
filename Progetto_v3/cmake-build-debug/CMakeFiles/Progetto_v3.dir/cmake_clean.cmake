@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj"
+  "CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj"

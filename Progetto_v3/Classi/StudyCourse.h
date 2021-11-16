@@ -16,6 +16,10 @@ public:
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
 
 protected:
+public:
+    int getId() const;
+
+protected:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<Course>> _semesters; //key: "yy-semester", value: vettore di courses

@@ -1,4 +1,4 @@
 A;Aula 1;150;30
-A;Aula 5;100;20
+L;Laib 5C;100;20
 A;Aula 1I;130;25
 A;Aula 1T;100;15

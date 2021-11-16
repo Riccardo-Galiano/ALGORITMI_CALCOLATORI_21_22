@@ -5,10 +5,20 @@
 #include "Classi/Student.h"
 #include <vector>
 #include "Classi/Professor.h"
+#include "Classi/DbException.h"
 
 enum {
-    add_student, add_professor, add_classroom, add_course, add_studyCourse, update_student, update_professor, update_classroom, insert_course
+    add_student,
+    add_professor,
+    add_classroom,
+    add_course,
+    add_studyCourse,
+    update_student,
+    update_professor,
+    update_classroom,
+    insert_course
 };
+
 /*
 template<typename T>
 std::map<int, T> readMembers(const std::string &fileIn) {
@@ -68,12 +78,13 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case add_classroom: {
-            uni.insertClassroom(argv[2]);
+            uni.insertClassrooms(argv[2]);
             break;
         }
         case add_course:
             break;
         case add_studyCourse:
+            uni.insertStudyCourses(argv[2]);
             break;
         case update_student:
             break;
@@ -108,13 +119,7 @@ int main(int argc, char *argv[]) {
     if (argc != 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");
     }
-
-
-    try{
-        startProgram(poliTo, argv);
-    }catch(invalid_argument){
-
-    }
+    startProgram(poliTo, argv);
 
     return 0;
 }
