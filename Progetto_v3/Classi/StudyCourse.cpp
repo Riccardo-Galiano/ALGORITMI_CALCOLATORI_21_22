@@ -6,10 +6,10 @@
 #include "StudyCourse.h"
 #include "Course.h"
 
-StudyCourse::StudyCourse(int id, bool isBachelor) : _id{id}, _isBachelor{isBachelor} {}
-std::vector<std::string> splittedLine2(const std::string &s,char delimiter );
+StudyCourse::StudyCourse(const int &id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
+std::vector<std::string> splittedLine2(const std::string &s,const char &delimiter );
 
-bool StudyCourse::addSemesterCourses(int year, int semester,std::string SemesterCourses) {
+bool StudyCourse::addSemesterCourses(const int &year,const  int & semester,const std::string & SemesterCourses) {
     int i=0;
     std::stringstream ss;
     ss << year << "-" << semester;
@@ -20,24 +20,26 @@ bool StudyCourse::addSemesterCourses(int year, int semester,std::string Semester
 
    for(auto iter = courses.begin();iter != courses.end(); iter++){//analizzo tutti i componenti del vettore corsi
         if (!_semesters.count(key)) {//se la chiave non esiste
-             std::vector<std::string> vect;
-             vect.push_back(courses[0]);//salvo il primo corso del semestre
-            _semesters.insert(std::pair<std::string,std::vector<std::string>>(key, vect));//inserisco nella mappa l primo corso del semestre
+             std::vector<Course> vect;
+             Course primocorso(courses[0]);
+             vect.push_back(primocorso);//salvo il primo corso del semestre
+            _semesters.insert(std::pair<std::string,std::vector<Course>>(key, vect));//inserisco nella mappa il primo corso del semestre
          }else {//se la chiave esiste
              i++;
-            _semesters.at(key).push_back(courses[i]);//aggiungo i corsi successivo al primo
+             Course corsoGenerico(courses[i]);
+            _semesters.at(key).push_back(corsoGenerico);//aggiungo nel semestre già esistenete i corsi successivo al primo
          }
      }
     return true;
 
 }
 
-bool StudyCourse::addOffCourses(std::vector<std::string> corsiSpenti) {
+bool StudyCourse::addOffCourses(const std::vector<std::string> &corsiSpenti) {
     int i = 0;
 
     for(auto iter = corsiSpenti.begin();iter != corsiSpenti.end(); iter++) {
 
-        Course corsospento;//da definire
+        Course corsospento(corsiSpenti[i]);//costruttore provvisorio da definire
 
         _corsiSpenti.insert(std::pair<std::string, Course>(corsiSpenti[i],corsospento));//per ogni codice del corso spento associo un oggetto corso
          i++;//sarebbe il caso di usare l'iteratore ma non riesco
@@ -46,7 +48,7 @@ bool StudyCourse::addOffCourses(std::vector<std::string> corsiSpenti) {
 }
 
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
-std::vector<std::string> splittedLine2(const std::string &s,char delimiter ) {
+std::vector<std::string> splittedLine2(const std::string &s,const char &delimiter ) {
 
 
     std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector

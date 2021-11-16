@@ -16,6 +16,8 @@ typedef struct {
 } hours;
 
 class Course {
+public:
+    Course(const std::string &idCorso);
 
 protected:
     std::string _id;///codice identificativo del corso

@@ -17,15 +17,15 @@ public:
 
     University();
 
-    int getNewStudentId();
+    const int getNewStudentId() const ;
 
-    int getNewProfessorId();
+    const int getNewProfessorId() const;
 
-    int getNewClassroomId();
+    const int getNewClassroomId() const;
 
-    int getNewStudyCourse();
+    const int getNewStudyCourse() const;
 
-    int getNewCourse();
+    const int getNewCourse()const;
 
     bool insertStuds(const std::string &fileIn);
 

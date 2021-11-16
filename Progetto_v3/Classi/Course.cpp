@@ -3,3 +3,7 @@
 //
 
 #include "Course.h"
+
+Course::Course(const std::string &idCorso) {
+_id = idCorso;
+}

@@ -11,14 +11,14 @@
 
 class StudyCourse {
 public:
-    StudyCourse(int id, bool isBachelor);
-    bool addSemesterCourses(int year, int semester, std::string SemesterCourses);
-    bool addOffCourses(std::vector<std::string> corsiSpenti );
+    StudyCourse(const int &id, const bool &isBachelor);
+    bool addSemesterCourses(const int &year,const  int & semester,const std::string & SemesterCourses);
+    bool addOffCourses(const std::vector<std::string> &corsiSpenti);
 
 protected:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
-    std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di courses
+    std::map<std::string,std::vector<Course>> _semesters; //key: "yy-semester", value: vettore di courses
     std::map<std::string,Course> _corsiSpenti;
 };
 

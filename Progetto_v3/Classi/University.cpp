@@ -16,7 +16,7 @@ University::University() {
 }
 
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
-std::vector<std::string> splittedLine(const std::string &s,char delimiter ) {
+std::vector<std::string> splittedLine(const std::string &s,const char &delimiter ) {
 
 
     std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector
@@ -85,7 +85,7 @@ bool University::insertStuds(const std::string &fileIn) {
 }
 
 ///capisce qual è la nuova matricola da associare al nuovo studente
-int University::getNewStudentId() {
+const int University::getNewStudentId() const {
 
     if(_students.empty())
         return 1;
@@ -136,7 +136,7 @@ bool University::insertProfessors(const std::string &fileIn) {
 }
 
 ///identico alla getNewStudentsId(); si evita di commentare per non sporcare il codice
-int University::getNewProfessorId() {
+const int University::getNewProfessorId() const{
     //dobbiamo partire da 1 e non da 0 quindi controllo se è vuoto
     if(_professors.empty())
         return 1;
@@ -191,7 +191,7 @@ bool University::insertClassroom(const std::string &fileIn) {
 
 /// potrebbe non esserci niente ad un certo i
 /// il codice dell'aula può essere riassegnato?
-int University::getNewClassroomId() {
+const int University::getNewClassroomId() const{
     if(_classroom.empty())
         return 1;
     auto last = _classroom.rbegin();  //
