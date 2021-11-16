@@ -15,20 +15,36 @@ University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
     //fs::create_directory("../Database");
     try {
-        readStudents();
+    //    readStudents();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
     try {
-        readProfessor();
+      //  readProfessor();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
-    readClassroom();
-    readStudyCourse();
-}
+    try{
+        readClassroom();
+    }catch (DbException &exc){
+        std::cerr << exc.what() <<std::endl;
+    }
+    try {
+        readStudyCourse();
+    }catch (DbException &exc){
+        std::cerr << exc.what() <<std::endl;
+    }
+    try {
+        readCourse();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+    }
+    }
+
+
 
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
 std::vector<std::string> splittedLine(const std::string &s, const char &delimiter) {
@@ -40,8 +56,7 @@ std::vector<std::string> splittedLine(const std::string &s, const char &delimite
 
 
     //fin quando la riga non è finita prende l'intera riga e salva in un vettore di string l'informazione fino al prossimo delimitatore
-    while (std::getline(line, token, delimiter)) {
-        toReturn.push_back(token);
+    while (std::getline(line, token, delimiter)) {toReturn.push_back(token);
     }
 
     return toReturn;
@@ -74,8 +89,7 @@ void University::readStudents() {
         if (_students.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
-            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, tokens[1], tokens[2],
-                                                                    tokens[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
+            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, tokens[1], tokens[2],tokens[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
     }
 
     fileIn.close();
@@ -93,8 +107,7 @@ bool University::insertStuds(const std::string &fileIn) {
     while (std::getline(fIn, line)) {
         tokens = splittedLine(line, ';');
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
-                                                               tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
     }
     fIn.close();
 
@@ -108,8 +121,7 @@ const int University::getNewStudentId() const {
         return 1;
 
     auto last = _students.rbegin();  //iteratore che punta all'ultimo studente della mappa
-    int toReturn = last->second.getId() +
-                   1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
@@ -168,7 +180,8 @@ const int University::getNewProfessorId() const {
 void University::readClassroom() {
     std::ifstream fileIn("../Sources/db_aule.txt");
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura database aule");
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw DbException("file db_aule.txt non esistente");
     }
     std::string line;
     std::vector<std::string> tokens;
@@ -192,8 +205,7 @@ void University::readClassroom() {
 
 
 bool University::insertClassrooms(const std::string &fileIn) {
-    std::fstream fIn(fileIn,
-                     std::ios::in); ///piccolezza: abbiamo aperto gli altri file con ifstream, lasciamo fstream per far vedere che conosciamo altro o uniformiamo il codice?
+    std::fstream fIn(fileIn,std::ios::in); ///piccolezza: abbiamo aperto gli altri file con ifstream, lasciamo fstream per far vedere che conosciamo altro o uniformiamo il codice?
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura database aule");
         return false;
@@ -203,8 +215,7 @@ bool University::insertClassrooms(const std::string &fileIn) {
     while (std::getline(fIn, line)) {
         tokens = splittedLine(line, ';');
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
-                                                                  std::stoi(tokens[3]))));
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]), std::stoi(tokens[3]))));
     }
     fIn.close();
     return true;
@@ -217,8 +228,7 @@ const int University::getNewClassroomId() const {
     if (_classroom.empty())
         return 1;
     auto last = _classroom.rbegin();  //
-    int toReturn = last->second.getId() +
-                   1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
@@ -229,11 +239,10 @@ void University::readStudyCourse() {
     std::ifstream fileIn("../Sources/db_corsi_studio.txt");
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
-        throw std::invalid_argument("errore apertura database corsi di studi");
+        throw DbException("file db_corsi_studio.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
-    std::vector<std::string> semestri;
     std::vector<std::string> corsiSpenti;
 
     while (std::getline(fileIn, line)) {
@@ -254,18 +263,15 @@ void University::readStudyCourse() {
 
         //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
         std::size_t found = tokens[2].find_first_of("{}");
-        while (found !=
-               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            posSem.push_back(
-                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            posSem.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
             found = tokens[2].find_first_of("{}", found + 1);//continuo a controllare la stringa
         }
 
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
+        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
-            semestri.push_back(tokens[2].substr(posStart,
-                                                len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            semestri.push_back(tokens[2].substr(posStart,len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
 
         }
 
@@ -281,20 +287,18 @@ void University::readStudyCourse() {
         bool isBachelor = false;
         if (levelCourse.compare("BS") == 0)
             isBachelor = true;
+
         StudyCourse SCourse(codCorso, isBachelor);
         //carico corsi e semestri letti nello studycourse
+
         int year = 0, numSemester = 1;
         for (i = 0; i < semestri.size(); i++) {
-            if (i % 2 == 0) {//se primo semestre aggiorno anno e mi trovo al primo semestre
-                year++;
-                numSemester = 1;
-            } else {//se secondo semestre mi trovo al secondo anno ma al secondo semestre
-
-                numSemester = 2;
-            }
-            SCourse.addSemesterCourses(year, numSemester,
-                                       semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            year = 1 + i/2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
+            numSemester = 1 + i%2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
+            SCourse.addSemesterCourses(year, numSemester, semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
+
+
         SCourse.addOffCourses(corsiSpenti);
         _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
     }
@@ -308,12 +312,12 @@ bool University::insertStudyCourses(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
-        throw std::invalid_argument("errore apertura database corsi di studi");
+        throw std::invalid_argument("errore apertura database corso di studi");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
-    std::vector<std::string> semestri;
     std::vector<std::string> corsiSpenti;
+
     bool toContinue = true;
     while (std::getline(fileIn, line) && toContinue) {
         ///codice, livello
@@ -330,25 +334,21 @@ bool University::insertStudyCourses(const std::string &fin) {
 
             //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
             std::size_t found = tokens[1].find_first_of("{}");
-            while (found !=
-                   std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-                posSem.push_back(
-                        found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+                posSem.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
                 found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
             }
 
-            for (i = 0; i < posSem.size() - 1; i = i +
-                                                   2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+            std::vector<std::string> semestri;
+            for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
                 int posStart = posSem[i] + 1;
                 int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(tokens[1].substr(posStart,
-                                                    len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+                semestri.push_back(tokens[1].substr(posStart, len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
             }
 
             ///leggo i semestri spenti.
             std::string corsiSpentiSenzaQuadre;
-            corsiSpentiSenzaQuadre = tokens[2].substr(1, tokens[2].size() - 1 -
-                                                         1);    //salvo la stringa senza le quadre, -1 perchè size è una lunghezza ma l'indice parte da 0 e un altro -1 per togliere ']'
+            corsiSpentiSenzaQuadre = tokens[2].substr(1, tokens[2].size() - 1 - 1);  //salvo la stringa senza le quadre, -1 perchè size è una lunghezza ma l'indice parte da 0 e un altro -1 per togliere ']'
             corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
 
             //versione compatta senza creare stringa corsiSpentiSenzaQuadre, meno chiaro ma più compatto
@@ -375,18 +375,48 @@ bool University::insertStudyCourses(const std::string &fin) {
     fileIn.close();
 }
 
-const int University::getNewCourseId() const {
-}
 
 const int University::getNewStudyCourseId() const {
     if (_studyCourse.empty())
         return 1;
 
     auto last = _studyCourse.rbegin();  //iteratore che punta all'ultimo studente della mappa
-    int toReturn = last->first +
-                   1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn = last->first + 1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
+const int University::getNewCourseId() const {
+}
+
+void University::readCourse() {
+    std::ifstream fileIn("../Sources/db_corsi.txt");
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw DbException("file db_corsi.txt non esistente");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
+
+
+    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+
+        tokens = splittedLine(line, ';');
+        if(tokens[0]=="c"){
+
+            if (_courses.count(tokens[1]))
+                throw std::logic_error("due matricole uguali");
+            else
+                _courses.insert(std::pair<std::string, Course>(tokens[1],Course(tokens[1],tokens[2],stoi(tokens[3]),stoi(tokens[4]),stoi(tokens[5]))));//la chiave è la matricola; ad ogni chiave/matricola è associato un corso
+             //devo modificare i parametri dei course in studycourse/_semester
+        } else if (tokens[0]=="a"){
+            //da implementare
+        }
+
+
+
+         }
+
+    fileIn.close();
+}
 
 

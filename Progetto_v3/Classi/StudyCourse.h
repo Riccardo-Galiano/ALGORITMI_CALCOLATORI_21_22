@@ -15,8 +15,6 @@ public:
     bool addSemesterCourses(const int &year,const  int & semester,const std::string & SemesterCourses);
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
 
-protected:
-public:
     int getId() const;
 
 protected:

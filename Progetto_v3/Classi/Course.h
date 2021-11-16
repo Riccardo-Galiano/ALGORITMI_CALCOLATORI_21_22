@@ -18,6 +18,7 @@ typedef struct {
 class Course {
 public:
     Course(const std::string &idCorso);
+    Course(const std::string &idCorso, const std::string &nomeCorso, const int &oreLezione, const int &oreEsercitazione, const int &oreLaboratorio);
 
 protected:
     std::string _id;///codice identificativo del corso
