@@ -207,7 +207,7 @@ void University::readClassroom() {
 bool University::insertClassrooms(const std::string &fileIn) {
     std::fstream fIn(fileIn,std::ios::in); ///piccolezza: abbiamo aperto gli altri file con ifstream, lasciamo fstream per far vedere che conosciamo altro o uniformiamo il codice?
     if (!fIn.is_open()) {
-        throw std::invalid_argument("errore apertura database aule");
+        throw std::invalid_argument("errore apertura file di inserimento nuove aule");
         return false;
     }
     std::string line;
@@ -307,16 +307,16 @@ void University::readStudyCourse() {
 }
 
 bool University::insertStudyCourses(const std::string &fin) {
-    char c;
+
     int i;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
-        throw std::invalid_argument("errore apertura database corso di studi");
+        throw std::invalid_argument("errore apertura file inserimento nuovi corsi di studio");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
-    std::vector<std::string> corsiSpenti;
+
 
     bool toContinue = true;
     while (std::getline(fileIn, line) && toContinue) {
@@ -346,13 +346,7 @@ bool University::insertStudyCourses(const std::string &fin) {
                 semestri.push_back(tokens[1].substr(posStart, len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
             }
 
-            ///leggo i semestri spenti.
-            std::string corsiSpentiSenzaQuadre;
-            corsiSpentiSenzaQuadre = tokens[2].substr(1, tokens[2].size() - 1 - 1);  //salvo la stringa senza le quadre, -1 perchè size è una lunghezza ma l'indice parte da 0 e un altro -1 per togliere ']'
-            corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
 
-            //versione compatta senza creare stringa corsiSpentiSenzaQuadre, meno chiaro ma più compatto
-            //corsiSpenti = splittedLine(tokens[2].substr(1,tokens[2].size()-2), ',');
 
             ///creo StudyCourse
             bool isBachelor = false;
@@ -367,7 +361,6 @@ bool University::insertStudyCourses(const std::string &fin) {
                 numSemester = 1 + i%2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
                 SCourse.addSemesterCourses(year, numSemester, semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
             }
-            SCourse.addOffCourses(corsiSpenti);
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
         }
     }
