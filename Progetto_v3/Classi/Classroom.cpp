@@ -21,38 +21,47 @@ if(AorL == "L"){
 
 }
 
-int Classroom::getId() const {
+///prende l'id
+const int Classroom::getId() const {
     return _id;
 }
 
-std::string Classroom::getName() const {
+///prende il nome
+const std::string Classroom::getName() const {
     return _name;
 }
 
-bool Classroom::getLab() const {
+///prende il tipo: lab o aula
+const bool Classroom::getLab() const {
     return _lab;
 }
 
-int Classroom::getNSeats() const {
+///prende la capienza
+const int Classroom::getNSeats() const {
     return _nSeats;
 }
 
-int Classroom::getNExamSeats() const {
+///prende la capienza per gli esami
+const int Classroom::getNExamSeats() const {
     return _nExamSeats;
 }
 
+///aggiorna il nome
 void Classroom::updateName(const std::string & name) {
 _name = name;
 }
 
+///aggiorna il tipo: lab o aula
 void Classroom::updateType(const bool &LorA) {
 _lab = LorA;
 }
 
-void Classroom::updateNSeats(const int &postiAula) {
-_nSeats = postiAula;
+///aggiorna la capienza
+void Classroom::updateNSeats(const int &NSeats) {
+_nSeats = NSeats;
 }
 
-void Classroom::updateNExamSeats(const int &postiAulaEsami) {
-_nExamSeats = postiAulaEsami;
+///aggiorna la capienza per l'esame
+void Classroom::updateNExamSeats(const int &NExamSeats) {
+_nExamSeats = NExamSeats;
 }

@@ -10,6 +10,7 @@ StudyCourse::StudyCourse(const int &id, const bool &isBachelor) : _id{id}, _isBa
 
 std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter);
 
+///aggiunge un semsetre con i relativi corsi al corso di studio
 bool StudyCourse::addSemesterCourses(const int &year, const int &semester, const std::string &SemesterCourses) {
     ///key
     int i = 0;
@@ -37,6 +38,7 @@ bool StudyCourse::addSemesterCourses(const int &year, const int &semester, const
 
 }
 
+///aggiunge corso spento
 bool StudyCourse::addOffCourses(const std::vector<std::string> &corsiSpenti) {
     for (int i=0; i<corsiSpenti.size(); i++) {
         Course corsospento(corsiSpenti[i]);//costruttore provvisorio da definire
@@ -45,11 +47,12 @@ bool StudyCourse::addOffCourses(const std::vector<std::string> &corsiSpenti) {
     return true;
 }
 
-int StudyCourse::getId() const {
+///prende l'_id
+const int StudyCourse::getId() const {
     return _id;
 }
 
-///per ogni riga del file in input scinde le varie info delimitate da ";"
+///funzione che splitta una riga considerando un delimitatore passate by reference
 std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {
 
 

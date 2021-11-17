@@ -83,17 +83,22 @@ void startProgram(University &uni, char *argv[]) {
         }
         case add_course:
             break;
-        case add_studyCourse:
+        case add_studyCourse: {
             uni.insertStudyCourses(argv[2]);
             break;
-        case update_student:
+        }
+        case update_student: {
             uni.updateStuds(argv[2]);
             break;
-        case update_professor:
+        }
+        case update_professor: {
             uni.updateProfessors(argv[2]);
             break;
-        case update_classroom:
+        }
+        case update_classroom: {
+            uni.updateClassroom(argv[2]);
             break;
+        }
         case insert_course:
             break;
         default:

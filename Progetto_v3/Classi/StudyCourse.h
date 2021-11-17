@@ -15,7 +15,7 @@ public:
     bool addSemesterCourses(const int &year,const  int & semester,const std::string & SemesterCourses);
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
 
-    int getId() const;
+   const  int getId() const;
 
 protected:
     int _id; //codice del corso di studi

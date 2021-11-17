@@ -13,15 +13,15 @@ public:
 Classroom(int , std::string, std::string, int, int);
 
 public:
-    int getId() const;
-    std::string getName() const;
-    bool getLab() const;
-    int getNSeats() const;
-    int getNExamSeats() const;
+    const int getId() const;
+    const std::string getName() const;
+    const bool getLab() const;
+    const int getNSeats() const;
+    const int getNExamSeats() const;
     void updateName(const std::string & name);
     void updateType(const bool & LorA);
-    void updateNSeats(const int & postiAula);
-    void updateNExamSeats(const int & postiAulaEsami);
+    void updateNSeats(const int & NSeats);
+    void updateNExamSeats(const int & NExamSeats);
 private:
 
     int _id; //codice identificativo

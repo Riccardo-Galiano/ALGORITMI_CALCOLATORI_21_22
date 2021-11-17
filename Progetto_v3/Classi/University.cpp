@@ -44,29 +44,23 @@ University::University() {
     }
     }
 
-
-
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
 std::vector<std::string> splittedLine(const std::string &s, const char &delimiter) {
 
 
-    std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector
-    std::istringstream line(s); // mi serve per per poter manipolare le stringhe
+    std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate
+    std::istringstream line(s); // mi serve per poter manipolare le stringhe
     std::string token; //buffer di appoggio per salvare l'informazione appena ricavata
 
 
-    //fin quando la riga non è finita prende l'intera riga e salva in un vettore di string l'informazione fino al prossimo delimitatore
+    //fin quando la riga non è finita prende l'intera riga(line) e salva in una stringa del vettore di stringhe(tokens) l'informazione fino al prossimo delimitatore
     while (std::getline(line, token, delimiter)) {toReturn.push_back(token);
     }
 
     return toReturn;
 }
 
-
-
-
-/// come faccio a creare il file se non lo trovo?
-
+///leggo il database degli studenti
 void University::readStudents() {
     std::ifstream fileIn("../Sources/db_studenti.txt");
     if (!fileIn.is_open()) {
@@ -95,36 +89,6 @@ void University::readStudents() {
     fileIn.close();
 }
 
-///inserisco un nuovo studente
-bool University::insertStuds(const std::string &fileIn) {
-    std::fstream fIn(fileIn, std::ios::in); //apro il file
-    if (!fIn.is_open()) { //controllo se il file è aperto
-        std::cerr << "rotto\n";
-        return false;
-    }
-    std::string line; //stringa di appoggio
-    std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione split
-    while (std::getline(fIn, line)) {
-        tokens = splittedLine(line, ';');
-        int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
-    }
-    fIn.close();
-
-    return true;
-}
-
-///capisce qual è la nuova matricola da associare al nuovo studente
-const int University::getNewStudentId() const {
-
-    if (_students.empty())
-        return 1;
-
-    auto last = _students.rbegin();  //iteratore che punta all'ultimo studente della mappa
-    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
-    return toReturn;
-}
-
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice
 void University::readProfessor() {
     std::ifstream fileIn("../Sources/db_professori.txt");
@@ -147,36 +111,7 @@ void University::readProfessor() {
     fileIn.close();
 }
 
-///identico alla insertStudents(); si evita di commentare per non sporcare il codice
-bool University::insertProfessors(const std::string &fileIn) {
-    std::fstream fIn(fileIn, std::ios::in);
-    if (!fIn.is_open()) {
-        std::cerr << "rotto\n";
-        return false;
-    }
-    std::string line;
-    std::vector<std::string> tokens;
-    while (std::getline(fIn, line)) {
-        tokens = splittedLine(line, ';');
-        int matr = getNewProfessorId();
-        _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
-    }
-    fIn.close();
-    return true;
-}
-
-///identico alla getNewStudentsId(); si evita di commentare per non sporcare il codice
-const int University::getNewProfessorId() const {
-    //dobbiamo partire da 1 e non da 0 quindi controllo se è vuoto
-    if (_professors.empty())
-        return 1;
-
-    auto last = _professors.rbegin();//creo un iteratore all'ultimo elemento della mappa.
-    int toReturn = last->second.getId() +
-                   1; //leggo l'id corrispondente al professore(second) puntanto dall'iteratore last e sommo 1. Sarà la nuova matricola
-    return toReturn;
-}
-
+///lettura delle aule dal database
 void University::readClassroom() {
     std::ifstream fileIn("../Sources/db_aule.txt");
     if (!fileIn.is_open()) {
@@ -194,51 +129,20 @@ void University::readClassroom() {
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
         else {
-            _classroom.insert(std::pair<int, Classroom>(nCod,
-                                                        Classroom(nCod, tokens[1], tokens[2], std::stoi(tokens[3]),
-                                                                  std::stoi(tokens[4]))));
+            _classroom.insert(std::pair<int, Classroom>(nCod,Classroom(nCod, tokens[1], tokens[2], std::stoi(tokens[3]), std::stoi(tokens[4]))));
 
         }
     }
     fileIn.close();
 }
 
-
-bool University::insertClassrooms(const std::string &fileIn) {
-    std::fstream fIn(fileIn,std::ios::in); ///piccolezza: abbiamo aperto gli altri file con ifstream, lasciamo fstream per far vedere che conosciamo altro o uniformiamo il codice?
-    if (!fIn.is_open()) {
-        throw std::invalid_argument("errore apertura file di inserimento nuove aule");
-        return false;
-    }
-    std::string line;
-    std::vector<std::string> tokens;
-    while (std::getline(fIn, line)) {
-        tokens = splittedLine(line, ';');
-        int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]), std::stoi(tokens[3]))));
-    }
-    fIn.close();
-    return true;
-}
-
-
-/// potrebbe non esserci niente ad un certo i
-/// il codice dell'aula può essere riassegnato?
-const int University::getNewClassroomId() const {
-    if (_classroom.empty())
-        return 1;
-    auto last = _classroom.rbegin();  //
-    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
-    return toReturn;
-}
-
-
+///lettura dei corsi di studio dal database
 void University::readStudyCourse() {
     char c;
     int i;
     std::ifstream fileIn("../Sources/db_corsi_studio.txt");
     if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
+
         throw DbException("file db_corsi_studio.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -306,13 +210,102 @@ void University::readStudyCourse() {
     fileIn.close();
 }
 
+///DA FARE
+void University::readCourse() {
+    std::ifstream fileIn("../Sources/db_corsi.txt");
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw DbException("file db_corsi.txt non esistente");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
+
+
+    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+
+        tokens = splittedLine(line, ';');
+        if(tokens[0]=="c"){
+
+            if (_courses.count(tokens[1]))
+                throw std::logic_error("due matricole uguali");
+            else
+                _courses.insert(std::pair<std::string, Course>(tokens[1],Course(tokens[1],tokens[2],stoi(tokens[3]),stoi(tokens[4]),stoi(tokens[5]))));//la chiave è la matricola; ad ogni chiave/matricola è associato un corso
+            //devo modificare i parametri dei course in studycourse/_semester
+        } else if (tokens[0]=="a"){
+            //da implementare
+        }
+
+
+
+    }
+
+    fileIn.close();
+}
+
+///inserisco un nuovo studente
+bool University::insertStuds(const std::string &fileIn) {
+    std::fstream fIn(fileIn, std::ios::in); //apro il file in lettura
+    if (!fIn.is_open()) {
+        throw std::invalid_argument("errore apertura file di inserimento nuovi studenti");
+        return false;
+    }
+    std::string line; //stringa di appoggio per l'intera riga del file
+    std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione splittedLine
+    while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
+        tokens = splittedLine(line, ';');
+        int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
+        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+    }
+    fIn.close();
+
+    return true;
+}
+
+///identico alla insertStudents(); si evita di commentare per non sporcare il codice
+bool University::insertProfessors(const std::string &fileIn) {
+    std::fstream fIn(fileIn, std::ios::in);
+    if (!fIn.is_open()) {
+        throw std::invalid_argument("errore apertura file di inserimento nuovi professori");
+        return false;
+    }
+    std::string line;
+    std::vector<std::string> tokens;
+    while (std::getline(fIn, line)) {
+        tokens = splittedLine(line, ';');
+        int matr = getNewProfessorId();
+        _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
+    }
+    fIn.close();
+    return true;
+}
+
+///inserisci nuove aule
+bool University::insertClassrooms(const std::string &fileIn) {
+    std::fstream fIn(fileIn,std::ios::in);
+    if (!fIn.is_open()) {
+        throw std::invalid_argument("errore apertura file di inserimento nuove aule");
+        return false;
+    }
+    std::string line;
+    std::vector<std::string> tokens;
+    while (std::getline(fIn, line)) {
+        tokens = splittedLine(line, ';');
+        int id = getNewClassroomId();
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]), std::stoi(tokens[3]))));
+    }
+    fIn.close();
+    return true;
+}
+
+///inserimento dei nuovi corsi di studio
 bool University::insertStudyCourses(const std::string &fin) {
 
     int i;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
+
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi di studio");
+        return  false;
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
@@ -321,8 +314,10 @@ bool University::insertStudyCourses(const std::string &fin) {
     bool toContinue = true;
     while (std::getline(fileIn, line) && toContinue) {
         ///codice, livello
+
         if (line.empty())//non dovrebbe esserci. Sistemare
             toContinue = false;
+
         else {
             tokens = splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
             int codCorso = getNewStudyCourseId();
@@ -347,7 +342,6 @@ bool University::insertStudyCourses(const std::string &fin) {
             }
 
 
-
             ///creo StudyCourse
             bool isBachelor = false;
             if (levelCourse.compare("BS") == 0)
@@ -368,7 +362,38 @@ bool University::insertStudyCourses(const std::string &fin) {
     fileIn.close();
 }
 
+///cerco la nuova matricola da associare al nuovo studente
+const int University::getNewStudentId() const {
 
+    if (_students.empty()) //per non usare la matricola s00000
+        return 1;
+
+    auto last = _students.rbegin();  //iteratore che punta all'ultimo studente della mappa
+    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    return toReturn;
+}
+
+///identico alla getNewStudentsId(); si evita di commentare per non sporcare il codice
+const int University::getNewProfessorId() const {
+    //dobbiamo partire da 1 e non da 0 quindi controllo se è vuoto
+    if (_professors.empty())
+        return 1;
+
+    auto last = _professors.rbegin();//creo un iteratore all'ultimo elemento della mappa.
+    int toReturn = last->second.getId() + 1; //leggo l'id corrispondente al professore(second) puntato dall'iteratore last e sommo 1. Sarà la nuova matricola
+    return toReturn;
+}
+
+///prende il nuovo codice da associare alla nuova aula
+const int University::getNewClassroomId() const {
+    if (_classroom.empty())
+        return 1;
+    auto last = _classroom.rbegin();  //
+    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    return toReturn;
+}
+
+///cerca il nuovo codice da associare al nuovo corso
 const int University::getNewStudyCourseId() const {
     if (_studyCourse.empty())
         return 1;
@@ -378,40 +403,12 @@ const int University::getNewStudyCourseId() const {
     return toReturn;
 }
 
+///DA FARE
 const int University::getNewCourseId() const {
+
 }
 
-void University::readCourse() {
-    std::ifstream fileIn("../Sources/db_corsi.txt");
-    if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
-        throw DbException("file db_corsi.txt non esistente");
-    }
-    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
-    std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
-
-
-    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
-
-        tokens = splittedLine(line, ';');
-        if(tokens[0]=="c"){
-
-            if (_courses.count(tokens[1]))
-                throw std::logic_error("due matricole uguali");
-            else
-                _courses.insert(std::pair<std::string, Course>(tokens[1],Course(tokens[1],tokens[2],stoi(tokens[3]),stoi(tokens[4]),stoi(tokens[5]))));//la chiave è la matricola; ad ogni chiave/matricola è associato un corso
-             //devo modificare i parametri dei course in studycourse/_semester
-        } else if (tokens[0]=="a"){
-            //da implementare
-        }
-
-
-
-         }
-
-    fileIn.close();
-}
-
+///aggiorno gli studenti
 enum {update_name=1,update_surName=2,update_eMail=3};
 bool University::updateStuds(const std::string & fin) {
     int i;
@@ -419,7 +416,7 @@ bool University::updateStuds(const std::string & fin) {
     int nMatr=0;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
+
         throw std::invalid_argument("errore apertura file per aggiornamento studenti");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -430,37 +427,35 @@ bool University::updateStuds(const std::string & fin) {
         std::stringstream ss(tokens[0]);
         ss >> c >> nMatr;
 
-   if(_students.find(nMatr)==_students.end())//se conto 0 matricole uguali non posso aggiornare
-       throw  std::invalid_argument("matricola non presente");
+        ///se la matricola non esiste nel database
+        if(_students.find(nMatr)==_students.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+            throw  std::invalid_argument("matricola non presente");
 
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-    for(i=1; i < tokens.size(); i++ ){//cerco i campi della riga del file passato che andranno aggiornati
+        for(i=1; i < tokens.size(); i++ ){//analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
-        if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                switch (i) {
+                    case update_name ://analizzo il nome
+                        if (!(iter->second.getName() == tokens[i])) {//se il nome letto dal file è diverso dal nome del database
+                            iter->second.updateName(tokens[i]); //cambio il nome
+                        }
+                        break;
 
+                    case update_surName ://analizzo il cognome
+                        if (!(iter->second.getSurname() == tokens[i])){//se il cognome letto dal file è diverso dal cognome del database
+                            iter->second.updateSurnName(tokens[i]); //cambio il cognome
+                        }
+                        break;
+                    case update_eMail : //analizzo l'email
+                        if (!(iter->second.getEmail() == tokens[i])){//se l'email letta dal file è diversa dall'email del database
+                            iter->second.updateEmail(tokens[i]); //cambia l'email
+                        }
+                        break;
 
-
-            switch (i) {
-                case update_name :
-                    if (!(iter->second.getName() == tokens[i])) {//se non sono uguali va cambiato
-                        iter->second.updateName(tokens[i]); //mi cambia il nome
-                    }
-                    break;
-
-                case update_surName :
-                    if (!(iter->second.getSurname() == tokens[i])){
-                        iter->second.updateSurnName(tokens[i]); //mi cambia il cognome
-                    }
-                    break;
-                case update_eMail :
-                    if (!(iter->second.getEmail() == tokens[i])){
-                        iter->second.updateEmail(tokens[i]); //cambia l'email
-                    }
-                    break;
-
-               }
+                }
 
             }
         }
@@ -470,14 +465,14 @@ bool University::updateStuds(const std::string & fin) {
     return false;
 }
 
-
+///aggiorno i professori
 bool University::updateProfessors(const std::string & fin) {
     int i;
     char c;
     int nMatr=0;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
+
         throw std::invalid_argument("errore apertura file per aggiornamento professori");
 
     }
@@ -485,34 +480,34 @@ bool University::updateProfessors(const std::string & fin) {
     std::vector<std::string> tokens;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
-        tokens = splittedLine(line, ';');
+        tokens = splittedLine(line, ';'); //splitto il rigo nei vari campi di interesse
         std::stringstream ss(tokens[0]);
         ss >> c >> nMatr;
 
-        if(_professors.find(nMatr)==_professors.end())//se conto 0 matricole uguali non posso aggiornare
+        if(_professors.find(nMatr)==_professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw  std::invalid_argument("matricola non presente");
 
         auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-        for(i=1; i < tokens.size(); i++ ){//cerco i campi della riga del file passato che andranno aggiornati
+        for(i=1; i < tokens.size(); i++ ){//analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
-            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
 
                 switch (i) {
-                    case update_name :
-                        if (!(iter->second.getName() == tokens[i])) {//se non sono uguali va cambiato
+                    case update_name ://analizzo il nome
+                        if (!(iter->second.getName() == tokens[i])) {//se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(tokens[i]); //cambia il nome
                         }
                         break;
 
-                    case update_surName :
-                        if (!(iter->second.getSurname() == tokens[i])){
+                    case update_surName : //analizzo il cognome
+                        if (!(iter->second.getSurname() == tokens[i])){//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(tokens[i]); //cambia il cognome
                         }
                         break;
-                    case update_eMail :
-                        if (!(iter->second.getEmail() == tokens[i])){
+                    case update_eMail ://analizzo l'email
+                        if (!(iter->second.getEmail() == tokens[i])){//se l'email letta dal file è diversa dall'email letta dal database
                             iter->second.updateEmail(tokens[i]); //cambia l'email
                         }
                         break;
@@ -526,11 +521,14 @@ bool University::updateProfessors(const std::string & fin) {
     fileIn.close();
     return true;
 }
-enum{update_nameClassroom = 1, update_lab=2, update_nSeats = 3, update_nSeatsExam = 4};
+
+///aggiornamento aule
+enum{update_lab=1,update_nameClassroom = 2, update_nSeats = 3, update_nSeatsExam = 4};
 bool University::updateClassroom(const std::string &fin) {
     int i;
     char c;
     int nMatr=0;
+
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
@@ -555,34 +553,37 @@ bool University::updateClassroom(const std::string &fin) {
             if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
 
                 switch (i) {
-                    case update_nameClassroom :
-                        if (!(iter->second.getName() == tokens[i])) {//se non sono uguali va cambiato
+
+                    case update_lab : {//analizzo il tipo di classroom: aula o lab
+                        bool lab;
+                        if (tokens[i] == "L") //se il carattere intercettato è L allora l'aula da aggiungee sarà un lab
+                            lab = true;
+                        else//altrimenti sarà un'aula
+                            lab = false;
+
+                        if (iter->second.getLab() != lab) {//se è cambiata da aula a lab o viceversa
+                            iter->second.updateType(lab); //cambia il tipo: lab o aula
+                        }
+                        break;
+                    }
+                    case update_nameClassroom : {//analizzo il nome della classroom
+                        if (!(iter->second.getName() == tokens[i])) {//se il nome letto dal file è diverso dal nome nel database
                             iter->second.updateName(tokens[i]); //cambia il nome
                         }
                         break;
+                    }
 
-                    case update_lab :
-                        bool lab;
-                        if (tokens[i] == "L")
-                            lab = true;
-                        else
-                            lab = false;
-
-                        if (iter->second.getLab() != lab){
-                            iter->second.updateType(lab); //cambia il cognome
+                    case update_nSeats : {//analizzo la capienza
+                        if (iter->second.getNSeats() != stoi(tokens[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
+                            iter->second.updateNSeats(stoi(tokens[i])); //cambia la capienza dell'aula
                         }
                         break;
-                        
-                    case update_nSeats :
-                        if (!iter->second.getNSeats() == stoi(tokens[i])){
-                            iter->second.updateNSeats(stoi(tokens[i])); //cambia l'email
-                        }
-                        break;
-                    case update_nSeatsExam :
-                        if (iter->second.getNExamSeats() != stoi(tokens[i])){
+                    }
+                    case update_nSeatsExam : {//analizzo la capienza dell'aula per gli esami
+                        if (iter->second.getNExamSeats() != stoi(tokens[i])) {//se la capienza dell'aula pe gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
                             iter->second.updateNExamSeats(stoi(tokens[i])); //cambia l'email
                         }
-
+                    }
                 }
 
             }
@@ -592,5 +593,31 @@ bool University::updateClassroom(const std::string &fin) {
     fileIn.close();
     return true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

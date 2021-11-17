@@ -31,16 +31,19 @@ const std::string &UniversityMember::getEmail() const {
     return _email;
 }
 
+///aggiorna il nome
 void UniversityMember::updateName(const std::string& name) {
     _name = name;
 
 }
 
+///aggiorna il cognome
 void UniversityMember::updateSurnName(const std::string& surName) {
     _surname = surName;
 
 }
 
+///aggiorna l'email
 void UniversityMember::updateEmail(const std::string & eMail) {
     _email = eMail;
 }
