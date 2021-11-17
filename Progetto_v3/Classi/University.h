@@ -37,6 +37,10 @@ public:
 
     bool insertCourses(const std::string &fileIn);
 
+    bool updateStuds(const std::string &fin);
+    bool updateProfessors(const std::string &fin);
+    bool updateClassroom(const std::string &fin);
+
 private:
     /// annoInizio-annoAccademico
     std::map<int, AccademicYear> _accademicYears;

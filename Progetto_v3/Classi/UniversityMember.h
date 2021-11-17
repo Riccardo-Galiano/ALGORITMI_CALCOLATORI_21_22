@@ -20,6 +20,9 @@ public:
     int getId() const;
 
     const std::string &getEmail() const;
+    void updateName(const std::string &name);
+    void updateSurnName(const std::string &surName);
+    void updateEmail(const std::string &eMail);
 
 protected:
     std::string _name;

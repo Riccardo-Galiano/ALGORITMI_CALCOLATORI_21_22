@@ -8,3 +8,8 @@ Student::Student(int matr, std::string name, std::string surname, std::string em
         : UniversityMember(matr, name, surname, email) {
 
 }
+
+
+
+
+

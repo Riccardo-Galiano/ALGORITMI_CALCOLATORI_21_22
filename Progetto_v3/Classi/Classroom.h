@@ -18,7 +18,10 @@ public:
     bool getLab() const;
     int getNSeats() const;
     int getNExamSeats() const;
-
+    void updateName(const std::string & name);
+    void updateType(const bool & LorA);
+    void updateNSeats(const int & postiAula);
+    void updateNExamSeats(const int & postiAulaEsami);
 private:
 
     int _id; //codice identificativo

@@ -30,3 +30,17 @@ int UniversityMember::getId() const {
 const std::string &UniversityMember::getEmail() const {
     return _email;
 }
+
+void UniversityMember::updateName(const std::string& name) {
+    _name = name;
+
+}
+
+void UniversityMember::updateSurnName(const std::string& surName) {
+    _surname = surName;
+
+}
+
+void UniversityMember::updateEmail(const std::string & eMail) {
+    _email = eMail;
+}

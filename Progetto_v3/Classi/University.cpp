@@ -15,13 +15,13 @@ University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
     //fs::create_directory("../Database");
     try {
-    //    readStudents();
+        readStudents();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
     try {
-      //  readProfessor();
+        readProfessor();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
@@ -410,6 +410,187 @@ void University::readCourse() {
          }
 
     fileIn.close();
+}
+
+enum {update_name=1,update_surName=2,update_eMail=3};
+bool University::updateStuds(const std::string & fin) {
+    int i;
+    char c;
+    int nMatr=0;
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw std::invalid_argument("errore apertura file per aggiornamento studenti");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> tokens;
+    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+
+        tokens = splittedLine(line, ';');
+        std::stringstream ss(tokens[0]);
+        ss >> c >> nMatr;
+
+   if(_students.find(nMatr)==_students.end())//se conto 0 matricole uguali non posso aggiornare
+       throw  std::invalid_argument("matricola non presente");
+
+        auto iter = _students.find(nMatr);//prendo la posizione della matricola
+
+        tokens = splittedLine(line, ';');
+    for(i=1; i < tokens.size(); i++ ){//cerco i campi della riga del file passato che andranno aggiornati
+
+        if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+
+
+
+            switch (i) {
+                case update_name :
+                    if (!(iter->second.getName() == tokens[i])) {//se non sono uguali va cambiato
+                        iter->second.updateName(tokens[i]); //mi cambia il nome
+                    }
+                    break;
+
+                case update_surName :
+                    if (!(iter->second.getSurname() == tokens[i])){
+                        iter->second.updateSurnName(tokens[i]); //mi cambia il cognome
+                    }
+                    break;
+                case update_eMail :
+                    if (!(iter->second.getEmail() == tokens[i])){
+                        iter->second.updateEmail(tokens[i]); //cambia l'email
+                    }
+                    break;
+
+               }
+
+            }
+        }
+    }
+
+    fileIn.close();
+    return false;
+}
+
+
+bool University::updateProfessors(const std::string & fin) {
+    int i;
+    char c;
+    int nMatr=0;
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw std::invalid_argument("errore apertura file per aggiornamento professori");
+
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> tokens;
+    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+
+        tokens = splittedLine(line, ';');
+        std::stringstream ss(tokens[0]);
+        ss >> c >> nMatr;
+
+        if(_professors.find(nMatr)==_professors.end())//se conto 0 matricole uguali non posso aggiornare
+            throw  std::invalid_argument("matricola non presente");
+
+        auto iter = _professors.find(nMatr);//prendo la posizione della matricola
+
+        tokens = splittedLine(line, ';');
+        for(i=1; i < tokens.size(); i++ ){//cerco i campi della riga del file passato che andranno aggiornati
+
+            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+
+                switch (i) {
+                    case update_name :
+                        if (!(iter->second.getName() == tokens[i])) {//se non sono uguali va cambiato
+                            iter->second.updateName(tokens[i]); //cambia il nome
+                        }
+                        break;
+
+                    case update_surName :
+                        if (!(iter->second.getSurname() == tokens[i])){
+                            iter->second.updateSurnName(tokens[i]); //cambia il cognome
+                        }
+                        break;
+                    case update_eMail :
+                        if (!(iter->second.getEmail() == tokens[i])){
+                            iter->second.updateEmail(tokens[i]); //cambia l'email
+                        }
+                        break;
+
+                }
+
+            }
+        }
+    }
+
+    fileIn.close();
+    return true;
+}
+enum{update_nameClassroom = 1, update_lab=2, update_nSeats = 3, update_nSeatsExam = 4};
+bool University::updateClassroom(const std::string &fin) {
+    int i;
+    char c;
+    int nMatr=0;
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw std::invalid_argument("errore apertura file per aggiornamento aule");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> tokens;
+    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+
+        tokens = splittedLine(line, ';');
+        std::stringstream ss(tokens[0]);
+        ss >> c >> nMatr;
+
+        if(_classroom.find(nMatr)==_classroom.end())//se non trovo il codice
+            throw  std::invalid_argument("matricola non presente");
+
+        auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
+
+        tokens = splittedLine(line, ';');
+        for(i=1; i < tokens.size(); i++ ){//cerco i campi della riga del file passato che andranno aggiornati
+
+            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+
+                switch (i) {
+                    case update_nameClassroom :
+                        if (!(iter->second.getName() == tokens[i])) {//se non sono uguali va cambiato
+                            iter->second.updateName(tokens[i]); //cambia il nome
+                        }
+                        break;
+
+                    case update_lab :
+                        bool lab;
+                        if (tokens[i] == "L")
+                            lab = true;
+                        else
+                            lab = false;
+
+                        if (iter->second.getLab() != lab){
+                            iter->second.updateType(lab); //cambia il cognome
+                        }
+                        break;
+                        
+                    case update_nSeats :
+                        if (!iter->second.getNSeats() == stoi(tokens[i])){
+                            iter->second.updateNSeats(stoi(tokens[i])); //cambia l'email
+                        }
+                        break;
+                    case update_nSeatsExam :
+                        if (iter->second.getNExamSeats() != stoi(tokens[i])){
+                            iter->second.updateNExamSeats(stoi(tokens[i])); //cambia l'email
+                        }
+
+                }
+
+            }
+        }
+    }
+
+    fileIn.close();
+    return true;
 }
 
 

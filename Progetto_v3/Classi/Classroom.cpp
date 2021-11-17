@@ -40,3 +40,19 @@ int Classroom::getNSeats() const {
 int Classroom::getNExamSeats() const {
     return _nExamSeats;
 }
+
+void Classroom::updateName(const std::string & name) {
+_name = name;
+}
+
+void Classroom::updateType(const bool &LorA) {
+_lab = LorA;
+}
+
+void Classroom::updateNSeats(const int &postiAula) {
+_nSeats = postiAula;
+}
+
+void Classroom::updateNExamSeats(const int &postiAulaEsami) {
+_nExamSeats = postiAulaEsami;
+}

@@ -1,0 +1,11 @@
+d000000;Arienti;Brunilde;brunilde.arienti@gmail.it
+d000001;Bertanzi Bianchin;Gianbattista;gianbattista.bertanzibianchin@gmail.com
+d000002;Mauriello;Natale;natale.mauriello@yahoo.it
+d000003;Galuppo Cimarosto;Marino Decimo Tiziano;marinodecimotiziano.galuppocimarosto@lycos.it
+d000004;Candotti;Venanzio;venanzio.candotti@katamail.it
+d000005;Arnau;Enea;enea.arnau@aruba.it
+d000006;Germino;Amalia Giada;amal.germ@katamail.it
+d000007;De Cristofano;Elettra;elettra.decristofano@yahoo.com
+d000008;Aloise;Marianna;marianna.aloise@aruba.it
+d000009;Vicinanza Pudda;Graziano Ugolino;graz.vici@tele2.it
+d000010;Alisio;Barnaba;barnaba.alisio@teletu.it
