@@ -12,8 +12,8 @@
 
 class StudyCourse {
 public:
-    StudyCourse(const int &id, const bool &isBachelor);
-    bool addSemesterCourses(const int &year,const  int & semester,const std::string & SemesterCourses);
+    StudyCourse(const int id, const bool &isBachelor);
+    bool addSemesterCourses(const int year,const  int  semester,const std::string & SemesterCourses);
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
     bool updateThatCourse(std::vector<std::string> infoCourse);
     const  int getId() const;

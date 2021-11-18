@@ -245,11 +245,10 @@ void University::readCourse() {
         if (interoCorso[0] == "c") {
             ///per ogni corso di studio
             lastReadCourse = interoCorso[1];
-            for (auto iterStudyCourse = _studyCourse.begin();
-                 iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
-                iterStudyCourse->second.updateThatCourse(interoCorso);
-                std::cout << "ciao";
-                //per tutti i corsi di studio punto al value che sarebbe un oggetto StudyCourse e passo alla funzione il rigo letto splittato. rigo che andrà in una seconda funzione(vedi StudyCourse.cpp)
+            for (auto iterStudyCourse = _studyCourse.begin();iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {//analizzo tutti i corsi di studio
+
+                iterStudyCourse->second.updateThatCourse(interoCorso);//per tutti i corsi di studio punto al value che sarebbe un oggetto StudyCourse e passo alla funzione il rigo letto splittato. rigo che andrà in una seconda funzione(vedi StudyCourse.cpp)
+
             }
         } else if (interoCorso[0] == "a") {
             specificYearCourse = splittedLine(line, ';');
@@ -270,7 +269,7 @@ void University::readCourse() {
                 }
             }
             //...
-            std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
+           // std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
             matrDocenteTit = profSenzaQuadre.substr(posCBrackets[0] + 1, posCBrackets[1] - posCBrackets[0] - 3);
         }
 
@@ -292,8 +291,7 @@ bool University::insertStuds(const std::string &fileIn) {
     while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
         tokens = splittedLine(line, ';');
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
-                                                               tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1], tokens[2]))); //inserisco il nuovo studente nella mappatura interna
     }
     fIn.close();
 

@@ -6,12 +6,12 @@
 #include "StudyCourse.h"
 #include "Course.h"
 
-StudyCourse::StudyCourse(const int &id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
+StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
 std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter);
 
 ///aggiunge un semsetre con i relativi corsi al corso di studio
-bool StudyCourse::addSemesterCourses(const int &year, const int &semester, const std::string &SemesterCourses) {
+bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses) {
     ///key
     int i = 0;
     std::stringstream ss;
@@ -53,11 +53,12 @@ const int StudyCourse::getId() const {
 }
 
 bool StudyCourse::updateThatCourse(std::vector<std::string> infoCourse) {
-    for(auto iter = _semesters.begin(); iter != _semesters.end(); iter++ ){
-        auto vectCourses = iter->second;
-        for(int j=0; j < vectCourses.size(); j++){
-            if(vectCourses[j].getId().compare(infoCourse[1])==0){
-                vectCourses[j].updateInfoCourse(infoCourse);
+    for(auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++ ){//analizzo ogni semestre
+        int n_courses = (iterSemester->second).size(); //numero di corsi per semestre
+
+        for(int j=0; j < n_courses; j++){ //analizzo tutti i corsi del semestre
+            if(iterSemester->second[j].getId() == infoCourse[1]){ //se L'id dell'oggetto corso puntato è uguale a quello passato da file
+                iterSemester->second[j].updateInfoCourse(infoCourse); //aggiorno il corso
                 return true;
             }
         }

@@ -18,7 +18,7 @@ typedef struct {
 class Course {
 public:
     Course(const std::string &idCorso);
-    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int &oreLezione, const int &oreEsercitazione, const int &oreLaboratorio);
+    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione, const int oreEsercitazione, const int oreLaboratorio);
     bool updateInfoCourse(const std::vector<std::string> &infoCorso);
     const std::string getId() const;
 
