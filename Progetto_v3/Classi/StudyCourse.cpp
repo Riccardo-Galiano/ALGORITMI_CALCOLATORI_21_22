@@ -52,6 +52,21 @@ const int StudyCourse::getId() const {
     return _id;
 }
 
+
+///aggiorna la inizializzazione del semestre
+bool StudyCourse::updateInfoSemester(const std::vector<std::string> &infoCorso) {
+    for(auto iterSemester = _semesters.begin(); iterSemester !=_semesters.end(); iterSemester++) {//per tutti i semestri
+
+        int nCorsiSemestre = (iterSemester -> second).size();//prendo il numero di corsi per ogni semestre
+
+        for(int i = 0; i<nCorsiSemestre; i++) { //per ogni corso del semestre in analisi
+            if(iterSemester->second[i].getId()==infoCorso[1])//mi chiedo se il value i-esimo puntato(che è un oggetto Course) abbia lo stesso codice di quello passato via file
+            iterSemester->second[i].updateInfoCourse(infoCorso);//se i codici sono uguali passo le info del corso lette da file ad un'altra funzione(vedi Course.cpp)
+        }
+    }
+    return true;
+}
+
 ///funzione che splitta una riga considerando un delimitatore passate by reference
 std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {
 

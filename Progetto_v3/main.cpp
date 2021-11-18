@@ -19,31 +19,7 @@ enum {
     insert_course
 };
 
-/*
-template<typename T>
-std::map<int, T> readMembers(const std::string &fileIn) {
-    std::fstream fIn(fileIn, std::ios::in);
-    std::map<int, T> members;
-    if (!fIn.is_open()) {
-        std::cerr << "rotto\n";
-        return members;
-    }
-    std::string line;
-    std::vector<std::string> tokens;
-    char c;
-    int nMatr;
-    while (std::getline(fIn, line)) {
-        //tokens = splittedLine(line);
-        std::stringstream ss(tokens[0]);
-        ss >> c >> nMatr;
-        if (members.count(nMatr))
-            throw std::logic_error("due matricole uguali");
-        else
-            members.insert(std::pair<int, T>(nMatr, T(tokens[1], tokens[2], tokens[3], nMatr)));
-    }
-    return members;
-}
-*/
+
 int returnCode(std::string paramInput) {
     if (paramInput.compare("-a:s") == 0)
         return add_student;

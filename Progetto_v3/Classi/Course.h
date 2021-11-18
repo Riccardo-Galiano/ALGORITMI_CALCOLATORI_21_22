@@ -19,6 +19,9 @@ class Course {
 public:
     Course(const std::string &idCorso);
     Course(const std::string &idCorso, const std::string &nomeCorso, const int &oreLezione, const int &oreEsercitazione, const int &oreLaboratorio);
+    bool updateInfoCourse(const std::vector<std::string> &infoCorso);
+    const std::string getId() const;
+
 
 protected:
     std::string _id;///codice identificativo del corso
