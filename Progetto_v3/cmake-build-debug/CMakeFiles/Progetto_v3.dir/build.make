@@ -160,22 +160,9 @@ CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.s"
 	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\StudyCourse.cpp -o CMakeFiles\Progetto_v3.dir\Classi\StudyCourse.cpp.s
 
-CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
-CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj: ../Classi/AccademicYear.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj"
-	C:\MinGW\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\AccademicYear.cpp.obj -c C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\AccademicYear.cpp
-
-CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.i"
-	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\AccademicYear.cpp > CMakeFiles\Progetto_v3.dir\Classi\AccademicYear.cpp.i
-
-CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.s"
-	C:\MinGW\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\AccademicYear.cpp -o CMakeFiles\Progetto_v3.dir\Classi\AccademicYear.cpp.s
-
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/University.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj"
 	C:\MinGW\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\University.cpp.obj -c C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\University.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.i: cmake_force
@@ -188,7 +175,7 @@ CMakeFiles/Progetto_v3.dir/Classi/University.cpp.s: cmake_force
 
 CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj: ../Classi/Classroom.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj"
 	C:\MinGW\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\Classroom.cpp.obj -c C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\Classroom.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.i: cmake_force
@@ -201,7 +188,7 @@ CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.s: cmake_force
 
 CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj: ../Classi/DbException.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj"
 	C:\MinGW\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\DbException.cpp.obj -c C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\DbException.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.i: cmake_force
@@ -222,7 +209,6 @@ Progetto_v3_OBJECTS = \
 "CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj" \
-"CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj"
@@ -238,7 +224,6 @@ Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj
-Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj
@@ -246,7 +231,7 @@ Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/build.make
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/linklibs.rsp
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/objects1.rsp
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable Progetto_v3.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\Andrea\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable Progetto_v3.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\Progetto_v3.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

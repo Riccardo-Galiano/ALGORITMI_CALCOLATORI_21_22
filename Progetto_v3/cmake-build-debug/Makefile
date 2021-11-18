@@ -122,33 +122,6 @@ Progetto_v3/fast:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/build
 .PHONY : Progetto_v3/fast
 
-Classi/AccademicYear.obj: Classi/AccademicYear.cpp.obj
-
-.PHONY : Classi/AccademicYear.obj
-
-# target to build an object file
-Classi/AccademicYear.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.obj
-.PHONY : Classi/AccademicYear.cpp.obj
-
-Classi/AccademicYear.i: Classi/AccademicYear.cpp.i
-
-.PHONY : Classi/AccademicYear.i
-
-# target to preprocess a source file
-Classi/AccademicYear.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.i
-.PHONY : Classi/AccademicYear.cpp.i
-
-Classi/AccademicYear.s: Classi/AccademicYear.cpp.s
-
-.PHONY : Classi/AccademicYear.s
-
-# target to generate assembly for a file
-Classi/AccademicYear.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/AccademicYear.cpp.s
-.PHONY : Classi/AccademicYear.cpp.s
-
 Classi/Classroom.obj: Classi/Classroom.cpp.obj
 
 .PHONY : Classi/Classroom.obj
@@ -455,9 +428,6 @@ help:
 	@echo ... Progetto_v3
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... Classi/AccademicYear.obj
-	@echo ... Classi/AccademicYear.i
-	@echo ... Classi/AccademicYear.s
 	@echo ... Classi/Classroom.obj
 	@echo ... Classi/Classroom.i
 	@echo ... Classi/Classroom.s

@@ -8,20 +8,21 @@
 #include <map>
 #include <list>
 #include "Course.h"
+#include "SpecificYearCourse.h"
 
 class StudyCourse {
 public:
     StudyCourse(const int &id, const bool &isBachelor);
     bool addSemesterCourses(const int &year,const  int & semester,const std::string & SemesterCourses);
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
-    bool updateInfoSemester(const std::vector<std::string> &infoCorso);
+    bool updateThatCourse(std::vector<std::string> infoCourse);
+    const  int getId() const;
 
-   const  int getId() const;
-
-protected:
+private:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<Course>> _semesters; //key: "yy-semester", value: vettore di courses
+    std::map<std::string,std::vector<SpecificYearCourse>> _perAccademicYear; //key: id (corso agg/nuovo), value: Corso
     std::map<std::string,Course> _corsiSpenti;
 };
 

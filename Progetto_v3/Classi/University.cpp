@@ -10,6 +10,18 @@
 
 ///costruisce la struttura dell'intera università leggendo i file da linea di comando
 
+std::vector<int> posCurlyBrackets(std::string input) {
+    std::vector<int> output;
+    std::size_t found = input.find_first_of("{}");
+    while (found !=
+           std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+        output.push_back(
+                found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        found = input.find_first_of("{}", found + 1);//continuo a controllare la stringa
+    }
+    return output;
+}
+
 //namespace fs = std::filesystem;
 University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
@@ -26,15 +38,15 @@ University::University() {
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
-    try{
+    try {
         readClassroom();
-    }catch (DbException &exc){
-        std::cerr << exc.what() <<std::endl;
+    } catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
     }
     try {
         readStudyCourse();
-    }catch (DbException &exc){
-        std::cerr << exc.what() <<std::endl;
+    } catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
     }
     try {
         readCourse();
@@ -42,7 +54,7 @@ University::University() {
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
-    }
+}
 
 ///per ogni riga del file in input scinde le varie info delimitate da ";"
 std::vector<std::string> splittedLine(const std::string &s, const char &delimiter) {
@@ -54,7 +66,8 @@ std::vector<std::string> splittedLine(const std::string &s, const char &delimite
 
 
     //fin quando la riga non è finita prende l'intera riga(line) e salva in una stringa del vettore di stringhe(tokens) l'informazione fino al prossimo delimitatore
-    while (std::getline(line, token, delimiter)) {toReturn.push_back(token);
+    while (std::getline(line, token, delimiter)) {
+        toReturn.push_back(token);
     }
 
     return toReturn;
@@ -83,7 +96,8 @@ void University::readStudents() {
         if (_students.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
-            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
+            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
+                                                                    InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
     }
 
     fileIn.close();
@@ -106,7 +120,9 @@ void University::readProfessor() {
         if (_professors.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
-            _professors.insert(std::pair<int, Professor>(nMatr, Professor(nMatr, InteroProfessore[1], InteroProfessore[2], InteroProfessore[3])));
+            _professors.insert(std::pair<int, Professor>(nMatr,
+                                                         Professor(nMatr, InteroProfessore[1], InteroProfessore[2],
+                                                                   InteroProfessore[3])));
     }
     fileIn.close();
 }
@@ -129,7 +145,9 @@ void University::readClassroom() {
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
         else {
-            _classroom.insert(std::pair<int, Classroom>(nCod,Classroom(nCod, InteraClasse[1], InteraClasse[2], std::stoi(InteraClasse[3]), std::stoi(InteraClasse[4]))));
+            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
+                                                                        std::stoi(InteraClasse[3]),
+                                                                        std::stoi(InteraClasse[4]))));
 
         }
     }
@@ -163,25 +181,21 @@ void University::readStudyCourse() {
 
 
         ///devo leggere i semestri
-        std::vector<int> posSem;
-
-        //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
-        std::size_t found = InteroCorsoDiStudi[2].find_first_of("{}");
-        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            posSem.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
-            found = InteroCorsoDiStudi[2].find_first_of("{}", found + 1);//continuo a controllare la stringa
-        }
+        std::vector<int> posSem = posCurlyBrackets(InteroCorsoDiStudi[2]);
 
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
-        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i +
+                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
-            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
+                                                            len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
 
         }
 
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
-        corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() - 2);    //salvo la stringa senza le quadre
+        corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -
+                                                                 2);    //salvo la stringa senza le quadre
         corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
 
 
@@ -195,9 +209,10 @@ void University::readStudyCourse() {
 
         int year = 0, numSemester = 1;
         for (i = 0; i < semestri.size(); i++) {
-            year = 1 + i/2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
-            numSemester = 1 + i%2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-            SCourse.addSemesterCourses(year, numSemester, semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
+            numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
+            SCourse.addSemesterCourses(year, numSemester,
+                                       semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
 
 
@@ -216,28 +231,48 @@ void University::readCourse() {
         throw DbException("file db_corsi.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
-    std::vector<std::string> InteroCorso;    //accoglierà il vettore con la riga del file scissa
-
-
+    std::vector<std::string> interoCorso;    //accoglierà il vettore con la riga del file scissa
+    std::vector<std::string> specificYearCourse;
+    std::string lastReadCourse; //ogni 'c' letto, viene aggiornato
+    std::string acYear;
+    bool isActive = false;
+    int num_parallel_courses = 0;
+    std::string profSenzaQuadre;
+    std::string profIesimoCorso;
+    std::string matrDocenteTit;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
-
-        InteroCorso = splittedLine(line, ';');
-        if(InteroCorso[0]=="c"){
-
-            if (_courses.count(InteroCorso[1]))
-                throw std::logic_error("due codici uguali");
-            else {
-                _courses.insert(std::pair<std::string, Course>(InteroCorso[1], Course(InteroCorso[1], InteroCorso[2], stoi(InteroCorso[3]),stoi(InteroCorso[4]),stoi(InteroCorso[5]))));//la chiave è la matricola; ad ogni chiave/matricola è associato un corso
-
-                ///aggiornamento study course
-                for(auto iterStudyCourse=_studyCourse.begin(); iterStudyCourse != _studyCourse.end(); iterStudyCourse++){//per tutti i corsi di studio
-                           iterStudyCourse->second.updateInfoSemester(InteroCorso); //per tutti i corsi di studio punto al value che sarebbe un oggetto StudyCourse e passo alla funzione il rigo letto splittato. rigo che andrà in una seconda funzione(vedi StudyCourse.cpp)
+        interoCorso = splittedLine(line, ';');
+        if (interoCorso[0] == "c") {
+            ///per ogni corso di studio
+            lastReadCourse = interoCorso[1];
+            for (auto iterStudyCourse = _studyCourse.begin();
+                 iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
+                iterStudyCourse->second.updateThatCourse(interoCorso);
+                std::cout << "ciao";
+                //per tutti i corsi di studio punto al value che sarebbe un oggetto StudyCourse e passo alla funzione il rigo letto splittato. rigo che andrà in una seconda funzione(vedi StudyCourse.cpp)
+            }
+        } else if (interoCorso[0] == "a") {
+            specificYearCourse = splittedLine(line, ';');
+            acYear = specificYearCourse[1];
+            if (specificYearCourse[2] == "attivo")
+                isActive = true;
+            else
+                isActive = false;
+            num_parallel_courses = stoi(specificYearCourse[3]);
+            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);
+            std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
+            int posFin = 0;
+            bool found = false;
+            for (int i = 0; i < posCBrackets.size() - 1 && !found; i++) {
+                if (profSenzaQuadre[posCBrackets[i] + 1] == ']') {
+                    posFin = posCBrackets[i] + 2;
+                    found = true;
                 }
             }
-        } else if (InteroCorso[0]=="a"){
-            //da implementare
+            //...
+            std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
+            matrDocenteTit = profSenzaQuadre.substr(posCBrackets[0] + 1, posCBrackets[1] - posCBrackets[0] - 3);
         }
-
 
 
     }
@@ -257,7 +292,8 @@ bool University::insertStuds(const std::string &fileIn) {
     while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
         tokens = splittedLine(line, ';');
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
+                                                               tokens[2]))); //inserisco il nuovo studente nella mappatura interna
     }
     fIn.close();
 
@@ -284,7 +320,7 @@ bool University::insertProfessors(const std::string &fileIn) {
 
 ///inserisci nuove aule
 bool University::insertClassrooms(const std::string &fileIn) {
-    std::fstream fIn(fileIn,std::ios::in);
+    std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuove aule");
         return false;
@@ -294,7 +330,8 @@ bool University::insertClassrooms(const std::string &fileIn) {
     while (std::getline(fIn, line)) {
         tokens = splittedLine(line, ';');
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]), std::stoi(tokens[3]))));
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
+                                                                  std::stoi(tokens[3]))));
     }
     fIn.close();
     return true;
@@ -308,7 +345,7 @@ bool University::insertStudyCourses(const std::string &fin) {
     if (!fileIn.is_open()) {
 
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi di studio");
-        return  false;
+        return false;
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
@@ -332,16 +369,20 @@ bool University::insertStudyCourses(const std::string &fin) {
 
             //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
             std::size_t found = tokens[1].find_first_of("{}");
-            while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-                posSem.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            while (found !=
+                   std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+                posSem.push_back(
+                        found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
                 found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
             }
 
             std::vector<std::string> semestri;
-            for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+            for (i = 0; i < posSem.size() - 1; i = i +
+                                                   2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
                 int posStart = posSem[i] + 1;
                 int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(tokens[1].substr(posStart, len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+                semestri.push_back(tokens[1].substr(posStart,
+                                                    len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
             }
 
 
@@ -354,9 +395,10 @@ bool University::insertStudyCourses(const std::string &fin) {
             int year = 1;
             int numSemester = 1;
             for (i = 0; i < semestri.size(); i++) {
-                year = 1 + i/2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
-                numSemester = 1 + i%2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-                SCourse.addSemesterCourses(year, numSemester, semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+                year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
+                numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
+                SCourse.addSemesterCourses(year, numSemester,
+                                           semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
             }
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
         }
@@ -372,7 +414,8 @@ const int University::getNewStudentId() const {
         return 1;
 
     auto last = _students.rbegin();  //iteratore che punta all'ultimo studente della mappa
-    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn = last->second.getId() +
+                   1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
@@ -383,7 +426,8 @@ const int University::getNewProfessorId() const {
         return 1;
 
     auto last = _professors.rbegin();//creo un iteratore all'ultimo elemento della mappa.
-    int toReturn = last->second.getId() + 1; //leggo l'id corrispondente al professore(second) puntato dall'iteratore last e sommo 1. Sarà la nuova matricola
+    int toReturn = last->second.getId() +
+                   1; //leggo l'id corrispondente al professore(second) puntato dall'iteratore last e sommo 1. Sarà la nuova matricola
     return toReturn;
 }
 
@@ -392,7 +436,8 @@ const int University::getNewClassroomId() const {
     if (_classroom.empty())
         return 1;
     auto last = _classroom.rbegin();  //
-    int toReturn = last->second.getId() +  1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn = last->second.getId() +
+                   1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
@@ -402,7 +447,8 @@ const int University::getNewStudyCourseId() const {
         return 1;
 
     auto last = _studyCourse.rbegin();  //iteratore che punta all'ultimo studente della mappa
-    int toReturn = last->first + 1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn =
+            last->first + 1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
@@ -412,11 +458,14 @@ const int University::getNewCourseId() const {
 }
 
 ///aggiorno gli studenti
-enum {update_name=1,update_surName=2,update_eMail=3};
-bool University::updateStuds(const std::string & fin) {
+enum {
+    update_name = 1, update_surName = 2, update_eMail = 3
+};
+
+bool University::updateStuds(const std::string &fin) {
     int i;
     char c;
-    int nMatr=0;
+    int nMatr = 0;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
 
@@ -431,29 +480,34 @@ bool University::updateStuds(const std::string & fin) {
         ss >> c >> nMatr;
 
         ///se la matricola non esiste nel database
-        if(_students.find(nMatr)==_students.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            throw  std::invalid_argument("matricola non presente");
+        if (_students.find(nMatr) ==
+            _students.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+            throw std::invalid_argument("matricola non presente");
 
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-        for(i=1; i < tokens.size(); i++ ){//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        for (i = 1; i <
+                    tokens.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
-            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+            if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
                 switch (i) {
                     case update_name ://analizzo il nome
-                        if (!(iter->second.getName() == tokens[i])) {//se il nome letto dal file è diverso dal nome del database
+                        if (!(iter->second.getName() ==
+                              tokens[i])) {//se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(tokens[i]); //cambio il nome
                         }
                         break;
 
                     case update_surName ://analizzo il cognome
-                        if (!(iter->second.getSurname() == tokens[i])){//se il cognome letto dal file è diverso dal cognome del database
+                        if (!(iter->second.getSurname() ==
+                              tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(tokens[i]); //cambio il cognome
                         }
                         break;
                     case update_eMail : //analizzo l'email
-                        if (!(iter->second.getEmail() == tokens[i])){//se l'email letta dal file è diversa dall'email del database
+                        if (!(iter->second.getEmail() ==
+                              tokens[i])) {//se l'email letta dal file è diversa dall'email del database
                             iter->second.updateEmail(tokens[i]); //cambia l'email
                         }
                         break;
@@ -469,10 +523,10 @@ bool University::updateStuds(const std::string & fin) {
 }
 
 ///aggiorno i professori
-bool University::updateProfessors(const std::string & fin) {
+bool University::updateProfessors(const std::string &fin) {
     int i;
     char c;
-    int nMatr=0;
+    int nMatr = 0;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
 
@@ -487,30 +541,35 @@ bool University::updateProfessors(const std::string & fin) {
         std::stringstream ss(tokens[0]);
         ss >> c >> nMatr;
 
-        if(_professors.find(nMatr)==_professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            throw  std::invalid_argument("matricola non presente");
+        if (_professors.find(nMatr) ==
+            _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+            throw std::invalid_argument("matricola non presente");
 
         auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-        for(i=1; i < tokens.size(); i++ ){//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        for (i = 1; i <
+                    tokens.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
-            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+            if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
 
                 switch (i) {
                     case update_name ://analizzo il nome
-                        if (!(iter->second.getName() == tokens[i])) {//se il nome letto dal file è diverso dal nome del database
+                        if (!(iter->second.getName() ==
+                              tokens[i])) {//se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(tokens[i]); //cambia il nome
                         }
                         break;
 
                     case update_surName : //analizzo il cognome
-                        if (!(iter->second.getSurname() == tokens[i])){//se il cognome letto dal file è diverso dal cognome del database
+                        if (!(iter->second.getSurname() ==
+                              tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(tokens[i]); //cambia il cognome
                         }
                         break;
                     case update_eMail ://analizzo l'email
-                        if (!(iter->second.getEmail() == tokens[i])){//se l'email letta dal file è diversa dall'email letta dal database
+                        if (!(iter->second.getEmail() ==
+                              tokens[i])) {//se l'email letta dal file è diversa dall'email letta dal database
                             iter->second.updateEmail(tokens[i]); //cambia l'email
                         }
                         break;
@@ -526,11 +585,14 @@ bool University::updateProfessors(const std::string & fin) {
 }
 
 ///aggiornamento aule
-enum{update_lab=1,update_nameClassroom = 2, update_nSeats = 3, update_nSeatsExam = 4};
+enum {
+    update_lab = 1, update_nameClassroom = 2, update_nSeats = 3, update_nSeatsExam = 4
+};
+
 bool University::updateClassroom(const std::string &fin) {
     int i;
     char c;
-    int nMatr=0;
+    int nMatr = 0;
 
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -545,15 +607,15 @@ bool University::updateClassroom(const std::string &fin) {
         std::stringstream ss(tokens[0]);
         ss >> c >> nMatr;
 
-        if(_classroom.find(nMatr)==_classroom.end())//se non trovo il codice
-            throw  std::invalid_argument("matricola non presente");
+        if (_classroom.find(nMatr) == _classroom.end())//se non trovo il codice
+            throw std::invalid_argument("matricola non presente");
 
         auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-        for(i=1; i < tokens.size(); i++ ){//cerco i campi della riga del file passato che andranno aggiornati
+        for (i = 1; i < tokens.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
 
-            if(!(tokens[i].empty())){//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+            if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
 
                 switch (i) {
 
@@ -570,20 +632,23 @@ bool University::updateClassroom(const std::string &fin) {
                         break;
                     }
                     case update_nameClassroom : {//analizzo il nome della classroom
-                        if (!(iter->second.getName() == tokens[i])) {//se il nome letto dal file è diverso dal nome nel database
+                        if (!(iter->second.getName() ==
+                              tokens[i])) {//se il nome letto dal file è diverso dal nome nel database
                             iter->second.updateName(tokens[i]); //cambia il nome
                         }
                         break;
                     }
 
                     case update_nSeats : {//analizzo la capienza
-                        if (iter->second.getNSeats() != stoi(tokens[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
+                        if (iter->second.getNSeats() !=
+                            stoi(tokens[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
                             iter->second.updateNSeats(stoi(tokens[i])); //cambia la capienza dell'aula
                         }
                         break;
                     }
                     case update_nSeatsExam : {//analizzo la capienza dell'aula per gli esami
-                        if (iter->second.getNExamSeats() != stoi(tokens[i])) {//se la capienza dell'aula pe gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
+                        if (iter->second.getNExamSeats() !=
+                            stoi(tokens[i])) {//se la capienza dell'aula pe gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
                             iter->second.updateNExamSeats(stoi(tokens[i])); //cambia l'email
                         }
                     }

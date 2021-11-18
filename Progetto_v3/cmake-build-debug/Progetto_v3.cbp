@@ -82,12 +82,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/AccademicYear.cpp">
-			<Option target="Progetto_v3"/>
-		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/AccademicYear.h">
-			<Option target="Progetto_v3"/>
-		</Unit>
 		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>

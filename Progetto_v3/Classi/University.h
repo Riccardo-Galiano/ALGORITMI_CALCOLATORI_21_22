@@ -5,7 +5,6 @@
 #ifndef PROGETTO_V3_UNIVERSITY_H
 #define PROGETTO_V3_UNIVERSITY_H
 
-#include "AccademicYear.h"
 #include "Professor.h"
 #include "Student.h"
 #include "Classroom.h"
@@ -43,12 +42,10 @@ public:
 
 private:
     /// annoInizio-annoAccademico
-    std::map<int, AccademicYear> _accademicYears;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
-    std::map<std::string, Course> _courses;
 
     void readStudents();
 
