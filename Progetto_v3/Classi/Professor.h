@@ -10,6 +10,7 @@
 
 class Professor : public UniversityMember {
 public:
+    Professor(int matr);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
 };
 

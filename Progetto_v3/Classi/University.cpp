@@ -9,8 +9,25 @@
 #include "DbException.h"
 
 ///costruisce la struttura dell'intera università leggendo i file da linea di comando
+std::vector<std::string> getProfPar(std::string& input, int num_parallel_courses, std::vector<int>& posCBrackets){
+    std::vector<std::string> profPar;
+    std::vector<int> posFinCorsiPar;
+    int found = 0;
+    for (int i = 0; i < posCBrackets.size() - 1 && found < num_parallel_courses; i++) {
+        if (input[posCBrackets[i] + 1] == ']') {
+            posFinCorsiPar.push_back(posCBrackets[i] + 2); //'}'
+            found ++;
+        }
+    }
+    int lastPosFin = 0;
+    for(int i=0; i<num_parallel_courses; i++){
+        profPar.push_back(input.substr(1+lastPosFin,posFinCorsiPar[i]-lastPosFin-1));
+        lastPosFin = posFinCorsiPar[i] + 2;
+    }
+    return profPar;
+};
 
-std::vector<int> posCurlyBrackets(std::string input) {
+std::vector<int> posCurlyBrackets(std::string& input) {
     std::vector<int> output;
     std::size_t found = input.find_first_of("{}");
     while (found !=
@@ -251,7 +268,7 @@ void University::readCourse() {
 
             }
         } else if (interoCorso[0] == "a") {
-            specificYearCourse = splittedLine(line, ';');
+            specificYearCourse = interoCorso;
             acYear = specificYearCourse[1];
             if (specificYearCourse[2] == "attivo")
                 isActive = true;
@@ -260,17 +277,22 @@ void University::readCourse() {
             num_parallel_courses = stoi(specificYearCourse[3]);
             profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);
             std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
-            int posFin = 0;
-            bool found = false;
-            for (int i = 0; i < posCBrackets.size() - 1 && !found; i++) {
-                if (profSenzaQuadre[posCBrackets[i] + 1] == ']') {
-                    posFin = posCBrackets[i] + 2;
-                    found = true;
-                }
-            }
-            //...
-           // std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
-            matrDocenteTit = profSenzaQuadre.substr(posCBrackets[0] + 1, posCBrackets[1] - posCBrackets[0] - 3);
+            std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre,num_parallel_courses,posCBrackets);
+            std::cout << "ciao";
+            /*std::string profSenzaQuadre2;
+            for(int i=0; i<num_parallel_courses; i++){
+                profCorsoPar.push_back(profSenzaQuadre.substr(1+lastPosFin,posFinCorsiPar[i]-lastPosFin-1));
+                int c;
+                int matrTit;
+                int found = profCorsoPar[i].find_first_of(",");
+                matrDocenteTit = profCorsoPar[i].substr(lastPosFin, found-lastPosFin);
+                std::stringstream ss (matrDocenteTit);
+                ss >> c >> matrTit;
+                Professor pTit(matrTit);
+                profSenzaQuadre2 = profCorsoPar[i].substr(found+2,(profCorsoPar[i].size()-found-2)-1);
+                lastPosFin = posFinCorsiPar[i] + 2;
+            }*/
+
         }
 
 

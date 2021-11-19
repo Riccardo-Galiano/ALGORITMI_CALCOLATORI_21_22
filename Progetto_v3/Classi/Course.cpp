@@ -29,7 +29,7 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
 
 ///aggiorna quelle che erano i parametri dello Study Course inizializzati con valori di default
 bool Course::updateInfoCourse(const std::vector<std::string> &infoCorso) {
-    _id = infoCorso[1];
+    //_id = infoCorso[1];
     _name = infoCorso[2];
     _cfu = stoi(infoCorso[3]);
     _hours._lec = stoi(infoCorso[4]);

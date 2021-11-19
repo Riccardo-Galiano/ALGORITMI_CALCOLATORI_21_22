@@ -16,7 +16,7 @@ typedef struct {
     Professor prof;
     hours assignedHours; ///ore assegnate ad ogni prof
     bool mainProf; ///titolare del corso?
-    
+    null() {}
 } professor;
 
 ///per ogni oggetto studente(in cui avrò matricola, nome, cognome e email) verrà tenuta traccia
@@ -30,6 +30,8 @@ typedef struct {
 } student;
 
 class SpecificYearCourse : public Course {
+public:
+    bool addProf(hours, Professor);
 private:
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine

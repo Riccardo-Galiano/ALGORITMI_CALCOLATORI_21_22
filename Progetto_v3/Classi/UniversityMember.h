@@ -10,6 +10,7 @@
 
 class UniversityMember {
 public:
+    UniversityMember();
 
     UniversityMember(const int &, const std::string &, const std::string &,const  std::string &);
 
