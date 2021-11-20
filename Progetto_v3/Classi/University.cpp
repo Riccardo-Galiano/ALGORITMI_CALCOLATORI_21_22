@@ -399,7 +399,8 @@ bool University::insertStudyCourses(const std::string &fin) {
                 int posStart = posSem[i] + 1;
                 int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
                 semestri.push_back(tokens[1].substr(posStart,len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
-            }
+            } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
+              //semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
 
 
             ///creo StudyCourse
