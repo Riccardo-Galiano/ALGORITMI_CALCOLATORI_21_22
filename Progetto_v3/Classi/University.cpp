@@ -106,7 +106,7 @@ void University::readStudents() {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         InteroStudente = splittedLine(line, ';');
 
-        std::stringstream ss(InteroStudente[0]); //manipolo la stringa della matricola
+        std::stringstream ss(InteroStudente[0]); //manipolo la stringa della matricola (iniziallizzo oggetto ss, di classe stringstream, con InteroStudente[0] ovvero matricola)
         ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
 
         ///controllo se la matricola è già esistente; in quel caso lancio un'eccezione, altrimenti inserisco lo studente con tutti i suoi dati
