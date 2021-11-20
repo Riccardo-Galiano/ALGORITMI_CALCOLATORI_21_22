@@ -495,34 +495,29 @@ bool University::updateStuds(const std::string &fin) {
         ss >> c >> nMatr;
 
         ///se la matricola non esiste nel database
-        if (_students.find(nMatr) ==
-            _students.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_students.find(nMatr) == _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-        for (i = 1; i <
-                    tokens.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        for (i = 1; i <tokens.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
             if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
                 switch (i) {
                     case update_name ://analizzo il nome
-                        if (!(iter->second.getName() ==
-                              tokens[i])) {//se il nome letto dal file è diverso dal nome del database
+                        if (!(iter->second.getName() == tokens[i])) { //se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(tokens[i]); //cambio il nome
                         }
                         break;
 
                     case update_surName ://analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                        if (!(iter->second.getSurname() == tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(tokens[i]); //cambio il cognome
                         }
                         break;
                     case update_eMail : //analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              tokens[i])) {//se l'email letta dal file è diversa dall'email del database
+                        if (!(iter->second.getEmail() == tokens[i])) {//se l'email letta dal file è diversa dall'email del database
                             iter->second.updateEmail(tokens[i]); //cambia l'email
                         }
                         break;
