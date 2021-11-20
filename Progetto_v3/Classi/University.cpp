@@ -301,7 +301,7 @@ void University::readCourse() {
     fileIn.close();
 }
 
-///inserisco un nuovo studente
+///inserisco un nuovo studente (privo di matricola che bisogna quindi ricavare)
 bool University::insertStuds(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in); //apro il file in lettura
     if (!fIn.is_open()) {
