@@ -392,7 +392,7 @@ bool University::insertStudyCourses(const std::string &fin) {
             while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
                 posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
                 found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
-            }
+            } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
             std::vector<std::string> semestri;
             for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
