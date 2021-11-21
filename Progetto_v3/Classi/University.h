@@ -41,11 +41,11 @@ public:
     bool updateClassroom(const std::string &fin);
 
 private:
-    /// annoInizio-annoAccademico
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
+    std::map<std::string, Course> _courses;
 
     void readStudents();
 

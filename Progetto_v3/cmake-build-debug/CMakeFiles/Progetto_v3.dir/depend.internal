@@ -7,6 +7,10 @@ CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj
 CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.cpp
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.cpp
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
@@ -18,7 +22,6 @@ CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj
- C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.cpp
  C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h

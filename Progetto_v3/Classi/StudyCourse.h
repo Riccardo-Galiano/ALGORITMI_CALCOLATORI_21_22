@@ -22,7 +22,8 @@ private:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<Course>> _semesters; //key: "yy-semester", value: vettore di courses
-    std::map<std::string,std::vector<SpecificYearCourse>> _perAccademicYear; //key: id (corso agg/nuovo), value: Corso
+    //std::map<std::string,std::vector<SpecificYearCourse>> _perAccademicYear; //key: id (corso agg/nuovo), value: Corso
+    //^^^^^^^^ non dovrebbe servire... -luca
     std::map<std::string,Course> _corsiSpenti;
 };
 

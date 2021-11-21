@@ -10,11 +10,19 @@ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/C
 cstring
 -
 
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.cpp
+Course.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 string
 -
 vector
 -
+map
+-
+SpecificYearCourse.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
 
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
 exception
@@ -26,13 +34,17 @@ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/P
 UniversityMember.h
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.cpp
+sstream
+-
+SpecificYearCourse.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
 vector
 -
 map
 -
-Course.h
-C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 Professor.h
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
 Student.h
@@ -41,6 +53,12 @@ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/S
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
 UniversityMember.h
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
+
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.cpp
+sstream
+-
+StudyCourse.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
 
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
 map
@@ -79,4 +97,22 @@ C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/C
 C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 string
 -
+
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp
+iostream
+-
+./Classi/University.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
+fstream
+-
+sstream
+-
+Classi/Student.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+vector
+-
+Classi/Professor.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+Classi/DbException.h
+C:/Users/lucam/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
 

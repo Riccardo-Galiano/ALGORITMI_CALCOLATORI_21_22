@@ -6,7 +6,11 @@ CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj: \
  ../Classi/Classroom.h
 CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: \
  ../Classi/Course.cpp \
- ../Classi/Course.h
+ ../Classi/Course.h \
+ ../Classi/Professor.h \
+ ../Classi/SpecificYearCourse.h \
+ ../Classi/Student.h \
+ ../Classi/UniversityMember.h
 CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj: \
  ../Classi/DbException.cpp \
  ../Classi/DbException.h
@@ -18,7 +22,6 @@ CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj: \
  ../Classi/Professor.h \
  ../Classi/UniversityMember.h
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: \
- ../Classi/Course.h \
  ../Classi/Professor.h \
  ../Classi/SpecificYearCourse.cpp \
  ../Classi/SpecificYearCourse.h \

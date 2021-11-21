@@ -4,7 +4,6 @@
 
 #include <sstream>
 #include "StudyCourse.h"
-#include "Course.h"
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 

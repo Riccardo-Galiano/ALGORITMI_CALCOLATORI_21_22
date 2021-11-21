@@ -8,6 +8,9 @@
 
 #include <string>
 #include <vector>
+#include <map>
+#include "SpecificYearCourse.h"
+
 
 typedef struct {
     int _lec;///ore lezione
@@ -21,13 +24,15 @@ public:
     Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione, const int oreEsercitazione, const int oreLaboratorio);
     bool updateInfoCourse(const std::vector<std::string> &infoCorso);
     const std::string getId() const;
-
-protected:
+    bool addSpecificYearCourse();
+private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso
     int _cfu;/// numero di crediti
     hours _hours;///ore impiegate nel corso; suddivise in ore di lezione,laboratori ed esame(struct hours)
     std::vector<Course*>_groupedCourse; ///corsi che avranno l'esame negli stessi giorni e nelle stesse ore
+    //key: accademic yy
+    std::map<int,SpecificYearCourse> _courseOfTheYear;
 };
 
 

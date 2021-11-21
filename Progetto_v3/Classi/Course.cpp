@@ -41,3 +41,7 @@ bool Course::updateInfoCourse(const std::vector<std::string> &infoCorso) {
 const std::string Course::getId() const {
     return _id;
 }
+
+bool Course::addSpecificYearCourse() {
+    return false;
+}
