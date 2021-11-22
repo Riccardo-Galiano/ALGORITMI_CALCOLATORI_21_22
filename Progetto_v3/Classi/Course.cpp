@@ -15,8 +15,7 @@ Course::Course(const std::string &idCorso) {
 
 }
 
-Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
-               const int oreEsercitazione, const int oreLaboratorio) {
+Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio) {
 
     _id = idCorso;
     _name = nomeCorso;

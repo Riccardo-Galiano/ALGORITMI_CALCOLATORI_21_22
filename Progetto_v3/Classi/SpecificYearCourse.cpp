@@ -7,8 +7,7 @@
 
 using namespace std;
 
-SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::string id) {
+SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::string id) {
     stringstream acYY(sY_eY);
     char c;
     acYY >> _startYear >> c >> _endYear;
@@ -25,9 +24,9 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
     std::string idMainProf;
     char c;
     int matrTit;
-    int found = profs.find_first_of(",");
-    idMainProf = profs.substr(0, found);
-    std::stringstream ssIdProf(idMainProf);
+    int found = profs.find_first_of(","); //cerca la prima virgola
+    idMainProf = profs.substr(0, found);//salva l'id del titolare
+    std::stringstream ssIdProf(idMainProf);//manipolo l'id per togliere la "d" e avere solo un intero
     ssIdProf >> c >> mainProf;
     profSenzaQuadre = profs.substr(found + 2, (profs.size() - found - 2) - 1);
     vector<int> foundBracket;
@@ -40,9 +39,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 
     ///controllare che legga giusto
     for (int i=0; i<foundBracket.size();i+=2) {
-        singoliProfDaLeggere.push_back(
-                profSenzaQuadre.substr(
-                        foundBracket[i] + 1, foundBracket[i]-foundBracket[i+1] ));
+        singoliProfDaLeggere.push_back( profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i+1]-foundBracket[i] - 1));
 
     }
     int id, hlez, hexe, hlab;

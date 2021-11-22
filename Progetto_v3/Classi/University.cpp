@@ -13,15 +13,17 @@ std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses
     std::vector<std::string> profCorsiPar;
     std::vector<int> posFinCorsiPar;
     int found = 0;
-    for (int i = 0; i < posCBrackets.size() - 1 && found < num_parallel_courses; i++) {
-        if (input[posCBrackets[i] + 1] == ']') {
-            posFinCorsiPar.push_back(posCBrackets[i] + 2); //salva la pos della seconda graffa: }] } <--
+    for (int i = 0; i < posCBrackets.size() - 1 && found < num_parallel_courses; i++) {//fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
+        if (input[posCBrackets[i] + 1] == ']') {//la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
+            posFinCorsiPar.push_back(posCBrackets[i] + 2); //salva la pos della graffa successiva a quella presa in analisi: }] } <--
             found++;
         }
     }
     int lastPosFin = 0;
+
+    ///divido le info dei vari corsi in parallelo
     for (int i = 0; i < num_parallel_courses; i++) {
-        profCorsiPar.push_back(input.substr(1 + lastPosFin, posFinCorsiPar[i] - lastPosFin - 1));
+        profCorsiPar.push_back(input.substr(1 + lastPosFin, posFinCorsiPar[i] - lastPosFin - 1));//inserisco nel vettore di stringhe le info del corso in parallelo
         lastPosFin = posFinCorsiPar[i] + 2; //salva la pos della terza graffa: }]}, { <--
     }
     return profCorsiPar;
@@ -30,10 +32,8 @@ std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses
 std::vector<int> posCurlyBrackets(std::string &input) {
     std::vector<int> output;
     std::size_t found = input.find_first_of("{}");
-    while (found !=
-           std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-        output.push_back(
-                found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+    while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+        output.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
         found = input.find_first_of("{}", found + 1);//continuo a controllare la stringa
     }
     return output;
@@ -202,18 +202,15 @@ void University::readStudyCourse() {
         std::vector<int> posSem = posCurlyBrackets(InteroCorsoDiStudi[2]);
 
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i +  2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
-            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
-                                                            len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart, len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
 
         }
 
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
-        corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -
-                                                                 2);    //salvo la stringa senza le quadre
+        corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -  2);    //salvo la stringa senza le quadre
         corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
 
 
@@ -229,8 +226,7 @@ void University::readStudyCourse() {
         for (i = 0; i < semestri.size(); i++) {
             year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
             numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-            SCourse.addSemesterCourses(year, numSemester,
-                                       semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            SCourse.addSemesterCourses(year, numSemester, semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
 
 
@@ -264,29 +260,23 @@ void University::readCourse() {
         interoCorso = splittedLine(line, ';');
         if (interoCorso[0] == "c") {
             lastReadCourse = interoCorso[1];
-            std::string _id;///codice identificativo del corso
-            std::string _name;///nome del corso
-            int _cfu;/// numero di crediti
-            hours _hours;///ore impiegate nel corso;
-            _courses.insert(std::pair<std::string, Course>(lastReadCourse,
-                                                           Course(interoCorso[1], interoCorso[2], stoi(interoCorso[3]),
-                                                                  stoi(interoCorso[4]), stoi(interoCorso[5]),
-                                                                  stoi(interoCorso[6]))));
+
+            _courses.insert(std::pair<std::string, Course>(lastReadCourse,Course(interoCorso[1], interoCorso[2], stoi(interoCorso[3]),stoi(interoCorso[4]), stoi(interoCorso[5]),stoi(interoCorso[6]))));
 
         } else if (interoCorso[0] == "a") {
             specificYearCourse = interoCorso;
-            acYear = specificYearCourse[1];
-            if (specificYearCourse[2] == "attivo")
+            acYear = specificYearCourse[1]; //anno accademico
+            if (specificYearCourse[2] == "attivo") //se attivo o meno
                 isActive = true;
             else
                 isActive = false;
-            num_parallel_courses = stoi(specificYearCourse[3]);
-            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);
-            std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);
-            std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses, posCBrackets);
-            examData=specificYearCourse[5];
+            num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
+            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+            std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
+            std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses, posCBrackets);//divido i vari corsi in parallelo
+            examData=specificYearCourse[5];//informazioni sull'esame
 
-            idParallelCourse=specificYearCourse[6];
+            idParallelCourse=specificYearCourse[6];//id dei vari corsi in parallelo
             _courses.at(lastReadCourse).addSpecificYearCourse();
         }
 
@@ -385,20 +375,16 @@ bool University::insertStudyCourses(const std::string &fin) {
 
             //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
             std::size_t found = tokens[1].find_first_of("{}");
-            while (found !=
-                   std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-                posSem.push_back(
-                        found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+                posSem.push_back( found );//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
                 found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
             } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
             std::vector<std::string> semestri;
-            for (i = 0; i < posSem.size() - 1; i = i +
-                                                   2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+            for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
                 int posStart = posSem[i] + 1;
                 int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(tokens[1].substr(posStart,
-                                                    len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+                semestri.push_back(tokens[1].substr(posStart, len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
             } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
             //semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
 
@@ -414,8 +400,7 @@ bool University::insertStudyCourses(const std::string &fin) {
             for (i = 0; i < semestri.size(); i++) {
                 year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
                 numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-                SCourse.addSemesterCourses(year, numSemester,
-                                           semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+                SCourse.addSemesterCourses(year, numSemester, semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
             }
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
         }
@@ -498,34 +483,29 @@ bool University::updateStuds(const std::string &fin) {
         ss >> c >> nMatr;
 
         ///se la matricola non esiste nel database
-        if (_students.find(nMatr) ==
-            _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_students.find(nMatr) == _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
         tokens = splittedLine(line, ';');
-        for (i = 1; i <
-                    tokens.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        for (i = 1; i < tokens.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
             if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
                 switch (i) {
                     case update_name ://analizzo il nome
-                        if (!(iter->second.getName() ==
-                              tokens[i])) { //se il nome letto dal file è diverso dal nome del database
+                        if (!(iter->second.getName() == tokens[i])) { //se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(tokens[i]); //cambio il nome
                         }
                         break;
 
                     case update_surName ://analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                        if (!(iter->second.getSurname() ==  tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(tokens[i]); //cambio il cognome
                         }
                         break;
                     case update_eMail : //analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              tokens[i])) {//se l'email letta dal file è diversa dall'email del database
+                        if (!(iter->second.getEmail() == tokens[i])) {//se l'email letta dal file è diversa dall'email del database
                             iter->second.updateEmail(tokens[i]); //cambia l'email
                         }
                         break;
