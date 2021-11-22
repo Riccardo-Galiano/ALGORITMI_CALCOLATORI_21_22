@@ -23,14 +23,13 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
 
     for (auto iter = courses.begin(); iter != courses.end(); iter++) {//analizzo tutti i componenti del vettore corsi
         if (!_semesters.count(key)) {//se la chiave non esiste
-            std::vector<Course> vect;
-            Course primocorso(courses[0]); // creo ogg corso xk courses[0] è una stringa
-            vect.push_back(primocorso);//salvo il primo corso del semestre
-            _semesters.insert(std::pair<std::string, std::vector<Course>>(key, vect));//inserisco nella mappa il primo corso del semestre
+            std::vector<std::string> vect;
+
+            vect.push_back(courses[0]);//salvo il primo corso del semestre
+            _semesters.insert(std::pair<std::string, std::vector<std::string>>(key, vect));//inserisco nella mappa il primo corso del semestre
         } else {//se la chiave esiste
             i++;
-            Course corsoGenerico(courses[i]);
-            _semesters.at(key).push_back(corsoGenerico);//aggiungo nel semestre già esistenete i corsi successivo al primo
+            _semesters.at(key).push_back(courses[i]);//aggiungo nel semestre già esistenete i corsi successivi al primo
         }
     }
     return true;
@@ -40,9 +39,9 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
 ///aggiunge corso spento
 bool StudyCourse::addOffCourses(const std::vector<std::string> &corsiSpenti) {
     for (int i=0; i<corsiSpenti.size(); i++) {
-        Course corsospento(corsiSpenti[i]);//costruttore provvisorio da definire
-        _corsiSpenti.insert(std::pair<std::string, Course>(corsiSpenti[i],corsospento));//per ogni codice del corso spento associo un oggetto corso
+        _corsiSpenti.push_back(corsiSpenti[i]);//per ogni codice del corso spento associo un oggetto corso
     }
+    _corsiSpenti.sort();//se li vogliamo in ordine crescente;
     return true;
 }
 
@@ -51,7 +50,7 @@ const int StudyCourse::getId() const {
     return _id;
 }
 
-bool StudyCourse::updateThatCourse(std::vector<std::string>& infoCourse) {
+/*bool StudyCourse::updateThatCourse(std::vector<std::string>& infoCourse) {
     for(auto currentSemester = _semesters.begin(); currentSemester != _semesters.end(); currentSemester++ ){//analizzo ogni semestre
         int n_courses = (currentSemester->second).size(); //numero di corsi per semestre
 
@@ -64,7 +63,7 @@ bool StudyCourse::updateThatCourse(std::vector<std::string>& infoCourse) {
         }
     }
     return false;
-}
+}*/
 
 ///funzione che splitta una riga considerando un delimitatore passate by reference
 std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {
