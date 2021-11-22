@@ -39,8 +39,8 @@ public:
     bool updateStuds(const std::string &fin);
     bool updateProfessors(const std::string &fin);
     bool updateClassroom(const std::string &fin);
-
 private:
+    friend SpecificYearCourse;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
     std::map<int, Classroom> _classroom;

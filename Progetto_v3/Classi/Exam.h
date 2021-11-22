@@ -9,12 +9,16 @@
 #include <string>
 
 class Exam {
+public:
+    Exam(){};
+    Exam(int time, int enterTime, int leaveTime, const std::string &mode, std::string place);
+
 private:
     int _time; //tempo dell'esame
     int _enterTime; //tempo per entrare
     int _leaveTime; //tempo per uscire
     std::string _mode; //modalità
-    char _place; //luogo
+    std::string _place; //luogo
 
 };
 

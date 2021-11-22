@@ -10,6 +10,8 @@
 
 class Professor : public UniversityMember {
 public:
+    //Professor() = delete;
+    Professor():UniversityMember(){};
     Professor(int matr);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
 };

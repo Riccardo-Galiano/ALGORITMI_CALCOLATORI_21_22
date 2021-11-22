@@ -41,6 +41,9 @@ const std::string Course::getId() const {
     return _id;
 }
 
-bool Course::addSpecificYearCourse() {
+bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,  std::vector<std::string> exam,
+                                    std::vector<std::string> idPar) {
+    _courseOfTheYear.insert(std::pair<int,SpecificYearCourse>(stoi(sY_eY.substr(0,4)),SpecificYearCourse(sY_eY,active,nCrsiPar,prof,exam,idPar)));
     return false;
 }
+

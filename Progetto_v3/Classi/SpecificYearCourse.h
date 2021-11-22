@@ -8,11 +8,13 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 #include "Professor.h"
 #include "Student.h"
+#include "Exam.h"
 
 typedef struct {
-    Professor prof;
+    int prof_id;
     int hLez;///ore assegnate ad ogni prof
     int hExe;
     int hLab;
@@ -31,23 +33,22 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::string id);
+    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idPar);
     //bool addProf(hours, Professor);
 private:
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?
     int _paralleleCours;    ///numero di corsi in parallelo
+    Exam _exam;
     // per ogni corso in parallelo ho un vettore dei prof e stud
     //key id del corso in parallelo
     //value vettore delle struct prof o stud
     std::map<std::string, std::vector<professor>> _professors;
     std::map<std::string, std::vector<student>> _student;
 
-
     std::vector<professor> getProfsFromString (std::string profs);
-    bool setProfMap(int, std::vector<std::string>, std::string);
-
+    bool setProfMap(int, std::vector<std::string>, std::vector<std::string>);
 };
 
 

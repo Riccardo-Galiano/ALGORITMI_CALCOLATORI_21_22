@@ -256,6 +256,8 @@ void University::readCourse() {
     std::string profSenzaQuadre;
     std::string profIesimoCorso;
     std::string matrDocenteTit;
+    std::vector<std::string> idPar;
+    std::vector<std::string> splittedExamData;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         interoCorso = splittedLine(line, ';');
         if (interoCorso[0] == "c") {
@@ -275,9 +277,12 @@ void University::readCourse() {
             std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
             std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses, posCBrackets);//divido i vari corsi in parallelo
             examData=specificYearCourse[5];//informazioni sull'esame
-
+            examData=examData.substr(1,examData.size()-2);
+            splittedExamData= splittedLine(examData,',');
             idParallelCourse=specificYearCourse[6];//id dei vari corsi in parallelo
-            _courses.at(lastReadCourse).addSpecificYearCourse();
+            idParallelCourse=idParallelCourse.substr(1,idParallelCourse.size()-2);
+            idPar= splittedLine(idParallelCourse,',');
+            _courses.at(lastReadCourse).addSpecificYearCourses(acYear,isActive,num_parallel_courses,profCorsoPar,splittedExamData,idPar);
         }
 
     }
@@ -658,6 +663,10 @@ bool University::updateClassroom(const std::string &fin) {
 
     fileIn.close();
     return true;
+}
+
+bool University::insertCourses(const std::string &fileIn) {
+    //
 }
 
 
