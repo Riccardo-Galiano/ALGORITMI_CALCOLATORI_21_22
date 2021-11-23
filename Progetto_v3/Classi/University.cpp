@@ -537,8 +537,14 @@ const std::string University::getNewCourseId() const {
   if(cod=="AAAAA")
       num++;
 
+
+
     std::stringstream ss;
+    if(num<10)
+    ss << 0 << num << cod;
+    else
     ss << num << cod;
+
     std::string newId = ss.str();
 
 
