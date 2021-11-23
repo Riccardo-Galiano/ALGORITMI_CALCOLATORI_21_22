@@ -24,7 +24,7 @@ public:
 
     const int getNewStudyCourseId() const;
 
-    const int getNewCourseId()const;
+    const std::string getNewCourseId()const;
 
     bool insertStuds(const std::string &fileIn);
 

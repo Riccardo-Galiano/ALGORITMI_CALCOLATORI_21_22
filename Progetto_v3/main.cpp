@@ -58,8 +58,10 @@ void startProgram(University &uni, char *argv[]) {
             uni.insertClassrooms(argv[2]);
             break;
         }
-        case add_course:
+        case add_course: {
+            uni.insertCourses(argv[2]);
             break;
+        }
         case add_studyCourse: {
             uni.insertStudyCourses(argv[2]);
             break;
