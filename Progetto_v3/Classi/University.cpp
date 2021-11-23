@@ -239,7 +239,7 @@ void University::readStudyCourse() {
     fileIn.close();
 }
 
-///DA FINIRE ADD SPECIFIC YEAR COURSE + LETTURA DATI ESAME E LETTURA ID CORSI PARALL
+///lettura dei corsi dal database
 void University::readCourse() {
     std::ifstream fileIn("../Sources/db_corsi.txt");
     if (!fileIn.is_open()) {
@@ -449,7 +449,7 @@ bool University::insertCourses(const std::string &fin) {
 
 
             num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
-            profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+            profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
             std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
             std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses, posCBrackets);//divido i vari corsi in parallelo
             examData=specificYearCourse[8];//informazioni sull'esame
@@ -460,10 +460,10 @@ bool University::insertCourses(const std::string &fin) {
             idPar= splittedLine(idParallelCourse,',');//scissione degli id dei corsi in parallelo
             _courses.at(newIdCourse).addSpecificYearCourses(acYear,isActive,num_parallel_courses,profCorsoPar,splittedExamData,idPar);
         }
+    fileIn.close();
+    return true;
 
     }
-
-
 
 ///cerco la nuova matricola da associare al nuovo studente
 const int University::getNewStudentId() const {
@@ -499,7 +499,7 @@ const int University::getNewClassroomId() const {
     return toReturn;
 }
 
-///cerca il nuovo codice da associare al nuovo corso
+///cerca il nuovo codice da associare al nuovo corso di studio
 const int University::getNewStudyCourseId() const {
     if (_studyCourse.empty())
         return 1;
@@ -509,17 +509,53 @@ const int University::getNewStudyCourseId() const {
     return toReturn;
 }
 
-///DA FARE
+///cerca il nuovo codice da associare al nuovo corso
 const std::string University::getNewCourseId() const {
+
+    auto last = _courses.rbegin();  //iteratore che punta all'ultimo corso della mappa
+    bool noZ = false;
+    int num;
+    std::string cod;
 
     if (_courses.empty())
         return "01AAAAA";
 
-    auto last = _courses.rbegin();  //iteratore che punta all'ultimo corso della mappa
-   std::string ultimo = last->first;
+    std::stringstream Id(last->first);
+    Id >> num >> cod;
+
+     for(int i = cod.size()-1; i>=0 && !noZ; i--){
+
+      if(cod[i] != 'Z'){
+          cod[i] ++;
+          noZ = true;
+
+      }else {
+          cod[i] = 'A';
+      }
+
+     }
+  if(cod=="AAAAA")
+      num++;
+
+    std::stringstream ss;
+    ss << num << cod;
+    std::string newId = ss.str();
 
 
+   /* for(auto iter = ultimo.rbegin();iter != ultimo.rend() && !noZ; iter++){
 
+
+        if(*iter != 'Z'){
+            *iter ++;
+            noZ = true;
+        }else {
+            *iter = 'A';
+        }
+
+    }*/
+
+
+return newId;
 }
 
 ///aggiorno gli studenti

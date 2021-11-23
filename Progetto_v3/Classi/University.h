@@ -39,6 +39,9 @@ public:
     bool updateStuds(const std::string &fin);
     bool updateProfessors(const std::string &fin);
     bool updateClassroom(const std::string &fin);
+
+    //overload operator
+    std::string operator ++();
 private:
     friend SpecificYearCourse;
     std::map<int, Professor> _professors;
