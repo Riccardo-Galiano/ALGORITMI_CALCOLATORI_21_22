@@ -592,7 +592,7 @@ bool University::updateStuds(const std::string &fin) {
 
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
-        tokens = splittedLine(line, ';');
+
         for (i = 1; i < tokens.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
             if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
@@ -643,35 +643,30 @@ bool University::updateProfessors(const std::string &fin) {
         std::stringstream ss(tokens[0]);
         ss >> c >> nMatr;
 
-        if (_professors.find(nMatr) ==
-            _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_professors.find(nMatr) == _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
-        tokens = splittedLine(line, ';');
-        for (i = 1; i <
-                    tokens.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+
+        for (i = 1; i < tokens.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
             if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
 
                 switch (i) {
                     case update_name ://analizzo il nome
-                        if (!(iter->second.getName() ==
-                              tokens[i])) {//se il nome letto dal file è diverso dal nome del database
+                        if (!(iter->second.getName() ==  tokens[i])) {//se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(tokens[i]); //cambia il nome
                         }
                         break;
 
                     case update_surName : //analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                        if (!(iter->second.getSurname() == tokens[i])) {//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(tokens[i]); //cambia il cognome
                         }
                         break;
                     case update_eMail ://analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              tokens[i])) {//se l'email letta dal file è diversa dall'email letta dal database
+                        if (!(iter->second.getEmail() == tokens[i])) {//se l'email letta dal file è diversa dall'email letta dal database
                             iter->second.updateEmail(tokens[i]); //cambia l'email
                         }
                         break;
@@ -714,7 +709,7 @@ bool University::updateClassroom(const std::string &fin) {
 
         auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
 
-        tokens = splittedLine(line, ';');
+
         for (i = 1; i < tokens.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
 
             if (!(tokens[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
@@ -762,6 +757,94 @@ bool University::updateClassroom(const std::string &fin) {
 
     fileIn.close();
     return true;
+}
+
+enum {
+    update_attivo = 2, update_parallel = 3 , update_profs = 4, update_Exam = 5, update_IdCourses
+};
+
+
+bool University::updateCourses(const std::string &fin) {
+
+    std::vector<std::string> specificYearCourse;
+
+    std::string acYear;
+    std::string examData;
+    std::string idParallelCourse;
+    bool isActive = true;
+    int num_parallel_courses = 0;
+    std::string profSenzaQuadre;
+    int i;
+    std::vector<std::string> idPar;
+    std::vector<std::string> splittedExamData;
+
+    std::ifstream fileIn(fin);
+
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("errore apertura file per inserimento di una nuova organizzazione del corso");
+    }
+
+
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+        std::vector<std::string> specificYearCourse;
+
+        if (_courses.find(specificYearCourse[0]) == _courses.end())//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+            throw std::invalid_argument("IdCorso non presente non presente");
+
+        auto iter = _courses.find(specificYearCourse[0]);//prendo la posizione della matricola
+        acYear = specificYearCourse[1]; //anno accademico
+
+
+        for (i = 1; i < specificYearCourse.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+
+            if (!(specificYearCourse[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+
+                switch (i) {
+                    case update_attivo ://analizzo se il corso è attivo o meno
+                        if (specificYearCourse[2] == "attivo") //se attivo o meno
+                            isActive = true;
+                        else
+                            isActive = false;
+
+
+
+                       break;
+
+
+                    case update_parallel ://analizzo il numero di corsi paralleli
+
+                        break;
+                    case update_profs ://analizzo prof
+
+                        break;
+                    case update_Exam ://analizzo le informazioni degli esami
+
+                        break;
+                    case update_IdCourses : //analizzo gli Id dei corsi
+
+                        break;
+
+                }
+
+            }
+        }
+
+/*
+        num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
+        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
+        std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses, posCBrackets);//divido i vari corsi in parallelo
+        examData=specificYearCourse[5];//informazioni sull'esame
+        examData=examData.substr(1,examData.size()-2);//tolgo le { } che racchiudono le info degli esami
+        splittedExamData= splittedLine(examData,',');//scissione info esami
+        idParallelCourse=specificYearCourse[6];//id dei vari corsi in parallelo
+        idParallelCourse=idParallelCourse.substr(1,idParallelCourse.size()-2);// tolgo le { } che racchiudono gli id
+        idPar= splittedLine(idParallelCourse,',');//scissione degli id dei corsi in parallelo
+        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear,isActive,num_parallel_courses,profCorsoPar,splittedExamData,idPar);*/
+
+
+    }
 }
 
 
