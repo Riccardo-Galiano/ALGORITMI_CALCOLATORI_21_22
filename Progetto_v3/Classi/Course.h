@@ -27,7 +27,8 @@ public:
     bool addSpecificYearCourses(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idPar);
     bool controlActive();
     int controlNumParallel();
-
+    bool updateSpecificYearCourse(std::vector<std::string>&);
+    SpecificYearCourse& getLastSpecificYearCourse();
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso
