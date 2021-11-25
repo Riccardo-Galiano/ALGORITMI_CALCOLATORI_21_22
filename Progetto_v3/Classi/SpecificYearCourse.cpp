@@ -9,22 +9,20 @@ using namespace std;
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
-    if (s.isActive())
+    if (s.getisActive())
         output << "attivo";
     else
         output << "non_attivo";
-    output << s.getParalleleCours() << ";";
+    output << ";" << s.getParalleleCours() << ";";
     output << s.getProfParSTring() << ";";
-    Exam exam = s.getExam();
-    output << "{" << exam.getTime() << "," << exam.getEnterTime() << "," << exam.getLeaveTime() << "," << exam.getMode()
-           << "," << exam.getPlace() << "};";
-    output << s.getParCourseId() << ";";
+    output << s.getExamString() << ";";
+    output << s.getParCourseIdString() << ";";
     return output;
 }
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::vector<std::string> exam, std::vector<std::string> idPar) : _exam(
-        stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
+                                       std::vector<std::string> exam, std::vector<std::string> idPar) :
+        _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
     acYY >> _startYear >> c >> _endYear;//anno iniziale - anno finale
@@ -113,7 +111,7 @@ int SpecificYearCourse::getEndYear() const {
     return _endYear;
 }
 
-bool SpecificYearCourse::isActive() const {
+bool SpecificYearCourse::getisActive() const {
     return _active;
 }
 
@@ -135,28 +133,50 @@ const map<std::string, std::vector<student>> &SpecificYearCourse::getStudent() c
 
 const std::string SpecificYearCourse::getProfParSTring() const {
     std::stringstream output;
-    output << "[{";
-    std::string matrTit;
+
+    output << "[";
+    int matrTit;
     std::vector<std::string> profsString;
     for (int i = 0; i < _paralleleCours; i++) {
+        output << "{";
         std::vector<professor> profs = _professors.at(_idPar[i]);
         for (int j = 0; j < profs.size(); j++) {
-            if(profs[j].mainProf)
+            if (profs[j].mainProf)
                 matrTit = profs[j].prof_id;
-            //modificare profsString[j]
         }
+        output << "d" << matrTit << ",[";
+        for (int j = 0; j < profs.size(); j++) {
+            output << "{d" << profs[j].prof_id << "," << profs[j].hLez << "," << profs[j].hExe << "," << profs[j].hLab
+                   << "}";
+            if (j < profs.size() - 1)
+                output << ",";
+        }
+        output << "]}";
+        if (i < _paralleleCours - 1)
+            output << ",";
     }
-
     output << "]";
+    return output.str();
 }
 
-const std::string SpecificYearCourse::getParCourseId() const {
+const std::string SpecificYearCourse::getParCourseIdString() const {
     std::stringstream output;
     output << "{";
     for (int i = 0; i < _idPar.size(); i++) {
-        output << _idPar[i] << ",";
+        output << _idPar[i];
+        if (i < _idPar.size() - 1)
+            output << ",";
     }
     output << "}";
+    return output.str();
+}
+
+const std::string SpecificYearCourse::getExamString() const {
+
+    std::stringstream output;
+    output << "{" << _exam.getTime() << "," << _exam.getEnterTime() << "," << _exam.getLeaveTime() << ","
+           << _exam.getMode() << "," << _exam.getPlace() << "}";
+
     return output.str();
 }
 

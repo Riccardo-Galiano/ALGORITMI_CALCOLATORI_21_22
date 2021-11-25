@@ -297,8 +297,7 @@ void University::readCourse() {
             examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
             splittedExamData = splittedLine(examData, ',');//scissione info esami
             idParallelCourse = specificYearCourse[6];//id dei vari corsi in parallelo
-            idParallelCourse = idParallelCourse.substr(1, idParallelCourse.size() -
-                                                          2);// tolgo le { } che racchiudono gli id
+            idParallelCourse = idParallelCourse.substr(1, idParallelCourse.size() - 2);// tolgo le { } che racchiudono gli id
             idPar = splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData, idPar);
@@ -568,10 +567,10 @@ const std::string University::getNewCourseId() const {
     }
     if (cod == "AAAAA")
         num++;
-   /*
-    int lastChar = str[lastPos] + 1;
-    if(lastChar > 'Z')
-        */
+    /*
+     int lastChar = str[lastPos] + 1;
+     if(lastChar > 'Z')
+         */
 
 
     std::stringstream ss;
@@ -743,6 +742,7 @@ bool University::updateClassroom(const std::string &fin) {
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> infoClassroom;
+    
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoClassroom = splittedLine(line, ';');
@@ -753,7 +753,6 @@ bool University::updateClassroom(const std::string &fin) {
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
-
 
         for (i = 1; i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
 
@@ -813,14 +812,12 @@ enum {
 bool University::insertCourses(const std::string &fin) {
 
     std::vector<std::string> specificYearCourse;
-
     std::string acYear;
     std::string examData;
     std::string idParallelCourse;
     bool isActive = true;
     int num_parallel_courses = 0;
     std::string profSenzaQuadre;
-    int i;
     std::vector<std::string> idPar;
     std::vector<std::string> splittedExamData;
 
@@ -835,13 +832,30 @@ bool University::insertCourses(const std::string &fin) {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         std::vector<std::string> specificYearCourse = splittedLine(line, ';');
 
-        if (!_courses.count(
-                specificYearCourse[0])) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_courses.find(specificYearCourse[0]) ==
+            _courses.end()) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("IdCorso non presente");
         }
 
-        auto course_with_given_id = _courses.at(specificYearCourse[0]);
-        course_with_given_id.updateSpecificYearCourse(specificYearCourse);
+        auto course_with_given_id = _courses.find(specificYearCourse[0]);
+        course_with_given_id->second.fillSpecificYearCourse(specificYearCourse);
+
+        acYear = specificYearCourse[1]; //anno accademico
+        if (specificYearCourse[2] == "attivo") //se attivo o meno
+            isActive = true;
+        else
+            isActive = false;
+        num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
+        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -  2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
+        std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,posCBrackets);//divido i vari corsi in parallelo
+        examData = specificYearCourse[5];//informazioni sull'esame
+        examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
+        splittedExamData = splittedLine(examData, ',');//scissione info esami
+        idParallelCourse = specificYearCourse[6];//id dei vari corsi in parallelo
+        idParallelCourse = idParallelCourse.substr(1,idParallelCourse.size() - 2);// tolgo le { } che racchiudono gli id
+        idPar = splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
+        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,splittedExamData, idPar);
     }
 
     return true;

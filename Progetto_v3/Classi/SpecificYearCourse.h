@@ -39,7 +39,7 @@ public:
 
     int getEndYear() const;
 
-    bool isActive() const;
+    bool getisActive() const;
 
     int getParalleleCours() const;
 
@@ -51,7 +51,8 @@ public:
 
     const std::string getProfParSTring() const;
 
-    const std::string getParCourseId() const;
+    const std::string getParCourseIdString() const;
+    const std::string getExamString() const;
     int getStartYear() const;
 
 private:
