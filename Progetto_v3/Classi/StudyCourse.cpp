@@ -50,20 +50,7 @@ const int StudyCourse::getId() const {
     return _id;
 }
 
-/*bool StudyCourse::updateThatCourse(std::vector<std::string>& infoCourse) {
-    for(auto currentSemester = _semesters.begin(); currentSemester != _semesters.end(); currentSemester++ ){//analizzo ogni semestre
-        int n_courses = (currentSemester->second).size(); //numero di corsi per semestre
 
-        for(int j=0; j < n_courses; j++){ //analizzo tutti i corsi del semestre
-            Course* currentcourse = &(currentSemester->second[j]);
-            if(currentcourse->getId() == infoCourse[1]){ //se L'id dell'oggetto corso puntato è uguale a quello passato da file
-                currentcourse->updateInfoCourse(infoCourse); //aggiorno il corso
-                return true;
-            }
-        }
-    }
-    return false;
-}*/
 
 ///funzione che splitta una riga considerando un delimitatore passate by reference
 std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {

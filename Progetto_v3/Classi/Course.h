@@ -20,18 +20,10 @@ typedef struct {
 
 class Course {
 public:
-    Course(const std::string &idCorso);
 
-    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
-           const int oreEsercitazione, const int oreLaboratorio);
+    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio);
 
-    bool updateInfoCourse(const std::vector<std::string> &infoCorso);
-
-    const std::string getId() const;
-
-    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                std::vector<std::string> exam, std::vector<std::string> idPar);
-
+    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idPar);
     bool fillSpecificYearCourse(std::vector<std::string>& );
 
     SpecificYearCourse &getLastSpecificYearCourse();
@@ -42,8 +34,7 @@ private:
     int _cfu;/// numero di crediti
     hours _hours;///ore impiegate nel corso; suddivise in ore di lezione,laboratori ed esame(struct hours)
     std::vector<Course *> _groupedCourse; ///corsi che avranno l'esame negli stessi giorni e nelle stesse ore
-    //key: accademic yy
-    std::map<int, SpecificYearCourse> _courseOfTheYear;
+    std::map<int, SpecificYearCourse> _courseOfTheYear;//key: accademic yy
 };
 
 

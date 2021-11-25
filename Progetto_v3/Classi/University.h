@@ -17,33 +17,24 @@ public:
     University();
 
     const int getNewStudentId() const ;
-
     const int getNewProfessorId() const;
-
     const int getNewClassroomId() const;
-
     const int getNewStudyCourseId() const;
-
     const std::string getNewCourseId()const;
 
     bool addStuds(const std::string &fileIn);
-
     bool addProfessors(const std::string &fileIn);
-
     bool addClassrooms(const std::string &fileIn);
-
     bool addStudyCourses(const std::string &fileIn);
-
     bool addCourses(const std::string &fileIn);
-
     bool updateStuds(const std::string &fin);
     bool updateProfessors(const std::string &fin);
     bool updateClassroom(const std::string &fin);
     bool insertCourses(const std::string &fin);
 
-    //overload operator
-    std::string operator ++();
+
 private:
+
     friend SpecificYearCourse;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
@@ -52,13 +43,9 @@ private:
     std::map<std::string, Course> _courses;
 
     void readStudents();
-
     void readProfessor();
-
     void readClassroom();
-
     void readStudyCourse();
-
     void readCourse();
 
 

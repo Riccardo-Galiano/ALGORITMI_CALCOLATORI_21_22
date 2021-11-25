@@ -48,6 +48,4 @@ void UniversityMember::updateEmail(const std::string & eMail) {
     _email = eMail;
 }
 
-UniversityMember::UniversityMember() {
-
-}
+UniversityMember::UniversityMember() {}

@@ -12,7 +12,6 @@ class Student : public UniversityMember {
 public:
     Student(int,std::string, std::string, std::string); ///matricola, nome, cognome, email
 
-
 };
 
 

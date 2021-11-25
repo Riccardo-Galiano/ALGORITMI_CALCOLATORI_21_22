@@ -265,8 +265,6 @@ void University::readCourse() {
     bool isActive = false;
     int num_parallel_courses = 0;
     std::string profSenzaQuadre;
-    std::string profIesimoCorso;
-    std::string matrDocenteTit;
     std::vector<std::string> idPar;
     std::vector<std::string> splittedExamData;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
@@ -307,7 +305,6 @@ void University::readCourse() {
 
     fileIn.close();
 }
-
 
 ///inserisco un nuovo studente (privo di matricola che bisogna quindi ricavare)
 bool University::addStuds(const std::string &fileIn) {
@@ -808,7 +805,7 @@ enum {
     update_attivo = 2, update_parallel = 3, update_profs = 4, update_Exam = 5, update_IdCourses
 };
 
-
+///inserisce un nuovo anno accademico ad un corso già esistente
 bool University::insertCourses(const std::string &fin) {
 
     std::vector<std::string> specificYearCourse;
