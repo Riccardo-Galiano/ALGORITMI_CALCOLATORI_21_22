@@ -47,23 +47,23 @@ void startProgram(University &uni, char *argv[]) {
     int code = returnCode(argv[1]);
     switch (code) {
         case add_student: {
-            uni.insertStuds(argv[2]);
+            uni.addStuds(argv[2]);
             break;
         }
         case add_professor: {
-            uni.insertProfessors(argv[2]);
+            uni.addProfessors(argv[2]);
             break;
         }
         case add_classroom: {
-            uni.insertClassrooms(argv[2]);
+            uni.addClassrooms(argv[2]);
             break;
         }
         case add_course: {
-            uni.insertCourses(argv[2]);
+            uni.addCourses(argv[2]);
             break;
         }
         case add_studyCourse: {
-            uni.insertStudyCourses(argv[2]);
+            uni.addStudyCourses(argv[2]);
             break;
         }
         case update_student: {
@@ -78,8 +78,10 @@ void startProgram(University &uni, char *argv[]) {
             uni.updateClassroom(argv[2]);
             break;
         }
-        case insert_course:
+        case insert_course: {
+            uni.insertCourses(argv[2]);
             break;
+        }
         default:
             throw std::invalid_argument("comando non trovato");
             break;

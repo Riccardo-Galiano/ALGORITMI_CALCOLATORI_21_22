@@ -35,6 +35,8 @@ class SpecificYearCourse {
 public:
     SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idPar);
     //bool addProf(hours, Professor);
+    const bool getActive() const;
+    const int getNumParallel() const;
 
 private:
     int _startYear;    ///anno di inizio

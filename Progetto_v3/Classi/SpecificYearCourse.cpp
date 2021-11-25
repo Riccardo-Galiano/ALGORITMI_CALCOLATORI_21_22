@@ -75,4 +75,12 @@ bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> pr
     return false;
 }
 
+const bool SpecificYearCourse::getActive() const {
+    return _active;
+}
+
+const int SpecificYearCourse::getNumParallel() const {
+    return _paralleleCours;
+}
+
 

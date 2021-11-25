@@ -26,20 +26,20 @@ public:
 
     const std::string getNewCourseId()const;
 
-    bool insertStuds(const std::string &fileIn);
+    bool addStuds(const std::string &fileIn);
 
-    bool insertProfessors(const std::string &fileIn);
+    bool addProfessors(const std::string &fileIn);
 
-    bool insertClassrooms(const std::string &fileIn);
+    bool addClassrooms(const std::string &fileIn);
 
-    bool insertStudyCourses(const std::string &fileIn);
+    bool addStudyCourses(const std::string &fileIn);
 
-    bool insertCourses(const std::string &fileIn);
+    bool addCourses(const std::string &fileIn);
 
     bool updateStuds(const std::string &fin);
     bool updateProfessors(const std::string &fin);
     bool updateClassroom(const std::string &fin);
-    bool updateCourses(const std::string &fin);
+    bool insertCourses(const std::string &fin);
 
     //overload operator
     std::string operator ++();

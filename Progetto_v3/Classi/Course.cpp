@@ -47,5 +47,15 @@ bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar
     return true;
 }
 
+bool Course::controlActive() {
+    auto iterCourseOfTheYear = _courseOfTheYear.rbegin();
+    return iterCourseOfTheYear->second.getActive();
+}
+
+int Course::controlNumParallel() {
+    auto iterCourseOfTheYear = _courseOfTheYear.rbegin();
+    return  iterCourseOfTheYear->second.getNumParallel();
+}
+
 
 
