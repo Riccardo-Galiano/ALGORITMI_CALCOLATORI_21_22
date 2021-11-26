@@ -330,12 +330,10 @@ bool University::addStuds(const std::string &fileIn) {
     fout.open("../Sources/db_studenti.txt");
 
     for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
-        Student stud = _students.at(iterStud->first);//copy cunstructor?
-        std::stringstream tok;
-        tok<<stud;
-        std::string appoggio = tok.str();
-        fout<<appoggio<<std::endl;
-        fout<<"ciao";
+        Student stud = _students.at(iterStud->first);//copy costructor?
+
+        fout<<stud<<std::endl;
+
 
     }
     fout.close();
@@ -360,6 +358,19 @@ bool University::addProfessors(const std::string &fileIn) {
         _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
     }
     fIn.close();
+
+/*
+    std::ofstream fout;
+    fout.open("../Sources/db_professori.txt");
+
+    for(auto iterProf=_students.begin(); iterProf!= _students.end();iterProf++) {
+        Student prof = _students.at(iterProf->first);//copy costructor?
+
+        fout<<prof<<std::endl;
+    }
+    fout.close();
+    */
+
     return true;
 }
 
@@ -651,6 +662,19 @@ bool University::updateStuds(const std::string &fin) {
     }
 
     fileIn.close();
+
+    std::ofstream fout;
+    fout.open("../Sources/db_studenti.txt");
+
+    for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
+        Student stud = _students.at(iterStud->first);//copy costructor?
+
+        fout<<stud<<std::endl;
+
+
+    }
+    fout.close();
+
     return false;
 }
 
