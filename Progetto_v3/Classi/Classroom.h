@@ -24,6 +24,8 @@ public:
     void updateNSeats(const int & NSeats);
     void updateNExamSeats(const int & NExamSeats);
 
+    std::string setCod(int nCod) const ;
+
 private:
 
     int _id; //codice identificativo
@@ -32,6 +34,6 @@ private:
     int _nSeats; //capienza massima dell'aula
     int _nExamSeats; //capienza all'esame
 };
-
+std::ostream &operator<<(std::ostream &room, const Classroom &s);
 
 #endif //PROGETTO_V3_CLASSROOM_H

@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <iomanip>
 #include "SpecificYearCourse.h"
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idPar) :
@@ -79,11 +80,17 @@ bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> pr
     return false;
 }
 
+std::string SpecificYearCourse::setId(int nMatr) const {
+    std::stringstream output;
+    output<<std::setfill('0')<<std::setw(6)<<nMatr;
+    return output.str();
+}
+
 const std::string SpecificYearCourse::getProfParSTring() const {
     std::stringstream output;
 
     output << "[";
-    int matrTit;
+    int matrTit = 0;
     std::vector<std::string> profsString;
     for (int i = 0; i < _parallelCourses; i++) {
         output << "{";
@@ -92,9 +99,9 @@ const std::string SpecificYearCourse::getProfParSTring() const {
             if (profs[j].mainProf)
                 matrTit = profs[j].prof_id;
         }
-        output << "d" << matrTit << ",[";
+        output << "d" << setId(matrTit) << ",[";
         for (int j = 0; j < profs.size(); j++) {
-            output << "{d" << profs[j].prof_id << "," << profs[j].hLez << "," << profs[j].hExe << "," << profs[j].hLab << "}";
+            output << "{d" << setId(profs[j].prof_id) << "," << profs[j].hLez << "," << profs[j].hExe << "," << profs[j].hLab << "}";
             if (j < profs.size() - 1)
                 output << ",";
         }

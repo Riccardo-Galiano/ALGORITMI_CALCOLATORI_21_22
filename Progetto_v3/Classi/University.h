@@ -33,6 +33,7 @@ public:
     bool insertCourses(const std::string &fin);
 
 
+
 private:
 
     friend SpecificYearCourse;

@@ -2,6 +2,8 @@
 // Created by lucam on 05/11/2021.
 //
 
+#include <sstream>
+#include <iomanip>
 #include "UniversityMember.h"
 
 UniversityMember::UniversityMember(const int &matricola, const std::string &name, const std::string &surname, const std::string &email) {
@@ -22,7 +24,7 @@ const std::string &UniversityMember::getSurname() const {
 }
 
 ///prende la matricola, solo lettura
-int UniversityMember::getId() const {
+const int UniversityMember::getId() const {
     return _id;
 }
 
@@ -49,3 +51,9 @@ void UniversityMember::updateEmail(const std::string & eMail) {
 }
 
 UniversityMember::UniversityMember() {}
+
+const std::string UniversityMember::setId(int nMatr) const {
+    std::stringstream output;
+    output<<std::setfill('0')<<std::setw(6)<<nMatr;
+    return output.str();
+}

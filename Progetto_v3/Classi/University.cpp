@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include "University.h"
 #include "DbException.h"
 
@@ -323,6 +324,24 @@ bool University::addStuds(const std::string &fileIn) {
     }
     fIn.close();
 
+
+
+    std::ofstream fout;
+    fout.open("../Sources/db_studenti.txt");
+
+    for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
+        Student stud = _students.at(iterStud->first);//copy cunstructor?
+        std::stringstream tok;
+        tok<<stud;
+        std::string appoggio = tok.str();
+        fout<<appoggio<<std::endl;
+        fout<<"ciao";
+
+    }
+    fout.close();
+
+
+
     return true;
 }
 
@@ -552,45 +571,20 @@ const std::string University::getNewCourseId() const {
     Id >> num >> cod;
 
     for (int i = cod.size() - 1; i >= 0 && !noZ; i--) {
-
         if (cod[i] != 'Z') {
             cod[i]++;
             noZ = true;
-
         } else {
             cod[i] = 'A';
         }
-
     }
+
     if (cod == "AAAAA")
         num++;
-    /*
-     int lastChar = str[lastPos] + 1;
-     if(lastChar > 'Z')
-         */
-
 
     std::stringstream ss;
-    if (num < 10)
-        ss << 0 << num << cod;
-    else
-        ss << num << cod;
-
+    ss << std::setfill('0') << std::setw(2) << num << cod;
     std::string newId = ss.str();
-
-
-    /* for(auto iter = ultimo.rbegin();iter != ultimo.rend() && !noZ; iter++){
-
-
-         if(*iter != 'Z'){
-             *iter ++;
-             noZ = true;
-         }else {
-             *iter = 'A';
-         }
-
-     }*/
-
 
     return newId;
 }
@@ -857,6 +851,9 @@ bool University::insertCourses(const std::string &fin) {
 
     return true;
 }
+
+
+
 
 
 

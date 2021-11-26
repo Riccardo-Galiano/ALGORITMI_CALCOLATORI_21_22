@@ -3,6 +3,8 @@
 //
 
 #include <stdexcept>
+#include <sstream>
+#include <iomanip>
 #include "Classroom.h"
 
 
@@ -64,4 +66,15 @@ _nSeats = NSeats;
 ///aggiorna la capienza per l'esame
 void Classroom::updateNExamSeats(const int &NExamSeats) {
 _nExamSeats = NExamSeats;
+}
+
+std::string Classroom::setCod(int nCod) const {
+    std::stringstream output;
+    output<<std::setfill('0')<<std::setw(3)<<nCod;
+    return output.str();
+}
+
+std::ostream &operator<<(std::ostream &room, const Classroom &s){
+    int nCod = s.getId();
+    room << "A" << s.setCod(nCod)<< ";"<< s.getLab() << ";" <<s.getName() <<";"<<s.getNSeats() <<";"<<s.getNExamSeats();
 }

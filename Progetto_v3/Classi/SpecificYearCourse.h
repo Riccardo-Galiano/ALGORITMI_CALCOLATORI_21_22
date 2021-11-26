@@ -43,6 +43,8 @@ public:
     const std::string getExamString() const;
     int getStartYear() const;
 
+    std::string setId(int nMatr)const;
+
     std::vector<professor> getProfsFromString (std::string profs);
     bool setProfMap(int, std::vector<std::string>, std::vector<std::string>);
 
