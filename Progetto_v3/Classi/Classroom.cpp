@@ -75,6 +75,14 @@ std::string Classroom::setCod(int nCod) const {
 }
 
 std::ostream &operator<<(std::ostream &room, const Classroom &s){
+
     int nCod = s.getId();
-    room << "A" << s.setCod(nCod)<< ";"<< s.getLab() << ";" <<s.getName() <<";"<<s.getNSeats() <<";"<<s.getNExamSeats();
+
+    room << "A" << s.setCod(nCod)<< ";";
+    if(s.getLab())
+        room <<"L;";
+    else
+        room<< "A;";
+
+    room<<s.getName() <<";"<<s.getNSeats() <<";"<<s.getNExamSeats();
 }

@@ -330,7 +330,7 @@ bool University::addStuds(const std::string &fileIn) {
     fout.open("../Sources/db_studenti.txt");
 
     for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
-        Student stud = _students.at(iterStud->first);//copy costructor?
+        Student stud = _students.at(iterStud->first);
 
         fout<<stud<<std::endl;
 
@@ -359,17 +359,17 @@ bool University::addProfessors(const std::string &fileIn) {
     }
     fIn.close();
 
-/*
+
     std::ofstream fout;
     fout.open("../Sources/db_professori.txt");
 
-    for(auto iterProf=_students.begin(); iterProf!= _students.end();iterProf++) {
-        Student prof = _students.at(iterProf->first);//copy costructor?
+    for(auto iterProf=_professors.begin(); iterProf != _professors.end();iterProf++) {
+        Professor prof = _professors.at(iterProf->first);
 
         fout<<prof<<std::endl;
     }
     fout.close();
-    */
+
 
     return true;
 }
@@ -390,6 +390,20 @@ bool University::addClassrooms(const std::string &fileIn) {
                                                                   std::stoi(tokens[3]))));
     }
     fIn.close();
+
+    std::ofstream fout;
+    fout.open("../Sources/db_aule.txt");
+
+    for(auto iterClassRoom=_classroom.begin(); iterClassRoom!= _classroom.end();iterClassRoom++) {
+        Classroom room = _classroom.at(iterClassRoom->first);
+        std::stringstream tok;
+        tok << room;
+       std::string appoggio = tok.str();
+
+        fout<< appoggio<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
+    }
+    fout.close();
+
     return true;
 }
 
@@ -462,6 +476,7 @@ bool University::addStudyCourses(const std::string &fin) {
     }
 
     fileIn.close();
+
     return true;
 }
 
