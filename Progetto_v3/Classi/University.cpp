@@ -210,8 +210,7 @@ void University::readStudyCourse() {
         std::vector<int> posSem = posCurlyBrackets(InteroCorsoDiStudi[2]);
 
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
                                                             len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
@@ -220,10 +219,10 @@ void University::readStudyCourse() {
 
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
-        corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -
-                                                                 2);    //salvo la stringa senza le quadre
-        corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
-
+        if(InteroCorsoDiStudi.size()==4) {
+            corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -  2);    //salvo la stringa senza le quadre
+            corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
+        }
 
         ///creo StudyCourse
         bool isBachelor = false;
@@ -241,8 +240,10 @@ void University::readStudyCourse() {
                                        semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
 
+        if(InteroCorsoDiStudi.size() == 4) {
+            SCourse.addOffCourses(corsiSpenti);
+        }
 
-        SCourse.addOffCourses(corsiSpenti);
         _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
     }
 

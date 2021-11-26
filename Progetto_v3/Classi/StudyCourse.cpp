@@ -113,7 +113,7 @@ std::string StudyCourse::getOffCoursesString() const {
     for(int i = 0; i<_corsiSpenti.size() ; i++){
         output<< *iterOffCourses;
         iterOffCourses++;
-        if(i < _corsiSpenti.max_size() - 1)
+        if(i < _corsiSpenti.size() - 1)
             output <<",";
     }
     output <<"]";
@@ -127,8 +127,8 @@ std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
         studC << "BS;";
     else
         studC << "MS;";
-   studC << s.getSemestersString()<<";";
+   studC << s.getSemestersString();
    if(!s.offCoursesEmpty())
-   studC << s.getOffCoursesString();
+   studC <<";"<< s.getOffCoursesString();
 }
 
