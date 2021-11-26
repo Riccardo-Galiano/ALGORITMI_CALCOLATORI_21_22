@@ -324,17 +324,12 @@ bool University::addStuds(const std::string &fileIn) {
     }
     fIn.close();
 
-
-
-    std::ofstream fout;
-    fout.open("../Sources/db_studenti.txt");
+    std::fstream fout;
+    fout.open("../Sources/db_studenti.txt",std::fstream::out | std::fstream::trunc);
 
     for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
         Student stud = _students.at(iterStud->first);
-
         fout<<stud<<std::endl;
-
-
     }
     fout.close();
 
@@ -360,8 +355,8 @@ bool University::addProfessors(const std::string &fileIn) {
     fIn.close();
 
 
-    std::ofstream fout;
-    fout.open("../Sources/db_professori.txt");
+    std::fstream fout;
+    fout.open("../Sources/db_professori.txt",std::fstream::out | std::fstream::trunc);
 
     for(auto iterProf=_professors.begin(); iterProf != _professors.end();iterProf++) {
         Professor prof = _professors.at(iterProf->first);
@@ -391,16 +386,14 @@ bool University::addClassrooms(const std::string &fileIn) {
     }
     fIn.close();
 
-    std::ofstream fout;
-    fout.open("../Sources/db_aule.txt");
+    std::fstream fout;
+    fout.open("../Sources/db_aule.txt",std::fstream::out | std::fstream::trunc);
 
     for(auto iterClassRoom=_classroom.begin(); iterClassRoom!= _classroom.end();iterClassRoom++) {
         Classroom room = _classroom.at(iterClassRoom->first);
-        std::stringstream tok;
-        tok << room;
-       std::string appoggio = tok.str();
-
-        fout<< appoggio<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
+        std::stringstream stringa;
+        stringa << room;
+        fout<< stringa.str()<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
     }
     fout.close();
 
@@ -477,6 +470,17 @@ bool University::addStudyCourses(const std::string &fin) {
 
     fileIn.close();
 
+    std::fstream fout;
+    fout.open("../Sources/db_corsi_studio.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterStudyCourse=_studyCourse.begin(); iterStudyCourse != _studyCourse.end();iterStudyCourse++) {
+        StudyCourse sC = _studyCourse.at(iterStudyCourse->first);
+        std::stringstream tok;
+        tok<<sC;
+        fout<<tok.str()<<std::endl;
+    }
+    fout.close();
+
     return true;
 }
 
@@ -533,8 +537,8 @@ bool University::addCourses(const std::string &fin) {
                                                         splittedExamData, idPar);
     }
     fileIn.close();
-    return true;
 
+    return true;
 }
 
 ///cerco la nuova matricola da associare al nuovo studente
@@ -678,17 +682,15 @@ bool University::updateStuds(const std::string &fin) {
 
     fileIn.close();
 
-    std::ofstream fout;
-    fout.open("../Sources/db_studenti.txt");
+    std::fstream fout;
+    fout.open("../Sources/db_studenti.txt",std::fstream::out | std::fstream::trunc);
 
     for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
-        Student stud = _students.at(iterStud->first);//copy costructor?
-
+        Student stud = _students.at(iterStud->first);
         fout<<stud<<std::endl;
-
-
     }
     fout.close();
+
 
     return false;
 }
@@ -752,6 +754,17 @@ bool University::updateProfessors(const std::string &fin) {
     }
 
     fileIn.close();
+
+    std::fstream fout;
+    fout.open("../Sources/db_professori.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterProf=_professors.begin(); iterProf != _professors.end();iterProf++) {
+        Professor prof = _professors.at(iterProf->first);
+
+        fout<<prof<<std::endl;
+    }
+    fout.close();
+
     return true;
 }
 
@@ -829,8 +842,19 @@ bool University::updateClassroom(const std::string &fin) {
             }
         }
     }
-
     fileIn.close();
+
+    std::fstream fout;
+    fout.open("../Sources/db_aule.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterClassRoom=_classroom.begin(); iterClassRoom!= _classroom.end();iterClassRoom++) {
+        Classroom room = _classroom.at(iterClassRoom->first);
+        std::stringstream stringa;
+        stringa << room;
+        fout<< stringa.str()<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
+    }
+    fout.close();
+
     return true;
 }
 

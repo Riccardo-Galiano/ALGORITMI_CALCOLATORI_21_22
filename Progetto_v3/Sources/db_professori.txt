@@ -1,10 +1,5 @@
-s000001;Arienti;Brunilde;brunilde.arienti@gmail.it
-s000002;Bertanzi Bianchin;Gianbattista;gianbattista.bertanzibianchin@gmail.com
-s000003;Mauriello;Natale;natale.mauriello@yahoo.it
-s000004;Galuppo Cimarosto;Marino Decimo Tiziano;marinodecimotiziano.galuppocimarosto@lycos.it
+s000001;Arienti;Brunilde;brunilde.arienti@alice.it
+s000002;Bertanzi Bianchin;Gianbattista;gianbattista.bertanzibianco@gmail.com
+s000003;Andrea;Natale;natale.mauriello@alice.com
+s000004;Galuppo Cimarosto;Marino Decimo Tiziano;marino@gmail.com
 s000005;Candotti;Venanzio;venanzio.candotti@katamail.it
-s000006;Arienti;Brunilde;brunilde.arienti@gmail.it
-s000007;Bertanzi Bianchin;Gianbattista;gianbattista.bertanzibianchin@gmail.com
-s000008;Mauriello;Natale;natale.mauriello@yahoo.it
-s000009;Galuppo Cimarosto;Marino Decimo Tiziano;marinodecimotiziano.galuppocimarosto@lycos.it
-s000010;Candotti;Venanzio;venanzio.candotti@katamail.it

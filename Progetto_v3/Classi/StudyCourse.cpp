@@ -3,11 +3,27 @@
 //
 
 #include <sstream>
+#include <iomanip>
 #include "StudyCourse.h"
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
-std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter);
+///funzione che splitta una riga considerando un delimitatore passate by reference
+std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {
+
+
+    std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector
+    std::istringstream line(s); // mi serve per poter manipolare le stringhe
+    std::string token; //buffer di appoggio per salvare l'informazione appena ricavata
+
+
+    //fin quando la riga non è finita prende l'intera riga e salva in un vettore di string l'informazione fino al prossimo delimitatore
+    while (std::getline(line, token, delimiter)) {
+        toReturn.push_back(token);
+    }
+
+    return toReturn;
+}
 
 ///aggiunge un semsetre con i relativi corsi al corso di studio
 bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses) {
@@ -50,21 +66,69 @@ const int StudyCourse::getId() const {
     return _id;
 }
 
-
-
-///funzione che splitta una riga considerando un delimitatore passate by reference
-std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {
-
-
-    std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector
-    std::istringstream line(s); // mi serve per poter manipolare le stringhe
-    std::string token; //buffer di appoggio per salvare l'informazione appena ricavata
-
-
-    //fin quando la riga non è finita prende l'intera riga e salva in un vettore di string l'informazione fino al prossimo delimitatore
-    while (std::getline(line, token, delimiter)) {
-        toReturn.push_back(token);
-    }
-
-    return toReturn;
+std::string StudyCourse::setCod(int nCod) const {
+    std::stringstream output;
+    output<<std::setfill('0')<<std::setw(3)<<nCod;
+    return output.str();
 }
+
+bool StudyCourse::getIsBachelor() const {
+    return _isBachelor;
+}
+
+std::string StudyCourse::getSemestersString() const {
+    std::stringstream output;
+    auto iterSemester = _semesters.begin();
+
+    output<<"[";
+    for(int i = 0 ; i<_semesters.size() ; i++){
+        output <<"{";
+
+        int numCoursesSemester = iterSemester->second.size();
+        for(int j = 0;j< numCoursesSemester; j++){
+            output<< iterSemester->second[j] ;
+            if(j< numCoursesSemester-1)
+                output<<",";
+        }
+        iterSemester++;
+        output <<"}";
+        if(i<_semesters.size()-1)
+            output <<",";
+    }
+    output <<"]";
+
+    return output.str();
+}
+
+bool StudyCourse::offCoursesEmpty() const {
+    return _corsiSpenti.empty();
+}
+
+
+std::string StudyCourse::getOffCoursesString() const {
+    std::stringstream output;
+
+    auto iterOffCourses = _corsiSpenti.begin();
+    output <<"[";
+    for(int i = 0; i<_corsiSpenti.size() ; i++){
+        output<< *iterOffCourses;
+        iterOffCourses++;
+        if(i < _corsiSpenti.max_size() - 1)
+            output <<",";
+    }
+    output <<"]";
+    return output.str();
+}
+
+std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
+    int nCod = s.getId();
+    studC << "C"<<s.setCod(nCod)<<";";
+    if(s.getIsBachelor())
+        studC << "BS;";
+    else
+        studC << "MS;";
+   studC << s.getSemestersString()<<";";
+   if(!s.offCoursesEmpty())
+   studC << s.getOffCoursesString();
+}
+
