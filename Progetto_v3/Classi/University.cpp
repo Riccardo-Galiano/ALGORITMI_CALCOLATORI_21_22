@@ -219,6 +219,7 @@ void University::readStudyCourse() {
 
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
+
         if(InteroCorsoDiStudi.size()==4) {
             corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -  2);    //salvo la stringa senza le quadre
             corsiSpenti = splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
@@ -333,8 +334,6 @@ bool University::addStuds(const std::string &fileIn) {
         fout<<stud<<std::endl;
     }
     fout.close();
-
-
 
     return true;
 }
@@ -521,23 +520,35 @@ bool University::addCourses(const std::string &fin) {
 
 
         num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
-        profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() -
-                                                          2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<int> posCBrackets = posCurlyBrackets(
-                profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
-        std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,
-                                                           posCBrackets);//divido i vari corsi in parallelo
+        profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
+        std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,posCBrackets);//divido i vari corsi in parallelo
         examData = specificYearCourse[8];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = splittedLine(examData, ',');//scissione info esami
         idParallelCourse = specificYearCourse[9];//id dei vari corsi in parallelo
-        idParallelCourse = idParallelCourse.substr(1,
-                                                   idParallelCourse.size() - 2);// tolgo le { } che racchiudono gli id
+        idParallelCourse = idParallelCourse.substr(1, idParallelCourse.size() - 2);// tolgo le { } che racchiudono gli id
         idPar = splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
-        _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                        splittedExamData, idPar);
+        _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idPar);
     }
     fileIn.close();
+
+    std::fstream fout;
+    fout.open("../Sources/db_corsi.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++) {
+        Course generalCourse = _courses.at(iterCourse->first);
+        std::stringstream token;
+        token<<generalCourse;
+        fout<<token.str()<<std::endl;
+        int size = iterCourse->second.getSpecificYearCourseSize();
+        std::vector<std::string> SYCourse = iterCourse->second.getSpecificYearsCourse();
+        for(int i = 0; i < size; i++){
+            fout<<SYCourse[i]<<std::endl;
+        }
+
+    }
+    fout.close();
 
     return true;
 }
@@ -912,6 +923,23 @@ bool University::insertCourses(const std::string &fin) {
         idPar = splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
         _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,splittedExamData, idPar);
     }
+
+    std::fstream fout;
+    fout.open("../Sources/db_corsi.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++) {
+        Course generalCourse = _courses.at(iterCourse->first);
+        std::stringstream token;
+        token<<generalCourse;
+        fout<<token.str()<<std::endl;
+        int size = iterCourse->second.getSpecificYearCourseSize();
+        std::vector<std::string> SYCourse = iterCourse->second.getSpecificYearsCourse();
+        for(int i = 0; i < size; i++){
+            fout<<SYCourse[i]<<std::endl;
+        }
+
+    }
+    fout.close();
 
     return true;
 }

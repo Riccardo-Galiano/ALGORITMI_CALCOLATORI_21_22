@@ -77,6 +77,42 @@ SpecificYearCourse &Course::getLastSpecificYearCourse() {
     return _courseOfTheYear.at(lastYear);
 }
 
+const std::string &Course::getId() const {
+    return _id;
+}
+
+const std::string &Course::getName() const {
+    return _name;
+}
+
+int Course::getCfu() const {
+    return _cfu;
+}
+
+const hours &Course::getHours() const {
+    return _hours;
+}
+
+std::vector<std::string> Course::getSpecificYearsCourse()  {
+
+    std::vector<std::string> specificYearsCourse;
+
+   for(auto iterSpecificYearCourse = _courseOfTheYear.begin(); iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {
+       std::stringstream tokens;
+       SpecificYearCourse specific = iterSpecificYearCourse->second;
+       tokens << "a;" << specific;
+       specificYearsCourse.push_back(tokens.str());
+   }
+
+   return specificYearsCourse ;
+}
+
+int Course::getSpecificYearCourseSize() const {
+    return _courseOfTheYear.size();
+}
 
 
-
+std::ostream &operator<<(std::ostream &course, const Course &s) {
+    course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";" << s.getHours()._ex << ";" << s.getHours()._lab;
+    return course;
+}

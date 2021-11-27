@@ -27,6 +27,16 @@ public:
     bool fillSpecificYearCourse(std::vector<std::string>& );
 
     SpecificYearCourse &getLastSpecificYearCourse();
+    std::vector<std::string>  getSpecificYearsCourse();
+
+    const std::string &getId() const;
+
+    const std::string &getName() const;
+
+    int getCfu() const;
+
+    const hours &getHours() const;
+    int getSpecificYearCourseSize() const;
 
 private:
     std::string _id;///codice identificativo del corso
@@ -36,6 +46,7 @@ private:
     std::vector<Course *> _groupedCourse; ///corsi che avranno l'esame negli stessi giorni e nelle stesse ore
     std::map<int, SpecificYearCourse> _courseOfTheYear;//key: accademic yy
 };
+std::ostream &operator<<(std::ostream &course, const Course&s);
 
 
 #endif //PROGETTO_V3_COURSE_H
