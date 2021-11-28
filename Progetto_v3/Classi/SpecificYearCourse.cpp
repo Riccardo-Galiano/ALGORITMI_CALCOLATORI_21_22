@@ -15,11 +15,12 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _parallelCourses = nCrsiPar;
     _idPar = idPar;
     setProfMap(nCrsiPar, prof, idPar);//setto la mappa dei prof per ogni corso
-    //_exam = Exam(stoi(exam[0]),stoi(exam[1]),stoi(exam[2]),exam[3],exam[4]);
+
 }
 
+///scinde le varie info per ogni prof e li mette in un vettore di struct professor
 std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs) {
-    int mainProf;
+    int mainProf; //titolare del corso
     std::vector<std::string> singoliProfDaLeggere;
     std::vector<professor> profToReturn;
     std::string profSenzaQuadre;
@@ -33,6 +34,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
                                               1); //tolgo le [ ] che delimitano i vari prof con le relative informazioni
     std::vector<int> foundBracket;
 
+    ///cerco e salvo le posizioni di { o } in profSenzaQuadre
     std::size_t posB = profSenzaQuadre.find_first_of("{}");
     bool toContinue = true;
     while (toContinue) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
@@ -45,7 +47,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
         }
     }
 
-    ///controllare che legga giusto
+    ///estrae ogni prof con le relative info
     for (int i = 0; i < foundBracket.size(); i += 2) {
         singoliProfDaLeggere.push_back(
                 profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
@@ -61,15 +63,17 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
         p.hLez = hlez;
         p.hExe = hexe;
         p.hLab = hlab;
-        if (p.prof_id == mainProf) {
+        if (p.prof_id == mainProf) {//se l'id analizzato uguale a quello del titolare letto in precedenza
             p.mainProf = true;
         }
-        profToReturn.push_back(p);
+        profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
 
     return profToReturn;
 }
 
+///setta la map dei prof con relativi id e ore
+//ogni anno accademico per ogni corso presenta una map che contiene tutte le info raccolte per i prof di ogni corso in parallelo
 bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, std::vector<std::string> idCorso) {
 
     std::vector<professor> profConOre;
@@ -77,9 +81,11 @@ bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> pr
         profConOre = getProfsFromString( profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
         _professors.insert(std::pair<std::string, std::vector<professor>>(idCorso[i], profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
+
     return false;
 }
 
+///setta l'Id aggiungendo degli 0 all'inizio, dove necessario
 std::string SpecificYearCourse::setId(int nMatr) const {
     std::stringstream output;
     output<<std::setfill('0')<<std::setw(6)<<nMatr;

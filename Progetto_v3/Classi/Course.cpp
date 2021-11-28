@@ -32,9 +32,9 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
 
 }
 
-//aggiunge per ogni anno accademico il corso con le sue informazioni
+///aggiunge per ogni anno accademico il corso con le sue informazioni
 bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idPar) {
-
+///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,idPar)));
 
     return true;
@@ -52,10 +52,14 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 
     SpecificYearCourse lastYearSpecificCourse = getLastSpecificYearCourse();
     std::stringstream last;
+    std::string posLastOffCourses;
     std::vector<std::string> lastYearSpecificYearCourseSplitted;
     last << lastYearSpecificCourse;
 
     lastYearSpecificYearCourseSplitted = splittedLine3(last.str(), ';');
+    if(specificYearCourse.size()== 3){
+        specificYearCourse.push_back(posLastOffCourses);
+    }
 
     for (int i = 2; i < specificYearCourse.size(); i++) {
         if (specificYearCourse[i].empty()) {
@@ -65,6 +69,7 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     return true;
 }
 
+///prende l'ultimo oggetto SpecificYearCourse dalla map _coursOfTheYear
 SpecificYearCourse &Course::getLastSpecificYearCourse() {
     int lastYear = 0, actualYear;
 
@@ -77,40 +82,45 @@ SpecificYearCourse &Course::getLastSpecificYearCourse() {
     return _courseOfTheYear.at(lastYear);
 }
 
+///legge l'Id
 const std::string &Course::getId() const {
     return _id;
 }
 
+///lette il nome
 const std::string &Course::getName() const {
     return _name;
 }
 
+///legge i cfu
 int Course::getCfu() const {
     return _cfu;
 }
 
+///legge le ore
 const hours &Course::getHours() const {
     return _hours;
 }
 
+///ogni stringa è costituita dalle info di uno specifico anno accademico del corso analizzato
 std::vector<std::string> Course::getSpecificYearsCourse()  {
 
     std::vector<std::string> specificYearsCourse;
 
-   for(auto iterSpecificYearCourse = _courseOfTheYear.begin(); iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {
+   for(auto iterSpecificYearCourse = _courseOfTheYear.begin(); iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {//per ogni anno accademico
        std::stringstream tokens;
-       SpecificYearCourse specific = iterSpecificYearCourse->second;
-       tokens << "a;" << specific;
-       specificYearsCourse.push_back(tokens.str());
+       SpecificYearCourse specific = iterSpecificYearCourse->second;//salvo le info puntatte da iterSpecificYearCourse che contiene le info dello specifico anno accademico
+       tokens << "a;" << specific; //overload dell'operatore. (si rimanda all'overload di << in SpecificYearCourse.cpp)
+       specificYearsCourse.push_back(tokens.str());//salvo la stringa con le info dell'anno
    }
 
    return specificYearsCourse ;
 }
 
+///prendo la dimensione della mappa di anni accademici
 int Course::getSpecificYearCourseSize() const {
     return _courseOfTheYear.size();
 }
-
 
 std::ostream &operator<<(std::ostream &course, const Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";" << s.getHours()._ex << ";" << s.getHours()._lab;
