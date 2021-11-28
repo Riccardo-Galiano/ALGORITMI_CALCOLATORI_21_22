@@ -8,6 +8,7 @@
 
 Student::Student(int matr, std::string name, std::string surname, std::string email): UniversityMember(matr, name, surname, email) {}
 
+///overload operatore <<
 std::ostream &operator<<(std::ostream &stud, const Student &s){
     int Id = s.getId();
     stud<< "s" << s.setId(Id)<< ";"<< s.getName()<<";"<<s.getSurname()<<";"<<s.getEmail();

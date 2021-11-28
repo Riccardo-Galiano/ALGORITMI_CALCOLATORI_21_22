@@ -66,60 +66,67 @@ const int StudyCourse::getId() const {
     return _id;
 }
 
+///setta il codice del cosro si studi aggiungendo 0 dove necessario
 std::string StudyCourse::setCod(int nCod) const {
     std::stringstream output;
     output<<std::setfill('0')<<std::setw(3)<<nCod;
     return output.str();
 }
 
+///prende il tipo di corso di studio: triennale o magistrale
 bool StudyCourse::getIsBachelor() const {
     return _isBachelor;
 }
 
+///prende l'intero semestre sottoforma di stringa
 std::string StudyCourse::getSemestersString() const {
     std::stringstream output;
     auto iterSemester = _semesters.begin();
 
     output<<"[";
-    for(int i = 0 ; i<_semesters.size() ; i++){
+    for(int i = 0 ; i<_semesters.size() ; i++){//per ogni semestre
         output <<"{";
 
-        int numCoursesSemester = iterSemester->second.size();
+        int numCoursesSemester = iterSemester->second.size();//numero di corsi del semestre
+        ///streammo su output ogni corso del semestre
         for(int j = 0;j< numCoursesSemester; j++){
-            output<< iterSemester->second[j] ;
-            if(j< numCoursesSemester-1)
+            output<< iterSemester->second[j] ;//l'iteratore punterà al j-esimo elemento del vettore di stringhe, value di ogni _semester della mappa, contenente i codici dei corsi
+            if(j< numCoursesSemester-1) //se è l'ultimo corso del semestre non va messa la virgola finale
                 output<<",";
         }
         iterSemester++;
         output <<"}";
-        if(i<_semesters.size()-1)
+        if(i<_semesters.size()-1)//se l'ultimo semestre non va messa la virgola
             output <<",";
     }
     output <<"]";
 
-    return output.str();
+    return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
+///controlla se ci sono corsi spenti: corsiSpenti è vuoto?
 bool StudyCourse::offCoursesEmpty() const {
     return _corsiSpenti.empty();
 }
 
-
+///prende i corsi spenti
 std::string StudyCourse::getOffCoursesString() const {
     std::stringstream output;
+    int countCourses = 0;
 
-    auto iterOffCourses = _corsiSpenti.begin();
+
     output <<"[";
-    for(int i = 0; i<_corsiSpenti.size() ; i++){
-        output<< *iterOffCourses;
-        iterOffCourses++;
-        if(i < _corsiSpenti.size() - 1)
+    for( auto iterOffCourses = _corsiSpenti.begin(); iterOffCourses != _corsiSpenti.end() ; iterOffCourses++){//per ogni corso spento
+        output<< *iterOffCourses;//dereferenzio l'iteratore: prendo il value puntato dall'iteratore
+        if( countCourses< _corsiSpenti.size() - 1)//se l'ultimo corso non va messa la virgola
             output <<",";
+        countCourses ++;
     }
     output <<"]";
-    return output.str();
+    return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
+///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
     int nCod = s.getId();
     studC << "C"<<s.setCod(nCod)<<";";
@@ -127,8 +134,9 @@ std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
         studC << "BS;";
     else
         studC << "MS;";
-   studC << s.getSemestersString();
-   if(!s.offCoursesEmpty())
-   studC <<";"<< s.getOffCoursesString();
+   studC << s.getSemestersString(); //stringa semestri
+   if(!s.offCoursesEmpty()) //ci sono corsi spenti?
+         studC <<";"<< s.getOffCoursesString();//se ci sono corsi spenti allora prendili
+    return studC;
 }
 

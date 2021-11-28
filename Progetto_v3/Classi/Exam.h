@@ -14,13 +14,9 @@ public:
     Exam(int time, int enterTime, int leaveTime, const std::string &mode, std::string place);
 
     int getTime() const;
-
     int getEnterTime() const;
-
     int getLeaveTime() const;
-
     const std::string &getMode() const;
-
     const std::string &getPlace() const;
 
 private:

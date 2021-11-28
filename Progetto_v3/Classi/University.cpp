@@ -545,16 +545,19 @@ bool University::addCourses(const std::string &fin) {
     fout.open("../Sources/db_corsi.txt",std::fstream::out | std::fstream::trunc);
 
     for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++) {
-        Course generalCourse = _courses.at(iterCourse->first);//prendo lintero oggetto Course generale per scrivere su file la riga che inizia con "c"
-        std::stringstream token;
-        token<<generalCourse;
-        fout<<token.str()<<std::endl; //scrivo la riga delle info generali del corso. inizia con "c" (si rimanda all'overload dell'operatore << in Course.cpp)
-        int size = iterCourse->second.getSpecificYearCourseSize();//prendo la dimensione di _courseOfTheYear. In altre parole quanti anni accademici ho per il corso analizzato
-        std::vector<std::string> SYCourse = iterCourse->second.getSpecificYearsCourse();//mi ritorna il vettore di stringhe dove ogni stringa è costituita dalle info di uno specifico anno accademico del corso analizzato
-        for(int i = 0; i < size; i++){//per ogni anno accademico scrivo la relativa riga
-            fout<<SYCourse[i]<<std::endl;
-        }
+        Course generalCourse = _courses.at(
+                iterCourse->first);//prendo lintero oggetto Course generale per scrivere su file la riga che inizia con "c"
+        std::stringstream courseToken;
+        courseToken << generalCourse;
+        fout << courseToken.str() << std::endl;
+        int size = iterCourse->second.getSpecificYearCourseSize();
+        std::vector<SpecificYearCourse> SYCourse = iterCourse->second.getSpecificYearsCourse();
+        for (int i = 0; i < size; i++) {
+            std::stringstream SYtoken;
+            SYtoken << SYCourse[i];
+            fout << SYtoken.str() << std::endl;
 
+        }
     }
     fout.close();
 
@@ -938,13 +941,15 @@ bool University::insertCourses(const std::string &fin) {
 
     for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++) {
         Course generalCourse = _courses.at(iterCourse->first);
-        std::stringstream token;
-        token<<generalCourse;
-        fout<<token.str()<<std::endl;
+        std::stringstream courseToken;
+        courseToken<<generalCourse;
+        fout<<courseToken.str()<<std::endl;
         int size = iterCourse->second.getSpecificYearCourseSize();
-        std::vector<std::string> SYCourse = iterCourse->second.getSpecificYearsCourse();
+        std::vector<SpecificYearCourse> SYCourse = iterCourse->second.getSpecificYearsCourse();
         for(int i = 0; i < size; i++){
-            fout<<SYCourse[i]<<std::endl;
+            std::stringstream SYtoken;
+            SYtoken<<SYCourse[i];
+            fout<<SYtoken.str()<<std::endl;
         }
 
     }

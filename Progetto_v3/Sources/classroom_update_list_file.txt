@@ -1,2 +1,2 @@
-A003;L;Aula 5R;130;
-A002;A;Aula 3;;30
+A003;L;Aula 5R;13;
+A002;A;Aula 4;;30

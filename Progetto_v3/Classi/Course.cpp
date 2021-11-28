@@ -40,6 +40,7 @@ bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar
     return true;
 }
 
+///riempie il vettore di stringhe specificYearcourse
 bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse) {
     std::string acYear = specificYearCourse[1];
     std::stringstream ss(acYear);
@@ -57,10 +58,15 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     last << lastYearSpecificCourse;
 
     lastYearSpecificYearCourseSplitted = splittedLine3(last.str(), ';');
+
+    //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
+    //specificYearCourse avrebbe soltanto 3 campi quindi dovremmo aggiungere un quarto campo inizialmente vuoto che verrà poi riempito dalle info
+    //dell'anno precedente
     if(specificYearCourse.size()== 3){
         specificYearCourse.push_back(posLastOffCourses);
     }
 
+    ///se il campo è vuoto lo riempio con le info dell'anno precedente
     for (int i = 2; i < specificYearCourse.size(); i++) {
         if (specificYearCourse[i].empty()) {
             specificYearCourse[i] = lastYearSpecificYearCourseSplitted[i - 1];
@@ -73,12 +79,19 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 SpecificYearCourse &Course::getLastSpecificYearCourse() {
     int lastYear = 0, actualYear;
 
-    for (auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
-        actualYear = iter->second.getStartYear();
+    for (auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
+        actualYear = iter->second.getStartYear();//punta all'oggetto di tipo SpecificYearCourse e ne prende l'anno di inizio(che poi sarebbe la key)
+                                                  //potrei scrivere actualYear = iter->first
         if (actualYear > lastYear)
-            lastYear = actualYear;
-    }
+            lastYear = actualYear;//prendo l'ultimo anno
 
+
+    }
+/*
+ potrei scrivere al posto del for
+ auto iter = _courseOfTheYear.rbegin(); mi da direttamente l'ultimo anno perchè la map è organizzata con le key in ordine crescente quindi l'ultimo in coda sarà sicuramente l'anno accademico più frequente
+ int lastYear = iter->first;
+ */
     return _courseOfTheYear.at(lastYear);
 }
 
@@ -103,15 +116,15 @@ const hours &Course::getHours() const {
 }
 
 ///ogni stringa è costituita dalle info di uno specifico anno accademico del corso analizzato
-std::vector<std::string> Course::getSpecificYearsCourse()  {
+std::vector<SpecificYearCourse> Course::getSpecificYearsCourse()  {
 
-    std::vector<std::string> specificYearsCourse;
+    std::vector<SpecificYearCourse> specificYearsCourse;
 
    for(auto iterSpecificYearCourse = _courseOfTheYear.begin(); iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {//per ogni anno accademico
-       std::stringstream tokens;
-       SpecificYearCourse specific = iterSpecificYearCourse->second;//salvo le info puntatte da iterSpecificYearCourse che contiene le info dello specifico anno accademico
-       tokens << "a;" << specific; //overload dell'operatore. (si rimanda all'overload di << in SpecificYearCourse.cpp)
-       specificYearsCourse.push_back(tokens.str());//salvo la stringa con le info dell'anno
+       //std::stringstream tokens;
+       SpecificYearCourse specific = iterSpecificYearCourse->second;//salvo le info puntate da iterSpecificYearCourse che contiene le info dello specifico anno accademico
+       //tokens << "a;" << specific; //overload dell'operatore. (si rimanda all'overload di << in SpecificYearCourse.cpp)
+       specificYearsCourse.push_back(specific);//salvo la stringa con le info dell'anno
    }
 
    return specificYearsCourse ;
