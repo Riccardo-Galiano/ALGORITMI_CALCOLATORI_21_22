@@ -17,7 +17,8 @@ enum {
     update_student,
     update_professor,
     update_classroom,
-    insert_course
+    insert_course,
+    set_availability
 };
 
 
@@ -40,6 +41,8 @@ int returnCode(std::string paramInput) {
         return update_classroom;
     else if (paramInput.compare("-i:c") == 0)
         return insert_course;
+    else if(paramInput.compare("-s") == 0)
+        return set_availability;
     return -1;
 }
 
@@ -82,6 +85,10 @@ void startProgram(University &uni, char *argv[]) {
             uni.insertCourses(argv[2]);
             break;
         }
+        case set_availability: {
+            break;
+        }
+
         default:
             throw std::invalid_argument("comando non trovato");
             break;

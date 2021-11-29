@@ -1,4 +1,5 @@
-s000001;Arienti;Brunilde;brunilde.arienti@alice.it
+s000001;Arienti;Brunilde;brunilde.arienti@gmail.it
 s000002;Bertanzi Bianchin;Gianbattista;gianbattista.bertanzibianchin@gmail.com
-s000003;Andrea;Natale;natale.mauriello@yahoo.com
-s000004;Galuppo Cimarosto;Marino Decimo Tiziano;marini@gmail.com
+s000003;Mauriello;Natale;natale.mauriello@yahoo.it
+s000004;Galuppo Cimarosto;Marino Decimo Tiziano;marinodecimotiziano.galuppocimarosto@lycos.it
+s000005;Candotti;Venanzio;venanzio.candotti@katamail.it

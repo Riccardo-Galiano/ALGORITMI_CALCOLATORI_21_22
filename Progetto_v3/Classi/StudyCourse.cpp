@@ -6,25 +6,9 @@
 #include <iomanip>
 #include <algorithm>
 #include "StudyCourse.h"
+#include "Parse.hpp"
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
-
-///funzione che splitta una riga considerando un delimitatore passate by reference
-std::vector<std::string> splittedLine2(const std::string &s, const char &delimiter) {
-
-
-    std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate con vector
-    std::istringstream line(s); // mi serve per poter manipolare le stringhe
-    std::string token; //buffer di appoggio per salvare l'informazione appena ricavata
-
-
-    //fin quando la riga non è finita prende l'intera riga e salva in un vettore di string l'informazione fino al prossimo delimitatore
-    while (std::getline(line, token, delimiter)) {
-        toReturn.push_back(token);
-    }
-
-    return toReturn;
-}
 
 ///aggiunge un semsetre con i relativi corsi al corso di studio
 bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses) {
@@ -36,7 +20,7 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
 
     ///create values
     std::vector<std::string> courses;
-    courses = splittedLine2(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
+    courses = Parse::splittedLine(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     for (auto iter = courses.begin(); iter != courses.end(); iter++) {//analizzo tutti i componenti del vettore corsi
         if (!_semesters.count(key)) {//se la chiave non esiste

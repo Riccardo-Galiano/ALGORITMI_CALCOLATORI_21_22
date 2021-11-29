@@ -10,10 +10,11 @@
 
 class Student : public UniversityMember {
 public:
-    Student(int,std::string, std::string, std::string); ///matricola, nome, cognome, email
+    Student(int, std::string, std::string, std::string); ///matricola, nome, cognome, email
 
 
 };
+
 std::ostream &operator<<(std::ostream &stud, const Student &s);
 
 

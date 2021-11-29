@@ -18,6 +18,6 @@ Professor::Professor(int matr) : UniversityMember() {
 std::ostream &operator<<(std::ostream &prof, const Professor &s){
 
     int Id = s.getId();
-    prof<< "s" << s.setId(Id)<< ";"<< s.getName()<<";"<<s.getSurname()<<";"<<s.getEmail();
+    prof<< "d" << s.setId(Id)<< ";"<< s.getName()<<";"<<s.getSurname()<<";"<<s.getEmail();
     return prof;
 }

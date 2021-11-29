@@ -30,8 +30,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
     idMainProf = profs.substr(0, found);//salva l'id del titolare
     std::stringstream ssIdProf(idMainProf);//manipolo l'id per togliere la "d" e avere solo un intero
     ssIdProf >> c >> mainProf;
-    profSenzaQuadre = profs.substr(found + 2, (profs.size() - found - 2) -
-                                              1); //tolgo le [ ] che delimitano i vari prof con le relative informazioni
+    profSenzaQuadre = profs.substr(found + 2, (profs.size() - found - 2) - 1); //tolgo le [ ] che delimitano i vari prof con le relative informazioni
     std::vector<int> foundBracket;
 
     ///cerco e salvo le posizioni di { o } in profSenzaQuadre
@@ -49,8 +48,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 
     ///estrae ogni prof con le relative info
     for (int i = 0; i < foundBracket.size(); i += 2) {
-        singoliProfDaLeggere.push_back(
-                profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
+        singoliProfDaLeggere.push_back( profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
 
     }
     int id, hlez, hexe, hlab;
@@ -165,6 +163,6 @@ std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << ";" << s.getParalleleCours() << ";";
     output << s.getProfParSTring() << ";";
     output << s.getExamString() << ";";
-    output << s.getParCourseIdString() << ";";
+    output << s.getParCourseIdString();
     return output;
 }

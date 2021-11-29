@@ -4,22 +4,9 @@
 
 #include <sstream>
 #include "Course.h"
-
-std::vector<std::string> splittedLine3(const std::string &s, const char &delimiter) {
-
-
-    std::vector<std::string> toReturn; //conterrà la riga splittata nelle sue informazioni necessarie e indicizzate
-    std::istringstream line(s); // mi serve per poter manipolare le stringhe
-    std::string token; //buffer di appoggio per salvare l'informazione appena ricavata
+#include "Parse.hpp"
 
 
-    //fin quando la riga non è finita prende l'intera riga(line) e salva in una stringa del vettore di stringhe(tokens) l'informazione fino al prossimo delimitatore
-    while (std::getline(line, token, delimiter)) {
-        toReturn.push_back(token);
-    }
-
-    return toReturn;
-}
 
 Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio) {
 
@@ -57,12 +44,12 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     std::vector<std::string> lastYearSpecificYearCourseSplitted;
     last << lastYearSpecificCourse;
 
-    lastYearSpecificYearCourseSplitted = splittedLine3(last.str(), ';');
+    lastYearSpecificYearCourseSplitted = Parse::splittedLine(last.str(), ';');
 
     //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
     //specificYearCourse avrebbe soltanto 3 campi quindi dovremmo aggiungere un quarto campo inizialmente vuoto che verrà poi riempito dalle info
     //dell'anno precedente
-    if(specificYearCourse.size()== 3){
+    if(specificYearCourse.size()== 6){
         specificYearCourse.push_back(posLastOffCourses);
     }
 
@@ -135,7 +122,12 @@ int Course::getSpecificYearCourseSize() const {
     return _courseOfTheYear.size();
 }
 
-std::ostream &operator<<(std::ostream &course, const Course &s) {
-    course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";" << s.getHours()._ex << ";" << s.getHours()._lab;
+std::ostream &operator<<(std::ostream &course, Course &s) {
+    course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";" << s.getHours()._ex << ";" << s.getHours()._lab <<std::endl;
+    int size = s.getSpecificYearCourseSize();
+    std::vector<SpecificYearCourse> SYCourse = s.getSpecificYearsCourse();
+    for (int i = 0; i < size; i++) {
+        course << "a;" << SYCourse[i] << std::endl;
+    }
     return course;
 }

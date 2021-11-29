@@ -85,4 +85,5 @@ std::ostream &operator<<(std::ostream &room, const Classroom &s){
         room<< "A;";
 
     room<<s.getName() <<";"<<s.getNSeats() <<";"<<s.getNExamSeats();
+    return room;
 }

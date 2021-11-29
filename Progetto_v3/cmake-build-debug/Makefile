@@ -122,6 +122,33 @@ Progetto_v3/fast:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/build
 .PHONY : Progetto_v3/fast
 
+Classi/Calendar.obj: Classi/Calendar.cpp.obj
+
+.PHONY : Classi/Calendar.obj
+
+# target to build an object file
+Classi/Calendar.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Calendar.cpp.obj
+.PHONY : Classi/Calendar.cpp.obj
+
+Classi/Calendar.i: Classi/Calendar.cpp.i
+
+.PHONY : Classi/Calendar.i
+
+# target to preprocess a source file
+Classi/Calendar.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Calendar.cpp.i
+.PHONY : Classi/Calendar.cpp.i
+
+Classi/Calendar.s: Classi/Calendar.cpp.s
+
+.PHONY : Classi/Calendar.s
+
+# target to generate assembly for a file
+Classi/Calendar.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Calendar.cpp.s
+.PHONY : Classi/Calendar.cpp.s
+
 Classi/Classroom.obj: Classi/Classroom.cpp.obj
 
 .PHONY : Classi/Classroom.obj
@@ -229,6 +256,33 @@ Classi/Exam.s: Classi/Exam.cpp.s
 Classi/Exam.cpp.s:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.s
 .PHONY : Classi/Exam.cpp.s
+
+Classi/ExamDay.obj: Classi/ExamDay.cpp.obj
+
+.PHONY : Classi/ExamDay.obj
+
+# target to build an object file
+Classi/ExamDay.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj
+.PHONY : Classi/ExamDay.cpp.obj
+
+Classi/ExamDay.i: Classi/ExamDay.cpp.i
+
+.PHONY : Classi/ExamDay.i
+
+# target to preprocess a source file
+Classi/ExamDay.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.i
+.PHONY : Classi/ExamDay.cpp.i
+
+Classi/ExamDay.s: Classi/ExamDay.cpp.s
+
+.PHONY : Classi/ExamDay.s
+
+# target to generate assembly for a file
+Classi/ExamDay.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.s
+.PHONY : Classi/ExamDay.cpp.s
 
 Classi/Professor.obj: Classi/Professor.cpp.obj
 
@@ -428,6 +482,9 @@ help:
 	@echo ... Progetto_v3
 	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... Classi/Calendar.obj
+	@echo ... Classi/Calendar.i
+	@echo ... Classi/Calendar.s
 	@echo ... Classi/Classroom.obj
 	@echo ... Classi/Classroom.i
 	@echo ... Classi/Classroom.s
@@ -440,6 +497,9 @@ help:
 	@echo ... Classi/Exam.obj
 	@echo ... Classi/Exam.i
 	@echo ... Classi/Exam.s
+	@echo ... Classi/ExamDay.obj
+	@echo ... Classi/ExamDay.i
+	@echo ... Classi/ExamDay.s
 	@echo ... Classi/Professor.obj
 	@echo ... Classi/Professor.i
 	@echo ... Classi/Professor.s

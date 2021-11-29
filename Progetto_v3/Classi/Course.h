@@ -46,7 +46,7 @@ private:
     std::vector<Course *> _groupedCourse; ///corsi che avranno l'esame negli stessi giorni e nelle stesse ore
     std::map<int, SpecificYearCourse> _courseOfTheYear;//key: accademic yy
 };
-std::ostream &operator<<(std::ostream &course, const Course&s);
+std::ostream &operator<<(std::ostream &course, Course&s);
 
 
 #endif //PROGETTO_V3_COURSE_H
