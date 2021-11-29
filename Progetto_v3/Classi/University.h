@@ -32,6 +32,12 @@ public:
     bool updateClassroom(const std::string &fin);
     bool insertCourses(const std::string &fin);
 
+    void dbStudsWrite();
+    void dbProfsWrite();
+    void dbClassRoomWrite();
+    void dbStudyCourseWrite();
+    void dbCourseWrite();
+
 
 
 private:

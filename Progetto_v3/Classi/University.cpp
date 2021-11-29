@@ -330,15 +330,7 @@ bool University::addStuds(const std::string &fileIn) {
     }
     fIn.close();
 
-    ///riscrive il database degli studenti
-    std::fstream fout;
-    fout.open("../Sources/db_studenti.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
-        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
-        fout<<stud<<std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
-    }
-    fout.close();
+    dbStudsWrite();
 
     return true;
 }
@@ -359,17 +351,7 @@ bool University::addProfessors(const std::string &fileIn) {
     }
     fIn.close();
 
-    ///riscrive il database dei professori
-    std::fstream fout;
-    fout.open("../Sources/db_professori.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterProf=_professors.begin(); iterProf != _professors.end();iterProf++) {
-        Professor prof = _professors.at(iterProf->first);
-
-        fout<<prof<<std::endl;
-    }
-    fout.close();
-
+    dbProfsWrite();
 
     return true;
 }
@@ -391,17 +373,7 @@ bool University::addClassrooms(const std::string &fileIn) {
     }
     fIn.close();
 
-    ///riscrive il database delle classroom
-    std::fstream fout;
-    fout.open("../Sources/db_aule.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterClassRoom=_classroom.begin(); iterClassRoom!= _classroom.end();iterClassRoom++) {
-        Classroom room = _classroom.at(iterClassRoom->first);
-        std::stringstream stringa;
-        stringa << room;
-        fout<< stringa.str()<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
-    }
-    fout.close();
+    dbClassRoomWrite();
 
     return true;
 }
@@ -476,17 +448,7 @@ bool University::addStudyCourses(const std::string &fin) {
 
     fileIn.close();
 
-    ///riscrive il database dei corsi di studio
-    std::fstream fout;
-    fout.open("../Sources/db_corsi_studio.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterStudyCourse=_studyCourse.begin(); iterStudyCourse != _studyCourse.end();iterStudyCourse++) {
-        StudyCourse sC = _studyCourse.at(iterStudyCourse->first);
-        std::stringstream tok;
-        tok<<sC;
-        fout<<tok.str()<<std::endl;
-    }
-    fout.close();
+    dbStudyCourseWrite();
 
     return true;
 }
@@ -537,26 +499,7 @@ bool University::addCourses(const std::string &fin) {
     }
     fileIn.close();
 
-    //riscrive il database dei corsi
-    std::fstream fout;
-    fout.open("../Sources/db_corsi.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++) {
-        Course generalCourse = _courses.at(
-                iterCourse->first);//prendo lintero oggetto Course generale per scrivere su file la riga che inizia con "c"
-        std::stringstream courseToken;
-        courseToken << generalCourse;
-        fout << courseToken.str() << std::endl;
-        int size = iterCourse->second.getSpecificYearCourseSize();
-        std::vector<SpecificYearCourse> SYCourse = iterCourse->second.getSpecificYearsCourse();
-        for (int i = 0; i < size; i++) {
-            std::stringstream SYtoken;
-            SYtoken << SYCourse[i];
-            fout << SYtoken.str() << std::endl;
-
-        }
-    }
-    fout.close();
+   dbCourseWrite();
 
     return true;
 }
@@ -702,14 +645,7 @@ bool University::updateStuds(const std::string &fin) {
 
     fileIn.close();
 
-    std::fstream fout;
-    fout.open("../Sources/db_studenti.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
-        Student stud = _students.at(iterStud->first);
-        fout<<stud<<std::endl;
-    }
-    fout.close();
+   dbStudsWrite();
 
 
     return false;
@@ -775,16 +711,7 @@ bool University::updateProfessors(const std::string &fin) {
 
     fileIn.close();
 
-    std::fstream fout;
-    fout.open("../Sources/db_professori.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterProf=_professors.begin(); iterProf != _professors.end();iterProf++) {
-        Professor prof = _professors.at(iterProf->first);
-
-        fout<<prof<<std::endl;
-    }
-    fout.close();
-
+   dbProfsWrite();
     return true;
 }
 
@@ -865,16 +792,7 @@ bool University::updateClassroom(const std::string &fin) {
     }
     fileIn.close();
 
-    std::fstream fout;
-    fout.open("../Sources/db_aule.txt",std::fstream::out | std::fstream::trunc);
-
-    for(auto iterClassRoom=_classroom.begin(); iterClassRoom!= _classroom.end();iterClassRoom++) {
-        Classroom room = _classroom.at(iterClassRoom->first);
-        std::stringstream stringa;
-        stringa << room;
-        fout<< stringa.str()<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
-    }
-    fout.close();
+   dbClassRoomWrite();
 
     return true;
 }
@@ -933,26 +851,93 @@ bool University::insertCourses(const std::string &fin) {
     }
     fileIn.close();
 
+    dbCourseWrite();
+    dbStudyCourseWrite();
+
+    return true;
+}
+
+///riscrive il database degli studenti
+void University::dbStudsWrite() {
+
+    std::fstream fout;
+    fout.open("../Sources/db_studenti.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterStud=_students.begin(); iterStud!= _students.end();iterStud++) {
+        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        fout<<stud<<std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
+    }
+    fout.close();
+
+}
+
+///riscrive il database dei professori
+void University::dbProfsWrite() {
+
+    std::fstream fout;
+    fout.open("../Sources/db_professori.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterProf=_professors.begin(); iterProf != _professors.end();iterProf++) {
+        Professor prof = _professors.at(iterProf->first);
+
+        fout<<prof<<std::endl;
+    }
+    fout.close();
+}
+
+///riscrive il database delle classroom
+void University::dbClassRoomWrite() {
+
+    std::fstream fout;
+    fout.open("../Sources/db_aule.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterClassRoom=_classroom.begin(); iterClassRoom!= _classroom.end();iterClassRoom++) {
+        Classroom room = _classroom.at(iterClassRoom->first);
+        std::stringstream stringa;
+        stringa << room;
+        fout<< stringa.str()<<std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
+    }
+    fout.close();
+}
+
+///riscrive il database dei corsi di studio
+void University::dbStudyCourseWrite() {
+    std::fstream fout;
+    fout.open("../Sources/db_corsi_studio.txt",std::fstream::out | std::fstream::trunc);
+
+    for(auto iterStudyCourse=_studyCourse.begin(); iterStudyCourse != _studyCourse.end();iterStudyCourse++) {
+        StudyCourse sC = _studyCourse.at(iterStudyCourse->first);
+        std::stringstream tok;
+        tok<<sC;
+        fout<<tok.str()<<std::endl;
+    }
+    fout.close();
+
+}
+
+///riscrive il database dei corsi
+void University::dbCourseWrite() {
+
     std::fstream fout;
     fout.open("../Sources/db_corsi.txt",std::fstream::out | std::fstream::trunc);
 
     for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++) {
-        Course generalCourse = _courses.at(iterCourse->first);
+        Course generalCourse = _courses.at(
+                iterCourse->first);//prendo lintero oggetto Course generale per scrivere su file la riga che inizia con "c"
         std::stringstream courseToken;
-        courseToken<<generalCourse;
-        fout<<courseToken.str()<<std::endl;
+        courseToken << generalCourse;
+        fout << courseToken.str() << std::endl;
         int size = iterCourse->second.getSpecificYearCourseSize();
         std::vector<SpecificYearCourse> SYCourse = iterCourse->second.getSpecificYearsCourse();
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             std::stringstream SYtoken;
-            SYtoken<<SYCourse[i];
-            fout<<"a;"<<SYtoken.str()<<std::endl;
-        }
+            SYtoken << SYCourse[i];
+            fout <<"a;"<< SYtoken.str() << std::endl;
 
+        }
     }
     fout.close();
 
-    return true;
 }
 
 
