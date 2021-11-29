@@ -293,12 +293,9 @@ void University::readCourse() {
             else
                 isActive = false;
             num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
-            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
-                                                              2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-            std::vector<int> posCBrackets = posCurlyBrackets(
-                    profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
-            std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,
-                                                               posCBrackets);//divido i vari corsi in parallelo
+            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+            std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
+            std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,posCBrackets);//divido i vari corsi in parallelo
             examData = specificYearCourse[5];//informazioni sull'esame
             examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
             splittedExamData = splittedLine(examData, ',');//scissione info esami
@@ -796,6 +793,7 @@ enum {
     update_lab = 1, update_nameClassroom = 2, update_nSeats = 3, update_nSeatsExam = 4
 };
 
+///aggiorno le Classroom
 bool University::updateClassroom(const std::string &fin) {
     int i;
     char c;
@@ -881,10 +879,6 @@ bool University::updateClassroom(const std::string &fin) {
     return true;
 }
 
-enum {
-    update_attivo = 2, update_parallel = 3, update_profs = 4, update_Exam = 5, update_IdCourses
-};
-
 ///inserisce un nuovo anno accademico ad un corso già esistente
 bool University::insertCourses(const std::string &fin) {
 
@@ -918,9 +912,12 @@ bool University::insertCourses(const std::string &fin) {
         acYear = specificYearCourse[1]; //anno accademico
         if (specificYearCourse[2] == "attivo") //se attivo o meno
             isActive = true;
-        else
+        else {
             isActive = false;
-
+            for(auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end(); iterStudyCourse++){
+                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0]);
+            }
+        }
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
         profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -  2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
@@ -949,7 +946,7 @@ bool University::insertCourses(const std::string &fin) {
         for(int i = 0; i < size; i++){
             std::stringstream SYtoken;
             SYtoken<<SYCourse[i];
-            fout<<SYtoken.str()<<std::endl;
+            fout<<"a;"<<SYtoken.str()<<std::endl;
         }
 
     }

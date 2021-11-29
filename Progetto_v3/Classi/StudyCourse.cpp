@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 #include "StudyCourse.h"
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
@@ -124,6 +125,22 @@ std::string StudyCourse::getOffCoursesString() const {
     }
     output <<"]";
     return output.str();//ritorno la stringstream sottoforma di stringa
+}
+
+bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse) {
+
+for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++){
+
+     std::vector<std::string> &corsi = iterSemesters->second;
+     auto found = std::find(corsi.begin(),corsi.end(),idCourse);
+
+        if(found != corsi.end()) {
+             corsi.erase(found);
+            _corsiSpenti.push_back(idCourse);
+        }
+    }
+
+    return true;
 }
 
 ///overload operatore <<
