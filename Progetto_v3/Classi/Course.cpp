@@ -3,8 +3,11 @@
 //
 
 #include <sstream>
+#include <fstream>
 #include "Course.h"
 #include "Parse.hpp"
+#include <vector>
+#include "DbException.h"
 
 
 
@@ -18,6 +21,7 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
     _hours._lab = oreLaboratorio;
 
 }
+
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
 bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idPar) {
@@ -120,6 +124,18 @@ std::vector<SpecificYearCourse> Course::getSpecificYearsCourse()  {
 ///prendo la dimensione della mappa di anni accademici
 int Course::getSpecificYearCourseSize() const {
     return _courseOfTheYear.size();
+}
+
+
+bool Course::insertInfoStud(int Year,std::string codCourse, student stud) {
+    //cerco l'anno accademico specifico di un corso e se non lo trovo vuol dire che non ho mai caricatoun corso con questo anno accademico
+        auto iterSpecificYear = _courseOfTheYear.find(Year);
+        if(iterSpecificYear == _courseOfTheYear.end())
+            throw DbException ("Anno accademico non trovato");
+        else
+             iterSpecificYear->second.setStudMap(codCourse, stud);//altrimenti setto la map stud che avrà come key: codCourse
+
+    return false;
 }
 
 std::ostream &operator<<(std::ostream &course, Course &s) {

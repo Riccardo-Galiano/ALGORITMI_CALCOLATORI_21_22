@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 #include "University.h"
 #include "DbException.h"
 #include "Parse.hpp"
@@ -36,6 +37,16 @@ std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses
     return profCorsiPar;
 };
 
+std::vector<int> posSquareBrackets(std::string &input) {
+    std::vector<int> output;
+    std::size_t found = input.find_first_of("[]");
+    while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+        output.push_back(
+                found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        found = input.find_first_of("[]", found + 1);//continuo a controllare la stringa
+    }
+    return output;
+}
 std::vector<int> posCurlyBrackets(std::string &input) {
     std::vector<int> output;
     std::size_t found = input.find_first_of("{}");
@@ -193,8 +204,7 @@ void University::readStudyCourse() {
         std::vector<int> posSem = posCurlyBrackets(InteroCorsoDiStudi[2]);
 
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i +  2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
                                                             len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
@@ -268,8 +278,7 @@ void University::readCourse() {
             //inserisco il corso con le relative info nella map _courses
             _courses.insert(std::pair<std::string, Course>(lastReadCourse,Course(interoCorso[1], interoCorso[2], stoi(interoCorso[3]),stoi(interoCorso[4]), stoi(interoCorso[5]),stoi(interoCorso[6]))));
 
-        } else if (interoCorso[0] ==
-                   "a") {//se la riga letta inizia con "a" devo inserire le info di un anno accademico per un corso generale letto
+        } else if (interoCorso[0] == "a") {//se la riga letta inizia con "a" devo inserire le info di un anno accademico per un corso generale letto
             specificYearCourse = interoCorso;//per una maggiore comprensione nella lettura del codice
             acYear = specificYearCourse[1]; //anno accademico
             if (specificYearCourse[2] == "attivo") //se attivo o meno
@@ -810,8 +819,7 @@ bool University::insertCourses(const std::string &fin) {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         std::vector<std::string> specificYearCourse = Parse::splittedLine(line, ';');
 
-        if (_courses.find(specificYearCourse[0]) ==
-            _courses.end()) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_courses.find(specificYearCourse[0]) ==  _courses.end()) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("IdCorso non presente");
         }
 
@@ -920,6 +928,73 @@ void University::dbCourseWrite() {
     fout.close();
 
 }
+
+bool University::insertInfoS(const std::string &fin) {
+    std::vector<std::string> infoStud;
+    std::string codCourse;
+    int startAcYear;
+    int id;
+    char c;
+    int startEnrolYear;
+    int endEnrolYear;
+    std::string passed;
+    std::ifstream fileIn(fin);
+
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("errore apertura file per inserimento di informazioni sugli studenti");
+    }
+
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    while (std::getline(fileIn, line)) {
+        //splitto la riga del file e pongo le info in apposite variabili
+        infoStud = Parse::splittedLine(line,';');
+        std::stringstream specificYear(infoStud[0]);
+        specificYear>>startAcYear;
+        codCourse = infoStud[1];
+        std::stringstream idStud(infoStud[2]);
+        idStud>>c>>id;
+        std::stringstream enrol(infoStud[3]);
+        enrol>>startEnrolYear>>c>>endEnrolYear;
+        std::vector<int> posSBrackets = posSquareBrackets(infoStud[4]);
+        bool passed;
+        int grade = -1;
+
+        //secondo il formato se non ho le quadre non ho passato l'esame; quindi se il vettore delle pos di [ ] è vuoto
+        if(posSBrackets.empty()){
+            passed = false;
+        } else {//se il vettore pos non è vuoto
+            passed = true;
+            grade = stoi(infoStud[4].substr(posSBrackets[0]+1,2));//estraggo il voto
+        }
+
+        student currentStud; //struct student
+        auto idIterator = std::find(_students.begin(),_students.end(),id);
+        //inizio i controlli
+        if(idIterator == _students.end())//se non è nel database
+            throw DbException ("Matricola studente non è stata trovata");
+        currentStud._id = id;//altrimenti la salvo
+        /*
+         controlli da fare: anno di iscrizione minore o al masssimo uguale all'acYear
+         voto da registrare se maggiore di 18
+        */
+        currentStud._startEnrolYear = startEnrolYear;
+        currentStud._endEnrolYear = endEnrolYear;
+        currentStud._passed = passed;
+        currentStud._grade = grade;
+        //per ogni corso provo ad inserire lo studente
+        for(auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++){
+            iterCourse ->second.insertInfoStud(startAcYear,codCourse, currentStud);
+        }
+
+    }
+
+        return true;
+}
+
+
+
+
+
 
 
 

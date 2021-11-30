@@ -23,11 +23,12 @@ typedef struct {
 
 ///per ogni oggetto studente(in cui avrò matricola, nome, cognome e email) verrà tenuta traccia
 typedef struct {
-    Student stud;
-    int _startEnrolYear; ///inizio corso di studi
-    int _endEnrolYear; ///fine corso di studi
-    int _grade;   ///voto
+    int _id;
+    int _startEnrolYear; ///anno inizio corso
+    int _endEnrolYear;
     bool _passed; ///promosso o bocciato
+    int _grade;   ///voto
+
     
 } student;
 
@@ -47,6 +48,7 @@ public:
 
     std::vector<professor> getProfsFromString (std::string profs);
     bool setProfMap(int, std::vector<std::string>, std::vector<std::string>);
+    bool setStudMap(std::string, student);
 
 private:
     int _startYear;    ///anno di inizio
