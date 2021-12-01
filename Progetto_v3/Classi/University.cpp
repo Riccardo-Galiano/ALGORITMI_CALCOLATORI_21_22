@@ -10,43 +10,6 @@
 #include "DbException.h"
 #include "Parse.hpp"
 
-///restituisce un vettore di stringhe con i prof di ciascun corso in parallelo
-std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses, std::vector<int> &posCBrackets) {
-    std::vector<std::string> profCorsiPar;
-    std::vector<int> posFinCorsiPar;
-    int found = 0;
-    for (int i = 0; i < posCBrackets.size() - 1 && found <
-                                                   num_parallel_courses; i++) {//fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
-        if (input[posCBrackets[i] + 1] ==
-            ']') {//la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
-            posFinCorsiPar.push_back(
-                    posCBrackets[i] + 2); //salva la pos della graffa successiva a quella presa in analisi: }] } <--
-            found++;
-        }
-    }
-
-    int lastPosFin = 0;
-
-    ///divido le info dei vari corsi in parallelo
-    for (int i = 0; i < num_parallel_courses; i++) {
-        profCorsiPar.push_back(input.substr(1 + lastPosFin, posFinCorsiPar[i] - lastPosFin -
-                                                            1));//inserisco nel vettore di stringhe le info del corso in parallelo
-        lastPosFin = posFinCorsiPar[i] + 2; //salva la pos della terza graffa: }]}, { <--
-    }
-    return profCorsiPar;
-};
-
-std::vector<int> posCurlyBrackets(std::string &input) {
-    std::vector<int> output;
-    std::size_t found = input.find_first_of("{}");
-    while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-        output.push_back(
-                found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
-        found = input.find_first_of("{}", found + 1);//continuo a controllare la stringa
-    }
-    return output;
-}
-
 //namespace fs = std::filesystem;
 University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
@@ -190,7 +153,7 @@ void University::readStudyCourse() {
 
 
         ///devo leggere i semestri
-        std::vector<int> posSem = posCurlyBrackets(InteroCorsoDiStudi[2]);
+        std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
 
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
         for (i = 0; i < posSem.size() - 1; i = i +
@@ -279,10 +242,7 @@ void University::readCourse() {
             num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
             profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
                                                               2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-            std::vector<int> posCBrackets = posCurlyBrackets(
-                    profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
-            std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,
-                                                               posCBrackets);//divido i vari corsi in parallelo
+            std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, num_parallel_courses);//divido i vari corsi in parallelo
             examData = specificYearCourse[5];//informazioni sull'esame
             examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
             splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
@@ -476,10 +436,7 @@ bool University::addCourses(const std::string &fin) {
         num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
         profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() -
                                                           2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<int> posCBrackets = posCurlyBrackets(
-                profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
-        std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,
-                                                           posCBrackets);//divido i vari corsi in parallelo
+        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[8];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
@@ -832,14 +789,11 @@ bool University::insertCourses(const std::string &fin) {
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
         profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<int> posCBrackets = posCurlyBrackets(profSenzaQuadre);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei pvari corsi in parallelo
-        std::vector<std::string> profCorsoPar = getProfPar(profSenzaQuadre, num_parallel_courses,posCBrackets);//divido i vari corsi in parallelo
+        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[5];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
-        idParallelCourse = specificYearCourse[6];//id dei vari corsi in parallelo
-        idParallelCourse = idParallelCourse.substr(1,idParallelCourse.size() - 2);// tolgo le { } che racchiudono gli id
-        idPar = Parse::splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
+        idPar = Parse::idPar(specificYearCourse[6]);
         _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                   splittedExamData, idPar);
     }

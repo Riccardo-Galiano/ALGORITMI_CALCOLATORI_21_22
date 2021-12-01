@@ -7,8 +7,8 @@
 #include "Parse.hpp"
 
 
-
-Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio) {
+Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
+               const int oreEsercitazione, const int oreLaboratorio) {
 
     _id = idCorso;
     _name = nomeCorso;
@@ -20,9 +20,12 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
 }
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
-bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idPar) {
+bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
+                                    std::vector<std::string> exam, std::vector<std::string> idPar) {
 ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
-    _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,idPar)));
+    _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),
+                                                               SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,
+                                                                                  idPar)));
 
     return true;
 }
@@ -49,7 +52,7 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
     //specificYearCourse avrebbe soltanto 3 campi quindi dovremmo aggiungere un quarto campo inizialmente vuoto che verrà poi riempito dalle info
     //dell'anno precedente
-    if(specificYearCourse.size()== 6){
+    if (specificYearCourse.size() == 6) {
         specificYearCourse.push_back(posLastOffCourses);
     }
 
@@ -59,6 +62,25 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
             specificYearCourse[i] = lastYearSpecificYearCourseSplitted[i - 1];
         }
     }
+
+    std::string profSenzaQuadre;
+    int new_num_par_courses = stoi(specificYearCourse[3]);
+    //check correttezza
+    for (int i = 2; i < specificYearCourse.size(); i++) {
+        if (i == 4) {
+            //se i=6 allora sto controllando string id corsi par
+            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+            //tornerà errore se non congruenti
+            std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, new_num_par_courses);//divido i vari corsi in parallelo
+        }
+        if (i == 6) {
+            //se i=6 allora sto controllando string id corsi par
+            std::vector<std::string> idPar = Parse::idPar(specificYearCourse[6]);
+            if (idPar.size() != new_num_par_courses)
+                throw std::invalid_argument(
+                        "numero id corsi paralleli non congruenti con il numero di corsi paralleli");
+        }
+    }
     return true;
 }
 
@@ -66,9 +88,10 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 SpecificYearCourse &Course::getLastSpecificYearCourse() {
     int lastYear = 0, actualYear;
 
-    for (auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
+    for (auto iter = _courseOfTheYear.begin();
+         iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
         actualYear = iter->second.getStartYear();//punta all'oggetto di tipo SpecificYearCourse e ne prende l'anno di inizio(che poi sarebbe la key)
-                                                  //potrei scrivere actualYear = iter->first
+        //potrei scrivere actualYear = iter->first
         if (actualYear > lastYear)
             lastYear = actualYear;//prendo l'ultimo anno
 
@@ -103,18 +126,19 @@ const hours &Course::getHours() const {
 }
 
 ///ogni stringa è costituita dalle info di uno specifico anno accademico del corso analizzato
-std::vector<SpecificYearCourse> Course::getSpecificYearsCourse()  {
+std::vector<SpecificYearCourse> Course::getSpecificYearsCourse() {
 
     std::vector<SpecificYearCourse> specificYearsCourse;
 
-   for(auto iterSpecificYearCourse = _courseOfTheYear.begin(); iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {//per ogni anno accademico
-       //std::stringstream tokens;
-       SpecificYearCourse specific = iterSpecificYearCourse->second;//salvo le info puntate da iterSpecificYearCourse che contiene le info dello specifico anno accademico
-       //tokens << "a;" << specific; //overload dell'operatore. (si rimanda all'overload di << in SpecificYearCourse.cpp)
-       specificYearsCourse.push_back(specific);//salvo la stringa con le info dell'anno
-   }
+    for (auto iterSpecificYearCourse = _courseOfTheYear.begin();
+         iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {//per ogni anno accademico
+        //std::stringstream tokens;
+        SpecificYearCourse specific = iterSpecificYearCourse->second;//salvo le info puntate da iterSpecificYearCourse che contiene le info dello specifico anno accademico
+        //tokens << "a;" << specific; //overload dell'operatore. (si rimanda all'overload di << in SpecificYearCourse.cpp)
+        specificYearsCourse.push_back(specific);//salvo la stringa con le info dell'anno
+    }
 
-   return specificYearsCourse ;
+    return specificYearsCourse;
 }
 
 ///prendo la dimensione della mappa di anni accademici
@@ -123,7 +147,8 @@ int Course::getSpecificYearCourseSize() const {
 }
 
 std::ostream &operator<<(std::ostream &course, Course &s) {
-    course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";" << s.getHours()._ex << ";" << s.getHours()._lab <<std::endl;
+    course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
+           << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;
     int size = s.getSpecificYearCourseSize();
     std::vector<SpecificYearCourse> SYCourse = s.getSpecificYearsCourse();
     for (int i = 0; i < size; i++) {
