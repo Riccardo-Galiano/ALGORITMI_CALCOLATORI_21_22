@@ -18,7 +18,6 @@ enum {
     update_professor,
     update_classroom,
     insert_course,
-    insert_student,
     set_availability
 };
 
@@ -42,8 +41,6 @@ int returnCode(std::string paramInput) {
         return update_classroom;
     else if (paramInput.compare("-i:c") == 0)
         return insert_course;
-    else if(paramInput.compare("-i:s")==0)
-        return insert_student;
     else if(paramInput.compare("-s") == 0)
         return set_availability;
     return -1;
@@ -86,10 +83,6 @@ void startProgram(University &uni, char *argv[]) {
         }
         case insert_course: {
             uni.insertCourses(argv[2]);
-            break;
-        }
-        case insert_student:{
-            uni.insertInfoS(argv[2]);
             break;
         }
         case set_availability: {

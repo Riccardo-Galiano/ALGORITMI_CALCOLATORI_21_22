@@ -5,8 +5,6 @@
 #include <sstream>
 #include <iomanip>
 #include "SpecificYearCourse.h"
-#include "DbException.h"
-#include <algorithm>
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idPar) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
@@ -19,7 +17,6 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     setProfMap(nCrsiPar, prof, idPar);//setto la mappa dei prof per ogni corso
 
 }
-
 
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
 std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs) {
@@ -156,24 +153,6 @@ bool SpecificYearCourse::getisActive() const {
 int SpecificYearCourse::getParalleleCours() const {
     return _parallelCourses;
 }
-
-bool SpecificYearCourse::setStudMap(std::string codCourse, student stud) {
-    //controllo se abbiamo mai inserito il corso parallelo in cui mettere lo studente
-    auto codCourseIter = std::find(_idPar.begin(),_idPar.end(), codCourse);
-    if(codCourseIter == _idPar.end())
-        throw DbException ("Corso parallelo non trovato");
-
-    //controllo se il corso lo abbiamo già inserito nella mappa student
-    if(_student.find(codCourse) == _student.end()) { //se non è ancora stato inserito
-         std::vector<student> buildVect;   //creo un vettore vuoto con la key: codCourse
-        _student.insert(std::pair<std::string, std::vector<student>>(codCourse, buildVect));
-    }
-        _student.at(codCourse).push_back(stud); //aggiungo lo studente e le sue info alla mappa
-
-    return true;
-}
-
-
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

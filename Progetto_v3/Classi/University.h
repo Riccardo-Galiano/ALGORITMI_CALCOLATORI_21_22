@@ -31,7 +31,6 @@ public:
     bool updateProfessors(const std::string &fin);
     bool updateClassroom(const std::string &fin);
     bool insertCourses(const std::string &fin);
-    bool insertInfoS(const std::string &fin);
 
     void dbStudsWrite();
     void dbProfsWrite();
