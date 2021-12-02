@@ -146,6 +146,10 @@ int Course::getSpecificYearCourseSize() const {
     return _courseOfTheYear.size();
 }
 
+bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string enrolYear, int mark) {
+    return _courseOfTheYear.at(acYear).addStudent(stud,enrolYear,mark);
+}
+
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
            << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;

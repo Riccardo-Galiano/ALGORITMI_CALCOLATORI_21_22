@@ -875,6 +875,50 @@ void University::dbCourseWrite() {
 
 }
 
+bool University::enrollStudents(const std::string &fin) {
+    std::fstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw DbException("file input non esistente");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa
+    char c;    //accoglierà la s della matricola presa dal file, a noi inutile
+    int nMatr; //accoglierà il codice identificativo della matricola presa dal file, a noi utile
+    std::vector<std::string> tokens;
+    std::getline(fileIn, line);
+    std::string cds, course;
+    std::string coursesWithoutSquareBrackets;
+    std::vector<std::string> courses;
+    std::vector<std::string> infoStud;
+    std::string idCorso, endrolAcYear;
+    int mark;
+    int year;
+    cds = line.substr(0,4);
+    year = stoi(line.substr(5,4));
+    while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
+        tokens = Parse::splittedLine(line, ';');
+        std::stringstream ss(tokens[0]);
+        ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
+        Student stud = _students.at(nMatr); //preso l'istanza dello studente di cui si parla
+        coursesWithoutSquareBrackets = tokens[1].substr(1,tokens[1].size()-2);
+        courses = Parse::splittedLine(coursesWithoutSquareBrackets,'%');
+        for(int i=0; i<courses.size(); i++){
+            course = courses[i].substr(1,courses[i].size()-2);
+            infoStud = Parse::splittedLine(course,',');
+            idCorso = infoStud[0];
+            endrolAcYear = infoStud[1];
+            if(infoStud[2].empty())
+                mark = -1;
+            else
+                mark = stoi(infoStud[2]);
+            _courses.at(idCorso).addStudentToSpecYearCourse(year,stud,endrolAcYear,mark);
+        }
+    }
+    fileIn.close();
+    return true;
+}
+
 
 
 

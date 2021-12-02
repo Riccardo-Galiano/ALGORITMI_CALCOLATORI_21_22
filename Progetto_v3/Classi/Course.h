@@ -37,7 +37,7 @@ public:
 
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
-
+    bool addStudentToSpecYearCourse(int,Student,std::string,int);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

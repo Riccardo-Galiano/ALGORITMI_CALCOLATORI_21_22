@@ -24,11 +24,10 @@ typedef struct {
 ///per ogni oggetto studente(in cui avrò matricola, nome, cognome e email) verrà tenuta traccia
 typedef struct {
     Student stud;
-    int _startEnrolYear; ///inizio corso di studi
-    int _endEnrolYear; ///fine corso di studi
+    int _startEnrolYear; ///inizio corso
+    int _endEnrolYear; ///fine corso
     int _grade;   ///voto
     bool _passed; ///promosso o bocciato
-    
 } student;
 
 class SpecificYearCourse {
@@ -47,19 +46,23 @@ public:
 
     std::vector<professor> getProfsFromString (std::string profs);
     bool setProfMap(int, std::vector<std::string>, std::vector<std::string>);
-
+    bool addStudent(Student,std::string,int);
 private:
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?
     int _parallelCourses;    ///numero di corsi in parallelo
+    int totStudentsEnrolled = 0;
+    int totStudentsNotPassed = 0;
     std::vector<std::string> _idPar;
     Exam _exam;
-    // per ogni corso in parallelo ho un vettore dei prof e stud
-    //key id del corso in parallelo
-    //value vettore delle struct prof o stud
+    // per ogni corso in parallelo ho un vettore dei prof
+    //key id del corso in parallelo ----> numero versione parallela, quindi da 0 a ... n
+    //value vettore delle struct prof
     std::map<std::string, std::vector<professor>> _professors;
-    std::map<std::string, std::vector<student>> _student;
+    //key: student id
+    //value: struct studente
+    std::map<int, student> _student;
 
 };
 

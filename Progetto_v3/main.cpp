@@ -18,6 +18,7 @@ enum {
     update_professor,
     update_classroom,
     insert_course,
+    enroll_students,
     set_availability
 };
 
@@ -41,6 +42,8 @@ int returnCode(std::string paramInput) {
         return update_classroom;
     else if (paramInput.compare("-i:c") == 0)
         return insert_course;
+    else if (paramInput.compare("-e:s") == 0)
+        return enroll_students;
     else if(paramInput.compare("-s") == 0)
         return set_availability;
     return -1;
@@ -85,6 +88,10 @@ void startProgram(University &uni, char *argv[]) {
             uni.insertCourses(argv[2]);
             break;
         }
+        case enroll_students:{
+            uni.enrollStudents(argv[2]);
+            break;
+        }
         case set_availability: {
             break;
         }
@@ -111,7 +118,7 @@ int main(int argc, char *argv[]) {
     }
 */
     University poliTo;
-    if (argc != 3) {
+    if (argc < 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");
     }
     startProgram(poliTo, argv);

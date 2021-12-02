@@ -154,6 +154,20 @@ int SpecificYearCourse::getParalleleCours() const {
     return _parallelCourses;
 }
 
+bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mark) {
+    student studToAdd;
+    studToAdd._grade = mark;
+    studToAdd._startEnrolYear = stoi(enrolYear.substr(0,4));
+    studToAdd._endEnrolYear = stoi(enrolYear.substr(5,4));
+    studToAdd.stud = stud;
+    std::pair<int,student> pair (stud.getId(),studToAdd);
+    _student.insert(pair);
+    totStudentsEnrolled++;
+    if(mark==-1) //da controllare da stringa vuota a int cosa succede
+        totStudentsNotPassed++;
+    return true;
+}
+
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getisActive())
