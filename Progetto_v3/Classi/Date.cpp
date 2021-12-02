@@ -8,8 +8,7 @@
 using namespace std;
 
 // initialize static member; one classwide copy
-const array<unsigned int, 13> Date::_days{
-   0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+const std::vector<unsigned int> Date::_days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 // Date constructor
 Date::Date(int year, int month, int day) {
@@ -70,8 +69,7 @@ Date& Date::operator+=(unsigned int additionalDays) {
 
 // if the year is a leap year, return true; otherwise, return false
 bool Date::leapYear(int testYear) {
-   return (testYear % 400 == 0 ||
-      (testYear % 100 != 0 && testYear % 4 == 0));
+   return (testYear % 400 == 0 ||  (testYear % 100 != 0 && testYear % 4 == 0));
 }
 
 // determine whether the day is the last day of the month
