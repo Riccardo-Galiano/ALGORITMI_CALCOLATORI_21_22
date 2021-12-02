@@ -32,20 +32,20 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idPar);
+    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped);
 
     int getEndYear() const;
     bool getisActive() const;
     int getParalleleCours() const;
-    const std::string getProfParSTring() const;
-    const std::string getParCourseIdString() const;
+    const std::string getProfParString() const;
+    const std::string getGroupedCoursesIdString() const;
     const std::string getExamString() const;
     int getStartYear() const;
 
     std::string setId(int nMatr)const;
 
     std::vector<professor> getProfsFromString (std::string profs);
-    bool setProfMap(int, std::vector<std::string>, std::vector<std::string>);
+    bool setProfMap(int, std::vector<std::string>);
     bool addStudent(Student,std::string,int);
 private:
     int _startYear;    ///anno di inizio
@@ -54,12 +54,12 @@ private:
     int _parallelCourses;    ///numero di corsi in parallelo
     int totStudentsEnrolled = 0;
     int totStudentsNotPassed = 0;
-    std::vector<std::string> _idPar;
+    std::vector<std::string> _idGroupedCourses;
     Exam _exam;
     // per ogni corso in parallelo ho un vettore dei prof
-    //key id del corso in parallelo ----> numero versione parallela, quindi da 0 a ... n
+    //key: numero versione parallela, quindi da 0 a ... n
     //value vettore delle struct prof
-    std::map<std::string, std::vector<professor>> _professors;
+    std::map<int, std::vector<professor>> _professors;
     //key: student id
     //value: struct studente
     std::map<int, student> _student;

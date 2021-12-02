@@ -4,4 +4,4 @@ project(Progetto_v3)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 
-add_executable(Progetto_v3 main.cpp Classi/Date.cpp Classi/UniversityMember.cpp Classi/UniversityMember.h Classi/Student.cpp Classi/Student.h Classi/Professor.cpp Classi/Professor.h Classi/Course.cpp Classi/Course.h Classi/SpecificYearCourse.cpp Classi/SpecificYearCourse.h Classi/Exam.cpp Classi/Exam.h Classi/StudyCourse.cpp Classi/StudyCourse.h Classi/University.cpp Classi/University.h Classi/Classroom.cpp Classi/Classroom.h Classi/DbException.cpp Classi/DbException.h Classi/Parse.hpp Classi/Calendar.cpp Classi/Calendar.hpp Classi/ExamDay.cpp Classi/ExamDay.hpp)
+add_executable(Progetto_v3 main.cpp Classi/Date.cpp Classi/UniversityMember.cpp Classi/Student.cpp Classi/Professor.cpp Classi/Course.cpp Classi/SpecificYearCourse.cpp Classi/Exam.cpp Classi/StudyCourse.cpp Classi/University.cpp Classi/Classroom.cpp Classi/DbException.cpp Classi/Parse.hpp Classi/Calendar.cpp Classi/Calendar.hpp Classi/ExamDay.cpp Classi/ExamDay.hpp)

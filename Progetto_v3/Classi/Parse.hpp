@@ -61,9 +61,9 @@ public:
         }
         return output;
     }
-    static std::vector<std::string> idPar(std::string &input){
+    static std::vector<std::string> SplittedGroupedID(std::string &input){
         input = input.substr(1,input.size() - 2);// tolgo le { } che racchiudono gli id
-        return splittedLine(input, ',');//scissione degli id dei corsi in parallelo
+        return splittedLine(input, ',');//scissione degli id dei corsi raggruppati
     };
 
 };

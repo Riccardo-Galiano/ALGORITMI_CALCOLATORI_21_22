@@ -15,10 +15,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/Course.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Course.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/Course.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Course.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/Parse.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Parse.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/University.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/University.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Sources/courses_insert_file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/courses_insert_file.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/db_corsi.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/db_corsi.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
@@ -35,19 +37,15 @@
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/build.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/cmake_clean.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/flags.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/linklibs.rsp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/linklibs.rsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/main.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/main.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/objects1.rsp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/objects1.rsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.cbp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.exe" afterDir="false" />
@@ -92,12 +90,12 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -136,7 +134,8 @@
       <workItem from="1637856738789" duration="14542000" />
       <workItem from="1637877598665" duration="2745000" />
       <workItem from="1637913354744" duration="10910000" />
-      <workItem from="1638369398925" duration="6516000" />
+      <workItem from="1638369398925" duration="6675000" />
+      <workItem from="1638461864842" duration="4621000" />
     </task>
     <servers />
   </component>
@@ -160,13 +159,28 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/Course.cpp</url>
-          <line>83</line>
+          <line>73</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/Course.cpp</url>
-          <line>73</line>
+          <line>71</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
+          <line>765</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
+          <line>775</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/Course.cpp</url>
+          <line>59</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

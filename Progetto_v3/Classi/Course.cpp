@@ -21,11 +21,11 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
 bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                    std::vector<std::string> exam, std::vector<std::string> idPar) {
+                                    std::vector<std::string> exam, std::vector<std::string> idGrouped) {
 ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),
                                                                SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,
-                                                                                  idPar)));
+                                                                                  idGrouped)));
 
     return true;
 }
@@ -66,21 +66,11 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     std::string profSenzaQuadre;
     int new_num_par_courses = stoi(specificYearCourse[3]);
     //check correttezza
-    for (int i = 2; i < specificYearCourse.size(); i++) {
-        if (i == 4) {
-            //se i=6 allora sto controllando string id corsi par
-            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-            //tornerà errore se non congruenti
-            std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, new_num_par_courses);//divido i vari corsi in parallelo
-        }
-        if (i == 6) {
-            //se i=6 allora sto controllando string id corsi par
-            std::vector<std::string> idPar = Parse::idPar(specificYearCourse[6]);
-            if (idPar.size() != new_num_par_courses)
-                throw std::invalid_argument(
-                        "numero id corsi paralleli non congruenti con il numero di corsi paralleli");
-        }
-    }
+
+    profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+    //tornerà errore se non congruenti
+    std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,new_num_par_courses);//divido i vari corsi in parallelo
+
     return true;
 }
 
@@ -147,7 +137,7 @@ int Course::getSpecificYearCourseSize() const {
 }
 
 bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string enrolYear, int mark) {
-    return _courseOfTheYear.at(acYear).addStudent(stud,enrolYear,mark);
+    return _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
 }
 
 std::ostream &operator<<(std::ostream &course, Course &s) {

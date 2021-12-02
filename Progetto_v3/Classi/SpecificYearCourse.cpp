@@ -6,15 +6,15 @@
 #include <iomanip>
 #include "SpecificYearCourse.h"
 
-SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idPar) :
+SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
     acYY >> _startYear >> c >> _endYear;//anno iniziale - anno finale
     _active = active;
     _parallelCourses = nCrsiPar;
-    _idPar = idPar;
-    setProfMap(nCrsiPar, prof, idPar);//setto la mappa dei prof per ogni corso
+    _idGroupedCourses = idGrouped;
+    setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
 
 }
 
@@ -72,12 +72,12 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 
 ///setta la map dei prof con relativi id e ore
 //ogni anno accademico per ogni corso presenta una map che contiene tutte le info raccolte per i prof di ogni corso in parallelo
-bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, std::vector<std::string> idCorso) {
+bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit) {
 
     std::vector<professor> profConOre;
     for (int i = 0; i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
         profConOre = getProfsFromString( profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
-        _professors.insert(std::pair<std::string, std::vector<professor>>(idCorso[i], profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
+        _professors.insert(std::pair<int, std::vector<professor>>(i, profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
 
     return false;
@@ -90,7 +90,7 @@ std::string SpecificYearCourse::setId(int nMatr) const {
     return output.str();
 }
 
-const std::string SpecificYearCourse::getProfParSTring() const {
+const std::string SpecificYearCourse::getProfParString() const {
     std::stringstream output;
 
     output << "[";
@@ -98,7 +98,7 @@ const std::string SpecificYearCourse::getProfParSTring() const {
     std::vector<std::string> profsString;
     for (int i = 0; i < _parallelCourses; i++) {
         output << "{";
-        std::vector<professor> profs = _professors.at(_idPar[i]);
+        std::vector<professor> profs = _professors.at(i);
         for (int j = 0; j < profs.size(); j++) {
             if (profs[j].mainProf)
                 matrTit = profs[j].prof_id;
@@ -117,12 +117,12 @@ const std::string SpecificYearCourse::getProfParSTring() const {
     return output.str();
 }
 
-const std::string SpecificYearCourse::getParCourseIdString() const {
+const std::string SpecificYearCourse::getGroupedCoursesIdString() const {
     std::stringstream output;
     output << "{";
-    for (int i = 0; i < _idPar.size(); i++) {
-        output << _idPar[i];
-        if (i < _idPar.size() - 1)
+    for (int i = 0; i < _idGroupedCourses.size(); i++) {
+        output << _idGroupedCourses[i];
+        if (i < _idGroupedCourses.size() - 1)
             output << ",";
     }
     output << "}";
@@ -175,8 +175,8 @@ std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     else
         output << "non_attivo";
     output << ";" << s.getParalleleCours() << ";";
-    output << s.getProfParSTring() << ";";
+    output << s.getProfParString() << ";";
     output << s.getExamString() << ";";
-    output << s.getParCourseIdString();
+    output << s.getGroupedCoursesIdString();
     return output;
 }

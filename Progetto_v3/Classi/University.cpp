@@ -213,11 +213,11 @@ void University::readCourse() {
     std::string lastReadCourse; //ogni 'c' letto, viene aggiornato con l'ID del corso
     std::string acYear;
     std::string examData;
-    std::string idParallelCourse;
+    std::string idGroupedCourse;
     bool isActive = false;
     int num_parallel_courses = 0;
     std::string profSenzaQuadre;
-    std::vector<std::string> idPar;
+    std::vector<std::string> idGrouped;
     std::vector<std::string> splittedExamData;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         interoCorso = Parse::splittedLine(line, ';');
@@ -246,15 +246,15 @@ void University::readCourse() {
             examData = specificYearCourse[5];//informazioni sull'esame
             examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
             splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
-            idParallelCourse = specificYearCourse[6];//id dei vari corsi in parallelo
-            idParallelCourse = idParallelCourse.substr(1, idParallelCourse.size() -
-                                                          2);// tolgo le { } che racchiudono gli id
-            idPar = Parse::splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
+            idGroupedCourse = specificYearCourse[6];//id dei vari corsi in parallelo
+            idGroupedCourse = idGroupedCourse.substr(1, idGroupedCourse.size() -
+                                                        2);// tolgo le { } che racchiudono gli id
+            idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
 
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData,
-                                                               idPar);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
+                                                               idGrouped);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
 
     }
@@ -413,11 +413,11 @@ bool University::addCourses(const std::string &fin) {
     std::vector<std::string> specificYearCourse;
     std::string acYear;
     std::string examData;
-    std::string idParallelCourse;
+    std::string idGroupedCourse;
     bool isActive = true;
     int num_parallel_courses = 0;
     std::string profSenzaQuadre;
-    std::vector<std::string> idPar;
+    std::vector<std::string> idGrouped;
     std::vector<std::string> splittedExamData;
 
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
@@ -440,12 +440,12 @@ bool University::addCourses(const std::string &fin) {
         examData = specificYearCourse[8];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
-        idParallelCourse = specificYearCourse[9];//id dei vari corsi in parallelo
-        idParallelCourse = idParallelCourse.substr(1,
-                                                   idParallelCourse.size() - 2);// tolgo le { } che racchiudono gli id
-        idPar = Parse::splittedLine(idParallelCourse, ',');//scissione degli id dei corsi in parallelo
+        idGroupedCourse = specificYearCourse[9];//id dei vari corsi in parallelo
+        idGroupedCourse = idGroupedCourse.substr(1,
+                                                 idGroupedCourse.size() - 2);// tolgo le { } che racchiudono gli id
+        idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                        splittedExamData, idPar);
+                                                        splittedExamData, idGrouped);
     }
     fileIn.close();
 
@@ -751,11 +751,10 @@ bool University::insertCourses(const std::string &fin) {
     std::vector<std::string> specificYearCourse;
     std::string acYear;
     std::string examData;
-    std::string idParallelCourse;
     bool isActive = true;
     int num_parallel_courses = 0;
     std::string profSenzaQuadre;
-    std::vector<std::string> idPar;
+    std::vector<std::string> idGrouped;
     std::vector<std::string> splittedExamData;
 
     std::ifstream fileIn(fin);
@@ -793,9 +792,9 @@ bool University::insertCourses(const std::string &fin) {
         examData = specificYearCourse[5];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
-        idPar = Parse::idPar(specificYearCourse[6]);
+        idGrouped = Parse::SplittedGroupedID(specificYearCourse[6]);
         _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                                  splittedExamData, idPar);
+                                                                  splittedExamData, idGrouped);
     }
     fileIn.close();
 
