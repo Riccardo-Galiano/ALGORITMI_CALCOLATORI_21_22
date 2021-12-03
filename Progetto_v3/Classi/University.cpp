@@ -944,11 +944,36 @@ bool University::enrollStudents(const std::string &fin) {
 
 bool University::set_session_period(const std::string& acYear,const std::string &wSession, const std::string &sSession, const std::string &aSession) {
     std::string accademicYear = acYear;
-    std::string winterSession = wSession.substr(1,wSession.size()-2);//tolgo le virgolette
-    std::string summerSession = sSession.substr(1,sSession.size()-2);
-    std::string autumnSession = aSession.substr(1,aSession.size()-2);
+    std::string winterSession = wSession.substr(0,wSession.size());//tolgo le virgolette
+    std::string summerSession = sSession.substr(0,sSession.size());
+    std::string autumnSession = aSession.substr(0,aSession.size());
+    _sYear.addSession(accademicYear,winterSession,"winterSession");
+    _sYear.addSession(accademicYear,summerSession,"summerSession");
+    _sYear.addSession(accademicYear,autumnSession,"autumnSession");
 
     return true;
+}
+
+bool University::setProfsAvailability(std::string acYear,const std::string& fin) {
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        //std::cerr << "errore apertura database studenti" << std::endl;
+        throw DbException("file availabilities non esistente");
+    }
+    std::string line;
+    std::vector<std::string> tokens;
+    int nMatr, year;
+    year = Parse::getAcStartYear(acYear);
+    while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
+        tokens = Parse::splittedLine(line,';');
+        nMatr = Parse::getMatr(tokens[0]);
+        for(int i=1; i<tokens.size(); i++){
+            _professors.at(nMatr).setAvaibilities(year,tokens[i]);
+        }
+    }
+
+
+        return true;
 }
 
 

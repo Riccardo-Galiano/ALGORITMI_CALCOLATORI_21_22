@@ -4,7 +4,7 @@
 #include <string>
 #include <iomanip>
 #include "Date.h"
-
+#include "cmath"
 using namespace std;
 
 // initialize static member; one classwide copy
@@ -151,4 +151,46 @@ bool Date::operator<(const Date & d) const {
     }else{
         return false;
     }
+}
+
+std::string Date::zellersAlgorithm(int day, int month, int year) {
+    int mon;
+    if (month > 2)
+        mon = month; //for march to december month code is same as month
+    else {
+        mon = (12 + month); //for Jan and Feb, month code will be 13 and 14
+        year--; //decrease year for month Jan and Feb
+    }
+    int y = year % 100; //last two digit
+    int c = year / 100; //first two digit
+    int w = (day + floor((13 * (mon + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
+    w = w % 7;
+    return _weekday[w];
+}
+
+bool Date::checkGapGiven(int weeks, Date d) {
+    int numDays = weeks * 7;
+    Date compare = this->add(numDays);
+    if(d._year == compare._year && d._month == compare._month && d._day == compare._day)
+        return true;
+    return false;
+}
+
+Date Date::add(int daysToAdd) {
+    Date toReturn(_year,_month,_day);
+    for(int i=0; i<daysToAdd; i++){
+        toReturn.helpIncrement();
+    }
+    return toReturn;
+}
+
+Date::Date(std::string date) {
+    std::stringstream ss;
+    int yy, mm, dd;
+    char c;
+    ss << date;
+    ss >> yy >> c >> mm >> c >> dd;
+    _year = yy;
+    _month = mm;
+    _day = dd;
 }

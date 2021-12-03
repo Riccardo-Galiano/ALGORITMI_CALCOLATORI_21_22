@@ -6,7 +6,9 @@
 #define PROGETTO_V3_PROFESSOR_H
 
 #include <vector>
+#include <map>
 #include "UniversityMember.h"
+#include "Date.h"
 
 //std::cout << std::put_time(std::localtime(&now), "%Y-%m-%d") << "\n";
 class Professor : public UniversityMember {
@@ -15,8 +17,9 @@ public:
     Professor():UniversityMember(){};
     Professor(int matr);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
+    bool setAvaibilities(int, std::string& input);
 private:
-    std::vector<std::pair<std::string, std::string>> non_avaib;
+    std::map<int, std::vector<std::pair<Date, Date>>> _nonAvaib;
 };
 
 std::ostream &operator<<(std::ostream &prof, const Professor &s);

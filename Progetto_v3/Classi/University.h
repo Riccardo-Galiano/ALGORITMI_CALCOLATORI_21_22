@@ -10,6 +10,7 @@
 #include "Classroom.h"
 #include "StudyCourse.h"
 #include "Course.h"
+#include "SessionYear.hpp"
 
 class University {
 public:
@@ -39,6 +40,7 @@ public:
     void dbClassRoomWrite();
     void dbStudyCourseWrite();
     void dbCourseWrite();
+    bool setProfsAvailability(std::string acYear,const std::string& fin);
 
 
 
@@ -50,7 +52,7 @@ private:
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
-
+    SessionYear _sYear;
     void readStudents();
     void readProfessor();
     void readClassroom();

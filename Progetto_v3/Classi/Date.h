@@ -11,7 +11,8 @@ class Date {
    friend std::istream& operator>>(std::istream&, Date&);
 
 public:
-   Date() = delete;
+    Date()= default;
+   Date(std::string);
    explicit Date(int y = 1900, int m = 1, int d = 1 ); // default constructor
    void setDate(int, int, int); // set year, month, day
    Date& operator++(); // prefix increment operator                  
@@ -22,11 +23,15 @@ public:
 
    static bool leapYear(int); // anno bisestile?
    bool endOfMonth(int) const; // fine del mese?
-private:
-   unsigned int _month;
-   unsigned int _day;
-   unsigned int _year;
+   Date add(int);
 
+   std::string zellersAlgorithm(int day, int month, int year);
+   bool checkGapGiven(int weeks, Date d);
+private:
+   unsigned int _month{};
+   unsigned int _day{};
+   unsigned int _year{};
+   std::string _weekday[7] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
    static const std::vector<unsigned int> _days; // _days per mese
    void helpIncrement();
 };

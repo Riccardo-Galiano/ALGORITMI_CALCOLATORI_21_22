@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Progetto_v3.dir/Classi/Calendar.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.obj"
@@ -7,6 +6,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj"
+  "CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj"

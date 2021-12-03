@@ -98,10 +98,11 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_session_period:{
-           uni.set_session_period(argv[2],argv[3],argv[4],argv[5]);
+           uni.set_session_period(argv[3],argv[4],argv[5],argv[6]);
             break;
         }
         case set_availability: {
+            uni.setProfsAvailability(argv[3], argv[4]);
             break;
         }
 

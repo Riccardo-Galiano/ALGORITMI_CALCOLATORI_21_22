@@ -6,7 +6,9 @@
 #define PROGETTO_V3_EXAMDAY_HPP
 
 
-class ExamDay {
+#include "Date.h"
+
+class ExamDay: public Date{
 
 };
 

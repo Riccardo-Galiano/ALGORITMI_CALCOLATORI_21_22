@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "Date.h"
 
 class Parse {
 public:
@@ -65,7 +66,30 @@ public:
         input = input.substr(1,input.size() - 2);// tolgo le { } che racchiudono gli id
         return splittedLine(input, ',');//scissione degli id dei corsi raggruppati
     };
-
+    static int getAcStartYear(std::string& input){
+        return stoi(input.substr(0,4));
+    }
+    static std::vector<Date> getDates(std::string& input){
+        std::vector<std::string> dates = splittedLine(input,'_');
+        std::stringstream ss;
+        int yy, mm, dd;
+        char c;
+        std::vector<Date> realDates;
+        for(int i=0; i<2; i++){
+            ss << dates[i];
+            ss >> yy >> c >> mm >> c >> dd;
+            realDates.push_back(Date(yy,mm,dd));
+            ss.clear();
+        }
+        return realDates;
+    }
+    static int getMatr(std::string& input){
+        int nMatr;
+        char c;
+        std::stringstream ss(input);
+        ss >> c >> nMatr;
+        return nMatr;
+    }
 };
 
 
