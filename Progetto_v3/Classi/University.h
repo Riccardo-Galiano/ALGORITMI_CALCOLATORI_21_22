@@ -32,6 +32,7 @@ public:
     bool updateClassroom(const std::string &fin);
     bool insertCourses(const std::string &fin);
     bool enrollStudents(const std::string &fin);
+    bool set_session_period(const std::string &acYear,const std::string &wSession, const std::string &sSession,const std::string &aSession);
 
     void dbStudsWrite();
     void dbProfsWrite();

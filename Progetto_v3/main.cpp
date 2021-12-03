@@ -19,11 +19,14 @@ enum {
     update_classroom,
     insert_course,
     enroll_students,
+    set_session_period,
     set_availability
 };
 
 
-int returnCode(std::string paramInput) {
+int returnCode(char *argv[]) {
+    std::string paramInput = argv[1];
+    std::string secondParamInput = argv[2];
     if (paramInput.compare("-a:s") == 0)
         return add_student;
     else if (paramInput.compare("-a:d") == 0)
@@ -44,13 +47,15 @@ int returnCode(std::string paramInput) {
         return insert_course;
     else if (paramInput.compare("-e:s") == 0)
         return enroll_students;
-    else if(paramInput.compare("-s") == 0)
+    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("current_a")==0)
+        return set_session_period;
+    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("set_availability")==0)
         return set_availability;
     return -1;
 }
 
 void startProgram(University &uni, char *argv[]) {
-    int code = returnCode(argv[1]);
+    int code = returnCode(argv);
     switch (code) {
         case add_student: {
             uni.addStuds(argv[2]);
@@ -90,6 +95,10 @@ void startProgram(University &uni, char *argv[]) {
         }
         case enroll_students:{
             uni.enrollStudents(argv[2]);
+            break;
+        }
+        case set_session_period:{
+           uni.set_session_period(argv[2],argv[3],argv[4],argv[5]);
             break;
         }
         case set_availability: {

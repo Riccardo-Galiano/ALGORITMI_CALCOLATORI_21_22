@@ -918,6 +918,15 @@ bool University::enrollStudents(const std::string &fin) {
     return true;
 }
 
+bool University::set_session_period(const std::string& acYear,const std::string &wSession, const std::string &sSession, const std::string &aSession) {
+    std::string accademicYear = acYear;
+    std::string winterSession = wSession.substr(1,wSession.size()-2);//tolgo le virgolette
+    std::string summerSession = sSession.substr(1,sSession.size()-2);
+    std::string autumnSession = aSession.substr(1,aSession.size()-2);
+
+    return true;
+}
+
 
 
 
