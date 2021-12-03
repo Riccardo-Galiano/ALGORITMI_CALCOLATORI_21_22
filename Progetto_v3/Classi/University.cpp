@@ -73,6 +73,7 @@ void University::readStudents() {
     }
 
     fileIn.close();
+
 }
 
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice
@@ -269,17 +270,22 @@ bool University::addStuds(const std::string &fileIn) {
         throw std::invalid_argument("errore apertura file di inserimento nuovi studenti");
         return false;
     }
+    int line_counter=1;
     std::string line; //stringa di appoggio per l'intera riga del file
     std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione splittedLine
     while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
         tokens = Parse::splittedLine(line, ';');
+        if(tokens.size()!=3){
+            throw DbException("errore formato file studenti alla riga: ",line_counter);
+        }
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
-                                                               tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+        line_counter++;
     }
     fIn.close();
 
     dbStudsWrite();
+    std::cout<<"comando -a:s correttamente eseguito"<<std::endl;
     return true;
 }
 
@@ -291,15 +297,21 @@ bool University::addProfessors(const std::string &fileIn) {
         return false;
     }
     std::string line;
+    int line_counter=1;
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
         tokens = Parse::splittedLine(line, ';');
+        if(tokens.size()!=3){
+            throw DbException("errore formato file professori alla riga: ",line_counter);
+        }
         int matr = getNewProfessorId();
         _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
+        line_counter++;
     }
     fIn.close();
 
     dbProfsWrite();
+    std::cout<<"comando -a:d correttamente eseguito"<<std::endl;
 
     return true;
 }
@@ -312,16 +324,21 @@ bool University::addClassrooms(const std::string &fileIn) {
         return false;
     }
     std::string line;
+    int line_counter=1;
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
         tokens = Parse::splittedLine(line, ';');
+        if(tokens.size()!=4){
+            throw DbException("errore formato file aule alla riga: ",line_counter);
+        }
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
-                                                                  std::stoi(tokens[3]))));
+        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),std::stoi(tokens[3]))));
+        line_counter++;
     }
     fIn.close();
 
     dbClassRoomWrite();
+    std::cout<<"comando -a:a correttamente eseguito"<<std::endl;
 
     return true;
 }
@@ -336,7 +353,8 @@ bool University::addStudyCourses(const std::string &fin) {
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi di studio");
         return false;
     }
-    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::string line;//stringa di appoggio in cui mettere l'intero rigo
+    int line_counter=1;
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
 
 
@@ -349,6 +367,9 @@ bool University::addStudyCourses(const std::string &fin) {
 
         else {
             tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
+            if(tokens.size()!=2){
+                throw DbException("errore formato file corsi di studio alla riga: ",line_counter);
+            }
             int codCorso = getNewStudyCourseId();
 
             std::string levelCourse = tokens[0];//triennale o magistrale
@@ -358,23 +379,22 @@ bool University::addStudyCourses(const std::string &fin) {
 
             //cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
             std::size_t found = tokens[1].find_first_of("{}");
-            while (found !=
-                   std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-                posSem.push_back(
-                        found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+                posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
                 found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
             } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
             std::vector<std::string> semestri;
-            for (i = 0; i < posSem.size() - 1; i = i +
-                                                   2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
-                int posStart = posSem[i] + 1;
+            for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+                int posStart = posSem[i] + 1;// tolgo la graffa
                 int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(tokens[1].substr(posStart,
-                                                    len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+                semestri.push_back(tokens[1].substr(posStart,len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
             } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
             //semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
 
+            if((levelCourse=="BS"&&semestri.size()!=6)||(levelCourse=="MS"&&semestri.size()!=4)){
+                throw DbException("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:",line_counter);
+            }
 
             ///creo StudyCourse
             bool isBachelor = false;
@@ -391,17 +411,21 @@ bool University::addStudyCourses(const std::string &fin) {
                                            semestri[i]);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
             }
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
+            line_counter++;
         }
     }
 
     fileIn.close();
 
     dbStudyCourseWrite();
+    std::cout<<"comando -a:f correttamente eseguito"<<std::endl;
 
     return true;
 }
 
 ///inserisco dei nuovi corsi
+
+///da fare controllo se corso non esiste ancora in base dati e sulla correttezza del file: tokens.size = 10
 bool University::addCourses(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {

@@ -13,14 +13,13 @@
   <component name="ChangeListManager">
     <list default="true" id="094b6821-78ee-4524-a106-380d09575ea4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/Course.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Course.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/Course.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Course.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/Parse.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Parse.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/DbException.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/DbException.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/DbException.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/DbException.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/University.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/University.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/courses_insert_file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/courses_insert_file.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/aule_list_file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/aule_list_file.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/cds_list_file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/cds_list_file.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/db_aule.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/db_aule.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/db_corsi_studio.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/db_corsi_studio.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
@@ -90,12 +89,12 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-a:f ../Sources/cds_list_file.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -136,6 +135,7 @@
       <workItem from="1637913354744" duration="10910000" />
       <workItem from="1638369398925" duration="6675000" />
       <workItem from="1638461864842" duration="4621000" />
+      <workItem from="1638529119162" duration="6664000" />
     </task>
     <servers />
   </component>
@@ -169,18 +169,33 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>765</line>
+          <line>789</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>775</line>
+          <line>799</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/Course.cpp</url>
           <line>59</line>
           <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
+          <line>331</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/DbException.cpp</url>
+          <line>8</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
+          <line>394</line>
+          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
