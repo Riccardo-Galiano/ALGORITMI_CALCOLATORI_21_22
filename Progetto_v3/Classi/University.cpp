@@ -48,6 +48,12 @@ University::University() {
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
+    try {
+        readProfsAvailability();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+    }
 }
 
 ///leggo il database degli studenti
@@ -984,27 +990,6 @@ bool University::set_session_period(const std::string& acYear,const std::string 
     return true;
 }
 
-///indisponibilità professori
-bool University::setProfsAvailability(std::string acYear,const std::string& fin) {
-    std::ifstream fileIn(fin);
-    if (!fileIn.is_open()) {
-        throw DbException("file availabilities non esistente");
-    }
-    std::string line;
-    std::vector<std::string> profAvailability;
-    int nMatr, year;
-    year = Parse::getAcStartYear(acYear);
-    while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
-        profAvailability = Parse::splittedLine(line,';');
-        nMatr = Parse::getMatr(profAvailability[0]);
-        for(int i=1; i<profAvailability.size(); i++){//per il numero di periodi di indisponibilità del singolo prof
-            _professors.at(nMatr).setAvaibilities(year,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
-        }
-    }
-
-       return true;
-}
-
 ///salva le date delle sessioni su file
 void University::dateSessionsWrite() {
 
@@ -1016,6 +1001,79 @@ void University::dateSessionsWrite() {
     fout.close();
 
 }
+
+///lettura delle indisponibilità professori
+void University::readProfsAvailability() {
+    std::ifstream fileIn("../Sources/tutte_le_indisponibilita.txt");
+    if (!fileIn.is_open()) {
+
+        throw DbException("file tutte_le_indisponibilita non esistente");
+    }
+    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::vector<std::string> profAvailability;
+    while (std::getline(fileIn, line)) {
+        profAvailability = Parse::splittedLine(line,';');
+        int acYear = Parse::getAcStartYear(profAvailability[0]);
+        profAvailability = Parse::splittedLine(line,';');
+        int nMatr = Parse::getMatr(profAvailability[1]);
+        for(int i=2; i<profAvailability.size(); i++){//per il numero di periodi di indisponibilità del singolo prof
+            _professors.at(nMatr).setAvaibilities(acYear,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+        }
+    }
+}
+
+///set indisponibilità professori
+bool University::setProfsAvailability(std::string acYear,const std::string& fin) {
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        throw DbException("file availabilities non esistente");
+    }
+    std::string line;
+    std::vector<std::string> profAvailability;
+    int nMatr, year;
+    year = Parse::getAcStartYear(acYear);
+    while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta
+        profAvailability = Parse::splittedLine(line,';');
+        nMatr = Parse::getMatr(profAvailability[0]);
+        for(int i=1; i<profAvailability.size(); i++){//per il numero di periodi di indisponibilità del singolo prof
+            _professors.at(nMatr).setAvaibilities(year,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+        }
+    }
+    fileIn.close();
+
+    availabilityWrite();
+
+
+       return true;
+}
+
+///scrittura indisponibilità professori
+void University::availabilityWrite() {
+    std::fstream fout;
+    fout.open("../Sources/tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
+    std::vector<std::string> allProfAvailability = allProfsAvailability();
+    for(int i = 0; i<allProfAvailability.size();i++){
+        fout<<allProfAvailability[i]<<std::endl;
+    }
+    fout.close();
+}
+
+std::vector<std::string> University::allProfsAvailability() {
+    std::vector<std::string> allProfsAvailability;
+    for(auto iterProfs = _professors.begin(); iterProfs != _professors.end(); iterProfs++){
+        std::vector<std::string> profsAvailability = iterProfs->second.outputAvailability(iterProfs->first);
+        for(int i = 0; i<profsAvailability.size(); i++) {
+            allProfsAvailability.push_back(profsAvailability[i]);
+        }
+    }
+    return allProfsAvailability;
+}
+
+
+
+
+
+
 
 
 

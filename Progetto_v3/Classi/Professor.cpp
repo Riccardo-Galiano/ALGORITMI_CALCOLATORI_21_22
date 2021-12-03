@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <vector>
 #include "Professor.h"
 #include "Parse.hpp"
 
@@ -32,6 +33,20 @@ bool Professor::setAvaibilities(int acYear, std::string &input) {
         _nonAvaib.at(acYear).push_back(std::pair<Date, Date>(d1, d2));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
     }
     return true;
+}
+
+std::vector<std::string> Professor::outputAvailability(int nMatr) {
+    std::stringstream output;
+    std::vector<std::string> prova;
+    for(auto iterNonAnvaib = _nonAvaib.begin(); iterNonAnvaib != _nonAvaib.end(); iterNonAnvaib++ ) {
+        output<<iterNonAnvaib->first<< "-" << iterNonAnvaib->first <<";"<<setId(nMatr) << ";";
+        for(auto iterDate = iterNonAnvaib->second.begin();iterDate != iterNonAnvaib->second.end(); iterDate++) {
+            output << iterDate->first << "|" << iterDate->second << ";";
+        }
+       
+    }
+    prova.push_back(output.str());
+    return prova;
 }
 
 ///overload operatore <<
