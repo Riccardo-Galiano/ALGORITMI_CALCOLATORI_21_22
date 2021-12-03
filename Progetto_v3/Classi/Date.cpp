@@ -168,14 +168,16 @@ std::string Date::zellersAlgorithm(int day, int month, int year) {
     return _weekday[w];
 }
 
+///controlla se le sessioni si svolgono nelle settimane richieste
 bool Date::checkGapGiven(int weeks, Date d) {
-    int numDays = weeks * 7;
-    Date compare = this->add(numDays);
-    if(d._year == compare._year && d._month == compare._month && d._day == compare._day)
+    int numDays = weeks * 7; //a quanti giorni corrisponde il numero di settimane da considerare
+    Date compare = this->add(numDays);//aggiungo alla data iniziale il numero di giorni  corrispondente a quelle settimane
+    if(d._year == compare._year && d._month == compare._month && d._day == compare._day) //se la data finale letta da linea di comando è uguale alla data che sarebbe esatta
         return true;
     return false;
 }
 
+///restituisce la data corrispondente ad un periodo(in giorni) dalla data iniziale
 Date Date::add(int daysToAdd) {
     Date toReturn(_year,_month,_day);
     for(int i=0; i<daysToAdd; i++){

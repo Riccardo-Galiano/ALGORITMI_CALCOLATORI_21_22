@@ -42,6 +42,12 @@ University::University() {
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
+    try {
+        readSessionAcYear();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+    }
 }
 
 ///leggo il database degli studenti
@@ -898,6 +904,7 @@ void University::dbCourseWrite() {
 
 }
 
+///inserimento dell einfo per gli studenti che si iscrivono
 bool University::enrollStudents(const std::string &fin) {
     std::fstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -942,39 +949,75 @@ bool University::enrollStudents(const std::string &fin) {
     return true;
 }
 
+///legge le date della sessione esame
+void University::readSessionAcYear() {
+    std::ifstream fileIn("../Sources/dateSessioni.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file dateSessioni.txt non esistente");
+    }
+
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::vector<std::string> infoSessions = Parse::splittedLine(line,';');
+        _acYearSessions.addSession(infoSessions[0],infoSessions[1],"winterSession");//infoSessions[0] = anno accademico. Aggiungo all'anno accademico la sessione invernale
+        _acYearSessions.addSession(infoSessions[0],infoSessions[2],"summerSession");//estiva
+        _acYearSessions.addSession(infoSessions[0],infoSessions[3],"autumnSession");//e autunnale
+    }
+    fileIn.close();
+
+}
+
+///setta il periodo delle sessioni
 bool University::set_session_period(const std::string& acYear,const std::string &wSession, const std::string &sSession, const std::string &aSession) {
-    std::string accademicYear = acYear;
+
+    std::string accademicYear = acYear;//anno accademico da settare
     std::string winterSession = wSession.substr(0,wSession.size());//tolgo le virgolette
     std::string summerSession = sSession.substr(0,sSession.size());
     std::string autumnSession = aSession.substr(0,aSession.size());
-    _sYear.addSession(accademicYear,winterSession,"winterSession");
-    _sYear.addSession(accademicYear,summerSession,"summerSession");
-    _sYear.addSession(accademicYear,autumnSession,"autumnSession");
+    //pulisci mappa delle date delle sessioni
+    _acYearSessions.clearYearSession();//anche se in teoria sovrascrive comunque
+    _acYearSessions.addSession(accademicYear,winterSession,"winterSession");//aggiungo all'anno accademico la sessione invernale
+    _acYearSessions.addSession(accademicYear,summerSession,"summerSession");//estiva
+    _acYearSessions.addSession(accademicYear,autumnSession,"autumnSession");//e autunnale
 
+    dateSessionsWrite();
     return true;
 }
 
+///indisponibilità professori
 bool University::setProfsAvailability(std::string acYear,const std::string& fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
         throw DbException("file availabilities non esistente");
     }
     std::string line;
-    std::vector<std::string> tokens;
+    std::vector<std::string> profAvailability;
     int nMatr, year;
     year = Parse::getAcStartYear(acYear);
     while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
-        tokens = Parse::splittedLine(line,';');
-        nMatr = Parse::getMatr(tokens[0]);
-        for(int i=1; i<tokens.size(); i++){
-            _professors.at(nMatr).setAvaibilities(year,tokens[i]);
+        profAvailability = Parse::splittedLine(line,';');
+        nMatr = Parse::getMatr(profAvailability[0]);
+        for(int i=1; i<profAvailability.size(); i++){//per il numero di periodi di indisponibilità del singolo prof
+            _professors.at(nMatr).setAvaibilities(year,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
         }
     }
 
-
-        return true;
+       return true;
 }
+
+///salva le date delle sessioni su file
+void University::dateSessionsWrite() {
+
+    std::fstream fout;
+    fout.open("../Sources/dateSessioni.txt", std::fstream::out | std::fstream::trunc);
+    SessionYear dateSessions = _acYearSessions;
+    fout << dateSessions;
+
+    fout.close();
+
+}
+
+
 
 
 

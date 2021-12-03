@@ -40,7 +40,10 @@ public:
     void dbClassRoomWrite();
     void dbStudyCourseWrite();
     void dbCourseWrite();
+    void dateSessionsWrite();
     bool setProfsAvailability(std::string acYear,const std::string& fin);
+
+
 
 
 
@@ -52,12 +55,13 @@ private:
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
-    SessionYear _sYear;
+    SessionYear _acYearSessions;
     void readStudents();
     void readProfessor();
     void readClassroom();
     void readStudyCourse();
     void readCourse();
+    void readSessionAcYear();
 
 
 };
