@@ -102,7 +102,7 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_availability: {
-            uni.setProfsAvailability(argv[3], argv[4]);
+            uni.setProfsNoAvailability(argv[3], argv[4]);
             break;
         }
 

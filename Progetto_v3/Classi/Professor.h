@@ -17,12 +17,13 @@ public:
     Professor():UniversityMember(){};
     Professor(int matr);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
-    bool setAvaibilities(int, std::string& input);
-    std::string outputAvailabilities(int,int);
-    bool availabilityPeriodIsEmpty(int year);
-    void availabilityClear();
+    bool setNoAvaibilities(int, std::string& input);
+    std::string outputNoAvailabilities(int);
+    bool noAvailabilityPeriodIsEmpty();
+    void noAvailabilityClear();
+    int getNoAvalaibilityYear()const;
 private:
-    std::map<int, std::vector<std::pair<Date, Date>>> _nonAvaib;
+    std::pair<int, std::vector<std::pair<Date, Date>>> _noAvailab;
 };
 
 std::ostream &operator<<(std::ostream &prof, const Professor &s);
