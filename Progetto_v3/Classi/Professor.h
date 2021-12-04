@@ -18,7 +18,9 @@ public:
     Professor(int matr);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
     bool setAvaibilities(int, std::string& input);
-    std::vector<std::string> outputAvailability(int);
+    std::string outputAvailabilities(int,int);
+    bool availabilityPeriodIsEmpty(int year);
+    void availabilityClear();
 private:
     std::map<int, std::vector<std::pair<Date, Date>>> _nonAvaib;
 };

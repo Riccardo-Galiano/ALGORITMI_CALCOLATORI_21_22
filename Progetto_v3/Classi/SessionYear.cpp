@@ -38,9 +38,14 @@ int SessionYear::getAcYear() const {
 
 std::string SessionYear::getSessions() const {
     std::stringstream output;
+    int i = 0;
     for(auto iterSession = _yearSessions.rbegin(); iterSession != _yearSessions.rend(); iterSession++) {
-        output << iterSession->second.startDate <<"_"<<iterSession->second.endDate<<";";
+        output << iterSession->second.startDate <<"_"<<iterSession->second.endDate;
+        if(i <_yearSessions.size()-1)
+            output<<";";
+        i++;
     }
+
     return output.str() ;
 }
 

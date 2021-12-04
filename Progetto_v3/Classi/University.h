@@ -34,7 +34,7 @@ public:
     bool insertCourses(const std::string &fin);
     bool enrollStudents(const std::string &fin);
     bool set_session_period(const std::string &acYear,const std::string &wSession, const std::string &sSession,const std::string &aSession);
-    std::vector<std::string> allProfsAvailability();
+    std::vector<std::string> allProfsAvailabilities(int);
 
     void dbStudsWrite();
     void dbProfsWrite();
@@ -43,7 +43,8 @@ public:
     void dbCourseWrite();
     void dateSessionsWrite();
     bool setProfsAvailability(std::string acYear,const std::string& fin);
-    void availabilityWrite();
+    void availabilityWrite(int acYear);
+    bool availabilityPeriodIsEmpty(int id, int year);
 
 
 

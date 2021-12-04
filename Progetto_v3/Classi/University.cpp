@@ -1012,13 +1012,16 @@ void University::readProfsAvailability() {
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> profAvailability;
     while (std::getline(fileIn, line)) {
-        profAvailability = Parse::splittedLine(line,';');
-        int acYear = Parse::getAcStartYear(profAvailability[0]);
-        profAvailability = Parse::splittedLine(line,';');
-        int nMatr = Parse::getMatr(profAvailability[1]);
-        for(int i=2; i<profAvailability.size(); i++){//per il numero di periodi di indisponibilità del singolo prof
-            _professors.at(nMatr).setAvaibilities(acYear,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
-        }
+       if(!line.empty()) {
+           profAvailability = Parse::splittedLine(line, ';');
+           int acYear = Parse::getAcStartYear(profAvailability[0]);
+           int nMatr = Parse::getMatr(profAvailability[1]);
+           for (int i = 2;
+                i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
+               _professors.at(nMatr).setAvaibilities(acYear,
+                                                     profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+           }
+       }
     }
 }
 
@@ -1032,42 +1035,52 @@ bool University::setProfsAvailability(std::string acYear,const std::string& fin)
     std::vector<std::string> profAvailability;
     int nMatr, year;
     year = Parse::getAcStartYear(acYear);
+
     while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta
         profAvailability = Parse::splittedLine(line,';');
-        nMatr = Parse::getMatr(profAvailability[0]);
-        for(int i=1; i<profAvailability.size(); i++){//per il numero di periodi di indisponibilità del singolo prof
-            _professors.at(nMatr).setAvaibilities(year,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+        nMatr = Parse::getMatr(profAvailability[0]);//prendo la matricola
+        auto iterProf = _professors.find(nMatr);//punto al prof con matricola nMatr
+        iterProf->second.availabilityClear();//pulisco la map delle indisponibilità
+        for(int i=1; i<profAvailability.size(); i++){//per ogni campo della riga letta
+            _professors.at(nMatr).setAvaibilities(year,profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
         }
     }
     fileIn.close();
 
-    availabilityWrite();
-
+    availabilityWrite(year);//riscrivo solo le info dell'anno richiesto dal terminale
 
        return true;
 }
 
 ///scrittura indisponibilità professori
-void University::availabilityWrite() {
+void University::availabilityWrite(int year) {
     std::fstream fout;
     fout.open("../Sources/tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
-    std::vector<std::string> allProfAvailability = allProfsAvailability();
-    for(int i = 0; i<allProfAvailability.size();i++){
-        fout<<allProfAvailability[i]<<std::endl;
+    std::vector<std::string> allprofsAvailabilities = allProfsAvailabilities(year);//ritorna le indisponibilità per ogni prof già sottoforam di stringhe da salvare sul file.txt
+    for(int i = 0; i<allprofsAvailabilities.size();i++){//salvo le varie stringhe di allprofsAvailabilities
+        fout<<allprofsAvailabilities[i]<<std::endl;
     }
     fout.close();
 }
 
-std::vector<std::string> University::allProfsAvailability() {
-    std::vector<std::string> allProfsAvailability;
-    for(auto iterProfs = _professors.begin(); iterProfs != _professors.end(); iterProfs++){
-        std::vector<std::string> profsAvailability = iterProfs->second.outputAvailability(iterProfs->first);
-        for(int i = 0; i<profsAvailability.size(); i++) {
-            allProfsAvailability.push_back(profsAvailability[i]);
+///prende tutte le indisponibilità di tutti i prof
+std::vector<std::string> University::allProfsAvailabilities(int year) {
+    std::vector<std::string> allProfsAvailabilities;
+    for(auto iterProfs = _professors.begin(); iterProfs != _professors.end(); iterProfs++){//per ogni professore
+
+        int id = iterProfs->first;
+        if(!availabilityPeriodIsEmpty(id, year)) {//controllo se il professore ha un periodo di indisponibilità
+            std::string profAvailabilities = iterProfs->second.outputAvailabilities(id, year);//prende le indisponibilità di un professore
+            allProfsAvailabilities.push_back(profAvailabilities);//salvo le indisponibilità di un professore
         }
     }
-    return allProfsAvailability;
+    return allProfsAvailabilities;
 }
+
+bool University::availabilityPeriodIsEmpty(int id,int year) {
+ auto iterator = _professors.find(id);//iteratore al prof analizzato
+ return iterator -> second.availabilityPeriodIsEmpty(year);//controlla che per quell'anno accademico sia vuoto il periodo di indisponibilità
+ }
 
 
 
