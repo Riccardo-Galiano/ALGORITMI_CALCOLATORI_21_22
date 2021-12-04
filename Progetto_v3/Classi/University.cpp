@@ -816,6 +816,10 @@ bool University::insertCourses(const std::string &fin) {
             isActive = true;
         else {
             isActive = false;
+            //se un corso viene aggiornato diventando "spento" in quell'anno allora per ogni corso di studio eseguo il metodo updateSemestersAndOffCourses
+            //con il quale vedo per i diversi semestri se c'è quel determinato corso ora diventato "spento" e in tal caso:
+            //- lo tolgo dai corsi attivi
+            //- lo aggiungo tra i corsi spenti
             for (auto iterStudyCourse = _studyCourse.begin();
                  iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
                 iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0]);
