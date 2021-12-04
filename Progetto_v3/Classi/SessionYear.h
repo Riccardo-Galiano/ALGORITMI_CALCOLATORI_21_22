@@ -1,9 +1,10 @@
 //
-// Created by Andrea on 03/12/2021.
+// Created by lucam on 04/12/2021.
 //
 
-#ifndef PROGETTO_V3_SESSIONYEAR_HPP
-#define PROGETTO_V3_SESSIONYEAR_HPP
+#ifndef PROGETTO_V3_SESSIONYEAR_H
+#define PROGETTO_V3_SESSIONYEAR_H
+
 
 #include <map>
 #include "Date.h"
@@ -27,4 +28,5 @@ public:
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 
-#endif //PROGETTO_V3_SESSIONYEAR_HPP
+
+#endif //PROGETTO_V3_SESSIONYEAR_H
