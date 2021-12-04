@@ -287,6 +287,7 @@ bool University::addStuds(const std::string &fileIn) {
     std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione splittedLine
     while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
         tokens = Parse::splittedLine(line, ';');
+       //controllo che formato file sia corretto: 3 campi
         if(tokens.size()!=3){
             throw DbException("errore formato file studenti alla riga: ",line_counter);
         }
@@ -313,6 +314,7 @@ bool University::addProfessors(const std::string &fileIn) {
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
         tokens = Parse::splittedLine(line, ';');
+        //controllo che formato file sia corretto: 3 campi
         if(tokens.size()!=3){
             throw DbException("errore formato file professori alla riga: ",line_counter);
         }
@@ -340,6 +342,7 @@ bool University::addClassrooms(const std::string &fileIn) {
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
         tokens = Parse::splittedLine(line, ';');
+        //controllo che formato file sia corretto: 4 campi
         if(tokens.size()!=4){
             throw DbException("errore formato file aule alla riga: ",line_counter);
         }
@@ -404,6 +407,8 @@ bool University::addStudyCourses(const std::string &fin) {
             } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
             //semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
 
+            //controllo che formato file sia corretto:
+            //se L3 -> 6 semestri, se LM -> 4 semestri
             if((levelCourse=="BS"&&semestri.size()!=6)||(levelCourse=="MS"&&semestri.size()!=4)){
                 throw DbException("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:",line_counter);
             }
@@ -446,6 +451,7 @@ bool University::addCourses(const std::string &fin) {
         return false;
     }
     std::string line;
+    int line_counter=1;
     std::vector<std::string> specificYearCourse;
     std::string acYear;
     std::string examData;
@@ -458,6 +464,23 @@ bool University::addCourses(const std::string &fin) {
 
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         specificYearCourse = Parse::splittedLine(line, ';');
+//controllo che il formato file sia corretto: 10 campi
+        if(specificYearCourse.size()!=10){
+            throw DbException("formato file corsi di studio no valido alla riga: ",line_counter);
+        }
+//controllo che tuttii campi siano specificati
+        for(int i=0;i<specificYearCourse.size();i++){
+            if(specificYearCourse[i].empty()){
+                throw DbException("uno o più campi sono vuoti alla riga: ",line_counter);
+            }
+        }
+//controllo che l'esame non sia già presente in base dati
+//cerco nel DB un esame con stesso titolo e cfu
+        for (auto iterCours = _courses.begin(); iterCours != _courses.end(); iterCours++){
+            if(iterCours->second.getName()==specificYearCourse[1]&&iterCours->second.getCfu()==stoi(specificYearCourse[2])){
+                throw DbException("c'è un esame già presente in base dati alla riga: ",line_counter);
+            }
+        }
         std::string newIdCourse = getNewCourseId();
 
         _courses.insert(std::pair<std::string, Course>(newIdCourse, Course(newIdCourse, specificYearCourse[1],
@@ -476,17 +499,19 @@ bool University::addCourses(const std::string &fin) {
         examData = specificYearCourse[8];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
-        idGroupedCourse = specificYearCourse[9];//id dei vari corsi in parallelo
+        idGroupedCourse = specificYearCourse[9];//id dei vari corsi raggruppati
         idGroupedCourse = idGroupedCourse.substr(1,
                                                  idGroupedCourse.size() - 2);// tolgo le { } che racchiudono gli id
         idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                         splittedExamData, idGrouped);
+        line_counter++;
     }
     fileIn.close();
 
     dbCourseWrite();
 
+    std::cout<<"comando -a:c eseguito correttamente"<<std::endl;
     return true;
 }
 
