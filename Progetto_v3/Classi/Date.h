@@ -1,3 +1,6 @@
+//
+// Created by lucam on 01/12/2021.
+//
 
 #ifndef DATE_H
 #define DATE_H
@@ -32,7 +35,7 @@ private:
    unsigned int _day{};
    unsigned int _year{};
    std::string _weekday[7] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-   static const std::vector<unsigned int> _days; // _days per mese
+   static const std::vector<unsigned int> _days; // num giorni per mese
    void helpIncrement();
 };
 

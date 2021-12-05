@@ -1,5 +1,4 @@
-// Fig. 10.7: Date.cpp
-// Date class member- and friend-function definitions.
+
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -7,31 +6,31 @@
 #include "cmath"
 using namespace std;
 
-// initialize static member; one classwide copy
 const std::vector<unsigned int> Date::_days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-// Date constructor
+//costruttore
 Date::Date(int year, int month, int day) {
    setDate(year, month, day);
 }
 
-// set month, day and year
+// set year, month, day
 void Date::setDate(int yy, int mm, int dd) {
-   if (mm >= 1 && mm <= 12) {
+
+    if (yy >= 1900 && yy <= 2100) {
+        _year = yy;
+    }
+    else {
+        throw invalid_argument{"Year must be >= 1900 and <= 2100"};
+    }
+
+    if (mm >= 1 && mm <= 12) {
       _month = mm;
    }
    else {
       throw invalid_argument{"Month must be 1-12"};
    }
 
-   if (yy >= 1900 && yy <= 2100) {
-      _year = yy;
-   }
-   else {
-      throw invalid_argument{"Year must be >= 1900 and <= 2100"};
-   }
-
-   // test for a leap year
+   // test se anno bisestile
    if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) ||
       (dd >= 1 && dd <= _days[_month])) {
       _day = dd;
@@ -192,7 +191,5 @@ Date::Date(std::string date) {
     char c;
     ss << date;
     ss >> yy >> c >> mm >> c >> dd;
-    _year = yy;
-    _month = mm;
-    _day = dd;
+    setDate(yy,mm,dd);
 }

@@ -13,11 +13,8 @@
   <component name="ChangeListManager">
     <list default="true" id="094b6821-78ee-4524-a106-380d09575ea4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/University.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/University.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/courses_list_file.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/courses_list_file.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/db_corsi.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/db_corsi.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progetto_v3.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/Date.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Date.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/Date.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Date.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,11 +60,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -105,7 +97,8 @@
       <workItem from="1638369398925" duration="6675000" />
       <workItem from="1638461864842" duration="4621000" />
       <workItem from="1638529119162" duration="6664000" />
-      <workItem from="1638635066772" duration="3127000" />
+      <workItem from="1638635066772" duration="3299000" />
+      <workItem from="1638722295593" duration="1636000" />
     </task>
     <servers />
   </component>
