@@ -20,7 +20,8 @@ enum {
     insert_course,
     enroll_students,
     set_session_period,
-    set_availability
+    set_availability,
+    set_exam_date
 };
 
 
@@ -51,6 +52,8 @@ int returnCode(char *argv[]) {
         return set_session_period;
     else if(paramInput.compare("-s") == 0 && secondParamInput.compare("set_availability")==0)
         return set_availability;
+    else if (paramInput.compare("-g")==0)
+        return set_exam_date;
     return -1;
 }
 
@@ -98,17 +101,20 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_session_period:{
-           uni.set_session_period(argv[3],argv[4],argv[5],argv[6]);
+           uni.setSessionPeriod(argv[3],argv[4],argv[5],argv[6]);
             break;
         }
         case set_availability: {
             uni.setProfsNoAvailability(argv[3], argv[4]);
             break;
         }
+        case set_exam_date:{
+
+            break;
+        }
 
         default:
             throw std::invalid_argument("comando non trovato");
-            break;
     }
 };
 

@@ -33,7 +33,7 @@ public:
     bool updateClassroom(const std::string &fin);
     bool insertCourses(const std::string &fin);
     bool enrollStudents(const std::string &fin);
-    bool set_session_period(const std::string &acYear,const std::string &wSession, const std::string &sSession,const std::string &aSession);
+    bool setSessionPeriod(const std::string &acYear,const std::string &wSession, const std::string &sSession,const std::string &aSession);
     std::vector<std::string> allProfsNoAvailabilities(int);
 
     void dbStudsWrite();
@@ -46,10 +46,6 @@ public:
     void noAvailabilityWrite(int acYear);
     bool noAvailabilityPeriodIsEmpty(int id);
     bool isCurrentYear(int,int);
-
-
-
-
 
 private:
 

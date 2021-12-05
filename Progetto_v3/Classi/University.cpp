@@ -1003,7 +1003,7 @@ void University::readSessionAcYear() {
 }
 
 ///setta il periodo delle sessioni
-bool University::set_session_period(const std::string& acYear,const std::string &wSession, const std::string &sSession, const std::string &aSession) {
+bool University::setSessionPeriod(const std::string& acYear,const std::string &wSession, const std::string &sSession, const std::string &aSession) {
 
     std::string accademicYear = acYear;//anno accademico da settare
     std::string winterSession = wSession.substr(0,wSession.size());//tolgo le virgolette
