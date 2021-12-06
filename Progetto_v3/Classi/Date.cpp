@@ -193,3 +193,13 @@ Date::Date(std::string date) {
     ss >> yy >> c >> mm >> c >> dd;
     setDate(yy,mm,dd);
 }
+
+unsigned int Date::getYear() const {
+    return _year;
+}
+
+std::string Date::toString() {
+    std::stringstream ss;
+    ss << *this;
+    return ss.str();
+}

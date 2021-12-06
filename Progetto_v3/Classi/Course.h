@@ -15,7 +15,7 @@
 typedef struct {
     int _lec;///ore lezione
     int _lab;///ore laboratori
-    int _ex;///ore esame
+    int _ex;///ore esercitazione
 } hours;
 
 class Course {
@@ -28,7 +28,7 @@ public:
 
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
-
+    SpecificYearCourse getThisYearCourse(int);
     const std::string &getId() const;
 
     const std::string &getName() const;

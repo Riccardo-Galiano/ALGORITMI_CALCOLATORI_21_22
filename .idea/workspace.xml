@@ -72,6 +72,8 @@
       <workItem from="1638565123859" duration="9617000" />
       <workItem from="1638606798721" duration="22293000" />
       <workItem from="1638712745312" duration="3455000" />
+      <workItem from="1638777960416" duration="1549000" />
+      <workItem from="1638779554118" duration="5175000" />
     </task>
     <servers />
   </component>
@@ -79,14 +81,18 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="177" y="11" key="#New_File_Extensions" timestamp="1638778286446">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="177" y="11" key="#New_File_Extensions/0.0.1368.872@0.0.1368.872" timestamp="1638778286446" />
     <state x="361" y="140" width="836" height="703" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1638719453679">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="361" y="140" width="836" height="703" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1638719453679" />
-    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1638555417913">
+    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1638781124833">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872@0.0.1368.872" timestamp="1638555417913" />
+    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872@0.0.1368.872" timestamp="1638781124833" />
     <state x="415" y="134" key="FileChooserDialogImpl" timestamp="1637224203578">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
@@ -132,12 +138,16 @@
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state width="690" height="442" key="XDebugger.FullValuePopup/0.0.1368.872@0.0.1368.872" timestamp="1638565629201" />
-    <state x="304" y="219" key="com.intellij.ide.util.TipDialog" timestamp="1638712766381">
+    <state x="304" y="219" key="com.intellij.ide.util.TipDialog" timestamp="1638779557163">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="304" y="183" key="com.intellij.ide.util.TipDialog/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1636880709367" />
     <state x="1670" y="183" key="com.intellij.ide.util.TipDialog/0.0.1366.728/1366.0.1366.728@1366.0.1366.728" timestamp="1636882732794" />
-    <state x="304" y="219" key="com.intellij.ide.util.TipDialog/0.0.1368.872@0.0.1368.872" timestamp="1638712766381" />
+    <state x="304" y="219" key="com.intellij.ide.util.TipDialog/0.0.1368.872@0.0.1368.872" timestamp="1638779557163" />
+    <state x="93" y="93" width="1181" height="685" key="dock-window-1" timestamp="1638779378271">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="93" y="93" width="1181" height="685" key="dock-window-1/0.0.1368.872@0.0.1368.872" timestamp="1638779378271" />
     <state width="752" height="346" key="javadoc.popup" timestamp="1636830496373">
       <screen x="0" y="0" width="1368" height="872" />
     </state>

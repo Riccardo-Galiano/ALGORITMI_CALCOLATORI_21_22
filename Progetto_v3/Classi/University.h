@@ -48,14 +48,13 @@ public:
     bool isCurrentYear(int,int);
 
 private:
-
     friend SpecificYearCourse;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
-    SessionYear _acYearSessions;
+    SessionYear _acYearSessions; //da cambiare con mappa???????????
     void readStudents();
     void readProfessor();
     void readClassroom();

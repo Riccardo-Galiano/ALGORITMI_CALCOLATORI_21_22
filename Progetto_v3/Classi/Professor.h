@@ -22,8 +22,14 @@ public:
     bool noAvailabilityPeriodIsEmpty();
     void noAvailabilityClear();
     int getNoAvalaibilityYear()const;
+    bool addNewExam(std::string date, int hh, std::string cod_exam);
+    bool amIavailable(std::string date, int hh);
 private:
     std::pair<int, std::vector<std::pair<Date, Date>>> _noAvailab;
+    //key: "aaaa-mm-gg"
+    //value: vettore di esami in ogni slot (hh,codice_esame)
+    //NB!! se un esame dura più di uno slot, altrettanti pair ci saranno qui
+    std::map<std::string,std::map<int,std::string>> _examsToDo;
 };
 
 std::ostream &operator<<(std::ostream &prof, const Professor &s);

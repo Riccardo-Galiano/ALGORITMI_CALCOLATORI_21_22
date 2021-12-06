@@ -257,6 +257,33 @@ Classi/Exam.cpp.s:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.s
 .PHONY : Classi/Exam.cpp.s
 
+Classi/ExamDay.obj: Classi/ExamDay.cpp.obj
+
+.PHONY : Classi/ExamDay.obj
+
+# target to build an object file
+Classi/ExamDay.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj
+.PHONY : Classi/ExamDay.cpp.obj
+
+Classi/ExamDay.i: Classi/ExamDay.cpp.i
+
+.PHONY : Classi/ExamDay.i
+
+# target to preprocess a source file
+Classi/ExamDay.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.i
+.PHONY : Classi/ExamDay.cpp.i
+
+Classi/ExamDay.s: Classi/ExamDay.cpp.s
+
+.PHONY : Classi/ExamDay.s
+
+# target to generate assembly for a file
+Classi/ExamDay.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.s
+.PHONY : Classi/ExamDay.cpp.s
+
 Classi/Professor.obj: Classi/Professor.cpp.obj
 
 .PHONY : Classi/Professor.obj
@@ -497,6 +524,9 @@ help:
 	@echo ... Classi/Exam.obj
 	@echo ... Classi/Exam.i
 	@echo ... Classi/Exam.s
+	@echo ... Classi/ExamDay.obj
+	@echo ... Classi/ExamDay.i
+	@echo ... Classi/ExamDay.s
 	@echo ... Classi/Professor.obj
 	@echo ... Classi/Professor.i
 	@echo ... Classi/Professor.s

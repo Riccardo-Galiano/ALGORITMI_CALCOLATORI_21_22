@@ -10,33 +10,39 @@
 #include <vector>
 
 class Date {
-   friend std::ostream& operator<<(std::ostream&, const Date&);
-   friend std::istream& operator>>(std::istream&, Date&);
+    friend std::ostream &operator<<(std::ostream &, const Date &);
+    friend std::istream &operator>>(std::istream &, Date &);
 
 public:
-    Date()= default;
-   Date(std::string);
-   explicit Date(int y = 1900, int m = 1, int d = 1 ); // default constructor
-   void setDate(int, int, int); // set year, month, day
-   Date& operator++(); // prefix increment operator                  
-   Date operator++(int); // postfix increment operator       
-   Date& operator+=(unsigned int);
-   bool operator>(const Date&) const;
-   bool operator<(const Date&) const;
+    Date() = default;
+    Date(std::string);
 
-   static bool leapYear(int); // anno bisestile?
-   bool endOfMonth(int) const; // fine del mese?
-   Date add(int);
+    explicit Date(int y = 1900, int m = 1, int d = 1); // default constructor
+    void setDate(int, int, int); // set year, month, day
+    Date &operator++(); // prefix increment operator
+    Date operator++(int); // postfix increment operator
+    Date &operator+=(unsigned int);
 
-   std::string zellersAlgorithm(int day, int month, int year);
-   bool checkGapGiven(int weeks, Date d);
+    bool operator>(const Date &) const;
+    bool operator<(const Date &) const;
+
+    static bool leapYear(int); // anno bisestile?
+    bool endOfMonth(int) const; // fine del mese?
+    Date add(int);
+
+    std::string zellersAlgorithm(int day, int month, int year);
+    bool checkGapGiven(int weeks, Date d);
+
+    unsigned int getYear() const;
+    std::string toString();
+
 private:
-   unsigned int _month{};
-   unsigned int _day{};
-   unsigned int _year{};
-   std::string _weekday[7] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-   static const std::vector<unsigned int> _days; // num giorni per mese
-   void helpIncrement();
+    unsigned int _month{};
+    unsigned int _day{};
+    unsigned int _year{};
+    std::string _weekday[7] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    static const std::vector<unsigned int> _days; // num giorni per mese
+    void helpIncrement();
 };
 
 #endif

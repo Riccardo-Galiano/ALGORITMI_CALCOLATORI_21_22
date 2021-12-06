@@ -140,6 +140,10 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
     return _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
 }
 
+SpecificYearCourse Course::getThisYearCourse(int year) {
+    return _courseOfTheYear.at(year);
+}
+
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
            << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;

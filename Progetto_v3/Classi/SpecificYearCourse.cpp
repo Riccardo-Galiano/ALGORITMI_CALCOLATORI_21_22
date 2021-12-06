@@ -6,7 +6,8 @@
 #include <iomanip>
 #include "SpecificYearCourse.h"
 
-SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped) :
+SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
+                                       std::vector<std::string> exam, std::vector<std::string> idGrouped) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
@@ -30,7 +31,8 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
     idMainProf = profs.substr(0, found);//salva l'id del titolare
     std::stringstream ssIdProf(idMainProf);//manipolo l'id per togliere la "d" e avere solo un intero
     ssIdProf >> c >> mainProf;
-    profSenzaQuadre = profs.substr(found + 2, (profs.size() - found - 2) - 1); //tolgo le [ ] che delimitano i vari prof con le relative informazioni
+    profSenzaQuadre = profs.substr(found + 2, (profs.size() - found - 2) -
+                                              1); //tolgo le [ ] che delimitano i vari prof con le relative informazioni
     std::vector<int> foundBracket;
 
     ///cerco e salvo le posizioni di { o } in profSenzaQuadre
@@ -48,7 +50,8 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 
     ///estrae ogni prof con le relative info
     for (int i = 0; i < foundBracket.size(); i += 2) {
-        singoliProfDaLeggere.push_back( profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
+        singoliProfDaLeggere.push_back(
+                profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
 
     }
     int id, hlez, hexe, hlab;
@@ -75,9 +78,12 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit) {
 
     std::vector<professor> profConOre;
-    for (int i = 0; i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
-        profConOre = getProfsFromString( profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
-        _professors.insert(std::pair<int, std::vector<professor>>(i, profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
+    for (int i = 0;
+         i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
+        profConOre = getProfsFromString(
+                profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
+        _professors.insert(std::pair<int, std::vector<professor>>(i,
+                                                                  profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
 
     return false;
@@ -86,7 +92,7 @@ bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> pr
 ///setta l'Id aggiungendo degli 0 all'inizio, dove necessario
 std::string SpecificYearCourse::setId(int nMatr) const {
     std::stringstream output;
-    output<<std::setfill('0')<<std::setw(6)<<nMatr;
+    output << std::setfill('0') << std::setw(6) << nMatr;
     return output.str();
 }
 
@@ -105,7 +111,8 @@ const std::string SpecificYearCourse::getProfParString() const {
         }
         output << "d" << setId(matrTit) << ",[";
         for (int j = 0; j < profs.size(); j++) {
-            output << "{d" << setId(profs[j].prof_id) << "," << profs[j].hLez << "," << profs[j].hExe << "," << profs[j].hLab << "}";
+            output << "{d" << setId(profs[j].prof_id) << "," << profs[j].hLez << "," << profs[j].hExe << ","
+                   << profs[j].hLab << "}";
             if (j < profs.size() - 1)
                 output << ",";
         }
@@ -157,15 +164,31 @@ int SpecificYearCourse::getParalleleCours() const {
 bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mark) {
     student studToAdd;
     studToAdd._grade = mark;
-    studToAdd._startEnrolYear = stoi(enrolYear.substr(0,4));
-    studToAdd._endEnrolYear = stoi(enrolYear.substr(5,4));
+    studToAdd._startEnrolYear = stoi(enrolYear.substr(0, 4));
+    studToAdd._endEnrolYear = stoi(enrolYear.substr(5, 4));
     studToAdd.stud = stud;
-    std::pair<int,student> pair (stud.getId(),studToAdd);
+    std::pair<int, student> pair(stud.getId(), studToAdd);
     _student.insert(pair);
     totStudentsEnrolled++;
-    if(mark==-1) //da controllare da stringa vuota a int cosa succede
+    if (mark == -1) //da controllare da stringa vuota a int cosa succede
         totStudentsNotPassed++;
     return true;
+}
+
+const Exam &SpecificYearCourse::getExam() const {
+    return _exam;
+}
+
+std::vector<int> SpecificYearCourse::getAllProfMatr() {
+    std::vector<int> professors;
+    std::vector<professor> profs;
+    for (int i = 0; i < _professors.size(); i++) {
+        profs = _professors.at(i);
+        for (int j = 0; j < profs.size(); j++){
+            professors.push_back(profs[i].prof_id);
+        }
+    }
+    return professors;
 }
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

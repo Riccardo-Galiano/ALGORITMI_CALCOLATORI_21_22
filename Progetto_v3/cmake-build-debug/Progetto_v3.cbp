@@ -112,6 +112,12 @@
 		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
+		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.cpp">
+			<Option target="Progetto_v3"/>
+		</Unit>
+		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h">
+			<Option target="Progetto_v3"/>
+		</Unit>
 		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
