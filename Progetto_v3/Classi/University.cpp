@@ -595,43 +595,43 @@ bool University::updateStuds(const std::string &fin) {
 
         throw std::invalid_argument("errore apertura file per aggiornamento studenti");
     }
-    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::string line;//stringa di appoggio in cui mettere l'intero rigo
+    int line_counter=1;
     std::vector<std::string> infoStud;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoStud = Parse::splittedLine(line, ';');
+
+        if (infoStud[0].empty()){
+            throw DbException("manca la matricola dello studente alla riga: ", line_counter);
+        }
         std::stringstream ss(infoStud[0]);
         ss >> c >> nMatr;
 
         ///se la matricola non esiste nel database
-        if (_students.find(nMatr) ==
-            _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_students.find(nMatr) == _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
 
-        for (i = 1; i <
-                    infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        for (i = 1; i <infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
             if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
                 switch (i) {
                     case update_name ://analizzo il nome
-                        if (!(iter->second.getName() ==
-                              infoStud[i])) { //se il nome letto dal file è diverso dal nome del database
+                        if (!(iter->second.getName() == infoStud[i])) { //se il nome letto dal file è diverso dal nome del database
                             iter->second.updateName(infoStud[i]); //cambio il nome
                         }
                         break;
 
                     case update_surName ://analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              infoStud[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                        if (!(iter->second.getSurname() == infoStud[i])) {//se il cognome letto dal file è diverso dal cognome del database
                             iter->second.updateSurnName(infoStud[i]); //cambio il cognome
                         }
                         break;
                     case update_eMail : //analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              infoStud[i])) {//se l'email letta dal file è diversa dall'email del database
+                        if (!(iter->second.getEmail() == infoStud[i])) {//se l'email letta dal file è diversa dall'email del database
                             iter->second.updateEmail(infoStud[i]); //cambia l'email
                         }
                         break;
@@ -640,6 +640,7 @@ bool University::updateStuds(const std::string &fin) {
 
             }
         }
+        line_counter++;
     }
 
     fileIn.close();
@@ -659,23 +660,25 @@ bool University::updateProfessors(const std::string &fin) {
         throw std::invalid_argument("errore apertura file per aggiornamento professori");
 
     }
-    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::string line;//stringa di appoggio in cui mettere l'intero rigo
+    int line_counter=1;
     std::vector<std::string> infoProf;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoProf = Parse::splittedLine(line, ';'); //splitto il rigo nei vari campi di interesse
+        if (infoProf[0].empty()){
+            throw DbException("manca la matricola del professore alla riga: ", line_counter);
+        }
         std::stringstream ss(infoProf[0]);
         ss >> c >> nMatr;
 
-        if (_professors.find(nMatr) ==
-            _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_professors.find(nMatr) == _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
 
-        for (i = 1; i <
-                    infoProf.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        for (i = 1; i <infoProf.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
             if (!(infoProf[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
 
@@ -704,6 +707,7 @@ bool University::updateProfessors(const std::string &fin) {
 
             }
         }
+        line_counter++;
     }
 
     fileIn.close();
@@ -729,11 +733,15 @@ bool University::updateClassroom(const std::string &fin) {
         throw std::invalid_argument("errore apertura file per aggiornamento aule");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    int line_counter=1;
     std::vector<std::string> infoClassroom;
 
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoClassroom = Parse::splittedLine(line, ';');
+        if (infoClassroom[0].empty()){
+            throw DbException("manca il codice dell' aula alla riga: ", line_counter);
+        }
         std::stringstream ss(infoClassroom[0]);
         ss >> c >> nMatr;
 
@@ -786,6 +794,7 @@ bool University::updateClassroom(const std::string &fin) {
 
             }
         }
+        line_counter++;
     }
     fileIn.close();
 
@@ -811,18 +820,32 @@ bool University::insertCourses(const std::string &fin) {
         throw std::invalid_argument("errore apertura file per inserimento di una nuova organizzazione del corso");
     }
 
-    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+    std::string line;//stringa di appoggio in cui mettere l'intero rigo
+    int line_counter=1;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         std::vector<std::string> specificYearCourse = Parse::splittedLine(line, ';');
 
-        if (_courses.find(specificYearCourse[0]) ==
-            _courses.end()) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_courses.find(specificYearCourse[0]) == _courses.end()) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("IdCorso non presente");
         }
 
         auto course_with_given_id = _courses.find(specificYearCourse[0]);//iteratore al corso da aggiornare
         ///fillSpecificYearCourse mi aggiorna il vettore specificYearCourse aggiungendo le info dell'anno accademico precedente negli spazi vuoti
-        course_with_given_id->second.fillSpecificYearCourse(specificYearCourse);//passo l'intero vettore di stringhe by reference
+        if(!(course_with_given_id->second.courseOfTheYearIsEmpty())){
+            course_with_given_id->second.fillSpecificYearCourse(specificYearCourse);//passo l'intero vettore di stringhe by reference
+        }else{
+            //non esistono informazioni riguardo anni precedenti
+            if(specificYearCourse.size()!=7){
+                throw DbException("non esistono informazioni riguardo anni precedenti da poter ereditare; manca info sui corsi raggruppati alla riga: ",line_counter);
+            }else{
+                for(int i=0;i<7;i++){
+                    if(specificYearCourse[i].empty()){
+                        throw DbException("non esistono informazioni riguardo anni precedenti da poter ereditare; specificare tutti i campi alla riga: ", line_counter);
+                    }
+                }
+            }
+
+        }
 
         acYear = specificYearCourse[1]; //anno accademico
         if (specificYearCourse[2] == "attivo") //se attivo o meno
@@ -833,8 +856,7 @@ bool University::insertCourses(const std::string &fin) {
             //con il quale vedo per i diversi semestri se c'è quel determinato corso ora diventato "spento" e in tal caso:
             //- lo tolgo dai corsi attivi
             //- lo aggiungo tra i corsi spenti
-            for (auto iterStudyCourse = _studyCourse.begin();
-                 iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
+            for (auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
                 iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0]);
             }
         }
@@ -846,8 +868,8 @@ bool University::insertCourses(const std::string &fin) {
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
         idGrouped = Parse::SplittedGroupedID(specificYearCourse[6]);
-        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                                  splittedExamData, idGrouped);
+        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,splittedExamData, idGrouped);
+        line_counter++;
     }
     fileIn.close();
 

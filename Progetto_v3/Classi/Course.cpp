@@ -6,7 +6,6 @@
 #include "Course.h"
 #include "Parse.hpp"
 
-
 Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
                const int oreEsercitazione, const int oreLaboratorio) {
 
@@ -50,7 +49,7 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     lastYearSpecificYearCourseSplitted = Parse::splittedLine(last.str(), ';');
 
     //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
-    //specificYearCourse avrebbe soltanto 3 campi quindi dovremmo aggiungere un quarto campo inizialmente vuoto che verrà poi riempito dalle info
+    //specificYearCourse avrebbe soltanto 6 campi quindi dovremmo aggiungere un settimo campo inizialmente vuoto che verrà poi riempito dalle info
     //dell'anno precedente
     if (specificYearCourse.size() == 6) {
         specificYearCourse.push_back(posLastOffCourses);
@@ -78,8 +77,7 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 SpecificYearCourse &Course::getLastSpecificYearCourse() {
     int lastYear = 0, actualYear;
 
-    for (auto iter = _courseOfTheYear.begin();
-         iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
+    for (auto iter = _courseOfTheYear.begin();iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
         actualYear = iter->second.getStartYear();//punta all'oggetto di tipo SpecificYearCourse e ne prende l'anno di inizio(che poi sarebbe la key)
         //potrei scrivere actualYear = iter->first
         if (actualYear > lastYear)
@@ -142,6 +140,14 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
 
 SpecificYearCourse Course::getThisYearCourse(int year) {
     return _courseOfTheYear.at(year);
+}
+
+bool Course::courseOfTheYearIsEmpty() {
+    if(_courseOfTheYear.empty()){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 std::ostream &operator<<(std::ostream &course, Course &s) {

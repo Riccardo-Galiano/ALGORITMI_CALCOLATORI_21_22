@@ -55,6 +55,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 
     }
     int id, hlez, hexe, hlab;
+    bool mainProfFound=false;
     for (int i = 0; i < singoliProfDaLeggere.size(); i++) {//inserisco le info per ogni prof
         std::stringstream ss(singoliProfDaLeggere[i]);
         ss >> c >> id >> c >> hlez >> c >> hexe >> c
@@ -66,8 +67,13 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
         p.hLab = hlab;
         if (p.prof_id == mainProf) {//se l'id analizzato uguale a quello del titolare letto in precedenza
             p.mainProf = true;
+            mainProfFound=true;
         }
+
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
+    }
+    if(mainProfFound==false){
+        throw std::invalid_argument("manca il professore titolare");
     }
 
     return profToReturn;
@@ -78,12 +84,9 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
 bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit) {
 
     std::vector<professor> profConOre;
-    for (int i = 0;
-         i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
-        profConOre = getProfsFromString(
-                profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
-        _professors.insert(std::pair<int, std::vector<professor>>(i,
-                                                                  profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
+    for (int i = 0; i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
+        profConOre = getProfsFromString(profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
+        _professors.insert(std::pair<int, std::vector<professor>>(i,profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
 
     return false;

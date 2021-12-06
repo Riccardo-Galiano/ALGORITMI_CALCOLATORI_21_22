@@ -25,7 +25,7 @@ public:
 
     bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped);
     bool fillSpecificYearCourse(std::vector<std::string>& );
-
+    bool courseOfTheYearIsEmpty();
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     SpecificYearCourse getThisYearCourse(int);
