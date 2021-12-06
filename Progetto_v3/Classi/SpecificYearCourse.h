@@ -41,16 +41,13 @@ public:
     const std::string getGroupedCoursesIdString() const;
     const std::string getExamString() const;
     int getStartYear() const;
-
     const Exam &getExam() const;
+    std::vector<professor> getProfsFromString (std::string profs);
+    std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
 
     std::string setId(int nMatr)const;
-
-    std::vector<professor> getProfsFromString (std::string profs);
     bool setProfMap(int, std::vector<std::string>);
-    bool addStudent(Student,std::string,int);
-
-    std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
+        bool addStudent(Student,std::string,int);
 
 private:
     int _startYear;    ///anno di inizio

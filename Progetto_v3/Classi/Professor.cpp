@@ -8,12 +8,9 @@
 #include "Professor.h"
 #include "Parse.hpp"
 
-Professor::Professor(int matr, std::string name, std::string surname, std::string email) : UniversityMember(matr, name,
-                                                                                                            surname,
-                                                                                                            email) {
+///costruttori
+Professor::Professor(int matr, std::string name, std::string surname, std::string email) : UniversityMember(matr, name,surname, email) {
 }
-
-
 Professor::Professor(int matr) : UniversityMember() {
     _id = matr;
 }
@@ -25,48 +22,40 @@ bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     Date d1 = Date(dates[0]); //creo un oggetto Date passando la stringa dell'intera data(vedere costructor in Date)
     Date d2 = Date(dates[1]);
     std::vector<std::pair<Date, Date>> vect;//vettore di tuple in cui mettere data di inizio e fine del periodo di indisponibilità
-    if (_noAvailab.first != acYear) {//se non abbiamo ancora un anno accademico o è diverso da quello nuovo
+    if(_noAvailab.count(acYear)==0) {//se non c'è ancora l'anno accademico a cui sto facendo riferimento
         vect.push_back(std::pair<Date, Date>(d1, d2));
-        _noAvailab = (std::pair<int, std::vector<std::pair<Date, Date>>>(acYear,
-                                                                         vect));//assegno la prima tupla di Date all'anno accademico
-    } else
-
-        _noAvailab.second.emplace_back(d1,
-                                       d2);//_nonAvaib.second.push_back(std::pair(d1,d2))così non me la fa inserire!!
-
+        _noAvailab.insert(std::pair<int,std::vector<std::pair<Date,Date>>>(acYear,vect));//metto in una mappa per anno accademico il vettore di tuple
+    }
+    else{
+        _noAvailab.at(acYear).push_back(std::pair<Date, Date>(d1, d2));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
+    }
 
     return true;
 }
 
 ///stringa destinata alla scrittura del file in cui ci sono le indisponibilità del prof
-std::string Professor::outputNoAvailabilities(int nMatr) {
-
-    std::stringstream output;
-    int i = 0;
-    output << _noAvailab.first << "-" << _noAvailab.first + 1 << ";" << "d" << setId(nMatr) << ";";
-    for (auto iterDate = _noAvailab.second.begin(); iterDate != _noAvailab.second.end(); iterDate++) {
-        output << iterDate->first << "|" << iterDate->second;
-        if (i < _noAvailab.second.size() - 1)
-            output << ";";
-        i++;
-    }
-
-    return output.str();
+std::vector<std::string> Professor::outputNoAvailabilities(int nMatr) {
+   std::vector<std::string> allProfNoAvailabilities;
+        for(auto iterNoAvailab = _noAvailab.begin(); iterNoAvailab != _noAvailab.end();iterNoAvailab++) {
+            int i = 0;
+            std::stringstream output;
+            output << iterNoAvailab->first << "-" << iterNoAvailab->first + 1 << ";" << "d" << setId(nMatr) << ";";//aaaa-aaaa ; dxxxxxx ;
+                for (auto iterDate = iterNoAvailab->second.begin(); iterDate != iterNoAvailab->second.end(); iterDate++) {//per tutti i periodi di indisponibilità
+                    output << iterDate->first << "|" << iterDate->second; //aaaa-mm-gg|aaaa-mm-gg
+                    if (i < iterNoAvailab->second.size() - 1)//se è l'ultimo periodo non va messo il punto e virgola
+                        output << ";";
+                    std::string prova = output.str();//lo stream diventa una stringa
+                    i++;//per capire se va messo il punto e virgola
+                }
+        std::string tokens = output.str();
+        allProfNoAvailabilities.push_back(tokens);
+}
+    return allProfNoAvailabilities ;
 }
 
-///restituisce true se _nonAvaib è vuoto
-bool Professor::noAvailabilityPeriodIsEmpty() {
-    return _noAvailab.second.empty();
-}
-
-///pulisce la tupla _nonAvaib
-void Professor::noAvailabilityClear() {
-    _noAvailab.second.clear();
-}
-
-///l'anno corrispondente alle indisponibilità
-int Professor::getNoAvalaibilityYear() const {
-    return _noAvailab.first;
+///pulisce la map ad un preciso anno di _nonAvaib
+void Professor::noAvailabilityClear(int year) {
+    _noAvailab.erase(year);
 }
 
 bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {

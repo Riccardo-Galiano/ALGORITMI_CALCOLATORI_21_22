@@ -40,9 +40,30 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
 ///aggiunge corso spento
 bool StudyCourse::addOffCourses(const std::vector<std::string> &corsiSpenti) {
     for (int i=0; i<corsiSpenti.size(); i++) {
-        _corsiSpenti.push_back(corsiSpenti[i]);//per ogni codice del corso spento associo un oggetto corso
+        _offCourses.push_back(corsiSpenti[i]);//per ogni codice del corso spento associo un oggetto corso
     }
-    _corsiSpenti.sort();//se li vogliamo in ordine crescente;
+    _offCourses.sort();//se li vogliamo in ordine crescente;
+    return true;
+}
+
+///controlla se ci sono corsi spenti: corsiSpenti è vuoto?
+bool StudyCourse::offCoursesEmpty() const {
+    return _offCourses.empty();
+}
+
+bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse) {
+
+for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++){
+
+     std::vector<std::string> &corsi = iterSemesters->second;
+     auto found = std::find(corsi.begin(),corsi.end(),idCourse);
+
+        if(found != corsi.end()) {
+             corsi.erase(found);
+            _offCourses.push_back(idCourse);
+        }
+    }
+
     return true;
 }
 
@@ -89,11 +110,6 @@ std::string StudyCourse::getSemestersString() const {
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
-///controlla se ci sono corsi spenti: corsiSpenti è vuoto?
-bool StudyCourse::offCoursesEmpty() const {
-    return _corsiSpenti.empty();
-}
-
 ///prende i corsi spenti
 std::string StudyCourse::getOffCoursesString() const {
     std::stringstream output;
@@ -101,30 +117,14 @@ std::string StudyCourse::getOffCoursesString() const {
 
 
     output <<"[";
-    for( auto iterOffCourses = _corsiSpenti.begin(); iterOffCourses != _corsiSpenti.end() ; iterOffCourses++){//per ogni corso spento
+    for( auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end() ; iterOffCourses++){//per ogni corso spento
         output<< *iterOffCourses;//dereferenzio l'iteratore: prendo il value puntato dall'iteratore
-        if( countCourses< _corsiSpenti.size() - 1)//se l'ultimo corso non va messa la virgola
+        if( countCourses< _offCourses.size() - 1)//se l'ultimo corso non va messa la virgola
             output <<",";
         countCourses ++;
     }
     output <<"]";
     return output.str();//ritorno la stringstream sottoforma di stringa
-}
-
-bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse) {
-
-for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++){
-
-     std::vector<std::string> &corsi = iterSemesters->second;
-     auto found = std::find(corsi.begin(),corsi.end(),idCourse);
-
-        if(found != corsi.end()) {
-             corsi.erase(found);
-            _corsiSpenti.push_back(idCourse);
-        }
-    }
-
-    return true;
 }
 
 ///overload operatore <<

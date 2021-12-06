@@ -13,19 +13,20 @@
 //std::cout << std::put_time(std::localtime(&now), "%Y-%m-%d") << "\n";
 class Professor : public UniversityMember {
 public:
-    //Professor() = delete;
+
     Professor():UniversityMember(){};
     Professor(int matr);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
     bool setNoAvaibilities(int, std::string& input);
-    std::string outputNoAvailabilities(int);
-    bool noAvailabilityPeriodIsEmpty();
-    void noAvailabilityClear();
-    int getNoAvalaibilityYear()const;
+    std::vector<std::string> outputNoAvailabilities(int);
+    void noAvailabilityClear(int);
     bool addNewExam(std::string date, int hh, std::string cod_exam);
     bool amIavailable(std::string date, int hh);
+
 private:
-    std::pair<int, std::vector<std::pair<Date, Date>>> _noAvailab;
+    //key: inizio anno accademico
+    //value: coppia di date; inizio e fine periodo di indisponibilità
+    std::map<int, std::vector<std::pair<Date, Date>>> _noAvailab;
     //key: "aaaa-mm-gg"
     //value: vettore di esami in ogni slot (hh,codice_esame)
     //NB!! se un esame dura più di uno slot, altrettanti pair ci saranno qui

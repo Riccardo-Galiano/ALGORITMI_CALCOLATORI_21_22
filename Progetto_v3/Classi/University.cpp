@@ -65,23 +65,19 @@ void University::readStudents() {
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa
-    char c;    //accoglierà la s della matricola presa dal file, a noi inutile
+
     int nMatr; //accoglierà il codice identificativo della matricola presa dal file, a noi utile
 
 
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         InteroStudente = Parse::splittedLine(line, ';');
 
-        std::stringstream ss(
-                InteroStudente[0]); //manipolo la stringa della matricola (iniziallizzo oggetto ss, di classe stringstream, con InteroStudente[0] ovvero matricola)
-        ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
-
+        nMatr = Parse::getMatr(InteroStudente [0]);
         ///controllo se la matricola è già esistente; in quel caso lancio un'eccezione, altrimenti inserisco lo studente con tutti i suoi dati
         if (_students.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
-            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
-                                                                    InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
+            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2], InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
     }
 
     fileIn.close();
@@ -96,12 +92,10 @@ void University::readProfessor() {
     }
     std::string line;
     std::vector<std::string> InteroProfessore;
-    char c;
     int nMatr;
     while (std::getline(fileIn, line)) {
         InteroProfessore = Parse::splittedLine(line, ';');
-        std::stringstream ss(InteroProfessore[0]);
-        ss >> c >> nMatr;
+        nMatr = Parse::getMatr(InteroProfessore[0]);
         if (_professors.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
@@ -121,12 +115,11 @@ void University::readClassroom() {
     }
     std::string line;
     std::vector<std::string> InteraClasse;
-    char c;
     int nCod = 0;
     while (std::getline(fileIn, line)) {
         InteraClasse = Parse::splittedLine(line, ';');
-        std::stringstream ss(InteraClasse[0]);
-        ss >> c >> nCod;
+        nCod = Parse::getMatr(InteraClasse[0]);
+
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
         else {
@@ -141,7 +134,7 @@ void University::readClassroom() {
 
 ///lettura dei corsi di studio dal database
 void University::readStudyCourse() {
-    char c;
+
     int i;
     std::ifstream fileIn("../Sources/db_corsi_studio.txt");
     if (!fileIn.is_open()) {
@@ -159,18 +152,13 @@ void University::readStudyCourse() {
             break;
 
         InteroCorsoDiStudi = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
-        std::stringstream ss(InteroCorsoDiStudi[0]);//manipolo la stringa
-        int codCorso;
-        ss >> c >> codCorso;//in c andrà il carattere A del codice letto. codCorso conterrà i 3 numeri subito dopo A
+
+        int codCorso  = Parse::getMatr(InteroCorsoDiStudi[0]);
         std::string levelCourse = InteroCorsoDiStudi[1];//triennale o magistrale
-
-
         ///devo leggere i semestri
         std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
-
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
                                                             len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
@@ -984,7 +972,7 @@ bool University::enrollStudents(const std::string &fin) {
     return true;
 }
 
-///legge le date della sessione esame
+///legge le date delle sessioni in base all'anno
 void University::readSessionAcYear() {
     std::ifstream fileIn("../Sources/dateSessioni.txt");
     if (!fileIn.is_open()) {
@@ -994,44 +982,15 @@ void University::readSessionAcYear() {
     std::string line;
     while (std::getline(fileIn, line)){
         std::vector<std::string> infoSessions = Parse::splittedLine(line,';');
-        _acYearSessions.addSession(infoSessions[0],infoSessions[1],"winterSession");//infoSessions[0] = anno accademico. Aggiungo all'anno accademico la sessione invernale
-        _acYearSessions.addSession(infoSessions[0],infoSessions[2],"summerSession");//estiva
-        _acYearSessions.addSession(infoSessions[0],infoSessions[3],"autumnSession");//e autunnale
+        int acStartYear = Parse::getAcStartYear(infoSessions[0]);
+        SessionYear sessionYear(infoSessions[0],infoSessions[1], infoSessions[2], infoSessions[3]);
+        _acYearSessions.insert(std::pair<int,SessionYear>(acStartYear,sessionYear));
     }
     fileIn.close();
 
 }
 
-///setta il periodo delle sessioni
-bool University::setSessionPeriod(const std::string& acYear,const std::string &wSession, const std::string &sSession, const std::string &aSession) {
-
-    std::string accademicYear = acYear;//anno accademico da settare
-    std::string winterSession = wSession.substr(0,wSession.size());//tolgo le virgolette
-    std::string summerSession = sSession.substr(0,sSession.size());
-    std::string autumnSession = aSession.substr(0,aSession.size());
-    //pulisci mappa delle date delle sessioni
-    _acYearSessions.clearYearSession();//anche se in teoria sovrascrive comunque
-    _acYearSessions.addSession(accademicYear,winterSession,"winterSession");//aggiungo all'anno accademico la sessione invernale
-    _acYearSessions.addSession(accademicYear,summerSession,"summerSession");//estiva
-    _acYearSessions.addSession(accademicYear,autumnSession,"autumnSession");//e autunnale
-
-    dateSessionsWrite();
-    return true;
-}
-
-///salva le date delle sessioni su file
-void University::dateSessionsWrite() {
-
-    std::fstream fout;
-    fout.open("../Sources/dateSessioni.txt", std::fstream::out | std::fstream::trunc);
-    SessionYear dateSessions = _acYearSessions;
-    fout << dateSessions;
-
-    fout.close();
-
-}
-
-///lettura delle indisponibilità professori
+///lettura delle indisponibilità dei professori in ogni anno
 void University::readProfsNoAvailability() {
     std::ifstream fileIn("../Sources/tutte_le_indisponibilita.txt");
     if (!fileIn.is_open()) {
@@ -1041,19 +1000,35 @@ void University::readProfsNoAvailability() {
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> profAvailability;
     while (std::getline(fileIn, line)) {
-       if(!line.empty()) {
-           profAvailability = Parse::splittedLine(line, ';');
-           int acYear = Parse::getAcStartYear(profAvailability[0]);
-           int nMatr = Parse::getMatr(profAvailability[1]);
-           for (int i = 2; i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
-               _professors.at(nMatr).setNoAvaibilities(acYear,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
-           }
-       }
+        if (!line.empty()) {
+            profAvailability = Parse::splittedLine(line, ';');
+            int acYear = Parse::getAcStartYear(profAvailability[0]);
+            int nMatr = Parse::getMatr(profAvailability[1]);
+            for (int i = 2; i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
+                _professors.at(nMatr).setNoAvaibilities(acYear,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+            }
+        }
     }
     fileIn.close();
 }
 
-///set indisponibilità professori
+///setta il periodo delle sessioni
+bool University::setSessionPeriod(const std::string& acYear,const std::string &winterSession, const std::string &summerSession, const std::string &autumnSession) {
+    std::string prova = acYear;
+    int acStartYear = Parse::getAcStartYear(prova);
+    if(!(_acYearSessions.count(acStartYear)==0))  {
+        _acYearSessions.erase(acStartYear);
+    }
+        SessionYear sessionYear(acYear, winterSession, summerSession, autumnSession);
+        _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
+
+
+
+    dateSessionsWrite();
+    return true;
+}
+
+///set indisponibilità professori in base all'anno
 bool University::setProfsNoAvailability(std::string acYear,const std::string& fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -1066,54 +1041,66 @@ bool University::setProfsNoAvailability(std::string acYear,const std::string& fi
 
     while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta
         profAvailability = Parse::splittedLine(line,';');
+
         nMatr = Parse::getMatr(profAvailability[0]);//prendo la matricola
         auto iterProf = _professors.find(nMatr);//punto al prof con matricola nMatr
-        iterProf->second.noAvailabilityClear();//pulisco la map delle indisponibilità
+
+        //dovrò aggiornare l'indisponibilità di un prof per uno specifico anno accademico quindi cancello le
+        //vecchie indisponibilità di uno specifico prof per uno specifico anno
+        iterProf->second.noAvailabilityClear(year);//facciamo il controllo se vuoto????
         for(int i=1; i<profAvailability.size(); i++){//per ogni campo della riga letta
+
             _professors.at(nMatr).setNoAvaibilities(year,profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
         }
     }
     fileIn.close();
 
-    noAvailabilityWrite(year);//riscrivo solo le info dell'anno richiesto dal terminale
+    noAvailabilityWrite();
 
        return true;
 }
 
-///scrittura indisponibilità professori
-void University::noAvailabilityWrite(int year) {
-    std::fstream fout;
-    fout.open("../Sources/tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
-    std::vector<std::string> allprofsAvailabilities = allProfsNoAvailabilities(year);//ritorna le indisponibilità per ogni prof già sottoforam di stringhe da salvare sul file.txt
-    for(int i = 0; i<allprofsAvailabilities.size();i++){//salvo le varie stringhe di allprofsAvailabilities
-        fout<<allprofsAvailabilities[i]<<std::endl;
-    }
-    fout.close();
-}
-
 ///prende tutte le indisponibilità di tutti i prof
-std::vector<std::string> University::allProfsNoAvailabilities(int year) {
+std::vector<std::string> University::allProfsNoAvailabilities() {
     std::vector<std::string> allProfsAvailabilities;
     for(auto iterProfs = _professors.begin(); iterProfs != _professors.end(); iterProfs++){//per ogni professore
-
-        int id = iterProfs->first;
-        if(!noAvailabilityPeriodIsEmpty(id) && isCurrentYear(id,year) ) {//controllo se il professore ha un periodo di indisponibilità
-            std::string profAvailabilities = iterProfs->second.outputNoAvailabilities(id);//prende le indisponibilità di un professore
-            allProfsAvailabilities.push_back(profAvailabilities);//salvo le indisponibilità di un professore
+        int id = iterProfs->first;//prendo l'id
+        std::vector<std::string> allProfAvailabilities = iterProfs->second.outputNoAvailabilities(id); //ritorna un vettore per anno accademico con tutte le indisponibilità per un prof
+        for(int i = 0; i < allProfAvailabilities.size();i++){//riempio il vettore di tutte le indisponibilità di ogni prof per ogni anno
+            allProfsAvailabilities.push_back(allProfAvailabilities[i]);
         }
     }
     return allProfsAvailabilities;
 }
 
-bool University::noAvailabilityPeriodIsEmpty(int id) {
- auto iterator = _professors.find(id);//iteratore al prof analizzato
- return iterator -> second.noAvailabilityPeriodIsEmpty();//controlla che per quell'anno accademico sia vuoto il periodo di indisponibilità
- }
+///salva le date delle sessioni su file
+void University::dateSessionsWrite() {
 
-bool University::isCurrentYear(int id, int year) {
-    auto iterator = _professors.find(id);//iteratore al prof analizzato
-    return iterator -> second.getNoAvalaibilityYear() == year;
+    std::fstream fout;
+    fout.open("../Sources/dateSessioni.txt", std::fstream::out | std::fstream::trunc);
+
+    for (auto iterAcYear = _acYearSessions.begin(); iterAcYear != _acYearSessions.end(); iterAcYear++) {
+        SessionYear dateSessions = iterAcYear->second;
+        fout << dateSessions <<std::endl;
+    }
+
+    fout.close();
+
 }
+
+///scrittura indisponibilità professori di tutti gli anni
+void University::noAvailabilityWrite() {
+    std::fstream fout;
+    fout.open("../Sources/tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
+    std::vector<std::string> allprofsAvailabilities = allProfsNoAvailabilities();//ritorna le indisponibilità per tutti gli anni per prof già sottoforma di stringhe da salvare sul file.txt
+    for(int i = 0; i<allprofsAvailabilities.size();i++){//scrivo su file le varie stringhe di allProfsAvailabilities
+        fout<<allprofsAvailabilities[i]<<std::endl;
+    }
+    fout.close();
+}
+
+
+
 
 
 

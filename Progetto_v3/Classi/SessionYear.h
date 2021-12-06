@@ -17,6 +17,13 @@ typedef struct {
 } session;
 
 class SessionYear {
+
+public:
+    SessionYear(std::string, std::string,std::string,std::string);
+    bool addSession(std::string, std::string,  std::string);
+    int getAcYear() const;
+    std::string getSessions() const;
+
 private:
     int _acYear;
     //key: "autumn" , "winter", "summer"
@@ -25,11 +32,6 @@ private:
     //key: data come stringa "aaaa-mm-gg"
     //value: oggetto Exam Day
     std::map<std::string,ExamDay> _yearCalendar;
-public:
-    bool addSession(std::string, std::string,  std::string);
-    bool clearYearSession();
-    int getAcYear() const;
-    std::string getSessions() const;
 
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);

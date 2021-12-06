@@ -34,7 +34,7 @@ public:
     bool insertCourses(const std::string &fin);
     bool enrollStudents(const std::string &fin);
     bool setSessionPeriod(const std::string &acYear,const std::string &wSession, const std::string &sSession,const std::string &aSession);
-    std::vector<std::string> allProfsNoAvailabilities(int);
+    std::vector<std::string> allProfsNoAvailabilities();
 
     void dbStudsWrite();
     void dbProfsWrite();
@@ -43,9 +43,7 @@ public:
     void dbCourseWrite();
     void dateSessionsWrite();
     bool setProfsNoAvailability(std::string acYear,const std::string& fin);
-    void noAvailabilityWrite(int acYear);
-    bool noAvailabilityPeriodIsEmpty(int id);
-    bool isCurrentYear(int,int);
+    void noAvailabilityWrite();
 
 private:
     friend SpecificYearCourse;
@@ -54,7 +52,7 @@ private:
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
-    SessionYear _acYearSessions; //da cambiare con mappa???????????
+    std::map<int,SessionYear> _acYearSessions;
     void readStudents();
     void readProfessor();
     void readClassroom();

@@ -19,13 +19,14 @@ public:
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
 
     const  int getId() const;
-    std::string setCod(int nCod) const ;
-
     bool getIsBachelor() const;
     std::string getSemestersString() const;
     std::string getOffCoursesString() const;
+
     bool offCoursesEmpty() const;
     bool updateSemestersAndOffCourses( const std::string&);
+    std::string setCod(int nCod) const ;
+
 
 private:
     int _id; //codice del corso di studi
@@ -33,7 +34,7 @@ private:
     std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di stringhe
     //std::map<std::string,std::vector<SpecificYearCourse>> _perAccademicYear; //key: id (corso agg/nuovo), value: Corso
     //^^^^^^^^ non dovrebbe servire... -luca
-    std::list <std::string> _corsiSpenti;
+    std::list <std::string> _offCourses;
 };
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s);
 
