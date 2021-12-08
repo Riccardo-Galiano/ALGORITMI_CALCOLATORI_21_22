@@ -30,7 +30,7 @@ private:
     //key: "aaaa-mm-gg"
     //value: vettore di esami in ogni slot (hh,codice_esame)
     //NB!! se un esame dura più di uno slot, altrettanti pair ci saranno qui
-    std::map<std::string,std::map<int,std::string>> _examsToDo;
+    std::map<std::string,std::map<int,std::string>> _examsToDo;//data-slot-esame. Ogni prof avrà una mappa in cui salveremo gli esami che dovrà fare, in che giorno e a che ora
 };
 
 std::ostream &operator<<(std::ostream &prof, const Professor &s);

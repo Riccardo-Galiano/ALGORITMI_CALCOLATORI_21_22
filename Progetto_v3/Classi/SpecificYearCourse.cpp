@@ -178,17 +178,19 @@ bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mar
     return true;
 }
 
+///prende l'esame
 const Exam &SpecificYearCourse::getExam() const {
     return _exam;
 }
 
+///prende tutte le matricole di tutti i professori per un corso di uno specifico anno per tutti i corsi paralleli
 std::vector<int> SpecificYearCourse::getAllProfMatr() {
     std::vector<int> professors;
     std::vector<professor> profs;
     for (int i = 0; i < _professors.size(); i++) {
-        profs = _professors.at(i);
+        profs = _professors.at(i);//prende il vettore di prof per l'iesimo corso parallelo
         for (int j = 0; j < profs.size(); j++){
-            professors.push_back(profs[i].prof_id);
+            professors.push_back(profs[i].prof_id);//prende l'id di ogni prof dell'iesimo corso parallelo
         }
     }
     return professors;

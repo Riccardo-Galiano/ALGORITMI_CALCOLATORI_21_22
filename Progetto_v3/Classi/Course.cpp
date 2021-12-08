@@ -138,10 +138,12 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
     return _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
 }
 
+///prende il corso con le sue info ad uno specifico anno
 SpecificYearCourse Course::getThisYearCourse(int year) {
     return _courseOfTheYear.at(year);
 }
 
+///il corso è vuoto?
 bool Course::courseOfTheYearIsEmpty() {
     if(_courseOfTheYear.empty()){
         return true;

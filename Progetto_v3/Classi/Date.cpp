@@ -198,6 +198,7 @@ unsigned int Date::getYear() const {
     return _year;
 }
 
+///ritorna la data sottofirma di stringa
 std::string Date::toString() {
     std::stringstream ss;
     ss << *this;

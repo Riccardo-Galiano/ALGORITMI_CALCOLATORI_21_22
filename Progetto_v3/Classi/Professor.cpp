@@ -58,10 +58,11 @@ void Professor::noAvailabilityClear(int year) {
     _noAvailab.erase(year);
 }
 
+///aggiunge un esame alla mappa degli esami che un professore deve preparare
 bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
     if (_examsToDo.count(date) == 0){
         //mappa di esami in quel giorno ancora non esistente
-        std::map<int,std::string> examsPerDay;
+        std::map<int,std::string> examsPerDay;//mappa che contiene ad un particolare slot un esame
         examsPerDay.insert(std::pair<int,std::string>(hh,cod_exam));
         _examsToDo.insert(std::pair<std::string,std::map<int,std::string>>(date,examsPerDay));
     }
@@ -72,15 +73,13 @@ bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
     return true;
 }
 
+///ritorna se lo slot a quell'ora per una certa data è libero(aggiungere i controlli per i periodi di indisponibilità per ogni prof)
 bool Professor::amIavailable(std::string date, int hh) {
-    if(_examsToDo.count(date) == 0){
+    if(_examsToDo.count(date) == 0){//il docente non ha esami in quel giorno
         return true;
     }
-    else{
-        //il docente ha esami in quel giorno...
-        //ma ha quello slot libero??
-        if(_examsToDo.at(date).count(hh)==0)
-            return true;
+    else if(_examsToDo.at(date).count(hh)==0){//il docente ha esami in quel giorno ma ha quello slot libero?
+        return true;
     }
     return false;
 }
