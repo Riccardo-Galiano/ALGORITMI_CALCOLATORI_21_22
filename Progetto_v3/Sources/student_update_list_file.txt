@@ -1,5 +1,4 @@
 s000001;Arienti;;
-;Mario;Draghi;marino@gmail.com
 s000002;;;gianbattista.bertanzibianco@gmail.com
 s000003;Andrea;;natale.mauriello@yahoo.com
 s000004;;Marino Decimo Tiziano;marino@gmail.com

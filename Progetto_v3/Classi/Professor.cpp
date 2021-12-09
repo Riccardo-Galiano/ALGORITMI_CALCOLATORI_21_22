@@ -68,20 +68,32 @@ bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
     }
     else{
         //mappa di esami in quel giorno esiste già
-        _examsToDo.at(date).insert(std::pair<int,std::string>(hh,cod_exam));
+        _examsToDo.at(date).insert(std::pair<int,std::string>(hh,cod_exam));//aggiunge in un particolar slot (hh) di una data (date) il codice dell'esame (cod_exam)
     }
     return true;
 }
 
 ///ritorna se lo slot a quell'ora per una certa data è libero(aggiungere i controlli per i periodi di indisponibilità per ogni prof)
 bool Professor::amIavailable(std::string date, int hh) {
-    if(_examsToDo.count(date) == 0){//il docente non ha esami in quel giorno
-        return true;
+    int year = Parse::getAcStartYear(date);
+    Date d(date);
+
+    if(_noAvailab.count(year) != 0) {//per quell'anno abbiamo delle indisponibilità del prof? se si controllo i periodi
+        for (auto iterNoAvailab = _noAvailab.at(year).begin(); iterNoAvailab !=_noAvailab.at(year).end(); iterNoAvailab++ ){//controllo tutti i periodi di indisponibilità del prof
+             if (d > iterNoAvailab->first && d < iterNoAvailab->second){//se la data appartiene ad un intervallo di indisponibilità allora non posso mettere quell'esame quel giorno
+                 return false;
+             }
+        }
     }
-    else if(_examsToDo.at(date).count(hh)==0){//il docente ha esami in quel giorno ma ha quello slot libero?
-        return true;
-    }
-    return false;
+
+    if (_examsToDo.count(date) == 0) {//il docente non ha esami in quel giorno
+                return true;
+            } else if (_examsToDo.at(date).count(hh) ==
+                       0) {//il docente ha esami in quel giorno ma ha quello slot libero?
+                return true;
+            }
+        return false;
+
 }
 
 ///overload operatore <<
