@@ -30,9 +30,8 @@ private:
     //value: session struct
     std::map<std::string,session> _yearSessions;
     //key: data come stringa "aaaa-mm-gg"
-    //value: oggetto Exam Day
+    //value: oggetto Exam Day --> controllo: non ci deve essere nessuna domenica
     std::map<std::string,ExamDay> _yearCalendar;
-
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

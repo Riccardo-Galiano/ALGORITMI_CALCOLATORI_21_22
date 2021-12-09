@@ -29,7 +29,6 @@ bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     else{
         _noAvailab.at(acYear).push_back(std::pair<Date, Date>(d1, d2));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
     }
-
     return true;
 }
 
@@ -77,19 +76,25 @@ bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
 bool Professor::amIavailable(std::string date, int hh) {
     int year = Parse::getAcStartYear(date);
     Date d(date);
-
+    /// controllo indisponibilità docenti compatibile con data esame
     if(_noAvailab.count(year) != 0) {//per quell'anno abbiamo delle indisponibilità del prof? se si controllo i periodi
-        for (auto iterNoAvailab = _noAvailab.at(year).begin(); iterNoAvailab !=_noAvailab.at(year).end(); iterNoAvailab++ ){//controllo tutti i periodi di indisponibilità del prof
-             if (d > iterNoAvailab->first && d < iterNoAvailab->second){//se la data appartiene ad un intervallo di indisponibilità allora non posso mettere quell'esame quel giorno
+        for (auto iterNoAvailab = _noAvailab.at(year).begin(); iterNoAvailab !=_noAvailab.at(year).end(); iterNoAvailab++ ){
+            //controllo tutti i periodi di indisponibilità del prof
+             if (d > iterNoAvailab->first && d < iterNoAvailab->second){
+                 //se la data appartiene ad un intervallo di indisponibilità allora
+                 // non posso mettere quell'esame quel giorno
                  return false;
              }
         }
     }
-
+    else{
+        //throw std::invalid_argument("nessuna indisponibilità segnata in questo anno");
+    }
+    ///controllo in quel giorno che non si sovrappongano fasce esame
     if (_examsToDo.count(date) == 0) {//il docente non ha esami in quel giorno
                 return true;
-            } else if (_examsToDo.at(date).count(hh) ==
-                       0) {//il docente ha esami in quel giorno ma ha quello slot libero?
+            }else if (_examsToDo.at(date).count(hh) == 0) {
+                //il docente ha esami in quel giorno ma ha quello slot libero? se ci entra, allora no
                 return true;
             }
         return false;
