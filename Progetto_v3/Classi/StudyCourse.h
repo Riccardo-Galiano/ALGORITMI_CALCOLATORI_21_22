@@ -26,6 +26,8 @@ public:
     bool offCoursesEmpty() const;
     bool updateSemestersAndOffCourses( const std::string&);
     std::string setCod(int nCod) const ;
+    bool controlSemester(int,std::string );
+    bool controlYear(std::string,std::string);
 
 
 private:

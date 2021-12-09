@@ -109,7 +109,7 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_exam_date:{
-
+            uni.setExamDate(argv[2],argv[3]);
             break;
         }
 

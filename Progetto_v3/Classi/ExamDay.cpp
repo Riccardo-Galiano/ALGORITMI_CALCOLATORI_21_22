@@ -14,7 +14,7 @@ int ExamDay::howManySlots(Exam exam) {
     return num_slots;
 }
 
-///
+///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
 int ExamDay::isPossibleToAssignThisExam(Course course, std::vector<Professor> &allUniversityProfs, int numSlotsRequired) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
