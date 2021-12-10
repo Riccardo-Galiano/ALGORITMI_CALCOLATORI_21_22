@@ -127,17 +127,14 @@ std::string StudyCourse::getOffCoursesString() const {
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
-///session = 1(winter), 2(summer). (autumn avrà comunque un appello, non serve il controllo). Controllo se semestre di appartenenza
-bool StudyCourse::controlSemester(int session, std::string codCourse) {
-    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){//controllo tutti i semestri dei corsi di studio
+std::string StudyCourse::isInWhichSemester(std::string codCourse) {
+    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){//controllo tutti i semestri del corso di studio
         auto iterCourse = find(iterSemester->second.begin(),iterSemester->second.end(),codCourse);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
-        if(iterCourse != iterSemester->second.end()) {//se il corso è presente in uno dei semsetri
-            int semester = stoi(iterSemester->first.substr(2, 1)); //ne prendo il semestre(primo o secondo)
-            if (session == semester)//se la sessione che sto organizzando coincide con il semestre
-                return true;// è il semestre di appartenenza
+        if(iterCourse != iterSemester->second.end()) {//se il corso è presente in uno dei semestri
+            return iterSemester->first; //ne prendo il semestre(primo o secondo)
         }
     }
-    return false;
+    return "";
 }
 
 ///controllo che un esame già assegnato sia dello stesso anno di un altro da assegnare

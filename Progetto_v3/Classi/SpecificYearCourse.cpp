@@ -7,7 +7,7 @@
 #include "SpecificYearCourse.h"
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::vector<std::string> exam, std::vector<std::string> idGrouped) :
+                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
@@ -16,7 +16,7 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _parallelCourses = nCrsiPar;
     _idGroupedCourses = idGrouped;
     setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
-
+    _yy_semester = yy_semester;
 }
 
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
@@ -200,6 +200,18 @@ bool SpecificYearCourse::setYear() {
     this->_startYear++;
     this->_endYear++;
     return true;
+}
+
+int SpecificYearCourse::getSemester() const {
+    return stoi(_yy_semester.substr(2,1));
+}
+
+void SpecificYearCourse::resetAssignations() {
+    _howManyTimesIAmAssignedInASession.clear();
+}
+
+int SpecificYearCourse::getYearOfTheSemester() const {
+    return stoi(_yy_semester.substr(0,1));
 }
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

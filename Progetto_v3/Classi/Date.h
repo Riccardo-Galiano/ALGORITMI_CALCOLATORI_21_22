@@ -30,11 +30,15 @@ public:
     bool endOfMonth(int) const; // fine del mese?
     Date add(int);
 
-    std::string zellersAlgorithm(int day, int month, int year);
+    std::string getWeekDay();
     bool checkGapGiven(int weeks, Date d);
 
     unsigned int getYear() const;
     std::string toString();
+
+    bool isEqual(Date);
+    unsigned int getMonth() const;
+    unsigned int getDay() const;
 
 private:
     unsigned int _month{};

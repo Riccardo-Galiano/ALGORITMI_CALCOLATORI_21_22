@@ -23,10 +23,11 @@ public:
 
     Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio);
 
-    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped);
+    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester);
     bool fillSpecificYearCourse(std::vector<std::string>& );
     bool courseOfTheYearIsEmpty();
     SpecificYearCourse &getLastSpecificYearCourse();
+    SpecificYearCourse &getSpecificYearCourseFromYear(int year) const;
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     SpecificYearCourse getThisYearCourse(int);
     const std::string &getId() const;

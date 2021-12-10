@@ -32,7 +32,7 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped);
+    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string yy_semester);
 
     int getEndYear() const;
     bool getisActive() const;
@@ -49,8 +49,11 @@ public:
     bool setProfMap(int, std::vector<std::string>);
     bool addStudent(Student,std::string,int);
     bool setYear();
-
+    int getSemester() const;
+    int getYearOfTheSemester() const;
+    void resetAssignations();
 private:
+    std::string _yy_semester;
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?
@@ -66,6 +69,9 @@ private:
     //key: student id
     //value: struct studente
     std::map<int, student> _student;
+    //key: semester (session)
+    //value: quante volte è stato programmato un suo esame in quel semestre
+    std::map<int, int> _howManyTimesIAmAssignedInASession;
 
 };
 

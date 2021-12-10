@@ -7,11 +7,58 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="58a029cc-6a04-4924-926b-74aa8e56b1c7" name="Default Changelist" comment="" />
+    <list default="true" id="58a029cc-6a04-4924-926b-74aa8e56b1c7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/Course.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/Course.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/Course.h" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/Course.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/Date.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/Date.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/Date.h" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/Date.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/SessionYear.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/SessionYear.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/SessionYear.h" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/SessionYear.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/SpecificYearCourse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/SpecificYearCourse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/SpecificYearCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/SpecificYearCourse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/StudyCourse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/StudyCourse.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/StudyCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/StudyCourse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/Classi/University.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/Classi/University.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/CMakeOutput.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/linklibs.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/main.cpp.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/objects1.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/Progetto_v3.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/cmake.check_cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/Progetto_v3.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/Progetto_v3.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_v3/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,25 +71,45 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="20ob9h6Qq80iOZE6qma9L0JwsFC" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunManager">
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -79,95 +146,22 @@
       <workItem from="1639037877189" duration="6649000" />
       <workItem from="1639061309765" duration="9340000" />
       <workItem from="1639123284220" duration="10261000" />
+      <workItem from="1639142427030" duration="5971000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="177" y="11" key="#New_File_Extensions" timestamp="1638778286446">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="177" y="11" key="#New_File_Extensions/0.0.1368.872@0.0.1368.872" timestamp="1638778286446" />
-    <state x="422" y="157" width="836" height="703" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1639126610890">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="422" y="157" width="836" height="703" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1639126610890" />
-    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1638781124833">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872@0.0.1368.872" timestamp="1638781124833" />
-    <state x="415" y="134" key="FileChooserDialogImpl" timestamp="1637224203578">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="1780" y="112" key="FileChooserDialogImpl/0.0.1366.728/1366.0.1366.728@1366.0.1366.728" timestamp="1636882748594" />
-    <state x="415" y="134" key="FileChooserDialogImpl/0.0.1368.872@0.0.1368.872" timestamp="1637224203578" />
-    <state width="1314" height="182" key="GridCell.Tab.0.bottom" timestamp="1639135294770">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639135294770" />
-    <state width="1314" height="182" key="GridCell.Tab.0.center" timestamp="1639135294769">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1639135294769" />
-    <state width="1314" height="182" key="GridCell.Tab.0.left" timestamp="1639135294769">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1639135294769" />
-    <state width="1314" height="182" key="GridCell.Tab.0.right" timestamp="1639135294770">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1639135294770" />
-    <state width="1314" height="182" key="GridCell.Tab.1.bottom" timestamp="1639135294770">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.1.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639135294770" />
-    <state width="1314" height="182" key="GridCell.Tab.1.center" timestamp="1639135294770">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.1.center/0.0.1368.872@0.0.1368.872" timestamp="1639135294770" />
-    <state width="1314" height="182" key="GridCell.Tab.1.left" timestamp="1639135294770">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.1.left/0.0.1368.872@0.0.1368.872" timestamp="1639135294770" />
-    <state width="1314" height="182" key="GridCell.Tab.1.right" timestamp="1639135294770">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="1314" height="182" key="GridCell.Tab.1.right/0.0.1368.872@0.0.1368.872" timestamp="1639135294770" />
-    <state x="70" y="0" key="SettingsEditor" timestamp="1638542275204">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="70" y="0" key="SettingsEditor/0.0.1368.872@0.0.1368.872" timestamp="1638542275204" />
-    <state width="690" height="442" key="XDebugger.FullValuePopup" timestamp="1638565629201">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="690" height="442" key="XDebugger.FullValuePopup/0.0.1368.872@0.0.1368.872" timestamp="1638565629201" />
-    <state x="304" y="219" key="com.intellij.ide.util.TipDialog" timestamp="1639123284766">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="304" y="183" key="com.intellij.ide.util.TipDialog/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1636880709367" />
-    <state x="1670" y="183" key="com.intellij.ide.util.TipDialog/0.0.1366.728/1366.0.1366.728@1366.0.1366.728" timestamp="1636882732794" />
-    <state x="304" y="219" key="com.intellij.ide.util.TipDialog/0.0.1368.872@0.0.1368.872" timestamp="1639123284766" />
-    <state x="448" y="333" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1639042539678">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="448" y="333" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1368.872@0.0.1368.872" timestamp="1639042539678" />
-    <state x="93" y="93" width="1181" height="685" key="dock-window-1" timestamp="1638779378271">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="93" y="93" width="1181" height="685" key="dock-window-1/0.0.1368.872@0.0.1368.872" timestamp="1638779378271" />
-    <state width="752" height="346" key="javadoc.popup" timestamp="1636830496373">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state width="752" height="346" key="javadoc.popup/0.0.1368.872@0.0.1368.872" timestamp="1636830496373" />
-    <state x="616" y="208" key="run.anything.popup" timestamp="1638958285042">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="616" y="208" key="run.anything.popup/0.0.1368.872@0.0.1368.872" timestamp="1638958285042" />
-    <state x="263" y="0" width="840" height="1034" key="search.everywhere.popup" timestamp="1638568710258">
-      <screen x="0" y="0" width="1368" height="872" />
-    </state>
-    <state x="263" y="0" width="840" height="1034" key="search.everywhere.popup/0.0.1368.872@0.0.1368.872" timestamp="1638568710258" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
+          <line>39</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

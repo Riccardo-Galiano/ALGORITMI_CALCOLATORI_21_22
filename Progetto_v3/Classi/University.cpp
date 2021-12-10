@@ -258,11 +258,19 @@ void University::readCourse() {
             idGroupedCourse = idGroupedCourse.substr(1, idGroupedCourse.size() -
                                                         2);// tolgo le { } che racchiudono gli id
             idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
-
+            ///ricerca "anno-semestre" di questo corso
+            std::string yy_semester;
+            for(int i=0; i<_studyCourse.size(); i++){
+                std::string res = _studyCourse.at(i).isInWhichSemester(lastReadCourse);
+                if(res!=""){
+                    //ho trovato il suo corso di studi
+                    yy_semester = res;
+                }
+            }
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData,
-                                                               idGrouped);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
+                                                               idGrouped, yy_semester);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
 
     }
@@ -508,8 +516,17 @@ bool University::addCourses(const std::string &fin) {
         idGroupedCourse = idGroupedCourse.substr(1,
                                                  idGroupedCourse.size() - 2);// tolgo le { } che racchiudono gli id
         idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
+        ///ricerca "anno-semestre" di questo corso
+        std::string yy_semester;
+        for(int i=0; i<_studyCourse.size(); i++){
+            std::string res = _studyCourse.at(i).isInWhichSemester(newIdCourse);
+            if(res!=""){
+                //ho trovato il suo corso di studi
+                yy_semester = res;
+            }
+        }
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                        splittedExamData, idGrouped);
+                                                        splittedExamData, idGrouped,yy_semester);
         line_counter++;
     }
     fileIn.close();
@@ -900,7 +917,16 @@ bool University::insertCourses(const std::string &fin) {
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
         idGrouped = Parse::SplittedGroupedID(specificYearCourse[6]);
-        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idGrouped);
+        ///ricerca "anno-semestre" di questo corso
+        std::string yy_semester;
+        for(int i=0; i<_studyCourse.size(); i++){
+            std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
+            if(res!=""){
+                //ho trovato il suo corso di studi
+                yy_semester = res;
+            }
+        }
+        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idGrouped, yy_semester);
         line_counter++;
     }
     fileIn.close();
@@ -1169,8 +1195,8 @@ void University::noAvailabilityWrite() {
 }
 
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
-
-    return true;
+    bool esito = _acYearSessions.at(Parse::getAcStartYear(acYear)).generateNewYearSession(outputNameFile);
+    return esito;
 }
 
 ///controlla se fa parte dello stesso corso di studi e se sono dello stesso anno(mi serve per capire se devono avere una distanza di almeno due giorni)

@@ -20,11 +20,11 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
 bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                    std::vector<std::string> exam, std::vector<std::string> idGrouped) {
+                                    std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester) {
 ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),
                                                                SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,
-                                                                                  idGrouped)));
+                                                                                  idGrouped, yy_semester)));
 
     return true;
 }
@@ -174,6 +174,10 @@ bool Course::fillAcYearsEmpty() {
       }
     }
     return true;
+}
+
+SpecificYearCourse &Course::getSpecificYearCourseFromYear(int year) const{
+    return _courseOfTheYear.at(year);
 }
 
 std::ostream &operator<<(std::ostream &course, Course &s) {

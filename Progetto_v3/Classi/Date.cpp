@@ -101,6 +101,13 @@ void Date::helpIncrement() {
 }
 
 // overloaded output operator
+unsigned int Date::getMonth() const {
+    return _month;
+}
+
+unsigned int Date::getDay() const {
+    return _day;
+}
 
 /*
 ostream& operator<<(ostream& output, const Date& d) {
@@ -152,17 +159,17 @@ bool Date::operator<(const Date & d) const {
     }
 }
 
-std::string Date::zellersAlgorithm(int day, int month, int year) {
+std::string Date::getWeekDay() {
     int mon;
-    if (month > 2)
-        mon = month; //for march to december month code is same as month
+    if (_month > 2)
+        mon = _month; //for march to december month code is same as month
     else {
-        mon = (12 + month); //for Jan and Feb, month code will be 13 and 14
-        year--; //decrease year for month Jan and Feb
+        mon = (12 + _month); //for Jan and Feb, month code will be 13 and 14
+        _year--; //decrease year for month Jan and Feb
     }
-    int y = year % 100; //last two digit
-    int c = year / 100; //first two digit
-    int w = (day + floor((13 * (mon + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
+    int y = _year % 100; //last two digit
+    int c = _year / 100; //first two digit
+    int w = (_day + floor((13 * (mon + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
     w = w % 7;
     return _weekday[w];
 }
@@ -171,9 +178,7 @@ std::string Date::zellersAlgorithm(int day, int month, int year) {
 bool Date::checkGapGiven(int weeks, Date d) {
     int numDays = weeks * 7; //a quanti giorni corrisponde il numero di settimane da considerare
     Date compare = this->add(numDays);//aggiungo alla data iniziale il numero di giorni  corrispondente a quelle settimane
-    if(d._year == compare._year && d._month == compare._month && d._day == compare._day) //se la data finale letta da linea di comando è uguale alla data che sarebbe esatta
-        return true;
-    return false;
+    return d.isEqual(compare);
 }
 
 ///restituisce la data corrispondente ad un periodo(in giorni) dalla data iniziale
@@ -203,4 +208,8 @@ std::string Date::toString() {
     std::stringstream ss;
     ss << *this;
     return ss.str();
+}
+
+bool Date::isEqual(Date compare) {
+    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
 }

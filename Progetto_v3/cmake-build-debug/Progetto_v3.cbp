@@ -8,165 +8,165 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
+				<Option working_dir="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Progetto_v3">
-				<Option output="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Progetto_v3.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 Progetto_v3"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="Progetto_v3/fast">
-				<Option output="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Progetto_v3.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
-					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../mingw32/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 Progetto_v3/fast"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
+				<Option working_dir="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Progetto_v3">
+				<Option output="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Progetto_v3" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 Progetto_v3"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Progetto_v3/fast">
+				<Option output="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Progetto_v3" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/10"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/10"/>
+					<Add directory="/usr/include/c++/10/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/10/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 Progetto_v3/fast"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/CMakeLists.txt">
+		<Unit filename="/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
