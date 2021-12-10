@@ -27,7 +27,7 @@ public:
     bool fillSpecificYearCourse(std::vector<std::string>& );
     bool courseOfTheYearIsEmpty();
     SpecificYearCourse &getLastSpecificYearCourse();
-    SpecificYearCourse &getSpecificYearCourseFromYear(int year) const;
+    const SpecificYearCourse &getSpecificYearCourseFromYear(int year) const;
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     SpecificYearCourse getThisYearCourse(int);
     const std::string &getId() const;

@@ -176,7 +176,7 @@ bool Course::fillAcYearsEmpty() {
     return true;
 }
 
-SpecificYearCourse &Course::getSpecificYearCourseFromYear(int year) const{
+const SpecificYearCourse &Course::getSpecificYearCourseFromYear(int year) const{
     return _courseOfTheYear.at(year);
 }
 

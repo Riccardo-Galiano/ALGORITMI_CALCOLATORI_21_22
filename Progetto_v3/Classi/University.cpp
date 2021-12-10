@@ -261,7 +261,7 @@ void University::readCourse() {
             ///ricerca "anno-semestre" di questo corso
             std::string yy_semester;
             for(int i=0; i<_studyCourse.size(); i++){
-                std::string res = _studyCourse.at(i).isInWhichSemester(lastReadCourse);
+                std::string res = _studyCourse.at(i+1).isInWhichSemester(lastReadCourse);
                 if(res!=""){
                     //ho trovato il suo corso di studi
                     yy_semester = res;
@@ -920,7 +920,7 @@ bool University::insertCourses(const std::string &fin) {
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
         for(int i=0; i<_studyCourse.size(); i++){
-            std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
+            std::string res = _studyCourse.at(i+1).isInWhichSemester(specificYearCourse[0]);
             if(res!=""){
                 //ho trovato il suo corso di studi
                 yy_semester = res;
@@ -1195,7 +1195,7 @@ void University::noAvailabilityWrite() {
 }
 
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
-    bool esito = _acYearSessions.at(Parse::getAcStartYear(acYear)).generateNewYearSession(outputNameFile);
+    bool esito = _acYearSessions.at(Parse::getAcStartYear(acYear)).generateNewYearSession(outputNameFile,_courses);
     return esito;
 }
 

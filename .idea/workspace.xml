@@ -7,7 +7,7 @@
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
   <component name="ChangeListManager">
@@ -90,26 +90,16 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -153,13 +143,59 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="WindowStateProjectService">
+    <state x="140" y="84" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1639157757937">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="140" y="84" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1639157757937" />
+    <state width="1314" height="370" key="GridCell.Tab.0.bottom" timestamp="1639158146047">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639158146047" />
+    <state width="1314" height="370" key="GridCell.Tab.0.center" timestamp="1639158146047">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1639158146047" />
+    <state width="1314" height="370" key="GridCell.Tab.0.left" timestamp="1639158146046">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1639158146046" />
+    <state width="1314" height="370" key="GridCell.Tab.0.right" timestamp="1639158146047">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1639158146047" />
+    <state width="1314" height="370" key="GridCell.Tab.1.bottom" timestamp="1639158147474">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.1.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
+    <state width="1314" height="370" key="GridCell.Tab.1.center" timestamp="1639158147474">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.1.center/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
+    <state width="1314" height="370" key="GridCell.Tab.1.left" timestamp="1639158147474">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.1.left/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
+    <state width="1314" height="370" key="GridCell.Tab.1.right" timestamp="1639158147474">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state width="1314" height="370" key="GridCell.Tab.1.right/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
+    <state x="70" y="0" key="SettingsEditor" timestamp="1639158866178">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="70" y="0" key="SettingsEditor/0.0.1368.872@0.0.1368.872" timestamp="1639158866178" />
+    <state x="259" y="196" key="run.anything.popup" timestamp="1639154498459">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="259" y="196" key="run.anything.popup/0.0.1368.872@0.0.1368.872" timestamp="1639154498459" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
-          <line>39</line>
-          <option name="timeStamp" value="2" />
+          <line>44</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
 cstring
 -
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 string
 -
 vector
@@ -18,9 +18,9 @@ vector
 map
 -
 SpecificYearCourse.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
 array
 -
 iostream
@@ -28,25 +28,25 @@ iostream
 vector
 -
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
 exception
 -
 string
 -
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
 string
 -
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
 SpecificYearCourse.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
 Course.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 map
 -
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
 vector
 -
 string
@@ -54,27 +54,27 @@ string
 sstream
 -
 Date.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
 vector
 -
 map
 -
 UniversityMember.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 Date.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
 map
 -
 Date.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
 ExamDay.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
 vector
 -
 map
@@ -82,27 +82,27 @@ map
 memory
 -
 Professor.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
 Student.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
 Exam.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
 UniversityMember.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
 map
 -
 list
 -
 Course.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 SpecificYearCourse.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp
 fstream
 -
 iostream
@@ -112,27 +112,27 @@ sstream
 iomanip
 -
 University.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
 DbException.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
 Parse.hpp
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
 Professor.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
 Student.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
 Classroom.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
 StudyCourse.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
 Course.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 SessionYear.h
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
 
-/home/antonio_vespa/Documenti/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 string
 -
 

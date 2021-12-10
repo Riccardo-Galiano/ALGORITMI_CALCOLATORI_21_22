@@ -15,8 +15,9 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _active = active;
     _parallelCourses = nCrsiPar;
     _idGroupedCourses = idGrouped;
-    setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
     _yy_semester = yy_semester;
+    setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
+
 }
 
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
