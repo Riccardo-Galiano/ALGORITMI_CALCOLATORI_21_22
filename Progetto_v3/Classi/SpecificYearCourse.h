@@ -48,6 +48,7 @@ public:
     std::string setId(int nMatr)const;
     bool setProfMap(int, std::vector<std::string>);
     bool addStudent(Student,std::string,int);
+    bool setYear();
 
 private:
     int _startYear;    ///anno di inizio

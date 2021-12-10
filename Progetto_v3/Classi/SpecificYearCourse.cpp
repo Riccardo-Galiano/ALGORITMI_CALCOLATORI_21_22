@@ -196,6 +196,12 @@ std::vector<int> SpecificYearCourse::getAllProfMatr() {
     return professors;
 }
 
+bool SpecificYearCourse::setYear() {
+    this->_startYear++;
+    this->_endYear++;
+    return true;
+}
+
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getisActive())

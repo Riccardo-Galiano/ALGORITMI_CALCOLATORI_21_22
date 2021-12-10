@@ -152,6 +152,30 @@ bool Course::courseOfTheYearIsEmpty() {
     }
 }
 
+///riempi i buchi tra anni accademici di un corso
+bool Course::fillAcYearsEmpty() {
+    for(auto iterCourseOfTheYear = _courseOfTheYear.begin(); iterCourseOfTheYear != _courseOfTheYear.end(); iterCourseOfTheYear++ ){//per ogni anno accademico
+        auto token = iterCourseOfTheYear;//iteratore all'elemento corrente
+        auto iterSuccessiveCourse = ++token;//iteratore al successivo elemento in memoria
+
+        if((iterSuccessiveCourse->first - iterCourseOfTheYear->first > 1) && iterSuccessiveCourse != _courseOfTheYear.end()){//se c'è un gap di almeno 2 anni (mancano degli anni accademici) e non sono alla fine di _courseOfTheYear
+            int range = iterSuccessiveCourse->first - iterCourseOfTheYear ->first - 1;//quanti anni accademici mancano e che devo aggiungere
+            int lastYear = iterCourseOfTheYear->first;//ultimo anno prima del gap
+            for(int i = 0;i < range;i++){//per il numero di anni accademici da aggiungere
+                //riscrivo l'anno precedente
+                lastYear ++;//il nuovo _courseOfTheYear avrà l'anno subuto successivo all'ultimo anno accademico prima del gap
+                //prendo l'ultimo SpecificYearCourse prima del gap
+                SpecificYearCourse sC = iterCourseOfTheYear->second;
+                sC.setYear();//setta l'anno (aggiungerà 1 all'anno di inizio e all'anno di fine)
+                //insert dell'anno nuovo
+                _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(lastYear,sC));//aggiungo l'anno accademico
+                iterCourseOfTheYear++;//per il prossimo ciclo devo prendere l'ultimo prima del gap(che sarà quello appena aggiunto)
+        }
+      }
+    }
+    return true;
+}
+
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
            << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;

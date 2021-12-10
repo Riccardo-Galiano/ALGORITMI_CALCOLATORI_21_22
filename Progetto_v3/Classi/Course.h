@@ -30,20 +30,18 @@ public:
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     SpecificYearCourse getThisYearCourse(int);
     const std::string &getId() const;
-
     const std::string &getName() const;
-
     int getCfu() const;
 
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
     bool addStudentToSpecYearCourse(int,Student,std::string,int);
+    bool fillAcYearsEmpty();
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso
     int _cfu;/// numero di crediti
     hours _hours;///ore impiegate nel corso; suddivise in ore di lezione,laboratori ed esame(struct hours)
-    std::vector<Course *> _groupedCourse; ///corsi che avranno l'esame negli stessi giorni e nelle stesse ore
     std::map<int, SpecificYearCourse> _courseOfTheYear;//key: accademic yy
 };
 std::ostream &operator<<(std::ostream &course, Course&s);
