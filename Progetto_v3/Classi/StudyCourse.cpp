@@ -137,27 +137,6 @@ std::string StudyCourse::isInWhichSemester(std::string codCourse) {
     return "";
 }
 
-///controllo che un esame già assegnato sia dello stesso anno di un altro da assegnare
-bool StudyCourse::controlYear(std::string codCourseAssigned, std::string codCourseToBeAssigned) {
-
-    int yearCCA = 0;
-    int yearCCTBA = 0;
-
-    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++) {//controllo tutti i semestri dei corsi di studio
-        auto iterCourseAssigned = find(iterSemester->second.begin(), iterSemester->second.end(),codCourseAssigned);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui ho già assegnato l'esame
-        auto iterCourseToBeAssigned = find(iterSemester->second.begin(), iterSemester->second.end(),codCourseToBeAssigned);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
-        if (iterCourseAssigned != iterSemester->second.end()){//se lo trova
-            std::stringstream CCA(iterSemester->first);
-             CCA >> yearCCA;
-        }
-        if(iterCourseToBeAssigned != iterSemester->second.end()){//se non lo trova
-            std::stringstream CCTBA(iterSemester->first);
-            CCTBA >> yearCCTBA;
-        }
-    }
-    return yearCCA == yearCCTBA;
-}
-
 
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){

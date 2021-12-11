@@ -6,6 +6,7 @@
 #include "SessionYear.h"
 #include "Parse.hpp"
 #include "ExamDay.h"
+#include "StudyCourse.h"
 
 ///costruttore
 SessionYear::SessionYear(std::string acYear, std::string winterSession, std::string summerSession,
@@ -69,14 +70,14 @@ std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
 }
 
 
-bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::string, Course>& courses,std::map<int, Professor> &professors) {
+bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::string, Course>& courses,std::map<int, Professor> &professors, const std::map<int, StudyCourse> &studyCourse) {
 
     ///generare sessione invernale
-    bool winter = generateThisSession("winter", courses,professors);
+    bool winter = generateThisSession("winter", courses,professors,studyCourse);
     ///generare sessione estiva
-    bool summer = generateThisSession("summer", courses,professors);
+    bool summer = generateThisSession("summer", courses,professors,studyCourse);
     ///generare sessione autunnale
-    bool autumn = generateThisSession("autumn",courses,professors);
+    bool autumn = generateThisSession("autumn",courses,professors,studyCourse);
     bool result;
     if (winter && summer && autumn)
         result = true;
@@ -86,7 +87,7 @@ bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::
 }
 
 //programma una sessione in particolare
-bool SessionYear::generateThisSession(std::string sessName, const std::map<std::string, Course>& courses,std::map<int, Professor>& profs) {
+bool SessionYear::generateThisSession(std::string sessName, const std::map<std::string, Course>& courses,std::map<int, Professor>& profs,const std::map<int, StudyCourse>& studyCourse) {
     ///prendiamo intervallo di date della sessione richiesta su cui dobbiamo ciclare
     session thisSession = _yearSessions.at(sessName);
     Date startDate = thisSession.startDate;
@@ -103,11 +104,20 @@ bool SessionYear::generateThisSession(std::string sessName, const std::map<std::
             for(int i=0; i < allExamAppealsToDo.size(); i++){
 
                Course course = courses.at(allExamAppealsToDo[i]);
-               Exam exam = courses.at(allExamAppealsToDo[i]).getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
-
                int counter = count(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),allExamAppealsToDo[i]);
-               //funzione che fa tutti i controlli: prof liberi, spazio dei due giorni
-               controlOfAllocationRequirements(currentExamDay,course,exam,profs);
+
+
+                Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
+                int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
+                //funzione che fa tutti i controlli: prof liberi, spazio dei due giorni, ecc...
+                int start = isPossibleToAssignThisExam(course,currentExamDay,profs,studyCourse,numSlots);//ora di inizio dello slot per l'esame
+                if(start == -1){
+                    //non è disponibile alcuno slot o uno/dei prof non sono disponibili. Esco
+                } else{
+                    //trovato il buco e i prof sono disponibili. il possibile buco inizia alle ore possibleStart
+                    //controllo la richiesta dei 2gg
+                }
+
 
                //aggiungo primo appello a _slots di ExamDay
                if (counter == 2){
@@ -150,11 +160,30 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
     return allExamAppealsToDo;
 }
 
-bool SessionYear::controlOfAllocationRequirements(Date currentExamDate, Course course, Exam examToAssign,std::map<int, Professor> allUniversityProfs) {
-    ExamDay examDay = _yearCalendar.at(currentExamDate.toString());
-    int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
-    int foundedStartHourSlot = examDay.isPossibleToAssignThisExam(course,allUniversityProfs,numSlots);//ora di inizio dello slot per l'esame
+///controlla dove può essere inserito l'esame ed eventualmente prende l'ora di inizio
+int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,const std::map<int, StudyCourse>& studyCourse,int numSlot ) {
+    ExamDay examCurrentDay = _yearCalendar.at(currentExamDay.toString());
+    //prendo gli esami dei due giorni precedenti
+    std::vector<ExamDay> dayBefore;
+    auto iter = _yearCalendar.find(currentExamDay.toString());
+    for(int i = 0; i < 2; i++ ) {
+        iter--;
+        dayBefore.push_back(iter->second);
+    }
+    ///dobbiamo controllare che il corso da inserire non abbia in un range di due giorni precedenti alla data analizzata un esame dello stesso corso di studi e dello stesso anno
+    //controllo il corso di studi e l'anno. Come?
+    //a partire da due giorni precedenti all'examDay ciclo il calendario fino a _date
+    //in quei due giorni precedenti cerco di capire se ci sono esami dello stesso corso di studi e dello stesso anno di quello da assegnare
+    sameYearAndStudyCourse();
 
+    int possibleStart = examCurrentDay.isPossibleToAssignThisExamToProf(course,profs,numSlot);
 
+    //estraggo vettore di corsi di studio
+    return possibleStart;
+}
+
+bool SessionYear::sameYearAndStudyCourse() {
     return false;
 }
+
+

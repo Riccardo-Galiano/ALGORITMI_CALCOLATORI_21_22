@@ -4,11 +4,11 @@
 
 #include <sstream>
 #include "ExamDay.h"
-
+#include "StudyCourse.h"
 
 
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
-int ExamDay::isPossibleToAssignThisExam(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired) {
+int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
     int startHourSlot = -1;
@@ -29,6 +29,7 @@ int ExamDay::isPossibleToAssignThisExam(Course course, std::map<int, Professor>&
     if (foundedStartHourSlot == -1)
         //non trovato un buco abbastanza grande
         return -1;
+
     ///dobbiamo ora controllare se i prof sono disponibili in questi slot per essere sicuri che questo esame è possibile in questo giorno
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
     //ci servono gli oggetti Professore per usare funzione amIavailable: tutti i professori DEVONO ESSERE DISPONBILI
@@ -43,10 +44,34 @@ int ExamDay::isPossibleToAssignThisExam(Course course, std::map<int, Professor>&
             }
         }
     }
+
+
     return foundedStartHourSlot; //se arrivato qui, tutti i prof sono disponibili
 }
+/*
+bool ExamDay::controlYear(std::string codCourseAssigned, std::string codCourseToBeAssigned) {
+    int yearCCA = 0;
+    int yearCCTBA = 0;
 
-///segna che uno slot del prof è occupato da un esame
+    for (auto iterSemester = _semesters.begin();
+         iterSemester != _semesters.end(); iterSemester++) {//controllo tutti i semestri dei corsi di studio
+        auto iterCourseAssigned = find(iterSemester->second.begin(), iterSemester->second.end(),
+                                       codCourseAssigned);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui ho già assegnato l'esame
+        auto iterCourseToBeAssigned = find(iterSemester->second.begin(), iterSemester->second.end(),
+                                           codCourseToBeAssigned);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
+        if (iterCourseAssigned != iterSemester->second.end()) {//se lo trova
+            std::stringstream CCA(iterSemester->first);
+            CCA >> yearCCA;
+        }
+        if (iterCourseToBeAssigned != iterSemester->second.end()) {//se non lo trova
+            std::stringstream CCTBA(iterSemester->first);
+            CCTBA >> yearCCTBA;
+        }
+    }
+    return yearCCA == yearCCTBA;
+}*/
+
+///aggiorna la mappa di slot occupati per i professori
 bool ExamDay::assignExamToProf(std::vector<Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
@@ -59,6 +84,12 @@ bool ExamDay::assignExamToProf(std::vector<Professor> &allUniversityProfs, Cours
     }
     return true;
 }
+/*
+ExamDay::ExamDay(Date date) {
+
+}*/
+
+
 
 
 

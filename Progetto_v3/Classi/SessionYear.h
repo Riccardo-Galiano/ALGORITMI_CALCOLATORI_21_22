@@ -9,6 +9,7 @@
 #include <map>
 #include "Date.h"
 #include "ExamDay.h"
+#include "StudyCourse.h"
 
 typedef struct {
     std::string season;
@@ -24,10 +25,10 @@ public:
     int getAcYear() const;
     std::string getSessions() const;
     //ritorna true se è stato possibile generare tutta la sessione, false altrimenti
-    bool generateNewYearSession(std::string& ,const std::map<std::string, Course>&,std::map<int, Professor>&);
+    bool generateNewYearSession(std::string& ,const std::map<std::string, Course>&,std::map<int, Professor>&,const std::map<int, StudyCourse>&);
     std::vector<std::string> getAllExamAppealsToDo(std::string, const std::map<std::string, Course>&);
-    bool controlOfAllocationRequirements(Date,Course,Exam,std::map<int, Professor>);
-
+    int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,const std::map<int, StudyCourse>&,int numSlot);
+    bool sameYearAndStudyCourse();
 private:
     int _acYear;
     //key: "autumn" , "winter", "summer"
@@ -38,8 +39,9 @@ private:
     std::map<std::string,ExamDay> _yearCalendar;
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
-    bool generateThisSession(std::string,const std::map<std::string, Course>&,std::map<int, Professor>&);
+    bool generateThisSession(std::string,const std::map<std::string, Course>&,std::map<int, Professor>&,const std::map<int, StudyCourse>&);
     int getSemester(std::string);
+
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

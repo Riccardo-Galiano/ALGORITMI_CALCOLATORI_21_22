@@ -29,7 +29,7 @@ public:
     //param: corso da cercare
     //return "" stringa vuoota se non esiste in questo corso di studio, oppure "anno-semestre" corrispondente
     std::string isInWhichSemester(std::string);
-    bool controlYear(std::string,std::string);
+
 
 private:
     int _id; //codice del corso di studi

@@ -1196,20 +1196,11 @@ void University::noAvailabilityWrite() {
 
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
-    bool esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors);
+    bool esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors,_studyCourse);
     return esito;
 }
 
-///controlla se fa parte dello stesso corso di studi e se sono dello stesso anno(mi serve per capire se devono avere una distanza di almeno due giorni)
-bool University::controlCorrespondence(const std::string &codCourseAssigned, const std::string & codCourseToBeAssigned) {
-    bool sameSCandYear = false;
-    for(auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end(); iterStudyCourse++){
-        sameSCandYear = iterStudyCourse ->second.controlYear(codCourseAssigned, codCourseToBeAssigned);
-        if(sameSCandYear)
-            return true;
-    }
-    return false;
-}
+
 
 
 

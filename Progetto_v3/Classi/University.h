@@ -45,7 +45,7 @@ public:
     bool setProfsNoAvailability(std::string acYear,const std::string& fin);
     bool setExamDate(std::string,std::string);
     void noAvailabilityWrite();
-    bool controlCorrespondence(const std::string & ,const std::string & );
+
 
 private:
     friend SpecificYearCourse;
