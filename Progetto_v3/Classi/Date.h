@@ -44,7 +44,7 @@ private:
     unsigned int _month{};
     unsigned int _day{};
     unsigned int _year{};
-    std::string _weekday[7] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    std::vector<std::string> _weekday;
     static const std::vector<unsigned int> _days; // num giorni per mese
     void helpIncrement();
 };

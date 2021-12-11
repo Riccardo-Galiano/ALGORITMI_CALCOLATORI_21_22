@@ -11,6 +11,7 @@ const std::vector<unsigned int> Date::_days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 
 //costruttore
 Date::Date(int year, int month, int day) {
    setDate(year, month, day);
+    _weekday = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 }
 
 // set year, month, day

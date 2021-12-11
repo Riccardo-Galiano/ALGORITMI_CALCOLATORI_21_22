@@ -5,17 +5,10 @@
 #include <sstream>
 #include "ExamDay.h"
 
-///quanti slot servono per un esame
-int ExamDay::howManySlots(Exam exam) {
-    int sum = exam.getTime() + exam.getEnterTime() + exam.getLeaveTime();//sommo le ore per l'esame per entrare e uscire dall'aula
-    int num_slots;
-    int duration = 2; //slot da due ore
-    num_slots = sum / duration + 1;//+1 perchè se venisse un numero razionale il compilatore raggionerebbe per difetto ma a noi interessa ragionare per eccesso
-    return num_slots;
-}
+
 
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
-int ExamDay::isPossibleToAssignThisExam(Course course, std::vector<Professor> &allUniversityProfs, int numSlotsRequired) {
+int ExamDay::isPossibleToAssignThisExam(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
     int startHourSlot = -1;
@@ -39,12 +32,12 @@ int ExamDay::isPossibleToAssignThisExam(Course course, std::vector<Professor> &a
     ///dobbiamo ora controllare se i prof sono disponibili in questi slot per essere sicuri che questo esame è possibile in questo giorno
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
     //ci servono gli oggetti Professore per usare funzione amIavailable: tutti i professori DEVONO ESSERE DISPONBILI
-    std::string matr;
+
     std::string dateAsString = _date.toString();//data sottoforma di stringa
-    for (int matr = 0; matr < profsMatr.size(); matr++) { //controllo se i prof del corso sono liberi. Considerato il fatto che corsi paralleli hanno l'esame lo stesso giorno alla stessa ora devo controllare che tutti i prof di tutti i corsi in parallelo siano disponibili
+    for (int i = 0; i < profsMatr.size(); i++) { //controllo se i prof del corso sono liberi. Considerato il fatto che corsi paralleli hanno l'esame lo stesso giorno alla stessa ora devo controllare che tutti i prof di tutti i corsi in parallelo siano disponibili
         for(int n_slot = 0; n_slot < numSlotsRequired; n_slot++) {
             //devo controllare tutti gli slot
-            if (!allUniversityProfs.at(matr).amIavailable(dateAsString, foundedStartHourSlot + (2 * n_slot))) {
+            if (!allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, foundedStartHourSlot + (2 * n_slot))) {
                 //se questo prof non è disponibile, torno false
                 return -1;
             }
@@ -54,7 +47,7 @@ int ExamDay::isPossibleToAssignThisExam(Course course, std::vector<Professor> &a
 }
 
 ///segna che uno slot del prof è occupato da un esame
-bool ExamDay::assignExam(std::vector<Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
+bool ExamDay::assignExamToProf(std::vector<Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
@@ -66,3 +59,8 @@ bool ExamDay::assignExam(std::vector<Professor> &allUniversityProfs, Course cour
     }
     return true;
 }
+
+
+
+
+

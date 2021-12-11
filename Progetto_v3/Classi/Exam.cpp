@@ -25,3 +25,11 @@ const std::string &Exam::getMode() const {
 const std::string &Exam::getPlace() const {
     return _place;
 }
+///quanti slot servono per un esame
+int Exam::howManySlots() {
+    int sum = this->getTime() + this->getEnterTime() + this->getLeaveTime();//sommo le ore per l'esame per entrare e uscire dall'aula
+    int num_slots;
+    int duration = 2; //slot da due ore
+    num_slots = sum / duration + 1;//+1 perchè se venisse un numero razionale il compilatore raggionerebbe per difetto ma a noi interessa ragionare per eccesso
+    return num_slots;
+}

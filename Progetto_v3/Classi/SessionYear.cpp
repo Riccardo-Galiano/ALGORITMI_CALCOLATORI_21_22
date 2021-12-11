@@ -2,8 +2,10 @@
 // Created by lucam on 04/12/2021.
 //
 
+#include <algorithm>
 #include "SessionYear.h"
 #include "Parse.hpp"
+#include "ExamDay.h"
 
 ///costruttore
 SessionYear::SessionYear(std::string acYear, std::string winterSession, std::string summerSession,
@@ -67,13 +69,14 @@ std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
 }
 
 
-bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::string, Course>& courses) {
+bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::string, Course>& courses,std::map<int, Professor> &professors) {
+
     ///generare sessione invernale
-    bool winter = generateThisSession("winter", courses);
+    bool winter = generateThisSession("winter", courses,professors);
     ///generare sessione estiva
-    bool summer = generateThisSession("summer", courses);
+    bool summer = generateThisSession("summer", courses,professors);
     ///generare sessione autunnale
-    bool autumn = generateThisSession("autumn",courses);
+    bool autumn = generateThisSession("autumn",courses,professors);
     bool result;
     if (winter && summer && autumn)
         result = true;
@@ -83,35 +86,35 @@ bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::
 }
 
 //programma una sessione in particolare
-bool SessionYear::generateThisSession(std::string sessName, const std::map<std::string, Course>& courses) {
+bool SessionYear::generateThisSession(std::string sessName, const std::map<std::string, Course>& courses,std::map<int, Professor>& profs) {
     ///prendiamo intervallo di date della sessione richiesta su cui dobbiamo ciclare
     session thisSession = _yearSessions.at(sessName);
     Date startDate = thisSession.startDate;
     Date endDate = thisSession.endDate;
     ///raggruppiamo tutti gli esami specifici di quest'anno
     std::vector<SpecificYearCourse> examsToDoInThisSession;
-    std::vector<std::string> allAppelliToDo; //contiene le stringhe dei codici esame per OGNI appello
-    int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
-    for(auto course = courses.begin(); course!=courses.end(); course++){
-        SpecificYearCourse sp = course->second.getSpecificYearCourseFromYear(_acYear);
-        int semester = sp.getSemester();
-        ///controllo se è un corso di questo semestre
-        if(semester == semesterOfThisSession){
-            ///devo fare due appelli se i semestri sono uguali!!!!
-            allAppelliToDo.push_back(course->first);
-            allAppelliToDo.push_back(course->first);
-        }
-        else
-            ///altrimenti solo uno...
-            allAppelliToDo.push_back(course->first);
-    }
+    std::vector<std::string> allExamAppealsToDo = getAllExamAppealsToDo(sessName,courses); //contiene le stringhe dei codici esame per OGNI appello
+
     for(Date currentExamDay(startDate.getYear(),startDate.getMonth(),startDate.getDay());
             !currentExamDay.isEqual(endDate++);
             currentExamDay++){
         if(!(currentExamDay.getWeekDay() == "Sunday")){
             //non è domenica, ok
-            for(int i=0; i < allAppelliToDo.size(); i++){
-                ///.....
+            for(int i=0; i < allExamAppealsToDo.size(); i++){
+
+               Course course = courses.at(allExamAppealsToDo[i]);
+               Exam exam = courses.at(allExamAppealsToDo[i]).getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
+
+               int counter = count(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),allExamAppealsToDo[i]);
+               //funzione che fa tutti i controlli: prof liberi, spazio dei due giorni
+               controlOfAllocationRequirements(currentExamDay,course,exam,profs);
+
+               //aggiungo primo appello a _slots di ExamDay
+               if (counter == 2){
+                   //devo aggiungere il secondo appello, a 14gg dall'altro
+                   i++;
+               }
+
             }
         }
     }
@@ -125,4 +128,33 @@ int SessionYear::getSemester(std::string sessName) {
     else if(sessName == "summer")
         return 2;
     return 3;
+}
+
+///prende tutti gli appelli da fare nella sessione sessName
+std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName, const std::map<std::string, Course>& courses) {
+    std::vector<std::string> allExamAppealsToDo;
+    int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
+    for(auto iterCourse = courses.begin(); iterCourse!=courses.end(); iterCourse++){
+        SpecificYearCourse sp = iterCourse->second.getSpecificYearCourseFromYear(_acYear);
+        int semester = sp.getSemester();
+        ///controllo se è un corso di questo semestre
+        if(semester == semesterOfThisSession){
+            ///devo fare due appelli se i semestri sono uguali!!!!
+            allExamAppealsToDo.push_back(iterCourse->first);
+            allExamAppealsToDo.push_back(iterCourse->first);
+        }
+        else
+            ///altrimenti solo uno...
+            allExamAppealsToDo.push_back(iterCourse->first);
+    }
+    return allExamAppealsToDo;
+}
+
+bool SessionYear::controlOfAllocationRequirements(Date currentExamDate, Course course, Exam examToAssign,std::map<int, Professor> allUniversityProfs) {
+    ExamDay examDay = _yearCalendar.at(currentExamDate.toString());
+    int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
+    int foundedStartHourSlot = examDay.isPossibleToAssignThisExam(course,allUniversityProfs,numSlots);//ora di inizio dello slot per l'esame
+
+
+    return false;
 }

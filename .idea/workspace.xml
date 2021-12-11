@@ -137,65 +137,74 @@
       <workItem from="1639061309765" duration="9340000" />
       <workItem from="1639123284220" duration="10261000" />
       <workItem from="1639142427030" duration="5971000" />
+      <workItem from="1639211314856" duration="14377000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
     <state x="140" y="84" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1639157757937">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="140" y="84" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1639157757937" />
-    <state width="1314" height="370" key="GridCell.Tab.0.bottom" timestamp="1639158146047">
+    <state width="1314" height="343" key="GridCell.Tab.0.bottom" timestamp="1639211336120">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639158146047" />
-    <state width="1314" height="370" key="GridCell.Tab.0.center" timestamp="1639158146047">
+    <state width="1314" height="343" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639211336120" />
+    <state width="1314" height="343" key="GridCell.Tab.0.center" timestamp="1639211336120">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1639158146047" />
-    <state width="1314" height="370" key="GridCell.Tab.0.left" timestamp="1639158146046">
+    <state width="1314" height="343" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1639211336120" />
+    <state width="1314" height="343" key="GridCell.Tab.0.left" timestamp="1639211336119">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1639158146046" />
-    <state width="1314" height="370" key="GridCell.Tab.0.right" timestamp="1639158146047">
+    <state width="1314" height="343" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1639211336119" />
+    <state width="1314" height="343" key="GridCell.Tab.0.right" timestamp="1639211336120">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1639158146047" />
-    <state width="1314" height="370" key="GridCell.Tab.1.bottom" timestamp="1639158147474">
+    <state width="1314" height="343" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1639211336120" />
+    <state width="1314" height="343" key="GridCell.Tab.1.bottom" timestamp="1639211337584">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.1.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
-    <state width="1314" height="370" key="GridCell.Tab.1.center" timestamp="1639158147474">
+    <state width="1314" height="343" key="GridCell.Tab.1.bottom/0.0.1368.872@0.0.1368.872" timestamp="1639211337584" />
+    <state width="1314" height="343" key="GridCell.Tab.1.center" timestamp="1639211337583">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.1.center/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
-    <state width="1314" height="370" key="GridCell.Tab.1.left" timestamp="1639158147474">
+    <state width="1314" height="343" key="GridCell.Tab.1.center/0.0.1368.872@0.0.1368.872" timestamp="1639211337583" />
+    <state width="1314" height="343" key="GridCell.Tab.1.left" timestamp="1639211337583">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.1.left/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
-    <state width="1314" height="370" key="GridCell.Tab.1.right" timestamp="1639158147474">
+    <state width="1314" height="343" key="GridCell.Tab.1.left/0.0.1368.872@0.0.1368.872" timestamp="1639211337583" />
+    <state width="1314" height="343" key="GridCell.Tab.1.right" timestamp="1639211337583">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="370" key="GridCell.Tab.1.right/0.0.1368.872@0.0.1368.872" timestamp="1639158147474" />
+    <state width="1314" height="343" key="GridCell.Tab.1.right/0.0.1368.872@0.0.1368.872" timestamp="1639211337583" />
     <state x="70" y="0" key="SettingsEditor" timestamp="1639158866178">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="70" y="0" key="SettingsEditor/0.0.1368.872@0.0.1368.872" timestamp="1639158866178" />
+    <state x="304" y="219" key="com.intellij.ide.util.TipDialog" timestamp="1639211322913">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="304" y="219" key="com.intellij.ide.util.TipDialog/0.0.1368.872@0.0.1368.872" timestamp="1639211322913" />
     <state x="259" y="196" key="run.anything.popup" timestamp="1639154498459">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state x="259" y="196" key="run.anything.popup/0.0.1368.872@0.0.1368.872" timestamp="1639154498459" />
+    <state x="263" y="0" key="search.everywhere.popup" timestamp="1639215217849">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="263" y="0" key="search.everywhere.popup/0.0.1368.872@0.0.1368.872" timestamp="1639215217849" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
-          <line>44</line>
-          <option name="timeStamp" value="4" />
+          <line>50</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

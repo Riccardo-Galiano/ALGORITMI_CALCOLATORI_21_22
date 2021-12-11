@@ -12,6 +12,7 @@
 #include "SpecificYearCourse.h"
 
 
+
 typedef struct {
     int _lec;///ore lezione
     int _lab;///ore laboratori
@@ -33,6 +34,7 @@ public:
     const std::string &getId() const;
     const std::string &getName() const;
     int getCfu() const;
+    const Exam getExamSpecificYear(int) const;
 
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;

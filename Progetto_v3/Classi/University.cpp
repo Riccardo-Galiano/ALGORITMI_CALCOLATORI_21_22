@@ -1195,7 +1195,8 @@ void University::noAvailabilityWrite() {
 }
 
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
-    bool esito = _acYearSessions.at(Parse::getAcStartYear(acYear)).generateNewYearSession(outputNameFile,_courses);
+    int startAcYear = Parse::getAcStartYear(acYear);
+    bool esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors);
     return esito;
 }
 

@@ -180,6 +180,11 @@ const SpecificYearCourse &Course::getSpecificYearCourseFromYear(int year) const{
     return _courseOfTheYear.at(year);
 }
 
+///prende le regole e gli orari dell'esame per un anno specifico di un corso
+const Exam Course::getExamSpecificYear(int acYear) const {
+    return _courseOfTheYear.at(acYear).getExam();
+}
+
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
            << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;
