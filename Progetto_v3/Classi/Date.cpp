@@ -214,3 +214,11 @@ std::string Date::toString() {
 bool Date::isEqual(Date compare) {
     return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
 }
+
+Date Date::incrementOf(int daysIncrement) {
+    Date d1 = (*this);
+    for(int i = 0; i < daysIncrement ; i++)
+        d++;
+
+    return d;
+}

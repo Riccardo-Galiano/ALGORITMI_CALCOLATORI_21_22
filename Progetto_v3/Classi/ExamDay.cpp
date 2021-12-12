@@ -5,6 +5,7 @@
 #include <sstream>
 #include "ExamDay.h"
 #include "StudyCourse.h"
+#include <algorithm>
 
 
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
@@ -48,31 +49,10 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
 
     return foundedStartHourSlot; //se arrivato qui, tutti i prof sono disponibili
 }
-/*
-bool ExamDay::controlYear(std::string codCourseAssigned, std::string codCourseToBeAssigned) {
-    int yearCCA = 0;
-    int yearCCTBA = 0;
 
-    for (auto iterSemester = _semesters.begin();
-         iterSemester != _semesters.end(); iterSemester++) {//controllo tutti i semestri dei corsi di studio
-        auto iterCourseAssigned = find(iterSemester->second.begin(), iterSemester->second.end(),
-                                       codCourseAssigned);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui ho già assegnato l'esame
-        auto iterCourseToBeAssigned = find(iterSemester->second.begin(), iterSemester->second.end(),
-                                           codCourseToBeAssigned);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
-        if (iterCourseAssigned != iterSemester->second.end()) {//se lo trova
-            std::stringstream CCA(iterSemester->first);
-            CCA >> yearCCA;
-        }
-        if (iterCourseToBeAssigned != iterSemester->second.end()) {//se non lo trova
-            std::stringstream CCTBA(iterSemester->first);
-            CCTBA >> yearCCTBA;
-        }
-    }
-    return yearCCA == yearCCTBA;
-}*/
 
 ///aggiorna la mappa di slot occupati per i professori
-bool ExamDay::assignExamToProf(std::vector<Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
+bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
@@ -84,6 +64,31 @@ bool ExamDay::assignExamToProf(std::vector<Professor> &allUniversityProfs, Cours
     }
     return true;
 }
+
+///un corso da assegnare è dello stesso corso di studio e dello stesso anno di un altro
+bool ExamDay::sameStudyCourseAndYear(Course course,int year) {
+
+  SpecificYearCourse specificYearCourseToAssign = course.getSpecificYearCourseFromYear(year);//prendo l'anno specifico del corso da assegnare
+   for(auto iterExamDay = _slots.begin(); iterExamDay != _slots.end(); iterExamDay++){//su uno degli examDay precedenti da controllare ciclo su tutti gli slot
+       std::vector<Course> examDayVect = iterExamDay->second; //estraggo per ogni slot il vettore di corsi
+       for(int i = 0; i<examDayVect.size(); i++){//ciclo sul vettore di corsi/esami da fare in quello slot
+           SpecificYearCourse specificYearCourseAssigned = examDayVect[i].getSpecificYearCourseFromYear(year);//prendo per quel corso/esame dello slot l'intero corso per un anno accademico specifico
+           if(specificYearCourseAssigned.getStudyCourseAssign() == specificYearCourseToAssign.getStudyCourseAssign()) {//controllo se l'esame da ssegnare e quello già assegnato sono dello stesso corso di studio
+               if (specificYearCourseAssigned.getYearOfTheSemester() == specificYearCourseToAssign.getYearOfTheSemester())//controllo se l'esame da assegnare e quello già assegnato sono dello stesso anno
+                   return true;//se stesso corso di studio e stesso anno ritorno true
+           }
+       }
+   }
+    return false;
+}
+
+///assegna l'esame al calendario
+bool ExamDay::assignExamToExamDay(int hhStart, Course course, int numSlot) {
+    for(int slot = hhStart; slot < hhStart + (numSlot * 2); slot + 2 ) {
+        _slots.at(slot).push_back(course);
+    }
+}
+
 /*
 ExamDay::ExamDay(Date date) {
 

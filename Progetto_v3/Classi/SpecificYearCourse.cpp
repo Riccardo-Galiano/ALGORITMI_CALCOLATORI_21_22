@@ -216,6 +216,10 @@ int SpecificYearCourse::getYearOfTheSemester() const {
     return stoi(_yy_semester.substr(0,1));
 }
 
+int SpecificYearCourse::getStudyCourseAssign() const {
+    return _studyCourseAssign;
+}
+
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getisActive())

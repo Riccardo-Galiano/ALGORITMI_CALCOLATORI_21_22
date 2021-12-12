@@ -17,10 +17,12 @@ public:
     Date() = default;
     Date(std::string);
 
+
     explicit Date(int y = 1900, int m = 1, int d = 1); // default constructor
     void setDate(int, int, int); // set year, month, day
     Date &operator++(); // prefix increment operator
     Date operator++(int); // postfix increment operator
+    Date incrementOf(int);
     Date &operator+=(unsigned int);
 
     bool operator>(const Date &) const;

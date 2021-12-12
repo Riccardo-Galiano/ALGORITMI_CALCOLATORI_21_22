@@ -52,6 +52,9 @@ public:
     int getSemester() const;
     int getYearOfTheSemester() const;
     void resetAssignations();
+
+    int getStudyCourseAssign() const;
+
 private:
     std::string _yy_semester;
     int _studyCourseAssign;
