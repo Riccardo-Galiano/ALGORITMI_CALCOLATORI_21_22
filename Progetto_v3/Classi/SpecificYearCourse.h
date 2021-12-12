@@ -32,7 +32,7 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string yy_semester);
+    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string yy_semester, int studyCourse);
 
     int getEndYear() const;
     bool getisActive() const;
@@ -54,6 +54,7 @@ public:
     void resetAssignations();
 private:
     std::string _yy_semester;
+    int _studyCourseAssign;
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?

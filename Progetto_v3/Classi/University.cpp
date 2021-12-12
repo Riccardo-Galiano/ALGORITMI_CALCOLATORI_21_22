@@ -260,17 +260,20 @@ void University::readCourse() {
             idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
             ///ricerca "anno-semestre" di questo corso
             std::string yy_semester;
+            int studyCourse = 0;
             for(int i=0; i<_studyCourse.size(); i++){
                 std::string res = _studyCourse.at(i+1).isInWhichSemester(lastReadCourse);
                 if(res!=""){
                     //ho trovato il suo corso di studi
+                    auto iterStudyCourse = _studyCourse.find(i+1);
+                    studyCourse = iterStudyCourse->first;
                     yy_semester = res;
                 }
             }
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData,
-                                                               idGrouped, yy_semester);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
+                                                               idGrouped, yy_semester,studyCourse);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
 
     }
@@ -518,15 +521,18 @@ bool University::addCourses(const std::string &fin) {
         idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
+        int studyCourse = 0;
         for(int i=0; i<_studyCourse.size(); i++){
             std::string res = _studyCourse.at(i).isInWhichSemester(newIdCourse);
             if(res!=""){
                 //ho trovato il suo corso di studi
+                auto iterStudyCourse = _studyCourse.find(i+1);
+                studyCourse = iterStudyCourse->first;
                 yy_semester = res;
             }
         }
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                        splittedExamData, idGrouped,yy_semester);
+                                                        splittedExamData, idGrouped,yy_semester,studyCourse);
         line_counter++;
     }
     fileIn.close();
@@ -919,14 +925,17 @@ bool University::insertCourses(const std::string &fin) {
         idGrouped = Parse::SplittedGroupedID(specificYearCourse[6]);
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
+        int studyCourse = 0;
         for(int i=0; i<_studyCourse.size(); i++){
             std::string res = _studyCourse.at(i+1).isInWhichSemester(specificYearCourse[0]);
             if(res!=""){
                 //ho trovato il suo corso di studi
+                auto iterStudyCourse = _studyCourse.find(i+1);
+                studyCourse = iterStudyCourse->first;
                 yy_semester = res;
             }
         }
-        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idGrouped, yy_semester);
+        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idGrouped, yy_semester,studyCourse);
         line_counter++;
     }
     fileIn.close();

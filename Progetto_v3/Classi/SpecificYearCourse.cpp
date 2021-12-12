@@ -7,7 +7,7 @@
 #include "SpecificYearCourse.h"
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester) :
+                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,int studyCourse) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
@@ -16,6 +16,7 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _parallelCourses = nCrsiPar;
     _idGroupedCourses = idGrouped;
     _yy_semester = yy_semester;
+    _studyCourseAssign = studyCourse;
     setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
 
 }
