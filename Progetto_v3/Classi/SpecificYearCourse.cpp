@@ -220,6 +220,7 @@ int SpecificYearCourse::getStudyCourseAssign() const {
     return _studyCourseAssign;
 }
 
+///se è dello stesso semestre ed è attivo
 bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const {
     if(semesterGiven == this->getSemester() && _active)
         return true;
@@ -227,6 +228,7 @@ bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGi
         return false;
 }
 
+///quanti appelli ho già assegnato
 int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
     return _howManyTimesIAmAssignedInASession.at(session).size();
 }

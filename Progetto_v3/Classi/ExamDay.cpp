@@ -7,6 +7,11 @@
 #include "StudyCourse.h"
 #include <algorithm>
 
+//costructor
+ExamDay::ExamDay(Date date) {
+    _date = date;
+    this->setSlot();
+}
 
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
 int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired) {
@@ -50,7 +55,6 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
     return foundedStartHourSlot; //se arrivato qui, tutti i prof sono disponibili
 }
 
-
 ///aggiorna la mappa di slot occupati per i professori
 bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
@@ -68,11 +72,11 @@ bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Cou
 ///un corso da assegnare è dello stesso corso di studio e dello stesso anno di uno degli esami già assegnati per una certa data?
 bool ExamDay::sameStudyCourseAndYear(Course course,int year) {
 
-  SpecificYearCourse specificYearCourseToAssign = course.getSpecificYearCourseFromYear(year);//prendo l'anno specifico del corso da assegnare
+  SpecificYearCourse specificYearCourseToAssign = course.getThisYearCourse(year);//prendo l'anno specifico del corso da assegnare
    for(auto iterExamDay = _slots.begin(); iterExamDay != _slots.end(); iterExamDay++){//su uno degli examDay dei giorni precedenti da controllare ciclo su tutti gli slot
        std::vector<Course> examDayVect = iterExamDay->second; //estraggo per ogni slot il vettore di corsi
        for(int i = 0; i<examDayVect.size(); i++){//ciclo sul vettore di corsi/esami da fare in quello slot
-           SpecificYearCourse specificYearCourseAssigned = examDayVect[i].getSpecificYearCourseFromYear(year);//prendo per quel corso/esame dello slot l'intero corso per un anno accademico specifico
+           SpecificYearCourse specificYearCourseAssigned = examDayVect[i].getThisYearCourse(year);//prendo per quel corso/esame dello slot l'intero corso per un anno accademico specifico
            if(specificYearCourseAssigned.getStudyCourseAssign() == specificYearCourseToAssign.getStudyCourseAssign()) {//controllo se l'esame da ssegnare e quello già assegnato sono dello stesso corso di studio
                if (specificYearCourseAssigned.getYearOfTheSemester() == specificYearCourseToAssign.getYearOfTheSemester())//controllo se l'esame da assegnare e quello già assegnato sono dello stesso anno
                    return true;//se stesso corso di studio e stesso anno ritorno true
@@ -90,12 +94,6 @@ bool ExamDay::assignExamToExamDay(int hhStart, Course course, int numSlot) {
     return true;
 }
 
-ExamDay::ExamDay(Date date) {
- _date = date;
- this->setSlot();
-
-}
-
 bool ExamDay::setSlot() {
     for(int i = 0; i < 6; i++){
         std::vector<Course> vectCourse;
@@ -104,10 +102,6 @@ bool ExamDay::setSlot() {
     return true;
 }
 
-/*
-ExamDay::ExamDay(Date date) {
-
-}*/
 
 
 

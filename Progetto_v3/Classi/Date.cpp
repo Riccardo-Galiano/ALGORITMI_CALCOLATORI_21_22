@@ -223,15 +223,16 @@ Date Date::incrementOf(int daysIncrement) {
     return d;
 }
 
+///gap tra due date (start session e date dove quest'ultima è la data da controllare)
 int Date::whatIsTheGap(Date& date) {
     bool areNotEqual = true;
-    Date currentDate(_year,_month,_day);
+    Date currentDate(_year,_month,_day);//data di inizio della sessione
     int gap = 0;
     while(areNotEqual){
-        if(currentDate.isEqual(date)){
+        if(currentDate.isEqual(date)){//se uguali ho raggiunto la data finale del gap che volevo conoscere
             areNotEqual = false;
         }
-        else{
+        else{//se non uguali controllo il giorno successivo e aggiorno il gap
             currentDate++;
             gap++;
         }

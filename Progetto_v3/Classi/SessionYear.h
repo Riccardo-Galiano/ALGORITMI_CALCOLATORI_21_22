@@ -43,7 +43,7 @@ private:
     bool dateIsOK(Date& newDate, SpecificYearCourse& sp, std::string& sessName);
     int getSemester(std::string);
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&);
-    void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&,SpecificYearCourse&);
+    void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , int);
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 
