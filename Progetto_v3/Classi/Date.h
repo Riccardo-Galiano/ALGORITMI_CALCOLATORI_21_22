@@ -27,6 +27,8 @@ public:
 
     bool operator>(const Date &) const;
     bool operator<(const Date &) const;
+    bool operator<=(const Date &) const;
+    bool operator>=(const Date &) const;
 
     static bool leapYear(int); // anno bisestile?
     bool endOfMonth(int) const; // fine del mese?

@@ -6,6 +6,7 @@
 #include "ExamDay.h"
 #include "StudyCourse.h"
 #include <algorithm>
+#include <iomanip>
 
 //costructor
 ExamDay::ExamDay(Date date) {
@@ -100,6 +101,31 @@ bool ExamDay::setSlot() {
         _slots.insert(std::pair<int,std::vector<Course>>(8 + i*2,vectCourse));
     }
     return true;
+}
+
+std::vector<std::string> ExamDay::getSlotsToString() {
+    std::vector<std::string> slotsToReturn;
+    std::stringstream coursesSS;
+    std::stringstream hoursSS;
+    std::stringstream toString;
+    for (auto iterSlots = _slots.begin(); iterSlots != _slots.end(); iterSlots++){
+        int hStart=iterSlots->first;
+        int hFinish =hStart+2;
+        hoursSS<< std::setfill('0')<< std::setw(2)<<hStart<<":00-"<<hFinish<<":00";
+        std::vector<Course> coursesOfThisSlot = iterSlots->second;
+        for(int i=0; i<coursesOfThisSlot.size();i++){
+            coursesSS << coursesOfThisSlot[i].getId()<<"(";
+            ///  !!!  manca numero_versione e corsi di studio  !!!
+            //ritorna una stringa con tutti i codici dei CDS che contengono il corso)
+           // coursesSS << getAllCDSWithThatCourse(coursesOfThisSlot[i].getId());
+            coursesSS <<";"<<std::endl;
+            toString<<hoursSS.str()<<coursesSS.str();
+            slotsToReturn.push_back(toString.str());
+        }
+
+    }
+
+        return slotsToReturn;
 }
 
 

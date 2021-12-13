@@ -3,6 +3,7 @@
 //
 
 #include <algorithm>
+#include <fstream>
 #include "SessionYear.h"
 #include "Parse.hpp"
 #include "ExamDay.h"
@@ -81,11 +82,17 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
     bool summer = generateThisSession("summer", courses, professors);
     ///generare sessione autunnale
     bool autumn = generateThisSession("autumn",courses, professors);
+
     bool result;
     if (winter && summer && autumn)
         result = true;
     else
         result = false;
+    if(result==true){
+        generateOutputFiles(fout,1);
+        generateOutputFiles(fout,2);
+        generateOutputFiles(fout,3);
+    }
     return result;
 }
 
@@ -104,10 +111,10 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
             for(int indexExam=0; indexExam < allExamAppealsToDo.size(); indexExam++){//ciclo su tutti gli appelli da assegnare
                 //prendo il corso considerato e vedo quante volte appare
                 Course course = courses.at(allExamAppealsToDo[indexExam]);//corso dell'esame da assegnare
-                SpecificYearCourse sp = course.getThisYearCourse(getAcYear());//corso per un anno specifico
+                SpecificYearCourse specificYY = course.getThisYearCourse(getAcYear());//corso per un anno specifico
                 //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
                 //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-                bool dateIsOk = dateIsOK(currentExamDay,sp,sessName);
+                bool dateIsOk = dateIsOK(currentExamDay, specificYY, sessName);
                 if(dateIsOk){
                     //se primi requisiti rispettati dobbiamo controllare se i prof sono disponibili e se nei due giorni precedenti non ci siano corsi dello stesso corso di studio e semestre
                     int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(course,currentExamDay,profs);
@@ -115,6 +122,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
                         int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
                         assignTheExamToThisExamDay(startExamHour,currentExamDay,profs,course,numSlots);
+                        specificYY.assignExamInThisSpecificYearCourse(currentExamDay, getSemester(sessName));
                     }
                 }
             }
@@ -129,7 +137,8 @@ int SessionYear::getSemester(std::string sessName) {
         return 1;
     else if(sessName == "summer")
         return 2;
-    return 3;
+    else if(sessName == "autumn")
+        return 3;
 }
 
 ///prende tutti gli appelli da fare nella sessione sessName
@@ -137,9 +146,9 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
     std::vector<std::string> allExamAppealsToDo;
     int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
     for(auto iterCourse = courses.begin(); iterCourse!=courses.end(); iterCourse++){
-        SpecificYearCourse sp = iterCourse->second.getThisYearCourse(_acYear);
-        int semester = sp.getSemester();
-        bool isActive = sp.getisActive();
+        SpecificYearCourse specificYY = iterCourse->second.getThisYearCourse(_acYear);
+        int semester = specificYY.getSemester();
+        bool isActive = specificYY.getisActive();
         ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
         if(semester == semesterOfThisSession && isActive){
             ///devo fare due appelli se i semestri sono uguali!!!!
@@ -226,6 +235,38 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& date, std:
     //aggiungo l'esame al calendario della sessione
     _yearCalendar.at(date.toString()).assignExamToExamDay(startExamHour,course,numSlots);
 
+}
+
+void SessionYear::generateOutputFiles(std::string & OutputFileName,int session) {
+    std::stringstream ssFout;
+    std::string key;
+    if(session == 1){
+        ssFout<<OutputFileName<<"_"<<"s1";
+        key="winter";
+    }else if(session == 2){
+        ssFout<<OutputFileName<<"_"<<"s2";
+        key="summer";
+    } else if (session == 3){
+        ssFout<<OutputFileName<<"_"<<"s3";
+        key="autumn";
+    }
+    std::ofstream outputSession (ssFout.str());
+    if(!outputSession.is_open()){
+        throw std::exception();
+    }
+    Date dayOne=_yearSessions.at(key).startDate;
+    Date lastDay=_yearSessions.at(key).endDate;
+    for (auto iterDateCalendar = _yearCalendar.begin(); iterDateCalendar != _yearCalendar.end(); iterDateCalendar++){
+        Date currentExamDay=iterDateCalendar->first;
+        if(currentExamDay>=dayOne&&currentExamDay<=lastDay){
+            outputSession<<currentExamDay.toString()<<std::endl;
+            //prendo un vettore con una stringa per ogni slot
+            iterDateCalendar->second.getSlotsToString();
+            //cliclo sul vettore e scrivo ogni stringa su file
+        }
+
+
+    }
 }
 
 

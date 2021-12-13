@@ -56,6 +56,7 @@ public:
     int getStudyCourseAssign() const;
     int amIAssignedAlreadyInThisSession(int session);
     Date lastDateAssignationInGivenSession(int session);
+    bool assignExamInThisSpecificYearCourse(Date,int);
 private:
     std::string _yy_semester;
     int _studyCourseAssign;

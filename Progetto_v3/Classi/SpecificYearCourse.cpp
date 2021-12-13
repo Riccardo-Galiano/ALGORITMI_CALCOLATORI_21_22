@@ -241,6 +241,17 @@ Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
     return _howManyTimesIAmAssignedInASession.at(session)[0];
 }
 
+bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int session) {
+    std::vector<Date>vectorOfExamDays;
+    vectorOfExamDays.push_back(examDay);
+    if(_howManyTimesIAmAssignedInASession.count(session)==0){
+        _howManyTimesIAmAssignedInASession.insert(std::pair <int, std::vector<Date>> (session,vectorOfExamDays));
+    }else if(_howManyTimesIAmAssignedInASession.count(session)==1){
+        _howManyTimesIAmAssignedInASession.at(session).push_back(examDay);
+    }
+    return true;
+}
+
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getisActive())

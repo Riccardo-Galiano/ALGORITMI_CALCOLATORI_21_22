@@ -44,6 +44,7 @@ private:
     int getSemester(std::string);
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&);
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , int);
+    void generateOutputFiles(std::string&,int);
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

@@ -239,3 +239,27 @@ int Date::whatIsTheGap(Date& date) {
     }
     return gap;
 }
+
+bool Date::operator<=(const Date & d) const {
+    if(_year<d._year){
+        return true;
+    }else if(_year==d._year&&_month<d._month){
+        return true;
+    }else if (_year==d._year&&_month==d._month&&_day<=d._day){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool Date::operator>=(const Date & d) const {
+    if(_year>d._year){
+        return true;
+    }else if(_year==d._year&&_month>d._month){
+        return true;
+    }else if (_year==d._year&&_month==d._month&&_day>=d._day){
+        return true;
+    }else {
+        return false;
+    }
+}

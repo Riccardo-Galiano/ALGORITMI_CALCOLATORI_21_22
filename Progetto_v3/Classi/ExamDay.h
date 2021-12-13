@@ -18,12 +18,14 @@ public:
     int isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
     bool sameStudyCourseAndYear(Course,int);
     bool setSlot();
+    std::vector<std::string> getSlotsToString();
 
 private:
     //key: orario inizio slot. value:corsi associati (paralleli compresi)
     //slots dalle 8 alle 20; uno slot dura due ore --> 8, 10, 12, 14, 16, 18
     std::map<int,std::vector<Course>> _slots;
     Date _date;
+
 };
 
 

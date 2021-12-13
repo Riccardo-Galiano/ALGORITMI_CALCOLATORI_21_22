@@ -35,8 +35,6 @@ private:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di stringhe
-    //std::map<std::string,std::vector<SpecificYearCourse>> _perAccademicYear; //key: id (corso agg/nuovo), value: Corso
-    //^^^^^^^^ non dovrebbe servire... -luca
     std::list <std::string> _offCourses;
 };
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s);

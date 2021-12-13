@@ -13,11 +13,15 @@
   <component name="ChangeListManager">
     <list default="true" id="094b6821-78ee-4524-a106-380d09575ea4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/Date.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Date.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/Date.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Date.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/ExamDay.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/ExamDay.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/Professor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Professor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/ExamDay.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/ExamDay.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/SessionYear.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SessionYear.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/SessionYear.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SessionYear.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/University.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/University.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/StudyCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/StudyCourse.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -106,6 +110,10 @@
       <workItem from="1639048467991" duration="20000" />
       <workItem from="1639048519252" duration="5410000" />
       <workItem from="1639054770409" duration="493000" />
+      <workItem from="1639253945665" duration="2420000" />
+      <workItem from="1639382120951" duration="1092000" />
+      <workItem from="1639415077956" duration="202000" />
+      <workItem from="1639415305115" duration="8951000" />
     </task>
     <servers />
   </component>
@@ -144,42 +152,42 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>329</line>
+          <line>340</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>395</line>
+          <line>406</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>481</line>
+          <line>492</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>471</line>
+          <line>482</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>468</line>
+          <line>479</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>624</line>
+          <line>647</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>641</line>
+          <line>664</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>619</line>
+          <line>642</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -194,17 +202,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>858</line>
+          <line>881</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>880</line>
+          <line>904</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>902</line>
+          <line>924</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
       </breakpoints>
