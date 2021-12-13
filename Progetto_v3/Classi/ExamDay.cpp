@@ -65,11 +65,11 @@ bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Cou
     return true;
 }
 
-///un corso da assegnare è dello stesso corso di studio e dello stesso anno di un altro
+///un corso da assegnare è dello stesso corso di studio e dello stesso anno di uno degli esami già assegnati per una certa data?
 bool ExamDay::sameStudyCourseAndYear(Course course,int year) {
 
   SpecificYearCourse specificYearCourseToAssign = course.getSpecificYearCourseFromYear(year);//prendo l'anno specifico del corso da assegnare
-   for(auto iterExamDay = _slots.begin(); iterExamDay != _slots.end(); iterExamDay++){//su uno degli examDay precedenti da controllare ciclo su tutti gli slot
+   for(auto iterExamDay = _slots.begin(); iterExamDay != _slots.end(); iterExamDay++){//su uno degli examDay dei giorni precedenti da controllare ciclo su tutti gli slot
        std::vector<Course> examDayVect = iterExamDay->second; //estraggo per ogni slot il vettore di corsi
        for(int i = 0; i<examDayVect.size(); i++){//ciclo sul vettore di corsi/esami da fare in quello slot
            SpecificYearCourse specificYearCourseAssigned = examDayVect[i].getSpecificYearCourseFromYear(year);//prendo per quel corso/esame dello slot l'intero corso per un anno accademico specifico
@@ -82,11 +82,26 @@ bool ExamDay::sameStudyCourseAndYear(Course course,int year) {
     return false;
 }
 
-///assegna l'esame al calendario
+///assegna l'esame negli slot accettabili in una particolare data
 bool ExamDay::assignExamToExamDay(int hhStart, Course course, int numSlot) {
     for(int slot = hhStart; slot < hhStart + (numSlot * 2); slot + 2 ) {
         _slots.at(slot).push_back(course);
     }
+    return true;
+}
+
+ExamDay::ExamDay(Date date) {
+ _date = date;
+ this->setSlot();
+
+}
+
+bool ExamDay::setSlot() {
+    for(int i = 0; i < 6; i++){
+        std::vector<Course> vectCourse;
+        _slots.insert(std::pair<int,std::vector<Course>>(8 + i*2,vectCourse));
+    }
+    return true;
 }
 
 /*

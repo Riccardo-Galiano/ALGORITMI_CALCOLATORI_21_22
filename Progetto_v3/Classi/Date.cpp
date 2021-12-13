@@ -216,7 +216,7 @@ bool Date::isEqual(Date compare) {
 }
 
 Date Date::incrementOf(int daysIncrement) {
-    Date d1 = (*this);
+    Date d = (*this);
     for(int i = 0; i < daysIncrement ; i++)
         d++;
 

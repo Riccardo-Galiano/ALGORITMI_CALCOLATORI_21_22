@@ -12,9 +12,12 @@
 SessionYear::SessionYear(std::string acYear, std::string winterSession, std::string summerSession,
                          std::string autumnSession) {
     _acYear = Parse::getAcStartYear(acYear);
+
     this->addSession(acYear, winterSession, "winter");
     this->addSession(acYear, summerSession, "summer");
     this->addSession(acYear, autumnSession, "autumn");
+
+
 
 }
 
@@ -36,8 +39,9 @@ bool SessionYear::addSession(std::string acYear, std::string sessionDates, std::
 
     session s{name, dates[0], dates[1]};//salvo le info della sessione nome, data di inizio e data di fine
 
-    _yearSessions.insert(
-            std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
+    _yearSessions.insert(std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
+    this->setCaldendar(dates);
+
     return true;
 }
 
@@ -86,7 +90,7 @@ bool SessionYear::generateNewYearSession(std::string& fout, const std::map<std::
     return result;
 }
 
-//programma una sessione in particolare
+///programma una sessione in particolare
 bool SessionYear::generateThisSession(std::string sessName, const std::map<std::string, Course>& courses,std::map<int, Professor>& profs) {
     ///prendiamo intervallo di date della sessione richiesta su cui dobbiamo ciclare
     session thisSession = _yearSessions.at(sessName);
@@ -99,7 +103,7 @@ bool SessionYear::generateThisSession(std::string sessName, const std::map<std::
         if(!(currentExamDay.getWeekDay() == "Sunday")){ //se non è domenica
             for(int indexExam=0; indexExam < allExamAppealsToDo.size(); indexExam++){//ciclo su tutti gli appelli da assegnare
 
-               Course course = courses.at(allExamAppealsToDo[indexExam]);
+               Course course = courses.at(allExamAppealsToDo[indexExam]);//corso dell'esame da assegnare
                int counter = count(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),allExamAppealsToDo[indexExam]);//quanti appelli devo fare per quella sessione
 
                 Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
@@ -108,23 +112,18 @@ bool SessionYear::generateThisSession(std::string sessName, const std::map<std::
                 ///funzione che fa tutti i controlli: prof liberi, spazio dei due giorni, ecc...
                 int startExam = isPossibleToAssignThisExam(course,currentExamDay,profs,numSlots);//ora di inizio dello slot per l'esame
                 if(startExam != -1) {//è disponibile un buco di numSlots
-                    //assegno il primo appello
-                    for(int slot = 0; slot < numSlots; slot++) {
-                        //aggiungo primo appello a _slots di ExamDay
-                        //aggiungo l'esame a quelli che i prof devono fare
+                         //aggiungo l'esame a quelli che i prof devono fare
                         _yearCalendar.at(currentExamDay.toString()).assignExamToProf(profs,course,startExam,numSlots);
                         //aggiungo l'esame al calendario della sessione
                         _yearCalendar.at(currentExamDay.toString()).assignExamToExamDay(startExam,course,numSlots);
-                    }
 
                     if (counter == 2){
-                        //devo aggiungere il secondo appello, a 14gg dall'altro
+                        //devo aggiungere il secondo appello, ad almeno 14gg dal primo appello
                         Date secondAppealDate = currentExamDay.incrementOf(14);
                         bool found = false;
-                        while(!found) {
-                            int startExamSecondAppeal = isPossibleToAssignThisExam(course, secondAppealDate, profs,
-                                                                             numSlots);//ora di inizio dello slot per l'esame
-                        if(startExamSecondAppeal !=-1){
+                        while(!found) {//finchè non trovo il giorno disponbibile a partire da 14 giorni dopo il primo appello
+                            int startExamSecondAppeal = isPossibleToAssignThisExam(course, secondAppealDate, profs, numSlots);//ora di inizio dello slot per l'esame
+                        if(startExamSecondAppeal !=-1){//ho trovato l'ora di inizio
                             //aggiungo l'esame a quelli che i prof devono fare
                             _yearCalendar.at(secondAppealDate.toString()).assignExamToProf(profs,course,startExam,numSlots);
                             //aggiungo l'esame al calendario della sessione
@@ -133,7 +132,7 @@ bool SessionYear::generateThisSession(std::string sessName, const std::map<std::
                         } else
                             secondAppealDate++;
                         }
-                        indexExam++;
+                        indexExam++;//essendo un secondo appello, se non lo facessi, in allExamAppealsToDo[indexExam] mi troverei lo stesso codice di prima
                     }
                 }
             }
@@ -175,19 +174,30 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
 int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,int numSlot ) {
 
     ///controlliamo che il corso da inserire non abbia in un range di due giorni precedenti alla data analizzata un esame dello stesso corso di studi e dello stesso anno
-    auto iterCalendar = _yearCalendar.find(currentExamDay.toString());
-    for(int i = 0; i < 2; i++ ) {//per i due giorni precedenti alla data considerata
+    auto iterCalendar = _yearCalendar.find(currentExamDay.toString());//cerco la data in cui voglio inserire l'esame nel calendario
+    for (int i = 0; i < 2; i++) {//per i due giorni precedenti alla data considerata
         iterCalendar--;
-        ExamDay dayBefore = iterCalendar->second;
-        bool same = dayBefore.sameStudyCourseAndYear(course,_acYear);
-            if(same)//se sameStudyAndYear ha trovato un esame già assegnato che appartenga allo stesso corso di studi e allo stesso anno da assegnare
-                return -1;
+        ExamDay dayBefore = iterCalendar->second;//al primo ciclo prendo l'examday precedente alla data in cui voglio inserire l'esame. Al secondo ciclo prendo l'examDay di due giorni prima
+        bool same = dayBefore.sameStudyCourseAndYear(course, _acYear);
+        if (same)//se sameStudyAndYear ha trovato un esame già assegnato che appartenga allo stesso corso di studi e allo stesso anno da assegnare
+            return -1;
     }
-   ///controlliamo se ci sono slot liberi ed eventualmente se i prof in quegli slot sono liberi
+    ///controlliamo se ci sono slot liberi ed eventualmente se i prof in quegli slot sono liberi
     ExamDay examCurrentDay = _yearCalendar.at(currentExamDay.toString());
-    int start = examCurrentDay.isPossibleToAssignThisExamToProf(course,profs,numSlot);
-
+    int start = examCurrentDay.isPossibleToAssignThisExamToProf(course, profs, numSlot);
     return start;
+
+}
+
+///creo il calendario con i giorni delle sessioni, in cui ogni giorno sarà un examDay
+bool SessionYear::setCaldendar(std::vector<Date> dates) {
+    Date lastDay = ++dates[1];
+    for(Date d = dates[0]; !d.isEqual(lastDay); d++){//per ogni giorno della sessione
+        ExamDay examDay(d);
+        _yearCalendar.insert(std::pair<std::string,ExamDay>(d.toString(),examDay));
+    }
+
+    return false;
 }
 
 

@@ -12,11 +12,12 @@
 
 class ExamDay {
 public:
-    //ExamDay(Date);
+    ExamDay(Date);
     bool assignExamToProf(std::map<int,Professor>&, Course course, int hhStart, int num_slots);
     bool assignExamToExamDay(int, Course,int);
     int isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
     bool sameStudyCourseAndYear(Course,int);
+    bool setSlot();
 
 private:
     //key: orario inizio slot. value:corsi associati (paralleli compresi)

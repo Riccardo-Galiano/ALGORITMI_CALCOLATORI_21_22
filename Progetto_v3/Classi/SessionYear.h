@@ -28,6 +28,7 @@ public:
     bool generateNewYearSession(std::string& ,const std::map<std::string, Course>&,std::map<int, Professor>&);
     std::vector<std::string> getAllExamAppealsToDo(std::string, const std::map<std::string, Course>&);
     int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,int numSlot);
+    bool setCaldendar(std::vector<Date>);
 
 private:
     int _acYear;

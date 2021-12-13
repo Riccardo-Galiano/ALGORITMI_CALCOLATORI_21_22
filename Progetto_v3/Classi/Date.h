@@ -14,7 +14,7 @@ class Date {
     friend std::istream &operator>>(std::istream &, Date &);
 
 public:
-    Date() = default;
+    //Date() = default;
     Date(std::string);
 
 
