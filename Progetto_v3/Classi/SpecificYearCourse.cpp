@@ -220,6 +220,25 @@ int SpecificYearCourse::getStudyCourseAssign() const {
     return _studyCourseAssign;
 }
 
+bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const {
+    if(semesterGiven == this->getSemester() && _active)
+        return true;
+    else
+        return false;
+}
+
+int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
+    return _howManyTimesIAmAssignedInASession.at(session).size();
+}
+
+Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
+    //ATTENZIONE: non può essere chiamata se amIAssignedAlreadyInThisSession(session) == 0
+    if(amIAssignedAlreadyInThisSession(session) == 0){
+        throw std::exception();
+    }
+    return _howManyTimesIAmAssignedInASession.at(session)[0];
+}
+
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getisActive())

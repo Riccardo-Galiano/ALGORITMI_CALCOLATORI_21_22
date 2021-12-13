@@ -139,7 +139,7 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
 }
 
 ///prende il corso con le sue info ad uno specifico anno
-SpecificYearCourse Course::getThisYearCourse(int year) {
+SpecificYearCourse& Course::getThisYearCourse(int year) {
     return _courseOfTheYear.at(year);
 }
 
@@ -174,10 +174,6 @@ bool Course::fillAcYearsEmpty() {
       }
     }
     return true;
-}
-
-const SpecificYearCourse &Course::getSpecificYearCourseFromYear(int year) const{
-    return _courseOfTheYear.at(year);
 }
 
 ///prende le regole e gli orari dell'esame per un anno specifico di un corso

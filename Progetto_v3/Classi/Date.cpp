@@ -176,7 +176,7 @@ std::string Date::getWeekDay() {
 }
 
 ///controlla se le sessioni si svolgono nelle settimane richieste
-bool Date::checkGapGiven(int weeks, Date d) {
+bool Date::checkGapGiven(int weeks, Date d){
     int numDays = weeks * 7; //a quanti giorni corrisponde il numero di settimane da considerare
     Date compare = this->add(numDays);//aggiungo alla data iniziale il numero di giorni  corrispondente a quelle settimane
     return d.isEqual(compare);
@@ -221,4 +221,20 @@ Date Date::incrementOf(int daysIncrement) {
         d++;
 
     return d;
+}
+
+int Date::whatIsTheGap(Date& date) {
+    bool areNotEqual = true;
+    Date currentDate(_year,_month,_day);
+    int gap = 0;
+    while(areNotEqual){
+        if(currentDate.isEqual(date)){
+            areNotEqual = false;
+        }
+        else{
+            currentDate++;
+            gap++;
+        }
+    }
+    return gap;
 }

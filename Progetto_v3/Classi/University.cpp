@@ -927,10 +927,11 @@ bool University::insertCourses(const std::string &fin) {
         std::string yy_semester;
         int studyCourse = 0;
         for(int i=0; i<_studyCourse.size(); i++){
-            std::string res = _studyCourse.at(i+1).isInWhichSemester(specificYearCourse[0]);
-            if(res!=""){
+            ///andrea hai messo i+1 qui? se no, cancella questo commento
+            std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
+            if(!res.empty()){
                 //ho trovato il suo corso di studi
-                auto iterStudyCourse = _studyCourse.find(i+1);
+                auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse = iterStudyCourse->first;
                 yy_semester = res;
             }

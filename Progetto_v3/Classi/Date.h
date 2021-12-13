@@ -42,6 +42,8 @@ public:
     unsigned int getMonth() const;
     unsigned int getDay() const;
 
+    int whatIsTheGap(Date& date);
+
 private:
     unsigned int _month{};
     unsigned int _day{};

@@ -52,9 +52,10 @@ public:
     int getSemester() const;
     int getYearOfTheSemester() const;
     void resetAssignations();
-
+    bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
     int getStudyCourseAssign() const;
-
+    int amIAssignedAlreadyInThisSession(int session);
+    Date lastDateAssignationInGivenSession(int session);
 private:
     std::string _yy_semester;
     int _studyCourseAssign;
@@ -75,7 +76,7 @@ private:
     std::map<int, student> _student;
     //key: semester (session)
     //value: quante volte è stato programmato un suo esame in quel semestre
-    std::map<int, int> _howManyTimesIAmAssignedInASession;
+    std::map<int, std::vector<Date>> _howManyTimesIAmAssignedInASession;
 
 };
 
