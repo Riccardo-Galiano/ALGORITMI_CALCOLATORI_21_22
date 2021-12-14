@@ -89,7 +89,7 @@ bool ExamDay::sameStudyCourseAndYear(Course course,int year) {
 
 ///assegna l'esame negli slot accettabili in una particolare data
 bool ExamDay::assignExamToExamDay(int hhStart, Course course, int numSlot) {
-    for(int slot = hhStart; slot < hhStart + (numSlot * 2); slot + 2 ) {
+    for(int slot = hhStart; slot < hhStart + (numSlot * 2); slot = slot + 2 ) {
         _slots.at(slot).push_back(course);
     }
     return true;

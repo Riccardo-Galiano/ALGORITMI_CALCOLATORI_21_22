@@ -51,9 +51,8 @@ Date& Date::operator++() {
 // overloaded postfix increment operator; note that the  
 // dummy integer parameter does not have a parameter name
 Date Date::operator++(int) {
-   Date temp{*this}; // hold current state of object    
-   helpIncrement();
-
+   Date temp(_year,_month,_day); // hold current state of object
+   temp.helpIncrement();
    // return unincremented, saved, temporary object      
    return temp; // value return; not a reference return  
 }

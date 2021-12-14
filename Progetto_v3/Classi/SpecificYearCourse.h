@@ -57,6 +57,7 @@ public:
     int amIAssignedAlreadyInThisSession(int session);
     Date lastDateAssignationInGivenSession(int session);
     bool assignExamInThisSpecificYearCourse(Date,int);
+    std::vector<std::string> getIdGroupedCourses();
 private:
     std::string _yy_semester;
     int _studyCourseAssign;

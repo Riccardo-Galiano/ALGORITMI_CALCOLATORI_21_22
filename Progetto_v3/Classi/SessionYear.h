@@ -40,11 +40,14 @@ private:
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
     bool generateThisSession(std::string, std::map<std::string, Course>&,std::map<int, Professor>&);
-    bool dateIsOK(Date& newDate, SpecificYearCourse& sp, std::string& sessName);
+    bool dateIsOK(Date& newDate, Course& course, std::string& sessName);
     int getSemester(std::string);
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&);
-    void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , int);
+    void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , std::string, std::vector<std::string>&);
     void generateOutputFiles(std::string&,int);
+    void popAppealFromVector(std::vector<std::string>&,int);
+    std::vector<std::string> getGroupedCourses(std::map<std::string, Course>&, std::string);
+    bool checkHours(std::vector<int>&);
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

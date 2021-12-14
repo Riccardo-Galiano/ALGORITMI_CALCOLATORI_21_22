@@ -252,6 +252,10 @@ bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int ses
     return true;
 }
 
+std::vector<std::string> SpecificYearCourse::getIdGroupedCourses() {
+    return _idGroupedCourses;
+}
+
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getisActive())
