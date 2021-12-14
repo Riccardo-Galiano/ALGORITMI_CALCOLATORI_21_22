@@ -19,6 +19,8 @@ public:
     bool sameStudyCourseAndYear(Course,int);
     bool setSlot();
     std::vector<std::string> getSlotsToString();
+    std::string getSingleSlotCourses(std::vector<Course>,std::vector<Course>);
+    bool firstSlotCourses(Course,std::vector<Course>);
 
 private:
     //key: orario inizio slot. value:corsi associati (paralleli compresi)
@@ -27,6 +29,5 @@ private:
     Date _date;
 
 };
-
 
 #endif //PROGETTO_V3_EXAMDAY_H

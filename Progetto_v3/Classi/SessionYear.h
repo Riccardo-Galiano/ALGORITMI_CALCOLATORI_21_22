@@ -44,7 +44,7 @@ private:
     int getSemester(std::string);
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&);
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , std::string, std::vector<std::string>&);
-    void generateOutputFiles(std::string&,int);
+    void generateOutputFiles(std::string&,int,std::map<std::string, Course>&);
     void popAppealFromVector(std::vector<std::string>&,int);
     std::vector<std::string> getGroupedCourses(std::map<std::string, Course>&, std::string);
     bool checkHours(std::vector<int>&);

@@ -7,6 +7,7 @@
 #include "StudyCourse.h"
 #include <algorithm>
 #include <iomanip>
+#include <unordered_set>
 
 //costructor
 ExamDay::ExamDay(Date date) {
@@ -105,29 +106,56 @@ bool ExamDay::setSlot() {
 
 std::vector<std::string> ExamDay::getSlotsToString() {
     std::vector<std::string> slotsToReturn;
-    std::stringstream coursesSS;
-    std::stringstream hoursSS;
-    std::stringstream toString;
-    for (auto iterSlots = _slots.begin(); iterSlots != _slots.end(); iterSlots++){
-        int hStart=iterSlots->first;
-        int hFinish =hStart+2;
-        hoursSS<< std::setfill('0')<< std::setw(2)<<hStart<<":00-"<<hFinish<<":00";
+    std::stringstream genericSlot;
+    std::vector<Course> lastCoursesOfThisSlot;
+
+
+    for (auto iterSlots = _slots.begin(); iterSlots != _slots.end(); iterSlots++) {
+        int hStart = iterSlots->first;
+        int hFinish = hStart + 2;
+        //set hh_slot
+        genericSlot << std::setfill('0') << std::setw(2) << hStart << ":00-" << hFinish << ":00;";
+        //set coursesSlot
         std::vector<Course> coursesOfThisSlot = iterSlots->second;
-        for(int i=0; i<coursesOfThisSlot.size();i++){
-            coursesSS << coursesOfThisSlot[i].getId()<<"(";
-            ///  !!!  manca numero_versione e corsi di studio  !!!
-            //ritorna una stringa con tutti i codici dei CDS che contengono il corso)
-           // coursesSS << getAllCDSWithThatCourse(coursesOfThisSlot[i].getId());
-            coursesSS <<";"<<std::endl;
-            toString<<hoursSS.str()<<coursesSS.str();
-            slotsToReturn.push_back(toString.str());
-        }
-
+        std::string singleSlotCourse = getSingleSlotCourses(coursesOfThisSlot,lastCoursesOfThisSlot);
+       /*
+        slotsToReturn.push_back(singleSlotCourse);
+        lastCoursesOfThisSlot = coursesOfThisSlot;
+       */
     }
-
         return slotsToReturn;
+
 }
 
+std::string ExamDay::getSingleSlotCourses(std::vector<Course> coursesOfThisSlot,std::vector<Course> lastCoursesOfThisSlot) {
+    std::stringstream singleSlotSS;
+    for (int i = 0; i < coursesOfThisSlot.size(); i++) {
+        SpecificYearCourse sp = coursesOfThisSlot[i].getThisYearCourse(_date.getYear());
+
+        bool firstTime = firstSlotCourses(coursesOfThisSlot[i],lastCoursesOfThisSlot);
+        if ( firstTime == false) {//se la prima volta che lo scrivo in uno slot
+            singleSlotSS << coursesOfThisSlot[i].getId();
+            int numVersion = sp.getParalleleCours();
+            if (numVersion != 1) {
+                for (int j = 0; j < numVersion; j++)
+                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << sp.getStudyCourseAssign() << ")";
+            } else {
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << sp.getStudyCourseAssign() << ")";
+            }
+        } else//se già presente prima metto ;;
+           singleSlotSS << ";;";
+
+    }
+    return singleSlotSS.str();
+}
+
+bool ExamDay::firstSlotCourses(Course courseToFind, std::vector<Course> lastCourses) {
+    for(int i = 0; i < lastCourses.size(); i++){
+        if(courseToFind.getId() == lastCourses[i].getId())
+            return false;
+    }
+    return true;
+}
 
 
 

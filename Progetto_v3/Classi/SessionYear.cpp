@@ -21,8 +21,6 @@ SessionYear::SessionYear(std::string acYear, std::string winterSession, std::str
     this->addSession(acYear, summerSession, "summer");
     this->addSession(acYear, autumnSession, "autumn");
 
-
-
 }
 
 ///aggiunge il periodo delle sessioni
@@ -92,11 +90,13 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
     else
         result = false;
     if(result==true){
-        generateOutputFiles(fout,1);
-        generateOutputFiles(fout,2);
-        generateOutputFiles(fout,3);
+       generateOutputFiles(fout,1,courses);
+       generateOutputFiles(fout,2,courses);
+       generateOutputFiles(fout,3,courses);
     }
+
     return result;
+
 }
 
 ///programma una sessione in particolare
@@ -155,6 +155,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
         return true;
     else
         return false;
+
 }
 
 int SessionYear::getSemester(std::string sessName) {
@@ -249,6 +250,7 @@ bool SessionYear::dateIsOK(Date& newDate, Course& course, std::string& sessName)
 int SessionYear::checkIfProfsAvailableAndGapSameSemesterCourses(Course& course, Date& currentExamDay, std::map<int, Professor>& profs) {
     Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
     int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
+
     return isPossibleToAssignThisExam(course,currentExamDay,profs,numSlots);//ora di inizio dello slot per l'esame
 }
 
@@ -267,7 +269,7 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& currentExa
     ///devo inserire anche tutti gli appelli programmati
 }
 
-void SessionYear::generateOutputFiles(std::string & OutputFileName,int session) {
+void SessionYear::generateOutputFiles(std::string & OutputFileName,int session,std::map<std::string, Course>& courses) {
     std::stringstream ssFout;
     std::string key;
     if(session == 1){
@@ -286,16 +288,14 @@ void SessionYear::generateOutputFiles(std::string & OutputFileName,int session) 
     }
     Date dayOne=_yearSessions.at(key).startDate;
     Date lastDay=_yearSessions.at(key).endDate;
-    for (auto iterDateCalendar = _yearCalendar.begin(); iterDateCalendar != _yearCalendar.end(); iterDateCalendar++){
-        Date currentExamDay=iterDateCalendar->first;
-        if(currentExamDay>=dayOne&&currentExamDay<=lastDay){
-            outputSession<<currentExamDay.toString()<<std::endl;
-            //prendo un vettore con una stringa per ogni slot
-            iterDateCalendar->second.getSlotsToString();
-            //cliclo sul vettore e scrivo ogni stringa su file
-        }
-
-
+    for (auto iterDateCalendar = _yearCalendar.find(dayOne.toString()); iterDateCalendar != _yearCalendar.find((++lastDay).toString()); iterDateCalendar++){
+            //giorno della sessione
+            outputSession<<iterDateCalendar->first<<std::endl;
+            //prendo un vettore di stringhe; una per ogni slot
+            std::vector<std::string> allSlots = iterDateCalendar->second.getSlotsToString();
+            for(int i = 0; i<allSlots.size(); i++){
+               outputSession<<allSlots[i]<<std::endl;
+            }
     }
 }
 

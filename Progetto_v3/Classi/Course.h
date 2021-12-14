@@ -29,7 +29,7 @@ public:
     bool courseOfTheYearIsEmpty();
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
-    SpecificYearCourse& getThisYearCourse(int);
+    SpecificYearCourse & getThisYearCourse(int) ;
     const std::string &getId() const;
     const std::string &getName() const;
     int getCfu() const;
