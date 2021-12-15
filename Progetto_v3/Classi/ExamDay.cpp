@@ -132,21 +132,22 @@ std::string ExamDay::getSingleSlotCourses(std::vector<Course> coursesOfThisSlot,
     for (int i = 0; i < coursesOfThisSlot.size(); i++) {
         SpecificYearCourse sp = coursesOfThisSlot[i].getThisYearCourse(_date.getYear());
 
-        bool firstTime = firstSlotCourses(coursesOfThisSlot[i],lastCoursesOfThisSlot);
-        if ( firstTime == false) {//se la prima volta che lo scrivo in uno slot
+        bool firstTime = firstSlotCourses(coursesOfThisSlot[i], lastCoursesOfThisSlot);
+        if (firstTime == false) {//se la prima volta che lo scrivo in uno slot
             singleSlotSS << coursesOfThisSlot[i].getId();
             int numVersion = sp.getParalleleCours();
             if (numVersion != 1) {
                 for (int j = 0; j < numVersion; j++)
-                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << sp.getStudyCourseAssign() << ")";
+                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << sp.getStudyCourseAssign()
+                                 << ")";
             } else {
                 singleSlotSS << coursesOfThisSlot[i].getId() << "(" << sp.getStudyCourseAssign() << ")";
             }
-        } else//se già presente prima metto ;;
-           singleSlotSS << ";;";
+            singleSlotSS << ";";
 
+        }
+        return singleSlotSS.str();
     }
-    return singleSlotSS.str();
 }
 
 bool ExamDay::firstSlotCourses(Course courseToFind, std::vector<Course> lastCourses) {

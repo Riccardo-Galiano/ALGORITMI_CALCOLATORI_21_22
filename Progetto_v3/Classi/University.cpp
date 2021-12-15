@@ -522,7 +522,7 @@ bool University::addCourses(const std::string &fin) {
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
         int studyCourse = 0;
-        for(int i=0; i<_studyCourse.size(); i++){
+        for(int i=1; i<_studyCourse.size(); i++){
             std::string res = _studyCourse.at(i).isInWhichSemester(newIdCourse);
             if(res!=""){
                 //ho trovato il suo corso di studi
@@ -1093,7 +1093,6 @@ void University::readSessionAcYear() {
 void University::readProfsNoAvailability() {
     std::ifstream fileIn("../Sources/tutte_le_indisponibilita.txt");
     if (!fileIn.is_open()) {
-
         throw DbException("file tutte_le_indisponibilita non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -1103,10 +1102,11 @@ void University::readProfsNoAvailability() {
             profAvailability = Parse::splittedLine(line, ';');
             int acYear = Parse::getAcStartYear(profAvailability[0]);
             int nMatr = Parse::getMatr(profAvailability[1]);
-            for (int i = 2;
-                 i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
-                _professors.at(nMatr).setNoAvaibilities(acYear,
-                                                        profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+            //prima di inserire le indisponibilità devo controllare che abbia il professore
+            if(_professors.find(nMatr)!=_professors.end()) {
+                for (int i = 2;i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
+                    _professors.at(nMatr).setNoAvaibilities(acYear,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+                }
             }
         }
     }
