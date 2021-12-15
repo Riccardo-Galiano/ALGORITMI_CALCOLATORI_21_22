@@ -19,10 +19,11 @@ public:
     bool sameStudyCourseAndYear(Course,int);
     bool setSlot();
     std::vector<std::string> getSlotsToString();
-    std::string getSingleSlotCourses(std::vector<Course>,std::vector<Course>);
-    bool firstSlotCourses(Course,std::vector<Course>);
 
 private:
+    std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);
+    bool firstSlotCourses(Course,std::vector<Course>&);
+
     //key: orario inizio slot. value:corsi associati (paralleli compresi)
     //slots dalle 8 alle 20; uno slot dura due ore --> 8, 10, 12, 14, 16, 18
     std::map<int,std::vector<Course>> _slots;

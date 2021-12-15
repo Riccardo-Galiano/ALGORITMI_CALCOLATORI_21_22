@@ -946,10 +946,8 @@ bool University::insertCourses(const std::string &fin) {
             iterCourse->second.fillAcYearsEmpty();
 
     }
-
     dbCourseWrite();
     dbStudyCourseWrite();
-
     return true;
 }
 

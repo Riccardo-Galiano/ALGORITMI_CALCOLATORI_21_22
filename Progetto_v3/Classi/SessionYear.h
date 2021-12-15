@@ -34,6 +34,7 @@ private:
     //key: "autumn" , "winter", "summer"
     //value: session struct
     std::map<std::string,session> _yearSessions;
+    std::vector<std::string> _sessionNames;
     //key: data come stringa "aaaa-mm-gg"
     //value: oggetto Exam Day --> controllo: non ci deve essere nessuna domenica
     std::map<std::string,ExamDay> _yearCalendar;
@@ -45,9 +46,9 @@ private:
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&);
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , std::string, std::vector<std::string>&);
     void generateOutputFiles(std::string&,int,std::map<std::string, Course>&);
-    void popAppealFromVector(std::vector<std::string>&,int);
-    std::vector<std::string> getGroupedCourses(std::map<std::string, Course>&, std::string);
-    bool checkHours(std::vector<int>&);
+    static void popAppealFromVector(std::vector<std::string>&,int);
+    std::vector<std::string> getGroupedCourses(std::map<std::string, Course>&, std::string) const;
+    static bool checkHours(std::vector<int>&);
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

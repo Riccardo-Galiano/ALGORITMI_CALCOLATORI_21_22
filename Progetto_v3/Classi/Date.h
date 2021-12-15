@@ -29,6 +29,7 @@ public:
     bool operator<(const Date &) const;
     bool operator<=(const Date &) const;
     bool operator>=(const Date &) const;
+    bool operator==(const Date &) const;
 
     static bool leapYear(int); // anno bisestile?
     bool endOfMonth(int) const; // fine del mese?
@@ -40,7 +41,7 @@ public:
     unsigned int getYear() const;
     std::string toString();
 
-    bool isEqual(Date);
+    bool isEqual(const Date);
     unsigned int getMonth() const;
     unsigned int getDay() const;
 

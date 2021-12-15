@@ -210,7 +210,7 @@ std::string Date::toString() {
     return ss.str();
 }
 
-bool Date::isEqual(Date compare) {
+bool Date::isEqual(const Date compare) {
     return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
 }
 
@@ -240,25 +240,21 @@ int Date::whatIsTheGap(Date& date) {
 }
 
 bool Date::operator<=(const Date & d) const {
-    if(_year<d._year){
+    if(*this < d || *this == d){
         return true;
-    }else if(_year==d._year&&_month<d._month){
-        return true;
-    }else if (_year==d._year&&_month==d._month&&_day<=d._day){
-        return true;
-    }else{
-        return false;
     }
+    else
+        return false;
 }
 
 bool Date::operator>=(const Date & d) const {
-    if(_year>d._year){
-        return true;
-    }else if(_year==d._year&&_month>d._month){
-        return true;
-    }else if (_year==d._year&&_month==d._month&&_day>=d._day){
-        return true;
-    }else {
+    if(*this < d){
         return false;
     }
+    else
+        return true;
+}
+
+bool Date::operator==(const Date& compare) const {
+    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
 }

@@ -11,16 +11,15 @@
 
 
 int indexExam;
+enum{caso_estremo, caso_medio, caso_lasco};
 
 ///costruttore
 SessionYear::SessionYear(std::string acYear, std::string winterSession, std::string summerSession,
                          std::string autumnSession) {
     _acYear = Parse::getAcStartYear(acYear);
-
-    this->addSession(acYear, winterSession, "winter");
-    this->addSession(acYear, summerSession, "summer");
-    this->addSession(acYear, autumnSession, "autumn");
-
+    this->addSession(acYear, winterSession, _sessionNames[0]);
+    this->addSession(acYear, summerSession, _sessionNames[1]);
+    this->addSession(acYear, autumnSession, _sessionNames[2]);
 }
 
 ///aggiunge il periodo delle sessioni
@@ -85,16 +84,16 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
     bool autumn = generateThisSession("autumn",courses, professors);
 
     bool result;
-    if (winter && summer && autumn)
+    if (winter && summer && autumn) {
+        generateOutputFiles(fout,1,courses);
+        generateOutputFiles(fout,2,courses);
+        generateOutputFiles(fout,3,courses);
         result = true;
-    else
-        result = false;
-    if(result==true){
-       generateOutputFiles(fout,1,courses);
-       generateOutputFiles(fout,2,courses);
-       generateOutputFiles(fout,3,courses);
     }
-
+    else {
+        ///reset strutture dati ToDo
+        result = false;
+    }
     return result;
 
 }
@@ -112,9 +111,10 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     for(Date currentExamDay(startDate.getYear(),startDate.getMonth(),startDate.getDay()); continueLoop && currentExamDay.isEqual(endDate++) == false; currentExamDay = currentExamDay++){
         if(!(currentExamDay.getWeekDay() == "Sunday")){
             //se non è domenica
-            for(indexExam=0; indexExam < allExamAppealsToDo.size(); indexExam++){//ciclo su tutti gli appelli da assegnare
+            for(indexExam=0; indexExam < allExamAppealsToDo.size() && continueLoop; indexExam++){//ciclo su tutti gli appelli da assegnare
                 ///esami raggruppati da considerare in questo giro
-                std::vector<std::string> coursesToConsiderInThisLoop = getGroupedCourses(courses, allExamAppealsToDo[indexExam]);
+                std::string codCurrentAppeal = allExamAppealsToDo[indexExam];
+                std::vector<std::string> coursesToConsiderInThisLoop = getGroupedCourses(courses, codCurrentAppeal);
                 ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
                 bool dateIsOk = true;
                 for(int i = 0; i < coursesToConsiderInThisLoop.size() && dateIsOk; i++){
@@ -136,11 +136,12 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                     ///controlliamo che non ci siano -1 nel vettore
                     bool againOk = checkHours(startHourPerCourse);
                     if(againOk){
+                        ///allora posso assegnare i corsi (facendo pop da allExamAppealsToDo!!!)
                         for(int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
                             Course courseToConsider = courses.at(coursesToConsiderInThisLoop[i]);
                             assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, courseToConsider, sessName, allExamAppealsToDo);
                         }
-                        ///check terminazione
+                        ///check terminazione funzione
                         if (allExamAppealsToDo.empty()) {
                             //se finiti gli appelli, esco
                             continueLoop = false;
@@ -269,19 +270,9 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& currentExa
     ///devo inserire anche tutti gli appelli programmati
 }
 
-void SessionYear::generateOutputFiles(std::string & OutputFileName,int session,std::map<std::string, Course>& courses) {
+void SessionYear::generateOutputFiles(std::string& OutputFileName,int session,std::map<std::string, Course>& courses) {
     std::stringstream ssFout;
-    std::string key;
-    if(session == 1){
-        ssFout<<OutputFileName<<"_"<<"s1";
-        key="winter";
-    }else if(session == 2){
-        ssFout<<OutputFileName<<"_"<<"s2";
-        key="summer";
-    } else if (session == 3){
-        ssFout<<OutputFileName<<"_"<<"s3";
-        key="autumn";
-    }
+    std::string key = _sessionNames[session];
     std::ofstream outputSession (ssFout.str());
     if(!outputSession.is_open()){
         throw std::exception();
@@ -289,12 +280,14 @@ void SessionYear::generateOutputFiles(std::string & OutputFileName,int session,s
     Date dayOne=_yearSessions.at(key).startDate;
     Date lastDay=_yearSessions.at(key).endDate;
     for (auto iterDateCalendar = _yearCalendar.find(dayOne.toString()); iterDateCalendar != _yearCalendar.find((++lastDay).toString()); iterDateCalendar++){
-            //giorno della sessione
-            outputSession<<iterDateCalendar->first<<std::endl;
-            //prendo un vettore di stringhe; una per ogni slot
-            std::vector<std::string> allSlots = iterDateCalendar->second.getSlotsToString();
-            for(int i = 0; i<allSlots.size(); i++){
-               outputSession<<allSlots[i]<<std::endl;
+            ///giorno della sessione
+            ExamDay examDay = iterDateCalendar->second;
+            std::string day = iterDateCalendar->first;
+            outputSession << day << std::endl;
+            ///prendo un vettore di stringhe, dell'intera giornata; una (stringa/riga) per ogni slot
+            std::vector<std::string> allSlots = examDay.getSlotsToString();
+            for(int i = 0; i < allSlots.size(); i++){
+               outputSession << allSlots[i] << std::endl;
             }
     }
 }
@@ -305,7 +298,7 @@ void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsTo
     allExamAppealsToDo.erase(pos);
 }
 
-std::vector<std::string> SessionYear::getGroupedCourses(std::map<std::string, Course>& courses, std::string idCourseSelected) {
+std::vector<std::string> SessionYear::getGroupedCourses(std::map<std::string, Course>& courses, std::string idCourseSelected) const {
     ///prendo il corso considerato
     Course course = courses.at(idCourseSelected);
     ///prendo corso di questo giro + i suoi esami raggruppati

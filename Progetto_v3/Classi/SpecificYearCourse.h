@@ -53,14 +53,14 @@ public:
     int getYearOfTheSemester() const;
     void resetAssignations();
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
-    int getStudyCourseAssign() const;
+    int getStudyCourseAssigned() const;
     int amIAssignedAlreadyInThisSession(int session);
     Date lastDateAssignationInGivenSession(int session);
     bool assignExamInThisSpecificYearCourse(Date,int);
     std::vector<std::string> getIdGroupedCourses();
 private:
     std::string _yy_semester;
-    int _studyCourseAssign;
+    int _studyCourseAssigned;
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?

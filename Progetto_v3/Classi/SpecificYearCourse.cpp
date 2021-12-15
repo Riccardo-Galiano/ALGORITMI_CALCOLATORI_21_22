@@ -16,7 +16,7 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _parallelCourses = nCrsiPar;
     _idGroupedCourses = idGrouped;
     _yy_semester = yy_semester;
-    _studyCourseAssign = studyCourse;
+    _studyCourseAssigned = studyCourse;
     setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
 
 }
@@ -216,8 +216,8 @@ int SpecificYearCourse::getYearOfTheSemester() const {
     return stoi(_yy_semester.substr(0,1));
 }
 
-int SpecificYearCourse::getStudyCourseAssign() const {
-    return _studyCourseAssign;
+int SpecificYearCourse::getStudyCourseAssigned() const {
+    return _studyCourseAssigned;
 }
 
 ///se è dello stesso semestre ed è attivo
