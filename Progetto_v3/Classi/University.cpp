@@ -1112,8 +1112,8 @@ void University::readProfsNoAvailability() {
 }
 
 ///setta il periodo delle sessioni
-bool University::setSessionPeriod(const std::string &acYear, const std::string &winterSession,
-                                  const std::string &summerSession, const std::string &autumnSession) {
+bool University::setSessionPeriod( std::string &acYear,  std::string &winterSession,
+                                   std::string &summerSession,  std::string &autumnSession) {
     std::string prova = acYear;
     int acStartYear = Parse::getAcStartYear(prova);
     if (_acYearSessions.count(acStartYear) != 0) {
@@ -1204,8 +1204,15 @@ void University::noAvailabilityWrite() {
 
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
-    bool esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors);
-
+    int constraintRelaxParameter=0;
+    bool esito = false;
+    while (!esito && constraintRelaxParameter<4){
+        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors, constraintRelaxParameter);
+        constraintRelaxParameter++;
+    }
+    if(!esito){
+        std::cerr<<"non è stato possibile generare le date d'esame nonostante i vincoli rilassati"<<std::endl;
+    }
     return esito;
 }
 

@@ -20,14 +20,14 @@ typedef struct {
 class SessionYear {
 
 public:
-    SessionYear(std::string, std::string,std::string,std::string);
-    bool addSession(std::string, std::string,  std::string);
+    SessionYear(std::string&, std::string&,std::string&,std::string&);
+    bool addSession(std::string&, std::string&,  std::string&);
     int getAcYear() const;
     std::string getSessions() const;
     //ritorna true se è stato possibile generare tutta la sessione, false altrimenti
-    bool generateNewYearSession(std::string& ,std::map<std::string, Course>&,std::map<int, Professor>&);
+    bool generateNewYearSession(std::string& ,std::map<std::string, Course>&,std::map<int, Professor>&, int);
     std::vector<std::string> getAllExamAppealsToDo(std::string, std::map<std::string, Course>&);
-    int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,int numSlot);
+    int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,int numSlot, int);
     bool setCaldendar(std::vector<Date>);
 private:
     int _acYear;
@@ -40,10 +40,10 @@ private:
     std::map<std::string,ExamDay> _yearCalendar;
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
-    bool generateThisSession(std::string, std::map<std::string, Course>&,std::map<int, Professor>&);
-    bool dateIsOK(Date& newDate, Course& course, std::string& sessName);
+    bool generateThisSession(std::string, std::map<std::string, Course>&,std::map<int, Professor>&, int, int);
+    bool dateIsOK(Date& newDate, Course& course, std::string& sessName, int);
     int getSemester(std::string);
-    int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&);
+    int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&, int);
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , std::string, std::vector<std::string>&);
     void generateOutputFiles(std::string&,int,std::map<std::string, Course>&);
     static void popAppealFromVector(std::vector<std::string>&,int);

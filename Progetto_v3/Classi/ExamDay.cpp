@@ -16,9 +16,10 @@ ExamDay::ExamDay(Date date) {
 }
 
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
-int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired) {
+int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired, int relaxPar) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
+    // esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
     int startHourSlot = -1;
     int numSlotsFoundedSoFar = 0;
     int foundedStartHourSlot = -1;  //rimarrà -1 se non riesco a trovare nulla, altrimenti l'orario di inizio
@@ -39,19 +40,21 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
         return -1;
 
     ///dobbiamo ora controllare se i prof sono disponibili in questi slot per essere sicuri che questo esame è possibile in questo giorno
-    std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
-    //ci servono gli oggetti Professore per usare funzione amIavailable: tutti i professori DEVONO ESSERE DISPONBILI
+   if (relaxPar<2){
+       std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
+       //ci servono gli oggetti Professore per usare funzione amIavailable: tutti i professori DEVONO ESSERE DISPONBILI
 
-    std::string dateAsString = _date.toString();//data sottoforma di stringa
-    for (int i = 0; i < profsMatr.size(); i++) { //controllo se i prof del corso sono liberi. Considerato il fatto che corsi paralleli hanno l'esame lo stesso giorno alla stessa ora devo controllare che tutti i prof di tutti i corsi in parallelo siano disponibili
-        for(int n_slot = 0; n_slot < numSlotsRequired; n_slot++) {
-            //devo controllare tutti gli slot
-            if (!allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, foundedStartHourSlot + (2 * n_slot))) {
-                //se questo prof non è disponibile, torno false
-                return -1;
-            }
-        }
-    }
+       std::string dateAsString = _date.toString();//data sottoforma di stringa
+       for (int i = 0; i < profsMatr.size(); i++) { //controllo se i prof del corso sono liberi. Considerato il fatto che corsi paralleli hanno l'esame lo stesso giorno alla stessa ora devo controllare che tutti i prof di tutti i corsi in parallelo siano disponibili
+           for(int n_slot = 0; n_slot < numSlotsRequired; n_slot++) {
+               //devo controllare tutti gli slot
+               if (!allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, foundedStartHourSlot + (2 * n_slot))) {
+                   //se questo prof non è disponibile, torno false
+                   return -1;
+               }
+           }
+       }
+   }
 
 
     return foundedStartHourSlot; //se arrivato qui, tutti i prof sono disponibili

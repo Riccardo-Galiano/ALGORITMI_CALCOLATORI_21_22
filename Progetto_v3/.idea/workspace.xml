@@ -13,16 +13,20 @@
   <component name="ChangeListManager">
     <list default="true" id="094b6821-78ee-4524-a106-380d09575ea4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/Date.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Date.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/Date.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/Date.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/ExamDay.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/ExamDay.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/ExamDay.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/ExamDay.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/SessionYear.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SessionYear.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Classi/SessionYear.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SessionYear.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/SpecificYearCourse.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Classi/StudyCourse.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/StudyCourse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/University.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/University.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Classi/University.h" beforeDir="false" afterPath="$PROJECT_DIR$/Classi/University.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sources/dateSessioni.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/dateSessioni.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Progetto_v3.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,14 +66,19 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../Sources/courses_insert_file.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-s current_a 2024-2025 &quot;2024-01-16_2024-02-27&quot; &quot;2024-06-16_2024-07-28&quot; &quot;2024-08-29_2024-09-26&quot;  " REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -114,6 +123,7 @@
       <workItem from="1639382120951" duration="1092000" />
       <workItem from="1639415077956" duration="202000" />
       <workItem from="1639415305115" duration="8951000" />
+      <workItem from="1639672416087" duration="7335000" />
     </task>
     <servers />
   </component>
@@ -214,6 +224,36 @@
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
           <line>924</line>
           <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
+          <line>1122</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
+          <line>1082</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/main.cpp</url>
+          <line>107</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/SessionYear.cpp</url>
+          <line>28</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/SessionYear.cpp</url>
+          <line>255</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Classi/SessionYear.cpp</url>
+          <line>266</line>
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

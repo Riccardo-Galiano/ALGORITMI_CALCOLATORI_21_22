@@ -33,7 +33,7 @@ public:
     bool updateClassroom(const std::string &fin);
     bool insertCourses(const std::string &fin);
     bool enrollStudents(const std::string &fin);
-    bool setSessionPeriod(const std::string &acYear,const std::string &wSession, const std::string &sSession,const std::string &aSession);
+    bool setSessionPeriod( std::string &acYear, std::string &wSession, std::string &sSession,std::string &aSession);
     std::vector<std::string> allProfsNoAvailabilities();
 
     void dbStudsWrite();

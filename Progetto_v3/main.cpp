@@ -100,8 +100,12 @@ void startProgram(University &uni, char *argv[]) {
             uni.enrollStudents(argv[2]);
             break;
         }
-        case set_session_period:{
-           uni.setSessionPeriod(argv[3],argv[4],argv[5],argv[6]);
+        case set_session_period: {
+            std::string acyear(argv[3]);
+            std::string one(argv[4]);
+            std::string two(argv[5]);
+            std::string three(argv[6]);
+            uni.setSessionPeriod(acyear, one, two, three);
             break;
         }
         case set_availability: {
