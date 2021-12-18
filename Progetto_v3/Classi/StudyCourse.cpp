@@ -7,11 +7,12 @@
 #include <algorithm>
 #include "StudyCourse.h"
 #include "Parse.hpp"
+#include "DbException.h"
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
 ///aggiunge un semsetre con i relativi corsi al corso di studio
-bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses) {
+bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse) {
     ///key
     int i = 0;
     std::stringstream ss;
@@ -23,6 +24,7 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
     courses = Parse::splittedLine(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     for (auto iter = courses.begin(); iter != courses.end(); iter++) {//analizzo tutti i componenti del vettore corsi
+
         if (!_semesters.count(key)) {//se la chiave non esiste
             std::vector<std::string> vect;
 
@@ -135,6 +137,21 @@ std::string StudyCourse::isInWhichSemester(std::string codCourse) {
         }
     }
     return "";
+}
+
+bool StudyCourse::controlOfTheExistenceOfCourses(const std::map<std::string, Course>& courses, int line) {
+    for(auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){
+        for(int i = 0; i<iterSemester->second.size();i++) {
+            auto iterCourses = courses.find(iterSemester->second[i]);
+            if(iterCourses == courses.end())
+                throw DbException("Nel database dei corsi non e' presente il seguente corso:",iterSemester->second[i],". Rivedere la seguente riga nel file per l'inserimento dei corsi di studio:",line);
+        }
+    }
+    return true;
+}
+
+const std::map<std::string, std::vector<std::string>> &StudyCourse::getSemesters() const {
+    return _semesters;
 }
 
 

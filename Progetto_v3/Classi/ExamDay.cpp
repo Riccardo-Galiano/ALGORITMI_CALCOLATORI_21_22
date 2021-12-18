@@ -136,9 +136,9 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course>& coursesOfTh
             int numVersion = sp.getParalleleCours();
             if (numVersion != 1) {
                 for (int j = 0; j < numVersion; j++)
-                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << sp.getStudyCourseAssigned() << ")";
+                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << sp.getStudyCourseAssigned()[0] << ")";
             } else {
-                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << sp.getStudyCourseAssigned() << ")";
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << sp.getStudyCourseAssigned()[0] << ")";
             }
             ///push nel vettore di corsi finora considerati
             CoursesPrintedSoFar.push_back(coursesOfThisSlot[i]);

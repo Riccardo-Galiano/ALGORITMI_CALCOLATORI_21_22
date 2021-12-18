@@ -24,12 +24,12 @@ public:
 
     Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio);
 
-    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, int studyCourse);
+    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse);
     bool fillSpecificYearCourse(std::vector<std::string>& );
     bool courseOfTheYearIsEmpty();
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
-    SpecificYearCourse & getThisYearCourse(int) ;
+    const SpecificYearCourse & getThisYearCourse(int) const;
     const std::string &getId() const;
     const std::string &getName() const;
     int getCfu() const;
@@ -39,6 +39,8 @@ public:
     int getSpecificYearCourseSize() const;
     bool addStudentToSpecYearCourse(int,Student,std::string,int);
     bool fillAcYearsEmpty();
+    bool controlTheExistenceOfGrouppedCourses(const std::map<std::string,Course> &);
+    bool controlTheExistenceOfProfessors(const std::map<int,Professor> &);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

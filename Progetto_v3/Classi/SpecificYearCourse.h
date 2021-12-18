@@ -13,6 +13,7 @@
 #include "Student.h"
 #include "Exam.h"
 
+
 typedef struct {
     int prof_id;
     int hLez;///ore assegnate ad ogni prof
@@ -32,7 +33,7 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string yy_semester, int studyCourse);
+    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse);
 
     int getEndYear() const;
     bool getisActive() const;
@@ -53,14 +54,18 @@ public:
     int getYearOfTheSemester() const;
     void resetAssignations();
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
-    int getStudyCourseAssigned() const;
+    std::vector<int> getStudyCourseAssigned() const;
     int amIAssignedAlreadyInThisSession(int session);
     Date lastDateAssignationInGivenSession(int session);
     bool assignExamInThisSpecificYearCourse(Date,int);
-    std::vector<std::string> getIdGroupedCourses();
+
+    const std::vector<std::string> &getIdGroupedCourses() const;
+    const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
+
+
 private:
     std::string _yy_semester;
-    int _studyCourseAssigned;
+    std::vector<int> _studyCourseAssigned;
     int _startYear;    ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?

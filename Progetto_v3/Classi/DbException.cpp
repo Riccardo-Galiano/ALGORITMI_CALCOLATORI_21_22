@@ -18,3 +18,27 @@ DbException::DbException(std::string mex, int line) {
     mexAndLine<<mex<<line;
     _message=mexAndLine.str();
 }
+
+DbException::DbException(std::string mex, std::string codCourse,std::string mex2, int line) {
+    std::stringstream mexAndLine;
+    mexAndLine<<mex<<codCourse<<mex2<<line;
+    _message=mexAndLine.str();
+}
+
+DbException::DbException(std::string mex, std::string codCourse,std::string mex2, std::string name) {
+    std::stringstream mexAndLine;
+    mexAndLine<<mex<<codCourse<<mex2<<name;
+    _message=mexAndLine.str();
+}
+
+DbException::DbException(std::string mex, std::string codCourse) {
+    std::stringstream mexAndLine;
+    mexAndLine<<mex<<codCourse;
+    _message=mexAndLine.str();
+}
+
+DbException::DbException(std::string mex, int idProf,std::string mex2, std::string cod) {
+    std::stringstream mexAndLine;
+    mexAndLine<<mex<<idProf<<mex2<<cod;
+    _message=mexAndLine.str();
+}

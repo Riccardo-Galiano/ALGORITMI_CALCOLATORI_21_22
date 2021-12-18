@@ -6,8 +6,9 @@
 #include <iomanip>
 #include "SpecificYearCourse.h"
 
+
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,int studyCourse) :
+                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,std::vector<int> studyCourse) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
@@ -216,7 +217,7 @@ int SpecificYearCourse::getYearOfTheSemester() const {
     return stoi(_yy_semester.substr(0,1));
 }
 
-int SpecificYearCourse::getStudyCourseAssigned() const {
+std::vector<int> SpecificYearCourse::getStudyCourseAssigned() const {
     return _studyCourseAssigned;
 }
 
@@ -252,9 +253,14 @@ bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int ses
     return true;
 }
 
-std::vector<std::string> SpecificYearCourse::getIdGroupedCourses() {
+const std::vector<std::string> &SpecificYearCourse::getIdGroupedCourses() const {
     return _idGroupedCourses;
 }
+
+const std::map<int, std::vector<professor>> SpecificYearCourse::getProfsOfParallelCourses() const {
+    return _professors;
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

@@ -5,6 +5,8 @@
 #include <sstream>
 #include "Course.h"
 #include "Parse.hpp"
+#include "DbException.h"
+#include <algorithm>
 
 Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
                const int oreEsercitazione, const int oreLaboratorio) {
@@ -20,7 +22,7 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
 bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                    std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,int studyCourse) {
+                                    std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,std::vector<int> studyCourse) {
 ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),
                                                                SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,
@@ -139,7 +141,7 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
 }
 
 ///prende il corso con le sue info ad uno specifico anno
-SpecificYearCourse & Course::getThisYearCourse(int year)  {
+const SpecificYearCourse & Course::getThisYearCourse(int year)const  {
     return _courseOfTheYear.at(year);
 }
 
@@ -180,6 +182,52 @@ bool Course::fillAcYearsEmpty() {
 const Exam Course::getExamSpecificYear(int acYear) const {
     return _courseOfTheYear.at(acYear).getExam();
 }
+
+bool Course::controlTheExistenceOfGrouppedCourses(const std::map<std::string, Course>& courses) {
+
+    for(auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
+        int year = iterCourse->first;
+        std::vector<std::string> grouppedCourses = iterCourse->second.getIdGroupedCourses();
+        std::vector<int> studyCoursesOfMainCourse = iterCourse->second.getStudyCourseAssigned();
+        for (int i = 0; i < grouppedCourses.size(); i++) {
+            auto iterGrouppedCourse = courses.find(grouppedCourses[i]);
+            SpecificYearCourse sp = iterGrouppedCourse->second.getThisYearCourse(year);
+            std::vector<int> studyCoursesOfGrouppedCourses = sp.getStudyCourseAssigned();
+            std::vector<int> allSc = studyCoursesOfGrouppedCourses;
+            allSc.insert(allSc.end(),studyCoursesOfMainCourse.begin(),studyCoursesOfMainCourse.end());
+
+            if (iterGrouppedCourse == courses.end()) {//se non esiste
+                throw DbException("Il seguente corso raggruppato non è presente tra i corsi da inserire:",grouppedCourses[i], ". Ricontrollare il seguente corso da inserire:", getName());
+            }else{//se esiste controllo sia di corsi di studio diversi
+                for(int j = 0; j<studyCoursesOfGrouppedCourses.size();j++){
+                    auto found = find(studyCoursesOfMainCourse.begin(),studyCoursesOfMainCourse.end(),studyCoursesOfGrouppedCourses[j]);
+                    if(found != studyCoursesOfMainCourse.end()){
+                        throw DbException("Il corso principale appartiene ad uno o più corsi di studio di uno o più corsi raggruppati. Controllare i corsi raggruppati del seguente corso:",getId());
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool Course::controlTheExistenceOfProfessors(const std::map<int, Professor> & professors) {
+    for(auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
+        std::map<int, std::vector<professor>> profsOfParallelCourses = iterCourse->second.getProfsOfParallelCourses();
+        for(int i  = 0; i<profsOfParallelCourses.size();i++){
+            std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);
+            for(int j = 0; j<profsOfSingleCourse.size();j++){
+                if(professors.find(profsOfSingleCourse[j].prof_id) == professors.end()){
+                    throw DbException("Il seguente professore non è stato trovato nel database:",profsOfSingleCourse[j].prof_id,". Controllare il seguente corso che si vuole inserire:",_id);
+                }
+            }
+        }
+
+    }
+    return true;
+}
+
 
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
