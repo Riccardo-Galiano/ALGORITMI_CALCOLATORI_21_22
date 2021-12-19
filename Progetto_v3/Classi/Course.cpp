@@ -18,15 +18,15 @@ Course::Course(const std::string &idCorso, const std::string &nomeCorso, const i
     _hours._ex = oreEsercitazione;
     _hours._lab = oreLaboratorio;
 
+
 }
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
 bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                    std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,std::vector<int> studyCourse) {
+                                    std::vector<std::string> exam, std::vector<std::string> idGrouped,
+                                    std::string yy_semester, std::vector<int> studyCourse) {
 ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
-    _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),
-                                                               SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,
-                                                                                  idGrouped, yy_semester,studyCourse)));
+    _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,idGrouped, yy_semester,studyCourse)));
 
     return true;
 }
@@ -68,9 +68,11 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     int new_num_par_courses = stoi(specificYearCourse[3]);
     //check correttezza
 
-    profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+    profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
+                                                      2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
     //tornerà errore se non congruenti
-    std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,new_num_par_courses);//divido i vari corsi in parallelo
+    std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
+                                                              new_num_par_courses);//divido i vari corsi in parallelo
 
     return true;
 }
@@ -79,7 +81,8 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 SpecificYearCourse &Course::getLastSpecificYearCourse() {
     int lastYear = 0, actualYear;
 
-    for (auto iter = _courseOfTheYear.begin();iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
+    for (auto iter = _courseOfTheYear.begin();
+         iter != _courseOfTheYear.end(); iter++) {//per ogni anno accademico di un corso
         actualYear = iter->second.getStartYear();//punta all'oggetto di tipo SpecificYearCourse e ne prende l'anno di inizio(che poi sarebbe la key)
         //potrei scrivere actualYear = iter->first
         if (actualYear > lastYear)
@@ -141,39 +144,42 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
 }
 
 ///prende il corso con le sue info ad uno specifico anno
-const SpecificYearCourse & Course::getThisYearCourse(int year)const  {
+const SpecificYearCourse &Course::getThisYearCourse(int year) const {
     return _courseOfTheYear.at(year);
 }
 
 ///il corso è vuoto?
 bool Course::courseOfTheYearIsEmpty() {
-    if(_courseOfTheYear.empty()){
+    if (_courseOfTheYear.empty()) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
 
 ///riempi i buchi tra anni accademici di un corso
 bool Course::fillAcYearsEmpty() {
-    for(auto iterCourseOfTheYear = _courseOfTheYear.begin(); iterCourseOfTheYear != _courseOfTheYear.end(); iterCourseOfTheYear++ ){//per ogni anno accademico
+    for (auto iterCourseOfTheYear = _courseOfTheYear.begin();
+         iterCourseOfTheYear != _courseOfTheYear.end(); iterCourseOfTheYear++) {//per ogni anno accademico
         auto token = iterCourseOfTheYear;//iteratore all'elemento corrente
         auto iterSuccessiveCourse = ++token;//iteratore al successivo elemento in memoria
 
-        if((iterSuccessiveCourse->first - iterCourseOfTheYear->first > 1) && iterSuccessiveCourse != _courseOfTheYear.end()){//se c'è un gap di almeno 2 anni (mancano degli anni accademici) e non sono alla fine di _courseOfTheYear
-            int range = iterSuccessiveCourse->first - iterCourseOfTheYear ->first - 1;//quanti anni accademici mancano e che devo aggiungere
+        if ((iterSuccessiveCourse->first - iterCourseOfTheYear->first > 1) && iterSuccessiveCourse !=
+                                                                              _courseOfTheYear.end()) {//se c'è un gap di almeno 2 anni (mancano degli anni accademici) e non sono alla fine di _courseOfTheYear
+            int range = iterSuccessiveCourse->first - iterCourseOfTheYear->first -
+                        1;//quanti anni accademici mancano e che devo aggiungere
             int lastYear = iterCourseOfTheYear->first;//ultimo anno prima del gap
-            for(int i = 0;i < range;i++){//per il numero di anni accademici da aggiungere
+            for (int i = 0; i < range; i++) {//per il numero di anni accademici da aggiungere
                 //riscrivo l'anno precedente
-                lastYear ++;//il nuovo _courseOfTheYear avrà l'anno subuto successivo all'ultimo anno accademico prima del gap
+                lastYear++;//il nuovo _courseOfTheYear avrà l'anno subuto successivo all'ultimo anno accademico prima del gap
                 //prendo l'ultimo SpecificYearCourse prima del gap
                 SpecificYearCourse sC = iterCourseOfTheYear->second;
                 sC.setYear();//setta l'anno (aggiungerà 1 all'anno di inizio e all'anno di fine)
                 //insert dell'anno nuovo
-                _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(lastYear,sC));//aggiungo l'anno accademico
+                _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(lastYear, sC));//aggiungo l'anno accademico
                 iterCourseOfTheYear++;//per il prossimo ciclo devo prendere l'ultimo prima del gap(che sarà quello appena aggiunto)
+            }
         }
-      }
     }
     return true;
 }
@@ -183,51 +189,61 @@ const Exam Course::getExamSpecificYear(int acYear) const {
     return _courseOfTheYear.at(acYear).getExam();
 }
 
-bool Course::controlTheExistenceOfGrouppedCourses(const std::map<std::string, Course>& courses) {
-
-    for(auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
-        int year = iterCourse->first;
-        std::vector<std::string> grouppedCourses = iterCourse->second.getIdGroupedCourses();
-        std::vector<int> studyCoursesOfMainCourse = iterCourse->second.getStudyCourseAssigned();
-        for (int i = 0; i < grouppedCourses.size(); i++) {
-            auto iterGrouppedCourse = courses.find(grouppedCourses[i]);
-            SpecificYearCourse sp = iterGrouppedCourse->second.getThisYearCourse(year);
-            std::vector<int> studyCoursesOfGrouppedCourses = sp.getStudyCourseAssigned();
-            std::vector<int> allSc = studyCoursesOfGrouppedCourses;
-            allSc.insert(allSc.end(),studyCoursesOfMainCourse.begin(),studyCoursesOfMainCourse.end());
-
-            if (iterGrouppedCourse == courses.end()) {//se non esiste
-                throw DbException("Il seguente corso raggruppato non è presente tra i corsi da inserire:",grouppedCourses[i], ". Ricontrollare il seguente corso da inserire:", getName());
-            }else{//se esiste controllo sia di corsi di studio diversi
-                for(int j = 0; j<studyCoursesOfGrouppedCourses.size();j++){
-                    auto found = find(studyCoursesOfMainCourse.begin(),studyCoursesOfMainCourse.end(),studyCoursesOfGrouppedCourses[j]);
-                    if(found != studyCoursesOfMainCourse.end()){
-                        throw DbException("Il corso principale appartiene ad uno o più corsi di studio di uno o più corsi raggruppati. Controllare i corsi raggruppati del seguente corso:",getId());
-                    }
-                }
-            }
-        }
+///controllo che un corso raggruppato esista nel database e in quel caso controllo che non appartenga allo stesso corso di studio dei suoi stessi raggruppati
+bool Course::controlOfGrouppedCourses(const std::map<std::string, Course> &courses) {
+    //faccio i controlli per ogni anno specifico
+    for (auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
+        int year = iterCourse->first;//anno considerato
+        std::vector<std::string> grouppedCourses = iterCourse->second.getIdGroupedCourses();//predo tutti i codici dei corsi raggruppati del corso considerato
+        //controllo nel database(o futuro database) se esistono i corsi raggruppati
+        controlTheExistenceOfGrouppedCourse(grouppedCourses,courses,year);
     }
 
     return true;
 }
 
-bool Course::controlTheExistenceOfProfessors(const std::map<int, Professor> & professors) {
-    for(auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
+bool Course::controlTheExistenceOfProfessors(const std::map<int, Professor> &professors) {
+    for (auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
         std::map<int, std::vector<professor>> profsOfParallelCourses = iterCourse->second.getProfsOfParallelCourses();
-        for(int i  = 0; i<profsOfParallelCourses.size();i++){
+        for (int i = 0; i < profsOfParallelCourses.size(); i++) {
             std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);
-            for(int j = 0; j<profsOfSingleCourse.size();j++){
-                if(professors.find(profsOfSingleCourse[j].prof_id) == professors.end()){
-                    throw DbException("Il seguente professore non è stato trovato nel database:",profsOfSingleCourse[j].prof_id,". Controllare il seguente corso che si vuole inserire:",_id);
-                }
-            }
+            controlProfsOfSingleCourse(profsOfSingleCourse, professors);
         }
-
     }
     return true;
 }
 
+bool Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int, Professor> &professors) {
+    for (int j = 0; j < profsOfSingleCourse.size(); j++) {
+        if (professors.find(profsOfSingleCourse[j].prof_id) == professors.end()) {
+            throw DbException("Il seguente professore non è stato trovato nel database:",
+                              profsOfSingleCourse[j].prof_id, ". Controllare il seguente corso che si vuole inserire:",
+                              getName());
+        }
+    }
+    return true;
+}
+
+bool Course::controlTheExistenceOfGrouppedCourse(std::vector<std::string> grouppedCourses, const std::map<std::string, Course> &courses, int year) {
+    for (int i = 0; i < grouppedCourses.size(); i++) {//per tutti i corsi raggruppati
+        auto iterGrouppedCourse = courses.find(grouppedCourses[i]);//cerco nel database dei corsi se esiste
+        if (iterGrouppedCourse == courses.end()) {//se non esiste nel database
+            throw DbException("Il seguente corso raggruppato non è presente tra i corsi da inserire:",grouppedCourses[i], ". Ricontrollare il seguente corso da inserire:", getName());
+        }
+    }
+}
+
+bool Course::controlItsGrouppedCourse(std::vector<std::string>allCourses,int line) const {
+    for(auto iterSC = _courseOfTheYear.begin(); iterSC != _courseOfTheYear.end();iterSC++){
+       std::vector<std::string> groupedCourse = iterSC->second.getIdGroupedCourses();
+       for(int i = 0; i<groupedCourse.size(); i++){
+           auto found = std::find(allCourses.begin(),allCourses.end(),groupedCourse[i]);
+           if(found != allCourses.end())
+               throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i],"alla riga: ",line);
+       }
+    }
+    return false;
+}
 
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"

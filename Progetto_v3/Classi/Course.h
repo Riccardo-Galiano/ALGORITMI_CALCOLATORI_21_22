@@ -22,7 +22,7 @@ typedef struct {
 class Course {
 public:
 
-    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio);
+    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratori);
 
     bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse);
     bool fillSpecificYearCourse(std::vector<std::string>& );
@@ -39,8 +39,11 @@ public:
     int getSpecificYearCourseSize() const;
     bool addStudentToSpecYearCourse(int,Student,std::string,int);
     bool fillAcYearsEmpty();
-    bool controlTheExistenceOfGrouppedCourses(const std::map<std::string,Course> &);
+    bool controlOfGrouppedCourses(const std::map<std::string,Course> &);
+    bool controlTheExistenceOfGrouppedCourse(std::vector<std::string>grouppedCourses,const std::map<std::string, Course> &courses,int year);
     bool controlTheExistenceOfProfessors(const std::map<int,Professor> &);
+    bool controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
+    bool controlItsGrouppedCourse(std::vector<std::string>, int) const;
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

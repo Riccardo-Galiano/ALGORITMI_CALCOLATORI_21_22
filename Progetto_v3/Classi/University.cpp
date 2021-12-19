@@ -433,6 +433,7 @@ bool University::addStudyCourses(const std::string &fin) {
             }
             //controllo che i corsi del corso di studio da inserire esistano nel database dei corsi
             SCourse.controlOfTheExistenceOfCourses(_courses, line_counter);
+            SCourse.controlStudyCourseOfGrouppedCourse(_courses, line_counter);
 
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
             line_counter++;
@@ -468,6 +469,7 @@ bool University::addCourses(const std::string &fin) {
     std::string profSenzaQuadre;
     std::vector<std::string> idGrouped;
     std::vector<std::string> splittedExamData;
+
 
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         specificYearCourse = Parse::splittedLine(line, ';');
@@ -531,10 +533,10 @@ bool University::addCourses(const std::string &fin) {
 
     //controllo che i corsi raggruppati esistano e che  non siano dello stesso corso di studi degli altri raggruppati
          for(auto iterCourse = _courses.begin(); iterCourse != _courses.end() ;iterCourse++){
-             iterCourse->second.controlTheExistenceOfGrouppedCourses(_courses);
+             iterCourse->second.controlOfGrouppedCourses(_courses);
              iterCourse->second.controlTheExistenceOfProfessors(_professors);
     }
-    //controllo che i corsi raggruppati
+
     dbCourseWrite();
 
     std::cout << "comando -a:c eseguito correttamente" << std::endl;
