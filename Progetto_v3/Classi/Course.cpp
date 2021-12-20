@@ -253,6 +253,14 @@ bool Course::courseOfTheYearFounded(int year) {
     return _courseOfTheYear.find(year) != _courseOfTheYear.end();//ritorno se esistono info per quel corso in quel'anno
 }
 
+SpecificYearCourse &Course::getThisYearCourseReference(int year){
+    if(_courseOfTheYear.count(year)==0){
+        ///non ci sono corsi per quell'anno
+        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto");
+    }
+    return _courseOfTheYear.at(year);
+}
+
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
            << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;

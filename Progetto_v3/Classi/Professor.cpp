@@ -82,15 +82,13 @@ bool Professor::amIavailable(std::string date, int hh) {
             //controllo tutti i periodi di indisponibilità del prof
             Date lower = iterNoAvailab->first;
             Date upper = iterNoAvailab->second;
-             if (d > lower && d < lower){
+
+            if (d > lower && d < upper){
                  //se la data appartiene ad un intervallo di indisponibilità allora
                  // non posso mettere quell'esame quel giorno
                  return false;
              }
-             else{
-                 //controlla operatori
-                 int ciao = 0;
-             }
+
         }
     }
     else{

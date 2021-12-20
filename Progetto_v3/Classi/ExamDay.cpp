@@ -63,12 +63,12 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
 ///aggiorna la mappa di slot occupati per i professori
 bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
-    SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
+    SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()-1); //prendiamo corso specifico dell'anno di questo Exam Day
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
     std::string dateAsString = _date.toString();
     for (int matr = 0; matr < profsMatr.size(); matr++) {
         for(int num_slot = 0; num_slot < num_slots; num_slot++) {
-            allUniversityProfs.at(matr).addNewExam(dateAsString, hhStart + (num_slot * 2), course.getId());//al prof con matricola matr vado ad aggiungere l'esame
+            allUniversityProfs.at(profsMatr[matr]).addNewExam(dateAsString, hhStart + (num_slot * 2), course.getId());//al prof con matricola matr vado ad aggiungere l'esame
         }
     }
     return true;

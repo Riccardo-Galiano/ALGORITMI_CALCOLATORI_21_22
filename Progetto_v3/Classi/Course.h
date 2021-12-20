@@ -30,6 +30,7 @@ public:
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     const SpecificYearCourse & getThisYearCourse(int) const;
+    SpecificYearCourse & getThisYearCourseReference(int);
     const std::string &getId() const;
     const std::string &getName() const;
     int getCfu() const;

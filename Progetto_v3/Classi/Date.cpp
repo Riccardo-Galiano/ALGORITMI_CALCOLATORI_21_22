@@ -135,24 +135,24 @@ istream& operator>>(istream& input, Date& d){
     return input;
 }
 
-bool Date::operator>(const Date & d) const{
-    if(_year>d._year){
+bool Date::operator>(const Date & date) const{
+    if(_year>date._year){
         return true;
-    }else if(_year==d._year&&_month>d._month){
+    }else if(_year==date._year&&_month>date._month){
         return true;
-    }else if (_year==d._year&&_month==d._month&&_day>d._day){
+    }else if (_year==date._year&&_month==date._month&&_day>date._day){
         return true;
     }else{
         return false;
     }
 }
 
-bool Date::operator<(const Date & d) const {
-    if(_year<d._year){
+bool Date::operator<(const Date & date) const {
+    if(_year<date._year){
         return true;
-    }else if(_year==d._year&&_month<d._month){
+    }else if(_year==date._year&&_month<date._month){
         return true;
-    }else if (_year==d._year&&_month==d._month&&_day<d._day){
+    }else if (_year==date._year&&_month==date._month&&_day<date._day){
         return true;
     }else{
         return false;

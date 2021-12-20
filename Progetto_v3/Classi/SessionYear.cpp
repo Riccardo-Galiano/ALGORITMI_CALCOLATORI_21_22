@@ -158,6 +158,8 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             //se finiti gli appelli, esco
                             continueLoop = false;
                         }
+                    }else{
+                        indexExam++;
                     }
                 }
             }
@@ -190,7 +192,7 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
         bool isActive;
         //se non trovo l'anno specifico prendo l'ultimo
         SpecificYearCourse specificYY = iterCourse->second.getThisYearCourse(_acYear);
-        if (specificYY.notUsed() == false){//se il corso è usato in qualche corso di studio
+
             semester = specificYY.getSemester();
             isActive = specificYY.getisActive();
             ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
@@ -201,7 +203,7 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
             } else
                 ///altrimenti solo uno...
                 allExamAppealsToDo.push_back(iterCourse->first);
-        }
+
     }
     return allExamAppealsToDo;
 }
@@ -271,7 +273,6 @@ bool SessionYear::dateIsOK(Date& newDate, Course& course, std::string& sessName,
             return false;
         }
         else
-
             return true;
     }
     else
@@ -290,7 +291,9 @@ int SessionYear::checkIfProfsAvailableAndGapSameSemesterCourses(Course& course, 
 void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& currentExamDay, std::map<int, Professor> & profs, Course &course, std::string sessName, std::vector<std::string>& allExamAppealsToDo) {
     Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
     int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
-    SpecificYearCourse specificYY = course.getThisYearCourse(getAcYear());//corso per un anno specifico
+
+    SpecificYearCourse& specificYY = course.getThisYearCourseReference(getAcYear());//corso per un anno specifico
+
     //aggiorno strutture dati degli esami dell'anno specifico
     specificYY.assignExamInThisSpecificYearCourse(currentExamDay, getSemester(sessName));
     //aggiungo l'esame a quelli che i prof devono fare
@@ -298,6 +301,9 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& currentExa
     //aggiungo l'esame al calendario della sessione
     _yearCalendar.at(currentExamDay.toString()).assignExamToExamDay(startExamHour,course,numSlots);
     ///elimino appello programmato da vettore di appelli da programmare
+   int howManyAssigned = specificYY.amIAssignedAlreadyInThisSession(getSemester(sessName));
+   int howManyAppeals = std::count(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),course.getId());
+   if(howManyAssigned == howManyAppeals) //lo cancello solo se il numero di appelli da assegnare è uguale al numero di appelli assegnati
     popAppealFromVector(allExamAppealsToDo,indexExam);
     ///devo inserire anche tutti gli appelli programmati
 }
@@ -338,7 +344,7 @@ std::vector<std::string> SessionYear::getGroupedCourses(std::map<std::string, Co
     ///prendo corsi raggruppati
     std::vector<std::string> groupedCourses = sp.getIdGroupedCourses();
     ///inserisco il corso selezionato inizialmente
-    groupedCourses.push_back(idCourseSelected);
+    groupedCourses.insert(groupedCourses.begin(),idCourseSelected);
     return groupedCourses;
 }
 
