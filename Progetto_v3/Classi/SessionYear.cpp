@@ -133,7 +133,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                     Course courseToConsider = courses.at(coursesToConsiderInThisLoop[i]);
                     //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
                     //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-                    if(dateIsOK(currentExamDay, courseToConsider, sessName, gapAppeals) == false){
+                    if(dateIsOK(currentExamDay, courseToConsider, sessName, gapAppeals) == false){//se non va bene per uno non va bene per tutti
                         dateIsOk = false;
                     }
                 }
@@ -185,19 +185,23 @@ int SessionYear::getSemester(std::string sessName) {
 std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course>& courses) {
     std::vector<std::string> allExamAppealsToDo;
     int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
-    for(auto iterCourse = courses.begin(); iterCourse!=courses.end(); iterCourse++){
-        SpecificYearCourse specificYY = iterCourse->second.getThisYearCourse(_acYear);
-        int semester = specificYY.getSemester();
-        bool isActive = specificYY.getisActive();
-        ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
-        if(semester == semesterOfThisSession && isActive){
-            ///devo fare due appelli se i semestri sono uguali!!!!
-            allExamAppealsToDo.push_back(iterCourse->first);
-            allExamAppealsToDo.push_back(iterCourse->first);
+    for(auto iterCourse = courses.begin(); iterCourse!=courses.end(); iterCourse++) {
+        int semester;
+        bool isActive;
+        //se non trovo l'anno specifico prendo l'ultimo
+        SpecificYearCourse specificYY = getSpecificCourse(iterCourse->second, _acYear);
+        if (specificYY.notUsed() == false) {//se il corso è usato in qualche corso di studio
+            semester = specificYY.getSemester();
+            isActive = specificYY.getisActive();
+            ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
+            if (semester == semesterOfThisSession && isActive) {
+                ///devo fare due appelli se i semestri sono uguali!!!!
+                allExamAppealsToDo.push_back(iterCourse->first);
+                allExamAppealsToDo.push_back(iterCourse->first);
+            } else
+                ///altrimenti solo uno...
+                allExamAppealsToDo.push_back(iterCourse->first);
         }
-        else
-            ///altrimenti solo uno...
-            allExamAppealsToDo.push_back(iterCourse->first);
     }
     return allExamAppealsToDo;
 }
@@ -211,7 +215,8 @@ int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,st
         ExamDay dayBefore = iterCalendar->second;//al primo ciclo prendo l'examday precedente alla data in cui voglio inserire l'esame. Al secondo ciclo prendo l'examDay di due giorni prima
         bool same = dayBefore.sameStudyCourseAndYear(course, _acYear);
         if (same){
-            if(relaxPar<1){
+            //rilassamento del range da uno a due giorni. (non ritorna -1 solo se c'è il vincolo rilassato e se sto considerando il secondo giorno da controllare)
+            if(!(relaxPar<1) && i<1){
                 return -1;
                 //se sameStudyAndYear ha trovato un esame già assegnato
                 //che appartenga allo stesso corso di studi e allo stesso anno da assegnare
@@ -321,11 +326,11 @@ void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsTo
     allExamAppealsToDo.erase(pos);
 }
 
-std::vector<std::string> SessionYear::getGroupedCourses(std::map<std::string, Course>& courses, std::string idCourseSelected) const {
+std::vector<std::string> SessionYear::getGroupedCourses(std::map<std::string, Course>& courses, std::string idCourseSelected) {
     ///prendo il corso considerato
     Course course = courses.at(idCourseSelected);
     ///prendo corso di questo giro + i suoi esami raggruppati
-    SpecificYearCourse sp = course.getThisYearCourse(getAcYear());//corso per un anno specifico
+    SpecificYearCourse sp = getSpecificCourse(course, _acYear);
     ///prendo corsi raggruppati
     std::vector<std::string> groupedCourses = sp.getIdGroupedCourses();
     ///inserisco il corso selezionato inizialmente
@@ -339,6 +344,16 @@ bool SessionYear::checkHours(std::vector<int>& input) {
             return false;
     }
     return true;
+}
+
+const SpecificYearCourse& SessionYear::getSpecificCourse(Course course ,int year) {
+    bool found = course.courseOfTheYearFounded(_acYear);
+
+    if (found) {
+        return course.getThisYearCourse(year);
+    } else {
+        return course.getLastSpecificYearCourse();
+    }
 }
 
 

@@ -29,6 +29,7 @@ public:
     std::vector<std::string> getAllExamAppealsToDo(std::string, std::map<std::string, Course>&);
     int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,int numSlot, int);
     bool setCaldendar(std::vector<Date>);
+    const SpecificYearCourse& getSpecificCourse(Course course ,int year);
 private:
     int _acYear;
     //key: "autumn" , "winter", "summer"
@@ -47,7 +48,7 @@ private:
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, Course& , std::string, std::vector<std::string>&);
     void generateOutputFiles(std::string&,int,std::map<std::string, Course>&);
     static void popAppealFromVector(std::vector<std::string>&,int);
-    std::vector<std::string> getGroupedCourses(std::map<std::string, Course>&, std::string) const;
+    std::vector<std::string> getGroupedCourses(std::map<std::string, Course>&, std::string);
     static bool checkHours(std::vector<int>&);
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);

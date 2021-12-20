@@ -44,6 +44,7 @@ public:
     bool controlTheExistenceOfProfessors(const std::map<int,Professor> &);
     bool controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
     bool controlItsGrouppedCourse(std::vector<std::string>, int) const;
+    bool courseOfTheYearFounded(int);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

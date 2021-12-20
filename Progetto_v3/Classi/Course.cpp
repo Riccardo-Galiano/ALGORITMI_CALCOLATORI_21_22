@@ -245,6 +245,10 @@ bool Course::controlItsGrouppedCourse(std::vector<std::string>allCourses,int lin
     return false;
 }
 
+bool Course::courseOfTheYearFounded(int year) {
+    return _courseOfTheYear.find(year) != _courseOfTheYear.end();//ritorno se esistono info per quel corso in quel'anno
+}
+
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
            << s.getHours()._ex << ";" << s.getHours()._lab << std::endl;

@@ -28,7 +28,7 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
             //slot i-esimo non occupato
             numSlotsFoundedSoFar++;
             if (numSlotsFoundedSoFar == 1)
-                startHourSlot = 8 + 2 * i; //se dovessi trovare io numero di slot necessari partirei da lì
+                startHourSlot = 8 + 2 * i; //se dovessi trovare il numero di slot necessari partirei da lì
             if (numSlotsFoundedSoFar == numSlotsRequired)//se il numero di slot trovati coincide con il numero di slot necessari
                 foundedStartHourSlot = startHourSlot;//ho lo slot di inizio
         } else

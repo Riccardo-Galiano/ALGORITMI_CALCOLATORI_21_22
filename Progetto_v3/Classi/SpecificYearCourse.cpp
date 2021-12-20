@@ -261,6 +261,10 @@ const std::map<int, std::vector<professor>> SpecificYearCourse::getProfsOfParall
     return _professors;
 }
 
+bool SpecificYearCourse::notUsed() {
+    return _yy_semester.empty();
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
