@@ -17,14 +17,14 @@ ExamDay::ExamDay(Date date) {
 
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
 int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired, int relaxPar) {
-    SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear()); //prendiamo corso specifico dell'anno di questo Exam Day
+    SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day (-1)
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
     // esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
     int startHourSlot = -1;
     int numSlotsFoundedSoFar = 0;
     int foundedStartHourSlot = -1;  //rimarrà -1 se non riesco a trovare nulla, altrimenti l'orario di inizio
-    for (int i = 0; i < 6; i++ ) {
-        if (_slots.count(8 + 2 * i) == 0) {//controllo sugli slot; 8-10-12....
+    for (int i = 0; i < 6 && foundedStartHourSlot == -1; i++ ) {
+        if (_slots.at(8 + 2 * i).empty()) {//controllo sugli slot; 8-10-12....
             //slot i-esimo non occupato
             numSlotsFoundedSoFar++;
             if (numSlotsFoundedSoFar == 1)
@@ -40,7 +40,7 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
         return -1;
 
     ///dobbiamo ora controllare se i prof sono disponibili in questi slot per essere sicuri che questo esame è possibile in questo giorno
-   if (relaxPar<2){
+   if (relaxPar<3){
        std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
        //ci servono gli oggetti Professore per usare funzione amIavailable: tutti i professori DEVONO ESSERE DISPONBILI
 

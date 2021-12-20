@@ -160,16 +160,17 @@ bool Date::operator<(const Date & d) const {
 }
 
 std::string Date::getWeekDay() {
+    Date d(_year,_month,_day);
     int mon;
-    if (_month > 2)
-        mon = _month; //for march to december month code is same as month
+    if (d.getMonth() > 2)
+        mon = d.getMonth(); //for march to december month code is same as month
     else {
-        mon = (12 + _month); //for Jan and Feb, month code will be 13 and 14
-        _year--; //decrease year for month Jan and Feb
+        mon = (12 + d.getMonth()); //for Jan and Feb, month code will be 13 and 14
+        d._year--; //decrease year for month Jan and Feb
     }
-    int y = _year % 100; //last two digit
-    int c = _year / 100; //first two digit
-    int w = (_day + floor((13 * (mon + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
+    int y = d.getYear() % 100; //last two digit
+    int c = d.getYear() / 100; //first two digit
+    int w = (d.getDay() + floor((13 * (mon + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
     w = w % 7;
     return _weekday[w];
 }
@@ -206,7 +207,7 @@ unsigned int Date::getYear() const {
 ///ritorna la data sottofirma di stringa
 std::string Date::toString() {
     std::stringstream ss;
-    ss << *this;
+    ss << Date(_year,_month,_day);
     return ss.str();
 }
 

@@ -144,7 +144,11 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
 }
 
 ///prende il corso con le sue info ad uno specifico anno
-const SpecificYearCourse &Course::getThisYearCourse(int year) const {
+const SpecificYearCourse& Course::getThisYearCourse(int year) const {
+    if(_courseOfTheYear.count(year)==0){
+        ///non ci sono corsi per quell'anno
+        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto");
+    }
     return _courseOfTheYear.at(year);
 }
 
@@ -242,7 +246,7 @@ bool Course::controlItsGrouppedCourse(std::vector<std::string>allCourses,int lin
                throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i],"alla riga: ",line);
        }
     }
-    return false;
+    return true;
 }
 
 bool Course::courseOfTheYearFounded(int year) {

@@ -82,7 +82,7 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
     int gapAppealsSameCourse=14;
     bool result=false;
     bool exitloop= false;
-    for (; gapAppealsSameCourse>=0&&!exitloop;gapAppealsSameCourse--){
+    for (; gapAppealsSameCourse>=0 && !exitloop; gapAppealsSameCourse--){
         ///generare sessione invernale
         bool winter = generateThisSession("winter", courses, professors, relaxPar, gapAppealsSameCourse);
         ///generare sessione estiva
@@ -100,7 +100,7 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
         else {
             ///reset strutture dati ToDo
             result = false;
-            if (relaxPar<=1){
+            if (relaxPar==0){
                 exitloop=true;
             }
         }
@@ -189,8 +189,8 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
         int semester;
         bool isActive;
         //se non trovo l'anno specifico prendo l'ultimo
-        SpecificYearCourse specificYY = getSpecificCourse(iterCourse->second, _acYear);
-        if (specificYY.notUsed() == false) {//se il corso è usato in qualche corso di studio
+        SpecificYearCourse specificYY = iterCourse->second.getThisYearCourse(_acYear);
+        if (specificYY.notUsed() == false){//se il corso è usato in qualche corso di studio
             semester = specificYY.getSemester();
             isActive = specificYY.getisActive();
             ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
@@ -209,14 +209,18 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
 ///controlla se può e dove può essere inserito l'esame ed eventualmente prende l'ora di inizio
 int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,int numSlot , int relaxPar) {
     ///controlliamo che il corso da inserire non abbia in un range di due giorni precedenti alla data analizzata un esame dello stesso corso di studi e dello stesso anno
-    auto iterCalendar = _yearCalendar.find(currentExamDay.toString());//cerco la data in cui voglio inserire l'esame nel calendario
-    for (int i = 0; i < 2; i++) {//per i due giorni precedenti alla data considerata
+    std::string str(currentExamDay.toString());
+    auto iterCalendar = _yearCalendar.find(str);//cerco la data in cui voglio inserire l'esame nel calendario
+    int pos = distance(_yearCalendar.begin(),_yearCalendar.find(str));
+    if(pos>2)
+        pos=2; //devo controllare al max due giorni
+    for (; pos>0; pos--){//per i due giorni precedenti alla data considerata
         iterCalendar--;
         ExamDay dayBefore = iterCalendar->second;//al primo ciclo prendo l'examday precedente alla data in cui voglio inserire l'esame. Al secondo ciclo prendo l'examDay di due giorni prima
         bool same = dayBefore.sameStudyCourseAndYear(course, _acYear);
         if (same){
             //rilassamento del range da uno a due giorni. (non ritorna -1 solo se c'è il vincolo rilassato e se sto considerando il secondo giorno da controllare)
-            if(!(relaxPar<1) && i<1){
+            if(relaxPar<1){
                 return -1;
                 //se sameStudyAndYear ha trovato un esame già assegnato
                 //che appartenga allo stesso corso di studi e allo stesso anno da assegnare
@@ -330,7 +334,7 @@ std::vector<std::string> SessionYear::getGroupedCourses(std::map<std::string, Co
     ///prendo il corso considerato
     Course course = courses.at(idCourseSelected);
     ///prendo corso di questo giro + i suoi esami raggruppati
-    SpecificYearCourse sp = getSpecificCourse(course, _acYear);
+    SpecificYearCourse sp = course.getThisYearCourse(_acYear);
     ///prendo corsi raggruppati
     std::vector<std::string> groupedCourses = sp.getIdGroupedCourses();
     ///inserisco il corso selezionato inizialmente
@@ -346,15 +350,6 @@ bool SessionYear::checkHours(std::vector<int>& input) {
     return true;
 }
 
-const SpecificYearCourse& SessionYear::getSpecificCourse(Course course ,int year) {
-    bool found = course.courseOfTheYearFounded(_acYear);
-
-    if (found) {
-        return course.getThisYearCourse(year);
-    } else {
-        return course.getLastSpecificYearCourse();
-    }
-}
 
 
 

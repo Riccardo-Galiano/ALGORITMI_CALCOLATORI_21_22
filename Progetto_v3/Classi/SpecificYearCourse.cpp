@@ -193,7 +193,7 @@ std::vector<int> SpecificYearCourse::getAllProfMatr() {
     for (int i = 0; i < _professors.size(); i++) {
         profs = _professors.at(i);//prende il vettore di prof per l'iesimo corso parallelo
         for (int j = 0; j < profs.size(); j++){
-            professors.push_back(profs[i].prof_id);//prende l'id di ogni prof dell'iesimo corso parallelo
+            professors.push_back(profs[j].prof_id);//prende l'id di ogni prof dell'iesimo corso parallelo
         }
     }
     return professors;
@@ -231,6 +231,8 @@ bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGi
 
 ///quanti appelli ho già assegnato
 int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
+    if(_howManyTimesIAmAssignedInASession.count(session)==0)
+        return 0;
     return _howManyTimesIAmAssignedInASession.at(session).size();
 }
 

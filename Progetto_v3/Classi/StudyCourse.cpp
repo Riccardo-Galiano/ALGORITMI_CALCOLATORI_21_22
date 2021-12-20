@@ -155,6 +155,7 @@ bool StudyCourse::controlStudyCourseOfGrouppedCourse(const std::map<std::string,
     for(int i = 0; i<allCourses.size();i++){//per ogni corso controllo se nello stesso corso di studio ci siano suoi corsi raggruppati
         courses.at(allCourses[i]).controlItsGrouppedCourse(allCourses,line);
     }
+    return false;
     /*for(int i = 0; i < grouppedCourses.size(); i++){
         auto iterGrouppedCourse = courses.find(grouppedCourses[i]);//cerco nel database(o futuro database) dei corsi se esiste
         SpecificYearCourse sp = iterGrouppedCourse->second.getThisYearCourse(year);//prendo il corso all'anno considerato
