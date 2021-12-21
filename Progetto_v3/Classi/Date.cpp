@@ -233,7 +233,7 @@ int Date::whatIsTheGap(Date& date) {
             areNotEqual = false;
         }
         else{//se non uguali controllo il giorno successivo e aggiorno il gap
-            currentDate++;
+            ++currentDate;
             gap++;
         }
     }

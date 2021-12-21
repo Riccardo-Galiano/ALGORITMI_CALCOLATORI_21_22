@@ -48,8 +48,8 @@ public:
     int whatIsTheGap(Date& date);
 
 private:
-    unsigned int _month{};
     unsigned int _day{};
+    unsigned int _month{};
     unsigned int _year{};
     std::vector<std::string> _weekday;
     static const std::vector<unsigned int> _days; // num giorni per mese

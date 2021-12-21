@@ -217,7 +217,6 @@ void University::readStudyCourse() {
     int i;
     std::ifstream fileIn("../Sources/db_corsi_studio.txt");
     if (!fileIn.is_open()) {
-
         throw DbException("file db_corsi_studio.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -241,9 +240,6 @@ void University::readStudyCourse() {
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
         }
-
-
-
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
 
@@ -256,11 +252,11 @@ void University::readStudyCourse() {
         bool isBachelor = false;
         if (levelCourse.compare("BS") == 0)//se corso di studi triennale
             isBachelor = true;
-
+/*
         if ((isBachelor && semestri.size() != 6) || (!isBachelor && semestri.size() != 4)) {
             throw InvalidDbException("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea");
         }
-
+*/
         StudyCourse SCourse(codCorso, isBachelor);
         //carico corsi e semestri letti nello studycourse
 
@@ -274,7 +270,6 @@ void University::readStudyCourse() {
         if (InteroCorsoDiStudi.size() == 4) {//solo se presenti aggiungo i corsi spenti
             SCourse.addOffCourses(corsiSpenti);
         }
-
         _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
     }
 
@@ -384,8 +379,6 @@ bool University::addStudyCourses(const std::string &fin) {
     bool toContinue = true;
     while (std::getline(fileIn, line)) {
         ///codice, livello
-
-
             tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
             if (tokens.size() != 2) {
                 throw DbException("errore formato file corsi di studio alla riga: ", line_counter);
@@ -409,11 +402,9 @@ bool University::addStudyCourses(const std::string &fin) {
             for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
                 int posStart = posSem[i] + 1;// tolgo la graffa
                 int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(tokens[1].substr(posStart,
-                                                    len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+                semestri.push_back(tokens[1].substr(posStart,len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
             } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
             //semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
-
             //controllo che formato file sia corretto:
             //se L3 -> 6 semestri, se LM -> 4 semestri
             if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
@@ -1214,14 +1205,18 @@ void University::noAvailabilityWrite() {
     fout.close();
 }
 
+///organizza gli esami per l'anno accademico
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
     int constraintRelaxParameter=0;
     bool esito = false;
+    ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter<4){
+        //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
         esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors, constraintRelaxParameter);
         constraintRelaxParameter++;
     }
+    ///se le sessioni non possono essere generate nonostante i vincoli rilassati
     if(!esito){
         std::cerr<<"non è stato possibile generare le date d'esame nonostante i vincoli rilassati"<<std::endl;
     }
