@@ -235,6 +235,7 @@ bool Course::controlTheExistenceOfGrouppedCourse(std::vector<std::string> groupp
             throw DbException("Il seguente corso raggruppato non è presente tra i corsi da inserire:",grouppedCourses[i], ". Ricontrollare il seguente corso da inserire:", getName());
         }
     }
+    return true;
 }
 
 bool Course::controlItsGrouppedCourse(std::vector<std::string>allCourses,int line) const {
@@ -243,7 +244,7 @@ bool Course::controlItsGrouppedCourse(std::vector<std::string>allCourses,int lin
        for(int i = 0; i<groupedCourse.size(); i++){
            auto found = std::find(allCourses.begin(),allCourses.end(),groupedCourse[i]);
            if(found != allCourses.end())
-               throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i],"alla riga: ",line);
+               throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i]," alla riga: ",line);
        }
     }
     return true;

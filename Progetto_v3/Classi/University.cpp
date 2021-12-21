@@ -8,8 +8,9 @@
 #include <iomanip>
 #include "University.h"
 #include "DbException.h"
+#include "InvalidDbException.h"
 #include "Parse.hpp"
-
+#include <algorithm>
 //namespace fs = std::filesystem;
 University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
@@ -237,8 +238,11 @@ void University::readStudyCourse() {
         std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
         for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
-            int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1; semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
+            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
         }
+
+
 
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
@@ -252,6 +256,10 @@ void University::readStudyCourse() {
         bool isBachelor = false;
         if (levelCourse.compare("BS") == 0)//se corso di studi triennale
             isBachelor = true;
+
+        if ((isBachelor && semestri.size() != 6) || (!isBachelor && semestri.size() != 4)) {
+            throw InvalidDbException("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea");
+        }
 
         StudyCourse SCourse(codCorso, isBachelor);
         //carico corsi e semestri letti nello studycourse
@@ -374,13 +382,10 @@ bool University::addStudyCourses(const std::string &fin) {
 
 
     bool toContinue = true;
-    while (std::getline(fileIn, line) && toContinue) {
+    while (std::getline(fileIn, line)) {
         ///codice, livello
 
-        if (line.empty())//non dovrebbe esserci. Sistemare
-            toContinue = false;
 
-        else {
             tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
             if (tokens.size() != 2) {
                 throw DbException("errore formato file corsi di studio alla riga: ", line_counter);
@@ -437,7 +442,7 @@ bool University::addStudyCourses(const std::string &fin) {
 
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
             line_counter++;
-        }
+
     }
 
     fileIn.close();
@@ -927,10 +932,17 @@ bool University::insertCourses(const std::string &fin) {
         std::string yy_semester;
         std::vector<int> studyCourse;
         for(int i=0; i<_studyCourse.size(); i++){
-            ///andrea hai messo i+1 qui? se no, cancella questo commento
             std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
             if(!res.empty()){
                 //ho trovato il suo corso di studi
+                // controllo che idGrouped NON siano corsi dello stesso CdS
+                std::vector<std::string> allCoursesOfCdS = _studyCourse.at(i).getAllCoursesOfStudyCourse();
+                for(int j = 0; j<idGrouped.size(); j++){
+                    auto found = std::find(allCoursesOfCdS.begin(),allCoursesOfCdS.end(),idGrouped[j]);
+                    if(found != allCoursesOfCdS.end())
+                        throw DbException("stesso corso di studio tra: ",specificYearCourse[0]," e ",idGrouped[j]," alla riga: ",line_counter);
+                }
+
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = res;
@@ -1215,6 +1227,8 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     }
     return esito;
 }
+
+
 
 
 

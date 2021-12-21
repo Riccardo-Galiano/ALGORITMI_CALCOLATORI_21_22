@@ -10,7 +10,7 @@
 #include "StudyCourse.h"
 
 
-int indexExam;
+
 enum{caso_estremo, caso_medio, caso_lasco};
 
 ///costruttore
@@ -123,7 +123,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     for(Date currentExamDay(startDate.getYear(),startDate.getMonth(),startDate.getDay()); continueLoop && currentExamDay.isEqual(endDate++) == false; currentExamDay = currentExamDay++){
         if(!(currentExamDay.getWeekDay() == "Sunday")){
             //se non è domenica
-            for(indexExam=0; indexExam < allExamAppealsToDo.size() && continueLoop; indexExam++){//ciclo su tutti gli appelli da assegnare
+            for(int indexExam=0; indexExam < allExamAppealsToDo.size() && continueLoop; indexExam++){//ciclo su tutti gli appelli da assegnare
                 ///esami raggruppati da considerare in questo giro
                 std::string codCurrentAppeal = allExamAppealsToDo[indexExam];
                 std::vector<std::string> coursesToConsiderInThisLoop = getGroupedCourses(courses, codCurrentAppeal);
@@ -142,7 +142,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                     std::vector<int> startHourPerCourse;
                     for(int i = 0; i < coursesToConsiderInThisLoop.size(); i++){
                         Course courseToConsider = courses.at(coursesToConsiderInThisLoop[i]);
-                        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,currentExamDay,profs, relaxPar);
+                        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,currentExamDay,profs, relaxPar,getSemester(sessName));
                         startHourPerCourse.push_back(startExamHour);
                     }
                     ///controlliamo che non ci siano -1 nel vettore
@@ -209,11 +209,16 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
 }
 
 ///controlla se può e dove può essere inserito l'esame ed eventualmente prende l'ora di inizio
-int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,int numSlot , int relaxPar) {
+int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,int numSlot , int relaxPar, int session) {
     ///controlliamo che il corso da inserire non abbia in un range di due giorni precedenti alla data analizzata un esame dello stesso corso di studi e dello stesso anno
     std::string str(currentExamDay.toString());
-    auto iterCalendar = _yearCalendar.find(str);//cerco la data in cui voglio inserire l'esame nel calendario
-    int pos = distance(_yearCalendar.begin(),_yearCalendar.find(str));
+    //prendo primo giorno della sessione
+    Date dayOne=_yearSessions.at(_sessionNames[session-1]).startDate;
+    // controllo il gap dal dayOne al currentDay
+    // se = 1 controllo solo il giorno prima
+    // se = 0 non devo controllare
+    int pos = dayOne.whatIsTheGap(currentExamDay);
+    auto iterCalendar=_yearCalendar.find(str);
     if(pos>2)
         pos=2; //devo controllare al max due giorni
     for (; pos>0; pos--){//per i due giorni precedenti alla data considerata
@@ -281,11 +286,11 @@ bool SessionYear::dateIsOK(Date& newDate, Course& course, std::string& sessName,
 }
 
 /// controlla se i prof sono disponibili e se l'esame da assegnare è dello stesso corso di studi e dello stesso anno di un altro, nel range di due giorni precedenti alla data controllata
-int SessionYear::checkIfProfsAvailableAndGapSameSemesterCourses(Course& course, Date& currentExamDay, std::map<int, Professor>& profs,int relaxPar) {
+int SessionYear::checkIfProfsAvailableAndGapSameSemesterCourses(Course& course, Date& currentExamDay, std::map<int, Professor>& profs,int relaxPar, int session) {
     Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
     int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
 
-    return isPossibleToAssignThisExam(course,currentExamDay,profs,numSlots,relaxPar);//ora di inizio dello slot per l'esame
+    return isPossibleToAssignThisExam(course,currentExamDay,profs,numSlots,relaxPar, session);//ora di inizio dello slot per l'esame
 }
 
 void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& currentExamDay, std::map<int, Professor> & profs, Course &course, std::string sessName, std::vector<std::string>& allExamAppealsToDo) {
@@ -301,11 +306,8 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date& currentExa
     //aggiungo l'esame al calendario della sessione
     _yearCalendar.at(currentExamDay.toString()).assignExamToExamDay(startExamHour,course,numSlots);
     ///elimino appello programmato da vettore di appelli da programmare
-   int howManyAssigned = specificYY.amIAssignedAlreadyInThisSession(getSemester(sessName));
-   int howManyAppeals = std::count(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),course.getId());
-   if(howManyAssigned == howManyAppeals) //lo cancello solo se il numero di appelli da assegnare è uguale al numero di appelli assegnati
-    popAppealFromVector(allExamAppealsToDo,indexExam);
-    ///devo inserire anche tutti gli appelli programmati
+    std::string codCurrentCourse=course.getId();
+    popAppealFromVector(allExamAppealsToDo, codCurrentCourse);
 }
 
 void SessionYear::generateOutputFiles(std::string& OutputFileName,int session,std::map<std::string, Course>& courses) {
@@ -330,9 +332,9 @@ void SessionYear::generateOutputFiles(std::string& OutputFileName,int session,st
     }
 }
 
-void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsToDo, int indexExam) {
+void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsToDo, std::string codExam) {
     ///se questo appello è stato assegnato, non lo dobbiamo più considerare!!
-    auto pos = find(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),allExamAppealsToDo[indexExam]);
+    auto pos = find(allExamAppealsToDo.begin(),allExamAppealsToDo.end(),codExam);
     allExamAppealsToDo.erase(pos);
 }
 

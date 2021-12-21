@@ -31,8 +31,8 @@ public:
     std::string isInWhichSemester(std::string);
     bool controlOfTheExistenceOfCourses(const std::map<std::string,Course>&,int);
     bool controlStudyCourseOfGrouppedCourse(const std::map<std::string, Course>&,int);
-    std::vector<std::string> getAllCoursesOfStudyCourse();
 
+    std::vector<std::string> getAllCoursesOfStudyCourse();
     const std::map<std::string, std::vector<std::string>> &getSemesters() const;
 
 private:
@@ -40,6 +40,7 @@ private:
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di stringhe
     std::list <std::string> _offCourses;
+
 };
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s);
 

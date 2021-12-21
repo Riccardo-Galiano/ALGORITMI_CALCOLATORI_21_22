@@ -5,6 +5,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj"
+  "CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj"

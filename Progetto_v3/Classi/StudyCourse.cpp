@@ -151,11 +151,12 @@ bool StudyCourse::controlOfTheExistenceOfCourses(const std::map<std::string, Cou
 }
 
 bool StudyCourse::controlStudyCourseOfGrouppedCourse(const std::map<std::string, Course>& courses, int line) {
+    bool flag_to_return=false;
     std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();//prendo tutti i corsi del corso di studio che sto inserendo
     for(int i = 0; i<allCourses.size();i++){//per ogni corso controllo se nello stesso corso di studio ci siano suoi corsi raggruppati
-        courses.at(allCourses[i]).controlItsGrouppedCourse(allCourses,line);
+        flag_to_return=courses.at(allCourses[i]).controlItsGrouppedCourse(allCourses,line);
     }
-    return false;
+    return flag_to_return;
     /*for(int i = 0; i < grouppedCourses.size(); i++){
         auto iterGrouppedCourse = courses.find(grouppedCourses[i]);//cerco nel database(o futuro database) dei corsi se esiste
         SpecificYearCourse sp = iterGrouppedCourse->second.getThisYearCourse(year);//prendo il corso all'anno considerato
@@ -186,7 +187,6 @@ std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() {
     }
     return allCourses;
 }
-
 
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
