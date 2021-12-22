@@ -14,13 +14,7 @@ InvalidDbException::InvalidDbException(std::string m) {
 }
 
 InvalidDbException::InvalidDbException(std::string mex, std::string id) {
-    std::stringstream mexAndLine;
-    mexAndLine<<mex<<id;
-    _message=mexAndLine.str();
-}
-
-InvalidDbException::InvalidDbException(std::string mex1, std::string idCourse, std::string mex2, int idStudyCourse) {
-    std::stringstream mexAndLine;
-    mexAndLine<<mex1<<idCourse<<mex2<<idStudyCourse;
-    _message=mexAndLine.str();
+    std::stringstream mexAndInfo;
+    mexAndInfo<<mex<<id;
+    _message=mexAndInfo.str();
 }

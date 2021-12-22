@@ -33,34 +33,34 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string sY_eY,bool active,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse);
+    SpecificYearCourse(std::string ,bool ,int , std::vector<std::string> , std::vector<std::string> ,std::vector<std::string> , std::string , std::vector<int>);
 
+    int getStartYear() const;
     int getEndYear() const;
     bool getisActive() const;
     int getParalleleCours() const;
+    const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
     const std::string getProfParString() const;
-    const std::string getGroupedCoursesIdString() const;
-    const std::string getExamString() const;
-    int getStartYear() const;
-    const Exam &getExam() const;
-    std::vector<professor> getProfsFromString (std::string profs);
     std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
-
-    std::string setId(int nMatr)const;
-    bool setProfMap(int, std::vector<std::string>);
-    bool addStudent(Student,std::string,int);
-    bool setYear();
+    const std::string getGroupedCoursesIdString() const;
+    std::vector<professor> getProfsFromString (std::string);
+    const std::vector<std::string> &getIdGroupedCourses() const;
+    const std::string getExamString() const;
+    const Exam &getExam() const;
     int getSemester() const;
     int getYearOfTheSemester() const;
-    void resetAssignations();
-    bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
     std::vector<int> getStudyCourseAssigned() const;
-    int amIAssignedAlreadyInThisSession(int session);
-    Date lastDateAssignationInGivenSession(int session);
+
+    bool setYear();
+    std::string setId(int)const;
+    bool setProfMap(int, std::vector<std::string>);
+    bool addStudent(Student,std::string,int);
+    bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
+    int amIAssignedAlreadyInThisSession(int);
+    Date lastDateAssignationInGivenSession(int);
     bool assignExamInThisSpecificYearCourse(Date,int);
 
-    const std::vector<std::string> &getIdGroupedCourses() const;
-    const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
+
 
 
 private:

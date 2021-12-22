@@ -22,11 +22,16 @@ typedef struct {
 class Course {
 public:
 
-    Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratori);
+    Course(const std::string&, const std::string&, const int , const int ,const int , const int );
 
-    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse);
+    bool addSpecificYearCourses(std::string, bool, int, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, std::string, std::vector<int> );
+    bool addStudentToSpecYearCourse(int,Student,std::string,int);
     bool fillSpecificYearCourse(std::vector<std::string>& );
     bool courseOfTheYearIsEmpty();
+    bool fillAcYearsEmpty();
+    bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int);
+    hours controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
+    bool controlExistenceSpecificYear(std::string, int);
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     const SpecificYearCourse & getThisYearCourse(int) const;
@@ -35,18 +40,8 @@ public:
     const std::string &getName() const;
     int getCfu() const;
     const Exam getExamSpecificYear(int) const;
-
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
-    bool addStudentToSpecYearCourse(int,Student,std::string,int);
-    bool fillAcYearsEmpty();
-    bool controlOfGroupedCourses(const std::map<std::string,Course> &,int);
-    bool controlTheExistenceOfGroupedCourse(std::vector<std::string>grouppedCourses,const std::map<std::string, Course> &courses,int year);
-    bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int);
-    hours controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
-    bool controlItsGroupedCourse(std::vector<std::string>,std::vector<std::string>, int,int) const;
-    bool courseOfTheYearFounded(int);
-    bool controlExistenceSpecificYear(std::string, int);
 
 private:
     std::string _id;///codice identificativo del corso

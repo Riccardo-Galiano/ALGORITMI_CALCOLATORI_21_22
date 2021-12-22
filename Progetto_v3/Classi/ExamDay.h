@@ -13,9 +13,9 @@
 class ExamDay {
 public:
     ExamDay(Date);
-    bool assignExamToProf(std::map<int,Professor>&, Course course, int hhStart, int num_slots);
+    bool assignExamToProf(std::map<int,Professor>&, Course , int , int );
     bool assignExamToExamDay(int, Course,int);
-    int isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired, int); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
+    int isPossibleToAssignThisExamToProf(Course, std::map<int, Professor>&, int, int); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
     bool sameStudyCourseAndYear(Course,int);
     bool setSlot();
     std::vector<std::string> getSlotsToString();

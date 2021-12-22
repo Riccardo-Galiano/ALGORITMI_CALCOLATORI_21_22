@@ -372,6 +372,7 @@ void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsTo
     allExamAppealsToDo.erase(pos);
 }
 
+///ritorna se il periodo delle sessioni è vuoto
 bool SessionYear::sessionsPeriodIsEmpty() {
     return _yearSessions.empty();
 }

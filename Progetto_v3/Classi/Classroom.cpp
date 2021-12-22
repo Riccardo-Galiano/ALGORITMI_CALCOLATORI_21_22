@@ -8,18 +8,18 @@
 #include "Classroom.h"
 
 
- Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int examSeats) {
-_id=id;
-_name=name;
-_nSeats=seats;
-_nExamSeats=examSeats;
-if(AorL == "L"){
-    _lab=true;
-}else if(AorL == "A"){
-    _lab=false;
-}else{
-    throw std::invalid_argument("errore aula o lab");
-}
+Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int examSeats) {
+    _id = id;
+    _name = name;
+    _nSeats = seats;
+    _nExamSeats = examSeats;
+    if (AorL == "L") {
+        _lab = true;
+    } else if (AorL == "A") {
+        _lab = false;
+    } else {
+        throw std::invalid_argument("errore aula o lab");
+    }
 
 }
 
@@ -49,41 +49,42 @@ const int Classroom::getNExamSeats() const {
 }
 
 ///aggiorna il nome
-void Classroom::updateName(const std::string & name) {
-_name = name;
+void Classroom::updateName(const std::string &name) {
+    _name = name;
 }
 
 ///aggiorna il tipo: lab o aula
 void Classroom::updateType(const bool &LorA) {
-_lab = LorA;
+    _lab = LorA;
 }
 
 ///aggiorna la capienza
 void Classroom::updateNSeats(const int &NSeats) {
-_nSeats = NSeats;
+    _nSeats = NSeats;
 }
 
 ///aggiorna la capienza per l'esame
 void Classroom::updateNExamSeats(const int &NExamSeats) {
-_nExamSeats = NExamSeats;
+    _nExamSeats = NExamSeats;
 }
 
+///setto il codice con n 0 davanti
 std::string Classroom::setCod(int nCod) const {
     std::stringstream output;
-    output<<std::setfill('0')<<std::setw(3)<<nCod;
+    output << std::setfill('0') << std::setw(3) << nCod;
     return output.str();
 }
 
-std::ostream &operator<<(std::ostream &room, const Classroom &s){
+std::ostream &operator<<(std::ostream &room, const Classroom &s) {
 
     int nCod = s.getId();
 
-    room << "A" << s.setCod(nCod)<< ";";
-    if(s.getLab())
-        room <<"L;";
+    room << "A" << s.setCod(nCod) << ";";
+    if (s.getLab())
+        room << "L;";
     else
-        room<< "A;";
+        room << "A;";
 
-    room<<s.getName() <<";"<<s.getNSeats() <<";"<<s.getNExamSeats();
+    room << s.getName() << ";" << s.getNSeats() << ";" << s.getNExamSeats();
     return room;
 }

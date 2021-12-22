@@ -12,7 +12,7 @@
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
-///aggiunge un semsetre con i relativi corsi al corso di studio
+///aggiunge un semestre con i relativi corsi al corso di studio
 bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses) {
     ///key
     int i = 0;
@@ -24,19 +24,20 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
     std::vector<std::string> courses;
     courses = Parse::splittedLine(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
-    for (auto iter = courses.begin(); iter != courses.end(); iter++) {//analizzo tutti i componenti del vettore corsi
-
+    ///analizzo tutti i componenti del vettore courses
+    for (auto iter = courses.begin(); iter != courses.end(); iter++) {
         ///dobbiamo controllare che questo corso non esista già all'interno di questo study course
-        std::vector<std::string> allCoursesSoFar = getAllCoursesOfStudyCourse();
-        int num_occ = std::count(allCoursesSoFar.begin(),allCoursesSoFar.end(),courses[i]);
-        if(num_occ != 0){
-            ///il corso esiste già
-            throw std::invalid_argument("Avere due corsi uguali all'interno dello stesso corso di studi non è consentito!");
+        if(_semesters.empty() == false) {//se sono ancora all'inserimento del primo corso del primo semestre la mappa è vuota
+            std::vector<std::string> allCoursesSoFar = getAllCoursesOfStudyCourse();
+            int num_occ = std::count(allCoursesSoFar.begin(), allCoursesSoFar.end(), courses[i]);
+            if (num_occ != 0) {
+                ///il corso esiste già
+                throw std::invalid_argument("Avere due corsi uguali all'interno dello stesso corso di studi non è consentito!");
+            }
         }
-
-        if (!_semesters.count(key)) {//se la chiave non esiste
+        ///
+        if (!_semesters.count(key)) {//se la chiave non esiste(non ho aggiunto ancora coris per quel semestre di quell'anno)
             std::vector<std::string> vect;
-
             vect.push_back(courses[0]);//salvo il primo corso del semestre
             _semesters.insert(std::pair<std::string, std::vector<std::string>>(key, vect));//inserisco nella mappa il primo corso del semestre
         } else {//se la chiave esiste
@@ -45,13 +46,26 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
         }
     }
     return true;
-
 }
 
-///aggiunge corso spento
-bool StudyCourse::addOffCourses(const std::vector<std::string> &corsiSpenti) {
-    for (int i=0; i<corsiSpenti.size(); i++) {
-        _offCourses.push_back(corsiSpenti[i]);//per ogni codice del corso spento associo un oggetto corso
+///prende tutti i corsi del corso di studio
+std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() {
+    std::vector<std::string> allCourses;
+    for(auto iterSemester = _semesters.begin();iterSemester != _semesters.end();iterSemester++) {
+        std::vector<std::string> sem = iterSemester->second;
+        allCourses.insert(allCourses.end(),sem.begin(),sem.end());
+    }
+    for(auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end();iterOffCourses++){
+        allCourses.push_back(*iterOffCourses);
+    }
+    return allCourses;
+}
+
+///aggiunge un corso spento
+bool StudyCourse::addOffCourses(const std::vector<std::string> &offCourses) {
+    //associo ogni corso spento a _offCourses
+    for (int i=0; i<offCourses.size(); i++) {
+        _offCourses.push_back(offCourses[i]);
     }
     _offCourses.sort();//se li vogliamo in ordine crescente;
     return true;
@@ -62,32 +76,24 @@ bool StudyCourse::offCoursesEmpty() const {
     return _offCourses.empty();
 }
 
+///aggiorna semestri e corsi spenti. Se un corso diventa spento dovrò toglierlo dal semestre a cui era assegnato
 bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse) {
-
 for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++){
-
+     //prendo il vettore con i codici del corso
      std::vector<std::string> &corsi = iterSemesters->second;
+     //cerco il codice che deve diventare spento
      auto found = std::find(corsi.begin(),corsi.end(),idCourse);
-
         if(found != corsi.end()) {
              corsi.erase(found);
             _offCourses.push_back(idCourse);
         }
     }
-
     return true;
 }
 
 ///prende l'_id
 const int StudyCourse::getId() const {
     return _id;
-}
-
-///setta il codice del cosro si studi aggiungendo 0 dove necessario
-std::string StudyCourse::setCod(int nCod) const {
-    std::stringstream output;
-    output<<std::setfill('0')<<std::setw(3)<<nCod;
-    return output.str();
 }
 
 ///prende il tipo di corso di studio: triennale o magistrale
@@ -138,74 +144,23 @@ std::string StudyCourse::getOffCoursesString() const {
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
+///setta il codice del cosro si studi aggiungendo 0 dove necessario
+std::string StudyCourse::setCod(int nCod) const {
+    std::stringstream output;
+    output<<std::setfill('0')<<std::setw(3)<<nCod;
+    return output.str();
+}
+
+///prendo semestre e anno di un corso associato ad un corso di studio
 std::string StudyCourse::isInWhichSemester(std::string codCourse) {
-    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){//controllo tutti i semestri del corso di studio
+    //controllo tutti i semestri del corso di studio
+    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){
         auto iterCourse = find(iterSemester->second.begin(),iterSemester->second.end(),codCourse);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
         if(iterCourse != iterSemester->second.end()) {//se il corso è presente in uno dei semestri
-            return iterSemester->first; //ne prendo il semestre(primo o secondo)
+            return iterSemester->first; //ne prendo il semestre e anno (primo o secondo)
         }
     }
     return "";
-}
-
-bool StudyCourse::controlOfTheExistenceOfCourses(const std::map<std::string, Course>& courses, int id) {
-    for(auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){
-        for(int i = 0; i<iterSemester->second.size();i++) {
-            auto iterCourses = courses.find(iterSemester->second[i]);
-            if(iterCourses == courses.end())
-                throw DbException("Nel database dei corsi non e' presente il seguente corso:",iterSemester->second[i],". Si consiglia di aggiungere il corso al database dei corsi:",id);
-        }
-    }
-    return true;
-}
-
-bool StudyCourse::controlStudyCourseOfGroupedCourse(const std::map<std::string, Course>& courses, int idStudyCourse, int year) {
-    bool flag_to_return = false;
-    std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();//prendo tutti i corsi del corso di studio che sto inserendo
-    std::vector<std::string> allGroupedCourses = getAllGroupedCourses(allCourses,courses,year);
-    ///per ogni corso controllo se nello stesso corso di studio ci siano suoi corsi raggruppati e se un corso raggruppato è il raggruppato di uno dei corsi dello stesso corso di studio
-    for (int i = 0; i < allCourses.size(); i++) {
-        flag_to_return = courses.at(allCourses[i]).controlItsGroupedCourse(allCourses,allGroupedCourses, idStudyCourse, year);
-    }
-    return flag_to_return;
-}
-
-const std::map<std::string, std::vector<std::string>> &StudyCourse::getSemesters() const {
-    return _semesters;
-}
-
-std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() {
-    std::vector<std::string> allCourses;
-    for(auto iterSemester = _semesters.begin();iterSemester != _semesters.end();iterSemester++) {
-        std::vector<std::string> sem = iterSemester->second;
-        allCourses.insert(allCourses.end(),sem.begin(),sem.end());
-    }
-    for(auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end();iterOffCourses++){
-        allCourses.push_back(*iterOffCourses);
-    }
-    return allCourses;
-}
-
-bool StudyCourse::controlUniqueness() {
-    std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();//prendo tutti i corsi del corso di studio che sto inserendo
-    for(int i = 0; i<allCourses.size(); i++){
-        int myCount = std::count(allCourses.begin(),allCourses.end(),allCourses[i]);
-        if(myCount > 1)
-            throw InvalidDbException("il seguente corso:",allCourses[i]," e' presente piu' volte nel seguente corso di studio: ",getId());
-    }
-    return false;
-}
-
-///prendo tutti i corsi raggruppati di ogni corso di un corso di studio
-std::vector<std::string> StudyCourse::getAllGroupedCourses(std::vector<std::string> allStudyCourseCourses,const std::map<std::string, Course>& courses, int year) {
-    std::vector<std::string> allGoupedCourses;
-    for(int i = 0; i<allStudyCourseCourses.size(); i++){
-        SpecificYearCourse sp = courses.at(allStudyCourseCourses[i]).getThisYearCourse(year);
-        std::vector<std::string> idGroupedCourse = sp.getIdGroupedCourses();
-        allGoupedCourses.insert(allGoupedCourses.end(), idGroupedCourse.begin(), idGroupedCourse.end());
-    }
-
-    return allGoupedCourses;
 }
 
 ///overload operatore <<

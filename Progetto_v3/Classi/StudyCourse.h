@@ -13,30 +13,21 @@
 class StudyCourse {
 public:
 
-    StudyCourse(const int id, const bool &isBachelor);
+    StudyCourse(const int, const bool &);
 
-    bool addSemesterCourses(const int year,const  int  semester,const std::string & SemesterCourses,const std::map<int, StudyCourse>&, std::map<std::string, Course>&);
-    bool addOffCourses(const std::vector<std::string> &corsiSpenti);
-
+    bool addSemesterCourses(const int,const  int ,const std::string &,const std::map<int, StudyCourse>&, std::map<std::string, Course>&);
+    bool addOffCourses(const std::vector<std::string> &);
     const  int getId() const;
     bool getIsBachelor() const;
     std::string getSemestersString() const;
     std::string getOffCoursesString() const;
-
+    std::vector<std::string> getAllCoursesOfStudyCourse();
     bool offCoursesEmpty() const;
     bool updateSemestersAndOffCourses( const std::string&);
-    std::string setCod(int nCod) const ;
+    std::string setCod(int) const ;
     //param: corso da cercare
     //return "" stringa vuoota se non esiste in questo corso di studio, oppure "anno-semestre" corrispondente
     std::string isInWhichSemester(std::string);
-    bool controlOfTheExistenceOfCourses(const std::map<std::string,Course>&,int);
-    bool controlStudyCourseOfGroupedCourse(const std::map<std::string, Course>&,int, int);
-
-    std::vector<std::string> getAllCoursesOfStudyCourse();
-    const std::map<std::string, std::vector<std::string>> &getSemesters() const;
-    bool controlUniqueness();
-    bool controlOfGroupedCourses(const std::map<std::string,Course> &,int);
-    std::vector<std::string> getAllGroupedCourses(std::vector<std::string>,const std::map<std::string, Course>&, int);
 
 private:
     int _id; //codice del corso di studi

@@ -78,6 +78,11 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     return true;
 }
 
+///aggiunge uno studente ad un anno specifico
+bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string enrolYear, int mark) {
+    return _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
+}
+
 ///prende l'ultimo oggetto SpecificYearCourse dalla map _coursOfTheYear
 SpecificYearCourse &Course::getLastSpecificYearCourse() {
     int lastYear = 0, actualYear;
@@ -140,21 +145,23 @@ int Course::getSpecificYearCourseSize() const {
     return _courseOfTheYear.size();
 }
 
-bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string enrolYear, int mark) {
-    return _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
-}
-
 ///prende il corso con le sue info ad uno specifico anno
 const SpecificYearCourse& Course::getThisYearCourse(int year) const {
         return _courseOfTheYear.at(year);
 }
-///controllo che per quell'anno esista il corso
-bool Course::controlExistenceSpecificYear(std::string codCourse, int year) {
+
+///prende le regole e gli orari dell'esame per un anno specifico di un corso
+const Exam Course::getExamSpecificYear(int acYear) const {
+    return _courseOfTheYear.at(acYear).getExam();
+}
+
+///ritorna il corso ad un anno specifico anno ma come reference
+SpecificYearCourse &Course::getThisYearCourseReference(int year){
     if(_courseOfTheYear.count(year)==0){
         ///non ci sono corsi per quell'anno
-        throw InvalidDbException ("il seguente corso non presenta informazioni relative alla'anno accademico richiesto:",codCourse);
+        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto");
     }
-    return true;
+    return _courseOfTheYear.at(year);
 }
 
 ///il corso è vuoto?
@@ -193,22 +200,6 @@ bool Course::fillAcYearsEmpty() {
     return true;
 }
 
-///prende le regole e gli orari dell'esame per un anno specifico di un corso
-const Exam Course::getExamSpecificYear(int acYear) const {
-    return _courseOfTheYear.at(acYear).getExam();
-}
-
-///controllo che un corso raggruppato esista nel database e in quel caso controllo che non appartenga allo stesso corso di studio dei suoi stessi raggruppati
-bool Course::controlOfGroupedCourses(const std::map<std::string, Course> &courses,int year) {
-    //faccio i controlli per l'anno specifico
-    SpecificYearCourse sp = _courseOfTheYear.at(year);
-        std::vector<std::string> grouppedCourses = sp.getIdGroupedCourses();//predo tutti i codici dei corsi raggruppati del corso considerato
-        //controllo nel database se esistono i corsi raggruppati
-        controlTheExistenceOfGroupedCourse(grouppedCourses,courses,year);
-
-
-    return true;
-}
 ///controllo che esistano i professori e che le ore in totale per lezioni, lab ed esercitazioni combacino con quelle del corso
 bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year) {
         SpecificYearCourse sp = _courseOfTheYear.at(year);
@@ -227,6 +218,7 @@ bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Profess
     return true;
 }
 
+///prendo le ore totali dei prof per un singolo corso
 hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int, Professor> &professors) {
     hours h{0,0,0};
     ///per ogni prof del corso verifico se esista nel db_professori, in tal caso prendo le sue ore e le sommo
@@ -243,44 +235,15 @@ hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCou
     return h;
 }
 
-bool Course::controlTheExistenceOfGroupedCourse(std::vector<std::string> grouppedCourses, const std::map<std::string, Course> &courses, int year) {
-    for (int i = 0; i < grouppedCourses.size(); i++) {//per tutti i corsi raggruppati
-        auto iterGrouppedCourse = courses.find(grouppedCourses[i]);//cerco nel database dei corsi se esiste
-        if (iterGrouppedCourse == courses.end()) {//se non esiste nel database
-            throw DbException("Il seguente corso raggruppato non è presente tra i corsi da inserire:",grouppedCourses[i], ". Ricontrollare il seguente corso da inserire:", getName());
-        }
-    }
-    return true;
-}
-
-bool Course::controlItsGroupedCourse(std::vector<std::string>allCourses,std::vector<std::string>allGroupedCourses,int idCourse,int year) const {
-       SpecificYearCourse sp = _courseOfTheYear.at(year);
-       std::vector<std::string> groupedCourse = sp.getIdGroupedCourses();
-       for(int i = 0; i<groupedCourse.size(); i++){
-           ///controllo che il corso raggruppato non sia all'interno del corso di studio
-           auto foundIntoStudyCourse = std::find(allCourses.begin(),allCourses.end(),groupedCourse[i]);
-           if(foundIntoStudyCourse != allCourses.end())
-               throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i]," relativamente al corso di studio: ",idCourse);
-           ///controllo che il corso raggruppato non sia anche il raggruppato di un altro corso dello stesso corso di studio
-           int myCount = std::count(allGroupedCourses.begin(), allGroupedCourses.end(),groupedCourse[i]);
-           if(myCount > 1)
-               throw DbException("il corso raggruppato",groupedCourse[i],"è anche un corso raggruppato di un altro corso dello stesso corso di studio:",idCourse);
-       }
-
-    return true;
-}
-
-bool Course::courseOfTheYearFounded(int year) {
-    return _courseOfTheYear.find(year) != _courseOfTheYear.end();//ritorno se esistono info per quel corso in quel'anno
-}
-
-SpecificYearCourse &Course::getThisYearCourseReference(int year){
+///controllo che per quell'anno esista il corso
+bool Course::controlExistenceSpecificYear(std::string codCourse, int year) {
     if(_courseOfTheYear.count(year)==0){
         ///non ci sono corsi per quell'anno
-        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto");
+        throw InvalidDbException ("il seguente corso non presenta informazioni relative alla'anno accademico richiesto:",codCourse);
     }
-    return _courseOfTheYear.at(year);
+    return true;
 }
+
 
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"

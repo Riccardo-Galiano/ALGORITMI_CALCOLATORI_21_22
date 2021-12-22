@@ -99,6 +99,7 @@ bool ExamDay::assignExamToExamDay(int hhStart, Course course, int numSlot) {
     return true;
 }
 
+///set degli slot con interi da 8 a 18
 bool ExamDay::setSlot() {
     for(int i = 0; i < 6; i++){
         std::vector<Course> vectCourse;
@@ -107,6 +108,7 @@ bool ExamDay::setSlot() {
     return true;
 }
 
+///ritorna gli slot sottoforma di stringa
 std::vector<std::string> ExamDay::getSlotsToString() {
     std::vector<std::string> slotsToReturn;
     std::stringstream genericSlot;
@@ -125,6 +127,7 @@ std::vector<std::string> ExamDay::getSlotsToString() {
         return slotsToReturn;
 }
 
+///ritorna sottoforma di stringa i corsi con esame assegnato ad un determinato slot
 std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course>& coursesOfThisSlot, std::vector<Course>& CoursesPrintedSoFar) {
     std::stringstream singleSlotSS;
     for (int i = 0; i < coursesOfThisSlot.size(); i++){
@@ -143,12 +146,13 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course>& coursesOfTh
             ///push nel vettore di corsi finora considerati
             CoursesPrintedSoFar.push_back(coursesOfThisSlot[i]);
         }
-        ///se prima volta o meno, scrivo comunque ';'
+        ///se non è la prima volta scrivo ';'
         singleSlotSS << ";";
     }
     return singleSlotSS.str();
 }
 
+///è il primo slot a cui assegno quell'esame o nel precedente è stato già assegnato?
 bool ExamDay::firstSlotCourses(Course courseToFind, std::vector<Course>& CoursesPrintedSoFar) {
     for(int i = 0; i < CoursesPrintedSoFar.size(); i++){
         if(courseToFind.getId() == CoursesPrintedSoFar[i].getId())

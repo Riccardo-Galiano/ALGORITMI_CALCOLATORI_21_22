@@ -367,16 +367,14 @@ bool University::addStudyCourses(const std::string &fin) {
     int i;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi di studio");
         return false;
     }
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
-
-
     bool toContinue = true;
+
     while (std::getline(fileIn, line)) {
         ///codice, livello
             tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
@@ -424,27 +422,18 @@ bool University::addStudyCourses(const std::string &fin) {
             for (i = 0; i < semestri.size(); i++) {
                 year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
                 numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-
                 SCourse.addSemesterCourses(year, numSemester, semestri[i],_studyCourse, _courses);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
             }
-
-
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
             line_counter++;
-
     }
-
     fileIn.close();
-
     dbStudyCourseWrite();
     std::cout << "comando -a:f correttamente eseguito" << std::endl;
-
     return true;
 }
 
 ///inserisco dei nuovi corsi
-
-///da fare controllo se corso non esiste ancora in base dati e sulla correttezza del file: tokens.size = 10
 bool University::addCourses(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -1217,9 +1206,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
 bool University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
     dataBaseIsEmpty(startAcYear);
-
     for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
-        hours hoursCourse = iterCourse->second.getHours();
         ///controllo che il corso abbia info relativamente all'anno accademico richiesto
         iterCourse->second.controlExistenceSpecificYear(iterCourse->first,startAcYear);
         SpecificYearCourse sp = iterCourse->second.getThisYearCourse(startAcYear);

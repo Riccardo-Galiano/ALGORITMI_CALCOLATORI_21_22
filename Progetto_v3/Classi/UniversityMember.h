@@ -19,12 +19,11 @@ public:
     const int getId() const;
     const std::string &getEmail() const;
 
-    void updateName(const std::string &name);
-    void updateSurnName(const std::string &surName);
-    void updateEmail(const std::string &eMail);
+    void updateName(const std::string &);
+    void updateSurnName(const std::string &);
+    void updateEmail(const std::string &);
 
-    const std::string setId(int nMatr) const;
-
+    const std::string setId(int) const;
 
 protected:
     std::string _name;

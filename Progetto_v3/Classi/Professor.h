@@ -15,13 +15,13 @@ class Professor : public UniversityMember {
 public:
 
     Professor():UniversityMember(){};
-    Professor(int matr);
+    Professor(int);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
-    bool setNoAvaibilities(int, std::string& input);
+    bool setNoAvaibilities(int, std::string&);
     std::vector<std::string> outputNoAvailabilities(int);
     void noAvailabilityClear(int);
-    bool addNewExam(std::string date, int hh, std::string cod_exam);
-    bool amIavailable(std::string date, int hh);
+    bool addNewExam(std::string, int, std::string);
+    bool amIavailable(std::string, int);
 
 private:
     //key: inizio anno accademico

@@ -19,12 +19,12 @@ public:
     const int getNSeats() const;
     const int getNExamSeats() const;
 
-    void updateName(const std::string & name);
-    void updateType(const bool & LorA);
-    void updateNSeats(const int & NSeats);
-    void updateNExamSeats(const int & NExamSeats);
+    void updateName(const std::string&);
+    void updateType(const bool&);
+    void updateNSeats(const int&);
+    void updateNExamSeats(const int&);
 
-    std::string setCod(int nCod) const ;
+    std::string setCod(int) const ;
 
 private:
 
