@@ -40,12 +40,14 @@ public:
     int getSpecificYearCourseSize() const;
     bool addStudentToSpecYearCourse(int,Student,std::string,int);
     bool fillAcYearsEmpty();
-    bool controlOfGrouppedCourses(const std::map<std::string,Course> &);
-    bool controlTheExistenceOfGrouppedCourse(std::vector<std::string>grouppedCourses,const std::map<std::string, Course> &courses,int year);
-    bool controlTheExistenceOfProfessors(const std::map<int,Professor> &);
-    bool controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
-    bool controlItsGrouppedCourse(std::vector<std::string>, int) const;
+    bool controlOfGroupedCourses(const std::map<std::string,Course> &,int);
+    bool controlTheExistenceOfGroupedCourse(std::vector<std::string>grouppedCourses,const std::map<std::string, Course> &courses,int year);
+    bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int, hours);
+    hours controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
+    bool controlItsGroupedCourse(std::vector<std::string>,std::vector<std::string>, int,int) const;
     bool courseOfTheYearFounded(int);
+    bool controlExistenceSpecificYear(std::string, int);
+
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

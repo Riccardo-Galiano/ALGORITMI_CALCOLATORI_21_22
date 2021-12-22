@@ -8,6 +8,7 @@
 #include "StudyCourse.h"
 #include "Parse.hpp"
 #include "DbException.h"
+#include "InvalidDbException.h"
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
@@ -139,37 +140,26 @@ std::string StudyCourse::isInWhichSemester(std::string codCourse) {
     return "";
 }
 
-bool StudyCourse::controlOfTheExistenceOfCourses(const std::map<std::string, Course>& courses, int line) {
+bool StudyCourse::controlOfTheExistenceOfCourses(const std::map<std::string, Course>& courses, int id) {
     for(auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){
         for(int i = 0; i<iterSemester->second.size();i++) {
             auto iterCourses = courses.find(iterSemester->second[i]);
             if(iterCourses == courses.end())
-                throw DbException("Nel database dei corsi non e' presente il seguente corso:",iterSemester->second[i],". Rivedere la seguente riga nel file per l'inserimento dei corsi di studio alla riga:",line);
+                throw DbException("Nel database dei corsi non e' presente il seguente corso:",iterSemester->second[i],". Si consiglia di aggiungere il corso al database dei corsi:",id);
         }
     }
     return true;
 }
 
-bool StudyCourse::controlStudyCourseOfGrouppedCourse(const std::map<std::string, Course>& courses, int line) {
-    bool flag_to_return=false;
+bool StudyCourse::controlStudyCourseOfGroupedCourse(const std::map<std::string, Course>& courses, int idStudyCourse, int year) {
+    bool flag_to_return = false;
     std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();//prendo tutti i corsi del corso di studio che sto inserendo
-    for(int i = 0; i<allCourses.size();i++){//per ogni corso controllo se nello stesso corso di studio ci siano suoi corsi raggruppati
-        flag_to_return=courses.at(allCourses[i]).controlItsGrouppedCourse(allCourses,line);
+    std::vector<std::string> allGroupedCourses = getAllGroupedCourses(allCourses,courses,year);
+    ///per ogni corso controllo se nello stesso corso di studio ci siano suoi corsi raggruppati e se un corso raggruppato è il raggruppato di uno dei corsi dello stesso corso di studio
+    for (int i = 0; i < allCourses.size(); i++) {
+        flag_to_return = courses.at(allCourses[i]).controlItsGroupedCourse(allCourses,allGroupedCourses, idStudyCourse, year);
     }
     return flag_to_return;
-    /*for(int i = 0; i < grouppedCourses.size(); i++){
-        auto iterGrouppedCourse = courses.find(grouppedCourses[i]);//cerco nel database(o futuro database) dei corsi se esiste
-        SpecificYearCourse sp = iterGrouppedCourse->second.getThisYearCourse(year);//prendo il corso all'anno considerato
-        std::vector<int> studyCoursesOfGrouppedCourses = sp.getStudyCourseAssigned();//prendo i corsi di studio a cui è assegnato in quell'anno
-        for (int j = 0; j < studyCoursesOfGrouppedCourses.size(); j++) {
-            int count = std::count(allSC.begin(),allSC.end(),studyCoursesOfGrouppedCourses[i]);
-            if(count > 1) {
-                grouppedCourses.insert(grouppedCourses.begin(),getId());
-                throw DbException("Controllare i seguenti corsi in modo che non abbiano corsi di studio in comune:",allName," con rispettivamente i seguenti codici: ",grouppedCourses);
-            }
-        }
-    }
-    return true;*/
 }
 
 const std::map<std::string, std::vector<std::string>> &StudyCourse::getSemesters() const {
@@ -186,6 +176,29 @@ std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() {
         allCourses.push_back(*iterOffCourses);
     }
     return allCourses;
+}
+
+bool StudyCourse::controlUniqueness() {
+
+    std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();//prendo tutti i corsi del corso di studio che sto inserendo
+    for(int i = 0; i<allCourses.size(); i++){
+        int myCount = std::count(allCourses.begin(),allCourses.end(),allCourses[i]);
+        if(myCount > 1)
+            throw InvalidDbException("il seguente corso:",allCourses[i]," e' presente piu' volte nel seguente corso di studio: ",getId());
+    }
+    return false;
+}
+
+///prendo tutti i corsi raggruppati di ogni corso di un corso di studio
+std::vector<std::string> StudyCourse::getAllGroupedCourses(std::vector<std::string> allStudyCourseCourses,const std::map<std::string, Course>& courses, int year) {
+    std::vector<std::string> allGoupedCourses;
+    for(int i = 0; i<allStudyCourseCourses.size(); i++){
+        SpecificYearCourse sp = courses.at(allStudyCourseCourses[i]).getThisYearCourse(year);
+        std::vector<std::string> idGroupedCourse = sp.getIdGroupedCourses();
+        allGoupedCourses.insert(allGoupedCourses.end(), idGroupedCourse.begin(), idGroupedCourse.end());
+    }
+
+    return allGoupedCourses;
 }
 
 ///overload operatore <<

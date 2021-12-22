@@ -61,7 +61,8 @@ public:
 
     const std::vector<std::string> &getIdGroupedCourses() const;
     const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
-    bool notUsed();
+    bool controlCourseAssign(std::string);
+
 
 
 private:

@@ -372,6 +372,10 @@ void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsTo
     allExamAppealsToDo.erase(pos);
 }
 
+bool SessionYear::sessionsPeriodIsEmpty() {
+    return _yearSessions.empty();
+}
+
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"
              << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg

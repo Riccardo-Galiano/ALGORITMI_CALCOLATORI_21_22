@@ -45,6 +45,8 @@ public:
     bool setProfsNoAvailability(std::string acYear,const std::string& fin);
     bool setExamDate(std::string,std::string);
     void noAvailabilityWrite();
+    bool controlDatabase(int);
+    bool dataBaseIsEmpty(int);
 
 
 private:

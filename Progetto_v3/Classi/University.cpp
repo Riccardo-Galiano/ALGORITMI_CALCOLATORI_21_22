@@ -427,9 +427,7 @@ bool University::addStudyCourses(const std::string &fin) {
 
                 SCourse.addSemesterCourses(year, numSemester, semestri[i],_studyCourse);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
             }
-            //controllo che i corsi del corso di studio da inserire esistano nel database dei corsi
-            SCourse.controlOfTheExistenceOfCourses(_courses, line_counter);
-            SCourse.controlStudyCourseOfGrouppedCourse(_courses, line_counter);
+
 
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
             line_counter++;
@@ -527,11 +525,6 @@ bool University::addCourses(const std::string &fin) {
     }
     fileIn.close();
 
-    //controllo che i corsi raggruppati esistano e che  non siano dello stesso corso di studi degli altri raggruppati
-         for(auto iterCourse = _courses.begin(); iterCourse != _courses.end() ;iterCourse++){
-             iterCourse->second.controlOfGrouppedCourses(_courses);
-             iterCourse->second.controlTheExistenceOfProfessors(_professors);
-    }
 
     dbCourseWrite();
 
@@ -1210,6 +1203,8 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
     int constraintRelaxParameter=0;
     bool esito = false;
+
+    controlDatabase(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter<4){
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
@@ -1221,6 +1216,57 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
         std::cerr<<"non è stato possibile generare le date d'esame nonostante i vincoli rilassati"<<std::endl;
     }
     return esito;
+}
+
+bool University::controlDatabase(int startAcYear) {
+    ///controllo che i database non siano vuoti
+    dataBaseIsEmpty(startAcYear);
+
+    for(auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end();iterStudyCourse++) {
+        StudyCourse SCourse = iterStudyCourse->second;
+        ///controllo che i corsi dei corsi di studio esistano nel database dei corsi
+        SCourse.controlOfTheExistenceOfCourses(_courses, SCourse.getId());
+        ///controllo che ogni singolo corso sia unico nel suo corso di studio
+        SCourse.controlUniqueness();
+    }
+
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
+       hours hoursCourse = iterCourse->second.getHours();
+        ///controllo che il corso abbia info relativamente all'anno accademico richiesto
+        iterCourse->second.controlExistenceSpecificYear(iterCourse->first,startAcYear);
+        SpecificYearCourse sp = iterCourse->second.getThisYearCourse(startAcYear);
+        ///controllo che il corso sia assegnato ad almeno un corso di studio
+        sp.controlCourseAssign(iterCourse->first);
+        ///controllo che i corsi raggruppati esistano nel database_corsi
+        iterCourse->second.controlOfGroupedCourses(_courses,startAcYear);
+        ///controllo che i professori di ogni corso esistano e che le ore totali dei prof siano coerenti con quelle del corso
+        iterCourse->second.controlTheExistenceAndHoursOfProfessors(_professors,startAcYear,hoursCourse);
+    }
+
+    ///controllo che, per quell'anno, per ogni corso questo non abbia corsi raggruppati dello stesso corso di studio
+    for(auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end();iterStudyCourse++) {
+        StudyCourse SCourse = iterStudyCourse->second;
+        SCourse.controlStudyCourseOfGroupedCourse(_courses, SCourse.getId(),startAcYear);
+    }
+
+    return false;
+}
+
+///i database sono vuoti?
+bool University::dataBaseIsEmpty(int startAcYear) {
+
+   if(_professors.empty())
+       throw InvalidDbException("Il database dei professori è vuoto");
+   else if (_students.empty())
+       throw InvalidDbException("Il database degli studenti è vuoto");
+   else if (_courses.empty())
+       throw InvalidDbException("Il database dei corsi è vuoto");
+   else if (_studyCourse.empty())
+       throw InvalidDbException("Il database dei corsi di studio è vuoto");
+   else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty())
+       throw InvalidDbException("Il database delle date delle sessioni è vuoto");
+
+   return false;
 }
 
 

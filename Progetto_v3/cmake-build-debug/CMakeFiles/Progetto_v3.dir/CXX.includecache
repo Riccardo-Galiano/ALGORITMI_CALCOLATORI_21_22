@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
+cstring
+-
+
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 string
 -
@@ -24,6 +28,14 @@ iostream
 vector
 -
 
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
+exception
+-
+string
+-
+vector
+-
+
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
 string
 -
@@ -36,6 +48,12 @@ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/
 StudyCourse.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
 map
+-
+
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.h
+exception
+-
+string
 -
 
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
@@ -57,20 +75,6 @@ UniversityMember.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 Date.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
-
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.cpp
-algorithm
--
-fstream
--
-SessionYear.h
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
-Parse.hpp
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
-ExamDay.h
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
-StudyCourse.h
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
 
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
 map
@@ -109,6 +113,40 @@ Course.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 SpecificYearCourse.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp
+fstream
+-
+iostream
+-
+sstream
+-
+iomanip
+-
+University.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
+DbException.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
+InvalidDbException.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.h
+Parse.hpp
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
+algorithm
+-
+
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
+Professor.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+Student.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+Classroom.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
+StudyCourse.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+Course.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+SessionYear.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
 
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 string

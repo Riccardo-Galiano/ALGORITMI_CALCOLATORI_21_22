@@ -30,10 +30,13 @@ public:
     //return "" stringa vuoota se non esiste in questo corso di studio, oppure "anno-semestre" corrispondente
     std::string isInWhichSemester(std::string);
     bool controlOfTheExistenceOfCourses(const std::map<std::string,Course>&,int);
-    bool controlStudyCourseOfGrouppedCourse(const std::map<std::string, Course>&,int);
+    bool controlStudyCourseOfGroupedCourse(const std::map<std::string, Course>&,int, int);
 
     std::vector<std::string> getAllCoursesOfStudyCourse();
     const std::map<std::string, std::vector<std::string>> &getSemesters() const;
+    bool controlUniqueness();
+    bool controlOfGroupedCourses(const std::map<std::string,Course> &,int);
+    std::vector<std::string> getAllGroupedCourses(std::vector<std::string>,const std::map<std::string, Course>&, int);
 
 private:
     int _id; //codice del corso di studi

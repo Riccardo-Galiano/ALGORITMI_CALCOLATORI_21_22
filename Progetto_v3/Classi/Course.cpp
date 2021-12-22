@@ -6,6 +6,7 @@
 #include "Course.h"
 #include "Parse.hpp"
 #include "DbException.h"
+#include "InvalidDbException.h"
 #include <algorithm>
 
 Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
@@ -145,11 +146,15 @@ bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string en
 
 ///prende il corso con le sue info ad uno specifico anno
 const SpecificYearCourse& Course::getThisYearCourse(int year) const {
+        return _courseOfTheYear.at(year);
+}
+///controllo che per quell'anno esista il corso
+bool Course::controlExistenceSpecificYear(std::string codCourse, int year) {
     if(_courseOfTheYear.count(year)==0){
         ///non ci sono corsi per quell'anno
-        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto");
+        throw InvalidDbException ("il seguente corso non presenta informazioni relative alla'anno accademico richiesto:",codCourse);
     }
-    return _courseOfTheYear.at(year);
+    return true;
 }
 
 ///il corso è vuoto?
@@ -194,41 +199,50 @@ const Exam Course::getExamSpecificYear(int acYear) const {
 }
 
 ///controllo che un corso raggruppato esista nel database e in quel caso controllo che non appartenga allo stesso corso di studio dei suoi stessi raggruppati
-bool Course::controlOfGrouppedCourses(const std::map<std::string, Course> &courses) {
-    //faccio i controlli per ogni anno specifico
-    for (auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
-        int year = iterCourse->first;//anno considerato
-        std::vector<std::string> grouppedCourses = iterCourse->second.getIdGroupedCourses();//predo tutti i codici dei corsi raggruppati del corso considerato
-        //controllo nel database(o futuro database) se esistono i corsi raggruppati
-        controlTheExistenceOfGrouppedCourse(grouppedCourses,courses,year);
-    }
+bool Course::controlOfGroupedCourses(const std::map<std::string, Course> &courses,int year) {
+    //faccio i controlli per l'anno specifico
+    SpecificYearCourse sp = _courseOfTheYear.at(year);
+        std::vector<std::string> grouppedCourses = sp.getIdGroupedCourses();//predo tutti i codici dei corsi raggruppati del corso considerato
+        //controllo nel database se esistono i corsi raggruppati
+        controlTheExistenceOfGroupedCourse(grouppedCourses,courses,year);
+
 
     return true;
 }
-
-bool Course::controlTheExistenceOfProfessors(const std::map<int, Professor> &professors) {
-    for (auto iterCourse = _courseOfTheYear.begin(); iterCourse != _courseOfTheYear.end(); iterCourse++) {
-        std::map<int, std::vector<professor>> profsOfParallelCourses = iterCourse->second.getProfsOfParallelCourses();
+///controllo che esistano i professori e che le ore in totale per lezioni, lab ed esercitazioni combacino con quelle del corso
+bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year, hours hoursCourse) {
+        SpecificYearCourse sp = _courseOfTheYear.at(year);
+        std::map<int, std::vector<professor>> profsOfParallelCourses = sp.getProfsOfParallelCourses();
         for (int i = 0; i < profsOfParallelCourses.size(); i++) {
             std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);
-            controlProfsOfSingleCourse(profsOfSingleCourse, professors);
+            hours hourProfs = controlProfsOfSingleCourse(profsOfSingleCourse, professors);
+            if(hoursCourse._lec != hourProfs._lec)
+                throw InvalidDbException("le ore delle lezioni non sono coerenti con le ore del corso: ",getId());
+            else if (hoursCourse._lab != hourProfs._lab)
+                throw  InvalidDbException("le ore dei laboratori non sono coerenti con le ore del corso: ",getId());
+            else if (hoursCourse._ex != hourProfs._ex)
+                throw  InvalidDbException("le ore delle esercitazioni non sono coerenti con le ore del corso:",getId());
         }
-    }
     return true;
 }
 
-bool Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int, Professor> &professors) {
-    for (int j = 0; j < profsOfSingleCourse.size(); j++) {
-        if (professors.find(profsOfSingleCourse[j].prof_id) == professors.end()) {
-            throw DbException("Il seguente professore non è stato trovato nel database:",
-                              profsOfSingleCourse[j].prof_id, ". Controllare il seguente corso che si vuole inserire:",
-                              getName());
+hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int, Professor> &professors) {
+    hours h{0,0,0};
+    ///per ogni prof del corso verifico se esista nel db_professori, in tal caso prendo le sue ore e le sommo
+    for (int i = 0; i < profsOfSingleCourse.size(); i++) {
+        if (professors.find(profsOfSingleCourse[i].prof_id) == professors.end()) {
+            throw DbException("Il seguente professore non è stato trovato nel database:",profsOfSingleCourse[i].prof_id, ". Controllare il seguente corso che si vuole inserire:",getName());
+        } else
+        {
+            h._lec = h._lec + profsOfSingleCourse[i].hLez;
+            h._lab = h._lab + profsOfSingleCourse[i].hLab;
+            h._ex = h._ex + profsOfSingleCourse[i].hExe;
         }
     }
-    return true;
+    return h;
 }
 
-bool Course::controlTheExistenceOfGrouppedCourse(std::vector<std::string> grouppedCourses, const std::map<std::string, Course> &courses, int year) {
+bool Course::controlTheExistenceOfGroupedCourse(std::vector<std::string> grouppedCourses, const std::map<std::string, Course> &courses, int year) {
     for (int i = 0; i < grouppedCourses.size(); i++) {//per tutti i corsi raggruppati
         auto iterGrouppedCourse = courses.find(grouppedCourses[i]);//cerco nel database dei corsi se esiste
         if (iterGrouppedCourse == courses.end()) {//se non esiste nel database
@@ -238,15 +252,20 @@ bool Course::controlTheExistenceOfGrouppedCourse(std::vector<std::string> groupp
     return true;
 }
 
-bool Course::controlItsGrouppedCourse(std::vector<std::string>allCourses,int line) const {
-    for(auto iterSC = _courseOfTheYear.begin(); iterSC != _courseOfTheYear.end();iterSC++){
-       std::vector<std::string> groupedCourse = iterSC->second.getIdGroupedCourses();
+bool Course::controlItsGroupedCourse(std::vector<std::string>allCourses,std::vector<std::string>allGroupedCourses,int idCourse,int year) const {
+       SpecificYearCourse sp = _courseOfTheYear.at(year);
+       std::vector<std::string> groupedCourse = sp.getIdGroupedCourses();
        for(int i = 0; i<groupedCourse.size(); i++){
-           auto found = std::find(allCourses.begin(),allCourses.end(),groupedCourse[i]);
-           if(found != allCourses.end())
-               throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i]," alla riga: ",line);
+           ///controllo che il corso raggruppato non sia all'interno del corso di studio
+           auto foundIntoStudyCourse = std::find(allCourses.begin(),allCourses.end(),groupedCourse[i]);
+           if(foundIntoStudyCourse != allCourses.end())
+               throw DbException("stesso corso di studio tra:",getId()," e ",groupedCourse[i]," relativamente al corso di studio: ",idCourse);
+           ///controllo che il corso raggruppato non sia anche il raggruppato di un altro corso dello stesso corso di studio
+           int myCount = std::count(allGroupedCourses.begin(), allGroupedCourses.end(),groupedCourse[i]);
+           if(myCount > 1)
+               throw DbException("il corso raggruppato",groupedCourse[i],"è anche un corso raggruppato di un altro corso dello stesso corso di studio:",idCourse);
        }
-    }
+
     return true;
 }
 

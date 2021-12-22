@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include "SpecificYearCourse.h"
+#include "InvalidDbException.h"
 
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
@@ -229,6 +230,7 @@ bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGi
         return false;
 }
 
+
 ///quanti appelli ho già assegnato
 int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
     if(_howManyTimesIAmAssignedInASession.count(session)==0)
@@ -263,9 +265,14 @@ const std::map<int, std::vector<professor>> SpecificYearCourse::getProfsOfParall
     return _professors;
 }
 
-bool SpecificYearCourse::notUsed() {
-    return _yy_semester.empty();
+bool SpecificYearCourse::controlCourseAssign(std::string idCourse) {
+    bool isEmpty =_studyCourseAssigned.empty();
+    if(isEmpty)
+        throw InvalidDbException("Il seguente corso non è assegnato ad alcun corso di studio:",idCourse);
+    return true;
 }
+
+
 
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
