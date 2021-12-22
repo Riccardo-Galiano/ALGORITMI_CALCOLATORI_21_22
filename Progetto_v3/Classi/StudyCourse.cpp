@@ -13,7 +13,7 @@
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
 ///aggiunge un semsetre con i relativi corsi al corso di studio
-bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse) {
+bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses) {
     ///key
     int i = 0;
     std::stringstream ss;
@@ -25,6 +25,14 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
     courses = Parse::splittedLine(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     for (auto iter = courses.begin(); iter != courses.end(); iter++) {//analizzo tutti i componenti del vettore corsi
+
+        ///dobbiamo controllare che questo corso non esista già all'interno di questo study course
+        std::vector<std::string> allCoursesSoFar = getAllCoursesOfStudyCourse();
+        int num_occ = std::count(allCoursesSoFar.begin(),allCoursesSoFar.end(),courses[i]);
+        if(num_occ != 0){
+            ///il corso esiste già
+            throw std::invalid_argument("Avere due corsi uguali all'interno dello stesso corso di studi non è consentito!");
+        }
 
         if (!_semesters.count(key)) {//se la chiave non esiste
             std::vector<std::string> vect;
@@ -179,7 +187,6 @@ std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() {
 }
 
 bool StudyCourse::controlUniqueness() {
-
     std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();//prendo tutti i corsi del corso di studio che sto inserendo
     for(int i = 0; i<allCourses.size(); i++){
         int myCount = std::count(allCourses.begin(),allCourses.end(),allCourses[i]);

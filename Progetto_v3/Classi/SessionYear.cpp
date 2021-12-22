@@ -146,11 +146,11 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                     ///controlliamo che non ci siano -1 nel vettore
                     bool againOk = checkHours(startHourPerCourse);
                     if(againOk){
+                        pop = true;
                         ///allora posso assegnare i corsi (facendo pop da allExamAppealsToDo!!!)
                         for(int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
                             Course& courseToConsider = courses.at(coursesToConsiderInThisLoop[i]);
                             assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, courseToConsider, sessName, allExamAppealsToDo);
-                            pop = true;
                         }
                         ///check terminazione funzione
                         if (allExamAppealsToDo.empty()) {

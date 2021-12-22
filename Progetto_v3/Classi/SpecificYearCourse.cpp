@@ -51,19 +51,19 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
             posB = profSenzaQuadre.find_first_of("{}", posB + 1);//continuo a controllare la stringa
         }
     }
-
     ///estrae ogni prof con le relative info
     for (int i = 0; i < foundBracket.size(); i += 2) {
         singoliProfDaLeggere.push_back(
                 profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
 
     }
-    int id, hlez, hexe, hlab;
+    int id=-1, hlez=-1, hexe=-1, hlab=-1;
     bool mainProfFound=false;
     for (int i = 0; i < singoliProfDaLeggere.size(); i++) {//inserisco le info per ogni prof
         std::stringstream ss(singoliProfDaLeggere[i]);
-        ss >> c >> id >> c >> hlez >> c >> hexe >> c
-           >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
+        ss >> c >> id >> c >> hlez >> c >> hexe >> c >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
+        if(id == -1 || hlez == -1 || hexe == -1 || hlab == -1)
+            throw InvalidDbException("ore professore non valide");
         professor p{};//struct
         p.prof_id = id;
         p.hLez = hlez;
@@ -73,7 +73,6 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
             p.mainProf = true;
             mainProfFound=true;
         }
-
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
     if(mainProfFound==false){
@@ -264,16 +263,6 @@ const std::vector<std::string> &SpecificYearCourse::getIdGroupedCourses() const 
 const std::map<int, std::vector<professor>> SpecificYearCourse::getProfsOfParallelCourses() const {
     return _professors;
 }
-
-bool SpecificYearCourse::controlCourseAssign(std::string idCourse) {
-    bool isEmpty =_studyCourseAssigned.empty();
-    if(isEmpty)
-        throw InvalidDbException("Il seguente corso non è assegnato ad alcun corso di studio:",idCourse);
-    return true;
-}
-
-
-
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

@@ -15,7 +15,7 @@ public:
 
     StudyCourse(const int id, const bool &isBachelor);
 
-    bool addSemesterCourses(const int year,const  int  semester,const std::string & SemesterCourses,const std::map<int, StudyCourse>&);
+    bool addSemesterCourses(const int year,const  int  semester,const std::string & SemesterCourses,const std::map<int, StudyCourse>&, std::map<std::string, Course>&);
     bool addOffCourses(const std::vector<std::string> &corsiSpenti);
 
     const  int getId() const;

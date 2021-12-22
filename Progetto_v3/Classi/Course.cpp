@@ -210,8 +210,9 @@ bool Course::controlOfGroupedCourses(const std::map<std::string, Course> &course
     return true;
 }
 ///controllo che esistano i professori e che le ore in totale per lezioni, lab ed esercitazioni combacino con quelle del corso
-bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year, hours hoursCourse) {
+bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year) {
         SpecificYearCourse sp = _courseOfTheYear.at(year);
+        hours hoursCourse = _hours;
         std::map<int, std::vector<professor>> profsOfParallelCourses = sp.getProfsOfParallelCourses();
         for (int i = 0; i < profsOfParallelCourses.size(); i++) {
             std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);

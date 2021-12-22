@@ -42,7 +42,7 @@ public:
     bool fillAcYearsEmpty();
     bool controlOfGroupedCourses(const std::map<std::string,Course> &,int);
     bool controlTheExistenceOfGroupedCourse(std::vector<std::string>grouppedCourses,const std::map<std::string, Course> &courses,int year);
-    bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int, hours);
+    bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int);
     hours controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
     bool controlItsGroupedCourse(std::vector<std::string>,std::vector<std::string>, int,int) const;
     bool courseOfTheYearFounded(int);
