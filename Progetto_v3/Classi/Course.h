@@ -42,6 +42,7 @@ public:
     const Exam getExamSpecificYear(int) const;
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
+    std::map<int,std::vector<std::string>> getGroupedCourseFromAllYear();
 
 private:
     std::string _id;///codice identificativo del corso

@@ -13,9 +13,8 @@
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
 ///aggiunge un semestre con i relativi corsi al corso di studio
-bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses) {
+bool StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses,int posFile) {
     ///key
-    int i = 0;
     std::stringstream ss;
     ss << year << "-" << semester;
     std::string key = ss.str(); //creo la chiave con anno e semestre
@@ -25,24 +24,25 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
     courses = Parse::splittedLine(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     ///analizzo tutti i componenti del vettore courses
-    for (auto iter = courses.begin(); iter != courses.end(); iter++) {
+    for (auto iterCourses = courses.begin(); iterCourses != courses.end(); iterCourses++) {
         ///dobbiamo controllare che questo corso non esista già all'interno di questo study course
         if(_semesters.empty() == false) {//se sono ancora all'inserimento del primo corso del primo semestre la mappa è vuota
             std::vector<std::string> allCoursesSoFar = getAllCoursesOfStudyCourse();
-            int num_occ = std::count(allCoursesSoFar.begin(), allCoursesSoFar.end(), courses[i]);
+            int num_occ = std::count(allCoursesSoFar.begin(), allCoursesSoFar.end(), *iterCourses);
             if (num_occ != 0) {
                 ///il corso esiste già
-                throw std::invalid_argument("Avere due corsi uguali all'interno dello stesso corso di studi non è consentito!");
+                throw InvalidDbException("Avere due corsi uguali all'interno dello stesso corso di studi non e' consentito! ",*iterCourses,posFile);
             }
         }
+        ///controllo che abbia lo stesso semestre se presente in altri corsi di studio
+        sameSemester(*iterCourses,studyCourse,semester);
         ///
         if (!_semesters.count(key)) {//se la chiave non esiste(non ho aggiunto ancora coris per quel semestre di quell'anno)
             std::vector<std::string> vect;
             vect.push_back(courses[0]);//salvo il primo corso del semestre
             _semesters.insert(std::pair<std::string, std::vector<std::string>>(key, vect));//inserisco nella mappa il primo corso del semestre
         } else {//se la chiave esiste
-            i++;
-            _semesters.at(key).push_back(courses[i]);//aggiungo nel semestre già esistenete i corsi successivi al primo
+            _semesters.at(key).push_back(*iterCourses);//aggiungo nel semestre già esistenete i corsi successivi al primo
         }
     }
     return true;
@@ -151,8 +151,22 @@ std::string StudyCourse::setCod(int nCod) const {
     return output.str();
 }
 
+///controlla se un corso presente in altri corsi di studio è posto sempre allo stesso semestre
+bool StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> & studyCourse,int semester) {
+    int sem = 0;
+    for(auto iterStudyCourse = studyCourse.begin();iterStudyCourse != studyCourse.end();iterStudyCourse++){
+       std::string result = iterStudyCourse->second.isInWhichSemester(idCourse);
+       if(result != "") {
+           sem = stoi(result.substr(2, 1));
+           if(semester != sem)
+           throw InvalidDbException("I corsi in parallelo devono appartenere allo stesso semestre.",idCourse);
+       }
+    }
+    return true;
+}
+
 ///prendo semestre e anno di un corso associato ad un corso di studio
-std::string StudyCourse::isInWhichSemester(std::string codCourse) {
+std::string StudyCourse::isInWhichSemester(std::string codCourse) const {
     //controllo tutti i semestri del corso di studio
     for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){
         auto iterCourse = find(iterSemester->second.begin(),iterSemester->second.end(),codCourse);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame

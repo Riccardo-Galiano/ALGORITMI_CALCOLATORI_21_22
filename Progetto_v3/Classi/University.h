@@ -47,7 +47,8 @@ public:
     void noAvailabilityWrite();
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
-    bool controlGroupedCourses(int,std::vector<std::string>&,std::vector<std::string>&,int);
+    bool controlGroupedCourses(int,std::vector<std::string>&,std::vector<std::string>&,int,std::string);
+    bool controlCoerence();
 
 private:
     friend SpecificYearCourse;

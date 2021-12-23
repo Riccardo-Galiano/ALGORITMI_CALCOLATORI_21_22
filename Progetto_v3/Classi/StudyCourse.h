@@ -15,7 +15,7 @@ public:
 
     StudyCourse(const int, const bool &);
 
-    bool addSemesterCourses(const int,const  int ,const std::string &,const std::map<int, StudyCourse>&, std::map<std::string, Course>&);
+    bool addSemesterCourses(const int,const  int ,const std::string &,const std::map<int, StudyCourse>&, std::map<std::string, Course>&,int);
     bool addOffCourses(const std::vector<std::string> &);
     const  int getId() const;
     bool getIsBachelor() const;
@@ -27,7 +27,8 @@ public:
     std::string setCod(int) const ;
     //param: corso da cercare
     //return "" stringa vuoota se non esiste in questo corso di studio, oppure "anno-semestre" corrispondente
-    std::string isInWhichSemester(std::string);
+    std::string isInWhichSemester(std::string) const;
+    bool sameSemester(std::string,const std::map<int, StudyCourse>&,int);
 
 private:
     int _id; //codice del corso di studi

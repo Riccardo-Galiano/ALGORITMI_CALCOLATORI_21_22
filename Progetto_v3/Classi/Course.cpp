@@ -244,6 +244,16 @@ bool Course::controlExistenceSpecificYear(std::string codCourse, int year) {
     return true;
 }
 
+///per anno accademico ho i corsi raggruppati di un corso
+std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
+    std::map<int, std::vector<std::string>> allGrouped;
+    for(auto iterSpecificYear = _courseOfTheYear.begin();iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
+        std::vector<std::string> vect = iterSpecificYear->second.getIdGroupedCourses();
+        allGrouped.insert(std::pair<int, std::vector<std::string>>(iterSpecificYear->first,vect));
+    }
+
+}
+
 
 std::ostream &operator<<(std::ostream &course, Course &s) {
     course << "c;" << s.getId() << ";" << s.getName() << ";" << s.getCfu() << ";" << s.getHours()._lec << ";"
