@@ -913,7 +913,7 @@ bool University::insertCourses(const std::string &fin) {
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
         std::vector<int> studyCourse;
-        for (int i = 0; i < _studyCourse.size(); i++) {
+        for (int i = 1; i < _studyCourse.size(); i++) {
             std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
             if (!res.empty()) {
                 //ho trovato il suo corso di studi
@@ -930,12 +930,16 @@ bool University::insertCourses(const std::string &fin) {
         line_counter++;
     }
     fileIn.close();
+
     ///se c'è un gap tra anni prendo quello precedente per ogni anno mancante
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         //prendo le info degli anni precedenti e li copio, prima di inserire le nuove info
         iterCourse->second.fillAcYearsEmpty();
 
     }
+
+///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
+    controlReciprocyGrouped();
     dbCourseWrite();
     dbStudyCourseWrite();
     return true;
@@ -1316,7 +1320,7 @@ void University::checkDistance(std::string &minor, std::string &major) {
 
 ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
 //a (b,c,d)
-//b (a,c,d)
+//b (f,a,c,d)
 //c (a,b,d)
 //d (a,c,b)
 void University::controlReciprocyGrouped() {
@@ -1324,25 +1328,27 @@ void University::controlReciprocyGrouped() {
         //a
         std::map<int, std::vector<std::string>> allGroupedCourse = iterCourse->second.getGroupedCourseFromAllYear();
         ///per ogni anno accademico del corso
-        for (int i = 0; i < allGroupedCourse.size(); i++) {
-            std::vector<std::string> groupedOfThisYear = allGroupedCourse.at(i); //(b,c,d)
+        for (auto iterSpecific = allGroupedCourse.begin(); iterSpecific != allGroupedCourse.end(); iterSpecific++) {
+            
+            std::vector<std::string> groupedOfThisYear = allGroupedCourse.at(iterSpecific->first); //(b,c,d)
             groupedOfThisYear.push_back(iterCourse->second.getId()); //(b,c,d,a)
             ///controllo tutti nel vettore, meno l'ultimo che è lui stesso (a)
-            for (int j = 0; j < groupedOfThisYear.size() - 1; j++) {//per ogni corso del vettore
+            for (int j = 0; j < groupedOfThisYear.size() - 1; j++) {
                 //b
                 std::map<int, std::vector<std::string>> allGroupedCourse2 = _courses.at(groupedOfThisYear[j]).getGroupedCourseFromAllYear();
+                std::string name = _courses.at(groupedOfThisYear[j]).getName();
                 ///prendo anno accademico considerato
-                std::vector<std::string> groupedOfThisYear2 = allGroupedCourse2.at(i); //(a,c,d)
-                groupedOfThisYear2.push_back(iterCourse->second.getId()); //(a,c,d,b)
+                std::vector<std::string> groupedOfThisYear2 = allGroupedCourse2.at(iterSpecific->first); //(a,c,d)
+                groupedOfThisYear2.push_back(groupedOfThisYear[j]); //(a,c,d,b)
                 ///rimuoviamo corso per corso -> alla fine dovrà rimanere 0
                 for(int k=0; k<groupedOfThisYear.size(); k++){
                     auto pos = std::find(groupedOfThisYear2.begin(), groupedOfThisYear2.end(), groupedOfThisYear[k]);
                     if(pos == groupedOfThisYear2.end())
-                        throw std::invalid_argument("Proprietà di reciprocità dei corsi non rispettata!");
+                        throw InvalidDbException("Proprietà di reciprocità dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: ",name,". Il codice assente e':",groupedOfThisYear[k]);
                     groupedOfThisYear2.erase(pos);
                 }
                 if(groupedOfThisYear2.empty() == false){
-                    throw std::invalid_argument("Proprietà di reciprocità dei corsi non rispettata!");
+                    throw InvalidDbException("Proprietà di reciprocità dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in più: ",name);
                 }
             }
         }

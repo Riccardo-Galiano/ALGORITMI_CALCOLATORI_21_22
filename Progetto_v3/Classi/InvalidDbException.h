@@ -13,6 +13,7 @@ public:
     explicit InvalidDbException(std::string,std::string);
     explicit InvalidDbException(std::string,std::string,int);
     explicit InvalidDbException(std::string,std::string,std::string,std::string,std::string,std::string,std::string,int,std::string, int);
+    explicit InvalidDbException(std::string, std::string, std::string, std::string);
     const char * what() const noexcept override;
 private:
     std::string _message;

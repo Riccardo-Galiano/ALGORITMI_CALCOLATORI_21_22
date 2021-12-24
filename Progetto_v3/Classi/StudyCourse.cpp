@@ -36,7 +36,7 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
         }
         ///se abbiamo un corso in comune con più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
         sameSemester(*iterCourses,studyCourse,semester);
-        ///
+
         if (!_semesters.count(key)) {//se la chiave non esiste(non ho aggiunto ancora coris per quel semestre di quell'anno)
             std::vector<std::string> vect;
             vect.push_back(courses[0]);//salvo il primo corso del semestre

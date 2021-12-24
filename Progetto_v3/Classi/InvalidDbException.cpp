@@ -32,3 +32,9 @@ InvalidDbException::InvalidDbException(std::string mex1, std::string nameCourse,
     _message=mexAndInfo.str();
 
 }
+
+InvalidDbException::InvalidDbException(std::string mex1, std::string name,std::string mex2, std::string idCourse) {
+    std::stringstream mexAndInfo;
+    mexAndInfo<<mex1<<name<<mex2<<idCourse;
+    _message=mexAndInfo.str();
+}
