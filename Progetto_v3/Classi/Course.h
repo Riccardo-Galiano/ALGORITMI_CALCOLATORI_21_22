@@ -26,7 +26,7 @@ public:
 
     bool addSpecificYearCourses(std::string, bool, int, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, std::string, std::vector<int>, int );
     bool addStudentToSpecYearCourse(int,Student,std::string,int);
-    bool fillSpecificYearCourse(std::vector<std::string>& );
+    bool fillSpecificYearCourse(std::vector<std::string>&, int  );
     bool courseOfTheYearIsEmpty();
     bool fillAcYearsEmpty();
     bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int);

@@ -33,30 +33,34 @@ bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar
 }
 
 ///riempie il vettore di stringhe specificYearcourse
-bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse) {
+bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse,int line_counter) {
     std::string acYear = specificYearCourse[1];
     std::stringstream ss(acYear);
     int startYear, endYear;
     char c;
-
-    ss >> startYear >> c >> endYear;
-    if (_courseOfTheYear.find(startYear) != _courseOfTheYear.end())
-        throw std::invalid_argument("anno già esistente");
-
-    SpecificYearCourse lastYearSpecificCourse = getLastSpecificYearCourse();
-    std::stringstream last;
     std::string posLastOffCourses;
-    std::vector<std::string> lastYearSpecificYearCourseSplitted;
-    last << lastYearSpecificCourse;
-
-    lastYearSpecificYearCourseSplitted = Parse::splittedLine(last.str(), ';');
-
     //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
     //specificYearCourse avrebbe soltanto 6 campi quindi dovremmo aggiungere un settimo campo inizialmente vuoto che verrà poi riempito dalle info
     //dell'anno precedente
     if (specificYearCourse.size() == 6) {
         specificYearCourse.push_back(posLastOffCourses);
     }
+    if (specificYearCourse.size() != 7) {
+        throw InvalidDbException("formato file non valido alla riga: ", line_counter);
+    }
+    ss >> startYear >> c >> endYear;
+    if (_courseOfTheYear.find(startYear) != _courseOfTheYear.end())
+        throw std::invalid_argument("anno già esistente");
+
+    SpecificYearCourse lastYearSpecificCourse = getLastSpecificYearCourse();
+    std::stringstream last;
+
+    std::vector<std::string> lastYearSpecificYearCourseSplitted;
+    last << lastYearSpecificCourse;
+
+    lastYearSpecificYearCourseSplitted = Parse::splittedLine(last.str(), ';');
+
+
 
     ///se il campo è vuoto lo riempio con le info dell'anno precedente
     for (int i = 2; i < specificYearCourse.size(); i++) {

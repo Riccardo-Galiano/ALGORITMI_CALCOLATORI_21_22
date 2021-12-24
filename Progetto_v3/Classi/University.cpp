@@ -868,7 +868,7 @@ bool University::insertCourses(const std::string &fin) {
         ///fillSpecificYearCourse mi aggiorna il vettore specificYearCourse aggiungendo le info dell'anno accademico precedente negli spazi vuoti
         if (!(course_with_given_id->second.courseOfTheYearIsEmpty())) {
             course_with_given_id->second.fillSpecificYearCourse(
-                    specificYearCourse);//passo l'intero vettore di stringhe by reference
+                    specificYearCourse,line_counter);//passo l'intero vettore di stringhe by reference
         } else {
             //non esistono informazioni riguardo anni precedenti
             if (specificYearCourse.size() != 7) {
@@ -944,6 +944,7 @@ bool University::insertCourses(const std::string &fin) {
     controlReciprocyGrouped();
     dbCourseWrite();
     dbStudyCourseWrite();
+    std::cout << "comando -i:c eseguito correttamente" << std::endl;
     return true;
 }
 
@@ -1020,7 +1021,7 @@ void University::dbCourseWrite() {
 
 }
 
-///inserimento dell einfo per gli studenti che si iscrivono
+///inserimento delle info per gli studenti che si iscrivono
 bool University::enrollStudents(const std::string &fin) {
     std::fstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -1067,7 +1068,7 @@ bool University::enrollStudents(const std::string &fin) {
 
 ///legge le date delle sessioni in base all'anno
 void University::readSessionAcYear() {
-    std::ifstream fileIn("../Sources/dateSessioni.txt");
+    std::ifstream fileIn("dateSessioni.txt");
     if (!fileIn.is_open()) {
         throw DbException("file dateSessioni.txt non esistente");
     }
@@ -1085,7 +1086,7 @@ void University::readSessionAcYear() {
 
 ///lettura delle indisponibilità dei professori in ogni anno
 void University::readProfsNoAvailability() {
-    std::ifstream fileIn("../Sources/tutte_le_indisponibilita.txt");
+    std::ifstream fileIn("tutte_le_indisponibilita.txt");
     if (!fileIn.is_open()) {
         throw DbException("file tutte_le_indisponibilita non esistente");
     }
