@@ -48,9 +48,11 @@ public:
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
     bool controlGroupedCourses(int,std::vector<std::string>&,std::vector<std::string>&,int,std::string);
-    bool controlCoerence();
+    void controlReciprocyGrouped();
 
 private:
+    void thereIsAHoleInTheCoursesCodes();
+    void checkDistance(std::string&, std::string&);
     friend SpecificYearCourse;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;

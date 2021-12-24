@@ -77,7 +77,8 @@ void University::readStudents() {
         if (_students.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
-            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
+            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
+                                                                    InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
     }
 
     fileIn.close();
@@ -99,9 +100,12 @@ void University::readProfessor() {
         if (_professors.count(nMatr))
             throw std::logic_error("due matricole uguali");
         else
-            _professors.insert(std::pair<int, Professor>(nMatr,Professor(nMatr, InteroProfessore[1], InteroProfessore[2],InteroProfessore[3])));
+            _professors.insert(std::pair<int, Professor>(nMatr,
+                                                         Professor(nMatr, InteroProfessore[1], InteroProfessore[2],
+                                                                   InteroProfessore[3])));
     }
-    fileIn.close();}
+    fileIn.close();
+}
 
 ///lettura delle aule dal database
 void University::readClassroom() {
@@ -119,7 +123,9 @@ void University::readClassroom() {
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
         else {
-            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],std::stoi(InteraClasse[3]),std::stoi(InteraClasse[4]))));
+            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
+                                                                        std::stoi(InteraClasse[3]),
+                                                                        std::stoi(InteraClasse[4]))));
         }
     }
     fileIn.close();
@@ -129,7 +135,6 @@ void University::readClassroom() {
 void University::readCourse() {
     std::ifstream fileIn("../Sources/db_corsi.txt");
     if (!fileIn.is_open()) {
-
         throw DbException("file db_corsi.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -152,9 +157,13 @@ void University::readCourse() {
         if (interoCorso[0] == "c") {//stringa che inizia per c contiene le info generali di un corso
             lastReadCourse = interoCorso[1];//codice identificativo del corso appena letto
             //inserisco il corso con le relative info nella map _courses
-            _courses.insert(std::pair<std::string, Course>(lastReadCourse,Course(interoCorso[1], interoCorso[2], stoi(interoCorso[3]),stoi(interoCorso[4]), stoi(interoCorso[5]),stoi(interoCorso[6]))));
+            _courses.insert(std::pair<std::string, Course>(lastReadCourse,
+                                                           Course(interoCorso[1], interoCorso[2], stoi(interoCorso[3]),
+                                                                  stoi(interoCorso[4]), stoi(interoCorso[5]),
+                                                                  stoi(interoCorso[6]))));
 
-        } else if (interoCorso[0] =="a") {//se la riga letta inizia con "a" devo inserire le info di un anno accademico per un corso generale letto
+        } else if (interoCorso[0] ==
+                   "a") {//se la riga letta inizia con "a" devo inserire le info di un anno accademico per un corso generale letto
             specificYearCourse = interoCorso;//per una maggiore comprensione nella lettura del codice
             acYear = specificYearCourse[1]; //anno accademico
             if (specificYearCourse[2] == "attivo") //se attivo o meno
@@ -164,7 +173,7 @@ void University::readCourse() {
             ///numero di corsi in parallelo
             num_parallel_courses = stoi(specificYearCourse[3]);
             ///estraggo gli id di tutti i prof di tutti i corsi in parallelo
-            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -  2);
+            profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);
             ///divido i vari corsi in parallelo
             std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, num_parallel_courses);
             examData = specificYearCourse[5];//informazioni sull'esame
@@ -178,9 +187,9 @@ void University::readCourse() {
             ///ricerca "anno-semestre" di questo corso
             std::string yy_semester;
             std::vector<int> studyCourse;
-            for(int i=1; i<=_studyCourse.size(); i++){
+            for (int i = 1; i <= _studyCourse.size(); i++) {
                 std::string result = _studyCourse.at(i).isInWhichSemester(lastReadCourse);
-                if(!result.empty()){
+                if (!result.empty()) {
                     //ho trovato il suo corso di studi
                     auto iterStudyCourse = _studyCourse.find(i);
                     studyCourse.push_back(iterStudyCourse->first);
@@ -188,7 +197,9 @@ void University::readCourse() {
                 }
             }
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
-            _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,splittedExamData,idGrouped, yy_semester,studyCourse);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
+            _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
+                                                               splittedExamData, idGrouped, yy_semester,
+                                                               studyCourse);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
     }
     fileIn.close();
@@ -218,16 +229,19 @@ void University::readStudyCourse() {
         std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
 
-        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i +
+                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
-            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
+                                                            len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
         }
         ///leggo i semestri spenti.
         std::string corsiSpentiSenzaQuadre;
         ///è possibile leggere i corsi spenti solo se questi, leggendo da database, sono presenti
         ///e quindi solo se il vettore InteroCorsoDiStudi presenta un quarto campo
         if (InteroCorsoDiStudi.size() == 4) {
-            corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() - 2);    //salvo la stringa senza le quadre
+            corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -
+                                                                     2);    //salvo la stringa senza le quadre
             corsiSpenti = Parse::splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
         }
         ///creo un oggetto StudyCourse
@@ -236,7 +250,8 @@ void University::readStudyCourse() {
             isBachelor = true;
 
         if ((isBachelor && semestri.size() != 6) || (!isBachelor && semestri.size() != 4)) {
-            throw InvalidDbException("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea");
+            throw InvalidDbException(
+                    "formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea");
         }
 
         StudyCourse SCourse(codCorso, isBachelor);
@@ -245,14 +260,16 @@ void University::readStudyCourse() {
         for (i = 0; i < semestri.size(); i++) {
             year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
             numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-            SCourse.addSemesterCourses(year, numSemester, semestri[i],_studyCourse, _courses,codCorso);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,
+                                       codCorso);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
 
         ///solo se presenti aggiungo i corsi spenti
         if (InteroCorsoDiStudi.size() == 4) {
             SCourse.addOffCourses(corsiSpenti);
         }
-        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
+        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso,
+                                                        SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
     }
 
     fileIn.close();
@@ -275,7 +292,8 @@ bool University::addStuds(const std::string &fileIn) {
             throw DbException("errore formato file studenti alla riga: ", line_counter);
         }
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
+                                                               tokens[2]))); //inserisco il nuovo studente nella mappatura interna
         line_counter++;
     }
     fIn.close();
@@ -354,56 +372,62 @@ bool University::addStudyCourses(const std::string &fin) {
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
     std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
-
     while (std::getline(fileIn, line)) {
         ///codice, livello
-            tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
-            if (tokens.size() != 2) {
-                throw DbException("errore formato file corsi di studio alla riga: ", line_counter);
-            }
-            int codCorso = getNewStudyCourseId();
+        tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
+        if (tokens.size() != 2) {
+            throw DbException("errore formato file corsi di studio alla riga: ", line_counter);
+        }
+        int codCorso = getNewStudyCourseId();
 
-            std::string levelCourse = tokens[0];//triennale o magistrale
-            ///devo leggere i semestri
-            std::vector<int> posSem;
-            ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
-            std::size_t found = tokens[1].find_first_of("{}");
-            while (found !=  std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-                posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
-                found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
-            } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
+        std::string levelCourse = tokens[0];//triennale o magistrale
+        ///devo leggere i semestri
+        std::vector<int> posSem;
+        ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
+        std::size_t found = tokens[1].find_first_of("{}");
+        while (found !=
+               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            posSem.push_back(
+                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
+        } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
-            std::vector<std::string> semestri;
-            for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
-                int posStart = posSem[i] + 1;// tolgo la graffa
-                int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(tokens[1].substr(posStart,len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
-            } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
-            ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
-            ///controllo che formato file sia corretto:
-            ///se L3 -> 6 semestri, se LM -> 4 semestri
-            if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
-                throw DbException(
-                        "formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:",
-                        line_counter);
-            }
+        std::vector<std::string> semestri;
+        for (i = 0; i < posSem.size() - 1; i = i +
+                                               2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+            int posStart = posSem[i] + 1;// tolgo la graffa
+            int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
+            semestri.push_back(tokens[1].substr(posStart,
+                                                len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+        } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
+        ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
+        ///controllo che formato file sia corretto:
+        ///se L3 -> 6 semestri, se LM -> 4 semestri
+        if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
+            throw DbException(
+                    "formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:",
+                    line_counter);
+        }
 
-            ///creo StudyCourse
-            bool isBachelor = false;
-            if (levelCourse.compare("BS") == 0)
-                isBachelor = true;
-            StudyCourse SCourse(codCorso, isBachelor);
-            //carico corsi e semestri letti nello studycourse
-            int year = 1;
-            int numSemester = 1;
-            for (i = 0; i < semestri.size(); i++) {
-                year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
-                numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-                SCourse.addSemesterCourses(year, numSemester, semestri[i],_studyCourse, _courses,line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
-            }
-            _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
-            line_counter++;
+        ///creo StudyCourse
+        bool isBachelor = false;
+        if (levelCourse.compare("BS") == 0)
+            isBachelor = true;
+        StudyCourse SCourse(codCorso, isBachelor);
+        //carico corsi e semestri letti nello studycourse
+        int year = 1;
+        int numSemester = 1;
+        for (i = 0; i < semestri.size(); i++) {
+            year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
+            numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
+            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,
+                                       line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+        }
+        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
+        line_counter++;
     }
+    ///controllo non ci siano buchi, se c'è mi ritorna eccezione
+    thereIsAHoleInTheCoursesCodes();
     fileIn.close();
     dbStudyCourseWrite();
     std::cout << "comando -a:f correttamente eseguito" << std::endl;
@@ -460,38 +484,44 @@ bool University::addCourses(const std::string &fin) {
         acYear = specificYearCourse[0]; //anno accademico
 
         num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
-        profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, num_parallel_courses);//divido i vari corsi in parallelo
+        profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() -
+                                                          2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
+                                                                  num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[8];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
         idGroupedCourse = specificYearCourse[9];//id dei vari corsi raggruppati
-        idGroupedCourse = idGroupedCourse.substr(1,idGroupedCourse.size() - 2);// tolgo le { } che racchiudono gli id
+        idGroupedCourse = idGroupedCourse.substr(1, idGroupedCourse.size() - 2);// tolgo le { } che racchiudono gli id
         idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
         std::vector<int> studyCourse;
-        if(_studyCourse.empty())
+        if (_studyCourse.empty())
             throw InvalidDbException("Per inserire nuovi corsi, devi prima definire i corsi di studio relativi");
-        for(int i=1; i<=_studyCourse.size(); i++){
+        for (int i = 1; i <= _studyCourse.size(); i++) {
             std::string result = _studyCourse.at(i).isInWhichSemester(newIdCourse);
-            if(!result.empty()){
+            if (!result.empty()) {
                 //ho trovato il suo corso di studi
                 ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i,idGrouped,specificYearCourse,line_counter,newIdCourse);
+                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, newIdCourse);
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = result;
             }
         }
-        if(yy_semester.empty())
-            throw InvalidDbException("un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",newIdCourse);
-        _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idGrouped,yy_semester,studyCourse);
-       // controlCoerence();
+        if (yy_semester.empty())
+            throw InvalidDbException(
+                    "un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",
+                    newIdCourse);
+        _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
+                                                        splittedExamData, idGrouped, yy_semester, studyCourse);
         ///controllo che i professori di questo corso esistano già in _professors
-        _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors,Parse::getAcStartYear(acYear));
+        _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors, Parse::getAcStartYear(acYear));
         line_counter++;
     }
+    ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
+    controlReciprocyGrouped();
     fileIn.close();
     dbCourseWrite();
     std::cout << "comando -a:c eseguito correttamente" << std::endl;
@@ -872,8 +902,10 @@ bool University::insertCourses(const std::string &fin) {
         }
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
-        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, num_parallel_courses);//divido i vari corsi in parallelo
+        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
+                                                          2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
+                                                                  num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[5];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
@@ -881,25 +913,27 @@ bool University::insertCourses(const std::string &fin) {
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
         std::vector<int> studyCourse;
-        for(int i=0; i<_studyCourse.size(); i++){
+        for (int i = 0; i < _studyCourse.size(); i++) {
             std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
-            if(!res.empty()){
+            if (!res.empty()) {
                 //ho trovato il suo corso di studi
                 ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i,idGrouped,specificYearCourse,line_counter,specificYearCourse[0]);
+                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, specificYearCourse[0]);
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = res;
             }
         }
-        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar, splittedExamData, idGrouped, yy_semester,studyCourse);
+        _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
+                                                                  splittedExamData, idGrouped, yy_semester,
+                                                                  studyCourse);
         line_counter++;
     }
     fileIn.close();
     ///se c'è un gap tra anni prendo quello precedente per ogni anno mancante
-    for(auto iterCourse = _courses.begin();iterCourse != _courses.end();iterCourse++) {
-             //prendo le info degli anni precedenti e li copio, prima di inserire le nuove info
-            iterCourse->second.fillAcYearsEmpty();
+    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+        //prendo le info degli anni precedenti e li copio, prima di inserire le nuove info
+        iterCourse->second.fillAcYearsEmpty();
 
     }
     dbCourseWrite();
@@ -1057,9 +1091,11 @@ void University::readProfsNoAvailability() {
             int acYear = Parse::getAcStartYear(profAvailability[0]);
             int nMatr = Parse::getMatr(profAvailability[1]);
             //prima di inserire le indisponibilità devo controllare che abbia il professore
-            if(_professors.find(nMatr)!=_professors.end()) {
-                for (int i = 2;i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
-                    _professors.at(nMatr).setNoAvaibilities(acYear,profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
+            if (_professors.find(nMatr) != _professors.end()) {
+                for (int i = 2;
+                     i < profAvailability.size(); i++) {//per il numero di periodi di indisponibilità del singolo prof
+                    _professors.at(nMatr).setNoAvaibilities(acYear,
+                                                            profAvailability[i]);//vado a settare l'indisponibilità del prof nella map _professor
                 }
             }
         }
@@ -1068,8 +1104,8 @@ void University::readProfsNoAvailability() {
 }
 
 ///setta il periodo delle sessioni
-bool University::setSessionPeriod( std::string &acYear,  std::string &winterSession,
-                                   std::string &summerSession,  std::string &autumnSession) {
+bool University::setSessionPeriod(std::string &acYear, std::string &winterSession,
+                                  std::string &summerSession, std::string &autumnSession) {
     std::string prova = acYear;
     int acStartYear = Parse::getAcStartYear(prova);
     if (_acYearSessions.count(acStartYear) != 0) {
@@ -1161,18 +1197,19 @@ void University::noAvailabilityWrite() {
 ///organizza gli esami per l'anno accademico
 bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
-    int constraintRelaxParameter=0;
+    int constraintRelaxParameter = 0;
     bool esito = false;
     controlDatabase(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
-    while (!esito && constraintRelaxParameter<4){
+    while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
-        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile,_courses,_professors, constraintRelaxParameter);
+        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,
+                                                                       constraintRelaxParameter);
         constraintRelaxParameter++;
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
-    if(!esito){
-        std::cerr<<"non è stato possibile generare le date d'esame nonostante i vincoli rilassati"<<std::endl;
+    if (!esito) {
+        std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
     return esito;
 }
@@ -1181,9 +1218,9 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
 bool University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
     dataBaseIsEmpty(startAcYear);
-    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
+    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         ///controllo che il corso abbia info relativamente all'anno accademico richiesto
-        iterCourse->second.controlExistenceSpecificYear(iterCourse->first,startAcYear);
+        iterCourse->second.controlExistenceSpecificYear(iterCourse->first, startAcYear);
         SpecificYearCourse sp = iterCourse->second.getThisYearCourse(startAcYear);
     }
 
@@ -1192,51 +1229,125 @@ bool University::controlDatabase(int startAcYear) {
 
 ///i database sono vuoti?
 bool University::dataBaseIsEmpty(int startAcYear) {
-   if(_professors.empty())
-       throw InvalidDbException("Il database dei professori è vuoto");
-   else if (_students.empty())
-       throw InvalidDbException("Il database degli studenti è vuoto");
-   else if (_courses.empty())
-       throw InvalidDbException("Il database dei corsi è vuoto");
-   else if (_studyCourse.empty())
-       throw InvalidDbException("Il database dei corsi di studio è vuoto");
-   else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty())
-       throw InvalidDbException("Il database delle date delle sessioni è vuoto");
-   return false;
+    if (_professors.empty())
+        throw InvalidDbException("Il database dei professori è vuoto");
+    else if (_students.empty())
+        throw InvalidDbException("Il database degli studenti è vuoto");
+    else if (_courses.empty())
+        throw InvalidDbException("Il database dei corsi è vuoto");
+    else if (_studyCourse.empty())
+        throw InvalidDbException("Il database dei corsi di studio è vuoto");
+    else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty())
+        throw InvalidDbException("Il database delle date delle sessioni è vuoto");
+    return false;
 }
 
 /// controllo che idGrouped NON siano corsi dello stesso CdS
-bool University::controlGroupedCourses(int idStudyCourse,std::vector<std::string>& idGrouped, std::vector<std::string>& specificYearCourse, int line_counter,std::string idCourse){
+bool University::controlGroupedCourses(int idStudyCourse, std::vector<std::string> &idGrouped,
+                                       std::vector<std::string> &specificYearCourse, int line_counter,
+                                       std::string idCourse) {
     std::vector<std::string> allCoursesOfCdS = _studyCourse.at(idStudyCourse).getAllCoursesOfStudyCourse();
     for (int j = 0; j < idGrouped.size(); j++) {
         auto found = std::find(allCoursesOfCdS.begin(), allCoursesOfCdS.end(), idGrouped[j]);
         if (found != allCoursesOfCdS.end())
-            throw InvalidDbException("stesso corso di studio tra: ", specificYearCourse[1], "(corrispondente al corso:",idCourse,") e ", idGrouped[j],
-                              " alla riga: ", line_counter,". Corso di studio non coerente: ",idStudyCourse);
+            throw InvalidDbException("stesso corso di studio tra: ", specificYearCourse[1], "(corrispondente al corso:",
+                                     idCourse, ") e ", idGrouped[j],
+                                     " alla riga: ", line_counter, ". Corso di studio non coerente: ", idStudyCourse);
     }
     return true;
 }
 
-/*
-bool University::controlCoerence() {
-    for(auto iterCourse = _courses.begin();iterCourse != _courses.end();iterCourse++){
-        std::map<int,std::vector<std::string>> allGroupedCourse = iterCourse->second.getGroupedCourseFromAllYear();
-    ///per ogni anno accademico del corso
-     for(int i = 0; i<allGroupedCourse.size();i++){
-         std::vector<std::string> controlVect = allGroupedCourse.at(i);
-         for(int j = 0; j< controlVect.size();j++)
-         {//per ogni corso del vettore
-          // metto il corso itercourse e tolgo il corso del vettore stesso
-             std::vector<std::string> vect =  controlVect;
-             vect.push_back(iterCourse->first);
-             auto it = find(vect.begin(),vect.end(),vect[j]);
-             vect.erase(it);
-             //controllo che i corsi raggruppati del raggruppato e vect siano uguali
-        }
-     }
+void University::thereIsAHoleInTheCoursesCodes() {
+    ///controllo non ci siano buchi, se c'è mi ritorna la stringa non consecutiva che crea il buco
+    std::vector<std::string> allCoursesCodesFromSemesters;
+    std::vector<std::string> codesReturned;
+    ///prendo tutti corsi di tutti i semestri di tutti i corsi di studio
+    for (int i = 1; i <= _studyCourse.size(); i++) {
+        codesReturned = _studyCourse.at(i).getAllCoursesOfStudyCourse();
+        allCoursesCodesFromSemesters.insert(allCoursesCodesFromSemesters.end(), codesReturned.begin(),
+                                            codesReturned.end());
+    }
+    ///for per controllare che le stringhe siano sequenziali
+    std::sort(allCoursesCodesFromSemesters.begin(), allCoursesCodesFromSemesters.end());
+    allCoursesCodesFromSemesters.erase(unique(allCoursesCodesFromSemesters.begin(), allCoursesCodesFromSemesters.end()),
+                                       allCoursesCodesFromSemesters.end());
+    for (int i = 1; i < allCoursesCodesFromSemesters.size(); i++) {
+        checkDistance(allCoursesCodesFromSemesters[i - 1], allCoursesCodesFromSemesters[i]);
     }
 }
- */
+
+void University::checkDistance(std::string &minor, std::string &major) {
+    int size_min = minor.size();
+    int size_maj = major.size();
+    if (size_maj != size_min)
+        throw std::invalid_argument("errore codice corso!");
+    for (int i = size_maj; i >= 0; i--) {
+        char lettMaj = major[size_maj - 1]; //caso1: 01AAAAA, caso2: 01AAAAZ
+        char lettMin = minor[size_min - 1]; //caso1: 01AAAAB, caso2: 01AAABA
+        char penultimaLettMaj = major[size_maj - 2];
+        char penultimaLettMin = minor[size_min - 2];
+        bool other_equal = true;
+        for (int j = 0; j < size_maj - 2; j++) {
+            char lettMaj = major[j];
+            char lettMin = minor[j];
+            if (lettMaj != lettMin)
+                other_equal = false;
+        }
+        int distance = lettMaj - lettMin;
+        if (distance == 1 && other_equal && penultimaLettMaj == penultimaLettMin) {
+            ///OK
+
+            return;
+        } else if (lettMaj == 'A' && lettMin == 'Z' && penultimaLettMaj != penultimaLettMin && other_equal) {
+            ///penul diverse, devo controllare che penultima_maj > pen_min
+            distance = penultimaLettMaj - penultimaLettMin;
+            if (distance == 1)
+                ///OK
+                return;
+        }
+    }
+    ///se esco devo lanciare eccezione
+    std::string error("File non corretto: le stringhe dei corsi non sono consecutive -> (");
+    error = error + major;
+    error = error + ")";
+    throw std::invalid_argument(error.c_str());
+}
+
+
+///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
+//a (b,c,d)
+//b (a,c,d)
+//c (a,b,d)
+//d (a,c,b)
+void University::controlReciprocyGrouped() {
+    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+        //a
+        std::map<int, std::vector<std::string>> allGroupedCourse = iterCourse->second.getGroupedCourseFromAllYear();
+        ///per ogni anno accademico del corso
+        for (int i = 0; i < allGroupedCourse.size(); i++) {
+            std::vector<std::string> groupedOfThisYear = allGroupedCourse.at(i); //(b,c,d)
+            groupedOfThisYear.push_back(iterCourse->second.getId()); //(b,c,d,a)
+            ///controllo tutti nel vettore, meno l'ultimo che è lui stesso (a)
+            for (int j = 0; j < groupedOfThisYear.size() - 1; j++) {//per ogni corso del vettore
+                //b
+                std::map<int, std::vector<std::string>> allGroupedCourse2 = _courses.at(groupedOfThisYear[j]).getGroupedCourseFromAllYear();
+                ///prendo anno accademico considerato
+                std::vector<std::string> groupedOfThisYear2 = allGroupedCourse2.at(i); //(a,c,d)
+                groupedOfThisYear2.push_back(iterCourse->second.getId()); //(a,c,d,b)
+                ///rimuoviamo corso per corso -> alla fine dovrà rimanere 0
+                for(int k=0; k<groupedOfThisYear.size(); k++){
+                    auto pos = std::find(groupedOfThisYear2.begin(), groupedOfThisYear2.end(), groupedOfThisYear[k]);
+                    if(pos == groupedOfThisYear2.end())
+                        throw std::invalid_argument("Proprietà di reciprocità dei corsi non rispettata!");
+                    groupedOfThisYear2.erase(pos);
+                }
+                if(groupedOfThisYear2.empty() == false){
+                    throw std::invalid_argument("Proprietà di reciprocità dei corsi non rispettata!");
+                }
+            }
+        }
+    }
+}
 
 
 

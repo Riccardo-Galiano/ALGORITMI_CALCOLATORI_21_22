@@ -251,7 +251,6 @@ std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
         std::vector<std::string> vect = iterSpecificYear->second.getIdGroupedCourses();
         allGrouped.insert(std::pair<int, std::vector<std::string>>(iterSpecificYear->first,vect));
     }
-
 }
 
 

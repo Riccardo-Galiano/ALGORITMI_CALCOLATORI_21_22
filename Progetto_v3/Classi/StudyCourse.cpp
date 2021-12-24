@@ -34,7 +34,7 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
                 throw InvalidDbException("Avere due corsi uguali all'interno dello stesso corso di studi non e' consentito! ",*iterCourses,posFile);
             }
         }
-        ///controllo che abbia lo stesso semestre se presente in altri corsi di studio
+        ///se abbiamo un corso in comune con più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
         sameSemester(*iterCourses,studyCourse,semester);
         ///
         if (!_semesters.count(key)) {//se la chiave non esiste(non ho aggiunto ancora coris per quel semestre di quell'anno)
