@@ -10,6 +10,7 @@
 class InvalidDbException : public std::exception {
 public:
     explicit InvalidDbException(std::string);
+    explicit InvalidDbException(std::string, int);
     explicit InvalidDbException(std::string,std::string);
     explicit InvalidDbException(std::string,std::string,int);
     explicit InvalidDbException(std::string,std::string,std::string,std::string,std::string,std::string,std::string,int,std::string, int);

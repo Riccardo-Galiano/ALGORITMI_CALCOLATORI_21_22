@@ -61,7 +61,7 @@ University::University() {
 
 ///leggo il database degli studenti
 void University::readStudents() {
-    std::ifstream fileIn("../Sources/db_studenti.txt");
+    std::ifstream fileIn("db_studenti.txt");
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
         throw DbException("file db_studenti.txt non esistente");
@@ -87,7 +87,7 @@ void University::readStudents() {
 
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice
 void University::readProfessor() {
-    std::ifstream fileIn("../Sources/db_professori.txt");
+    std::ifstream fileIn("db_professori.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_professori.txt non esistente");
     }
@@ -109,7 +109,7 @@ void University::readProfessor() {
 
 ///lettura delle aule dal database
 void University::readClassroom() {
-    std::ifstream fileIn("../Sources/db_aule.txt");
+    std::ifstream fileIn("db_aule.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_aule.txt non esistente");
     }
@@ -133,10 +133,11 @@ void University::readClassroom() {
 
 ///lettura dei corsi dal database
 void University::readCourse() {
-    std::ifstream fileIn("../Sources/db_corsi.txt");
+    std::ifstream fileIn("db_corsi.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_corsi.txt non esistente");
     }
+    int line_counter=1;
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> interoCorso;    //accoglierà il vettore con la riga del file scissa
     std::vector<std::string> specificYearCourse;
@@ -199,9 +200,10 @@ void University::readCourse() {
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData, idGrouped, yy_semester,
-                                                               studyCourse);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
+                                                               studyCourse, line_counter);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
     }
+    line_counter++;
     fileIn.close();
 }
 
@@ -209,7 +211,7 @@ void University::readCourse() {
 void University::readStudyCourse() {
 
     int i;
-    std::ifstream fileIn("../Sources/db_corsi_studio.txt");
+    std::ifstream fileIn("db_corsi_studio.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_corsi_studio.txt non esistente");
     }
@@ -427,7 +429,7 @@ bool University::addStudyCourses(const std::string &fin) {
         line_counter++;
     }
     ///controllo non ci siano buchi, se c'è mi ritorna eccezione
-    thereIsAHoleInTheCoursesCodes();
+    //thereIsAHoleInTheCoursesCodes();
     fileIn.close();
     dbStudyCourseWrite();
     std::cout << "comando -a:f correttamente eseguito" << std::endl;
@@ -515,7 +517,7 @@ bool University::addCourses(const std::string &fin) {
                     "un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",
                     newIdCourse);
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                        splittedExamData, idGrouped, yy_semester, studyCourse);
+                                                        splittedExamData, idGrouped, yy_semester, studyCourse, line_counter);
         ///controllo che i professori di questo corso esistano già in _professors
         _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors, Parse::getAcStartYear(acYear));
         line_counter++;
@@ -926,7 +928,7 @@ bool University::insertCourses(const std::string &fin) {
         }
         _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                   splittedExamData, idGrouped, yy_semester,
-                                                                  studyCourse);
+                                                                  studyCourse, line_counter);
         line_counter++;
     }
     fileIn.close();
@@ -949,7 +951,7 @@ bool University::insertCourses(const std::string &fin) {
 void University::dbStudsWrite() {
 
     std::fstream fout;
-    fout.open("../Sources/db_studenti.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
         Student stud = _students.at(
@@ -965,7 +967,7 @@ void University::dbStudsWrite() {
 void University::dbProfsWrite() {
 
     std::fstream fout;
-    fout.open("../Sources/db_professori.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("db_professori.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterProf = _professors.begin(); iterProf != _professors.end(); iterProf++) {
         Professor prof = _professors.at(iterProf->first);
@@ -979,7 +981,7 @@ void University::dbProfsWrite() {
 void University::dbClassRoomWrite() {
 
     std::fstream fout;
-    fout.open("../Sources/db_aule.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("db_aule.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterClassRoom = _classroom.begin(); iterClassRoom != _classroom.end(); iterClassRoom++) {
         Classroom room = _classroom.at(iterClassRoom->first);
@@ -991,7 +993,7 @@ void University::dbClassRoomWrite() {
 ///riscrive il database dei corsi di studio
 void University::dbStudyCourseWrite() {
     std::fstream fout;
-    fout.open("../Sources/db_corsi_studio.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("db_corsi_studio.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
         StudyCourse sC = _studyCourse.at(iterStudyCourse->first);
@@ -1007,7 +1009,7 @@ void University::dbStudyCourseWrite() {
 void University::dbCourseWrite() {
 
     std::fstream fout;
-    fout.open("../Sources/db_corsi.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("db_corsi.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         Course generalCourse = _courses.at(
@@ -1175,7 +1177,7 @@ std::vector<std::string> University::allProfsNoAvailabilities() {
 void University::dateSessionsWrite() {
 
     std::fstream fout;
-    fout.open("../Sources/dateSessioni.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("dateSessioni.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterAcYear = _acYearSessions.begin(); iterAcYear != _acYearSessions.end(); iterAcYear++) {
         SessionYear dateSessions = iterAcYear->second;
@@ -1189,7 +1191,7 @@ void University::dateSessionsWrite() {
 ///scrittura indisponibilità professori di tutti gli anni
 void University::noAvailabilityWrite() {
     std::fstream fout;
-    fout.open("../Sources/tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
+    fout.open("tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
     std::vector<std::string> allprofsAvailabilities = allProfsNoAvailabilities();//ritorna le indisponibilità per tutti gli anni per prof già sottoforma di stringhe da salvare sul file.txt
     for (int i = 0;
          i < allprofsAvailabilities.size(); i++) {//scrivo su file le varie stringhe di allProfsAvailabilities

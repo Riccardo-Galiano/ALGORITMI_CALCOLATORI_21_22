@@ -33,7 +33,7 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
-    SpecificYearCourse(std::string ,bool ,int , std::vector<std::string> , std::vector<std::string> ,std::vector<std::string> , std::string , std::vector<int>);
+    SpecificYearCourse(std::string ,bool ,int , std::vector<std::string> , std::vector<std::string> ,std::vector<std::string> , std::string , std::vector<int>, int);
 
     int getStartYear() const;
     int getEndYear() const;
@@ -43,7 +43,7 @@ public:
     const std::string getProfParString() const;
     std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
     const std::string getGroupedCoursesIdString() const;
-    std::vector<professor> getProfsFromString (std::string);
+    std::vector<professor> getProfsFromString (std::string, int);
     const std::vector<std::string> &getIdGroupedCourses() const;
     const std::string getExamString() const;
     const Exam &getExam() const;
@@ -53,7 +53,7 @@ public:
 
     bool setYear();
     std::string setId(int)const;
-    bool setProfMap(int, std::vector<std::string>);
+    bool setProfMap(int, std::vector<std::string>, int);
     bool addStudent(Student,std::string,int);
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
     int amIAssignedAlreadyInThisSession(int);

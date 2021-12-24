@@ -9,7 +9,7 @@
 
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,std::vector<int> studyCourse) :
+                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,std::vector<int> studyCourse, int line_counter) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
@@ -19,18 +19,18 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _idGroupedCourses = idGrouped;
     _yy_semester = yy_semester;
     _studyCourseAssigned = studyCourse;
-    setProfMap(nCrsiPar, prof);//setto la mappa dei prof per ogni corso
+    setProfMap(nCrsiPar, prof, line_counter);//setto la mappa dei prof per ogni corso
 
 }
 
 
 ///setta la map dei prof con relativi id e ore
 //ogni anno accademico per ogni corso presenta una map che contiene tutte le info raccolte per i prof di ogni corso in parallelo
-bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit) {
+bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, int line_counter) {
 
     std::vector<professor> profConOre;
     for (int i = 0; i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
-        profConOre = getProfsFromString(profsToSplit[i]);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
+        profConOre = getProfsFromString(profsToSplit[i],line_counter);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
         _professors.insert(std::pair<int, std::vector<professor>>(i,profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
 
@@ -72,7 +72,7 @@ int SpecificYearCourse::getParalleleCours() const {
 }
 
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
-std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs) {
+std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,int line_counter) {
     int mainProf; //titolare del corso
     std::vector<std::string> singoliProfDaLeggere;
     std::vector<professor> profToReturn;
@@ -111,7 +111,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
         std::stringstream ss(singoliProfDaLeggere[i]);
         ss >> c >> id >> c >> hlez >> c >> hexe >> c >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
         if(id == -1 || hlez == -1 || hexe == -1 || hlab == -1)
-            throw InvalidDbException("ore professore non valide");
+            throw InvalidDbException("ore professore non valide alla riga:",line_counter);
         professor p{};//struct
         p.prof_id = id;
         p.hLez = hlez;
@@ -124,7 +124,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs)
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
     if(mainProfFound==false){
-        throw std::invalid_argument("manca il professore titolare");
+        throw InvalidDbException("manca il professore titolare alla riga: ", line_counter);
     }
 
     return profToReturn;

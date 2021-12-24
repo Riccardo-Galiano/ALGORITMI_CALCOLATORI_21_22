@@ -24,7 +24,7 @@ public:
 
     Course(const std::string&, const std::string&, const int , const int ,const int , const int );
 
-    bool addSpecificYearCourses(std::string, bool, int, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, std::string, std::vector<int> );
+    bool addSpecificYearCourses(std::string, bool, int, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, std::string, std::vector<int>, int );
     bool addStudentToSpecYearCourse(int,Student,std::string,int);
     bool fillSpecificYearCourse(std::vector<std::string>& );
     bool courseOfTheYearIsEmpty();
