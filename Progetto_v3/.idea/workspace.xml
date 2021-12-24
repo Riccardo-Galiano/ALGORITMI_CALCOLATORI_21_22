@@ -12,9 +12,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="094b6821-78ee-4524-a106-380d09575ea4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/db_aule.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/db_corsi.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/db_corsi_studio.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/db_professori.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmake-build-debug/db_studenti.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/input/add/add_profs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/input/add/add_profs.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Sources/input/add/add_studs.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Sources/input/add/add_studs.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,11 +59,6 @@
   </component>
   <component name="RunManager">
     <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-a:d C:\Users\lucam\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Sources\input\add\add_profs.txt" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -116,6 +114,7 @@
       <workItem from="1640074572560" duration="13436000" />
       <workItem from="1640349692350" duration="2355000" />
       <workItem from="1640355002470" duration="63000" />
+      <workItem from="1640355476021" duration="198000" />
     </task>
     <servers />
   </component>
