@@ -43,6 +43,7 @@ public:
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
     std::map<int,std::vector<std::string>> getGroupedCourseFromAllYear();
+    void oneTimeNotActive();
 
 private:
     std::string _id;///codice identificativo del corso

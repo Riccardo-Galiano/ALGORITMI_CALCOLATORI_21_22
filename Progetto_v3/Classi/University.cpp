@@ -429,7 +429,7 @@ bool University::addStudyCourses(const std::string &fin) {
         line_counter++;
     }
     ///controllo non ci siano buchi, se c'è mi ritorna eccezione
-    //thereIsAHoleInTheCoursesCodes();
+    thereIsAHoleInTheCoursesCodes();
     fileIn.close();
     dbStudyCourseWrite();
     std::cout << "comando -a:f correttamente eseguito" << std::endl;
@@ -676,8 +676,8 @@ bool University::updateStuds(const std::string &fin) {
     }
 
     fileIn.close();
-
     dbStudsWrite();
+    std::cout << "comando -u:s correttamente eseguito" << std::endl;
     return false;
 }
 
@@ -745,8 +745,8 @@ bool University::updateProfessors(const std::string &fin) {
     }
 
     fileIn.close();
-
     dbProfsWrite();
+    std::cout << "comando -u:d correttamente eseguito" << std::endl;
     return true;
 }
 
@@ -831,8 +831,8 @@ bool University::updateClassroom(const std::string &fin) {
         line_counter++;
     }
     fileIn.close();
-
     dbClassRoomWrite();
+    std::cout << "comando -u:a correttamente eseguito" << std::endl;
 
     return true;
 }
@@ -889,10 +889,15 @@ bool University::insertCourses(const std::string &fin) {
 
         acYear = specificYearCourse[1]; //anno accademico
 
-        if (specificYearCourse[2] == "attivo") //se attivo o meno
+        if (specificYearCourse[2] == "attivo") { //se attivo o meno
             isActive = true;
+            if(_courses.at(specificYearCourse[0]).courseOfTheYearIsEmpty() == false)
+            //se attivo e ci sono anni precedenti devo vedere se è stato già dichiarato non attivo
+              _courses.at(specificYearCourse[0]).oneTimeNotActive();
+        }
         else {
             isActive = false;
+
             //se un corso viene aggiornato diventando "spento" in quell'anno allora per ogni corso di studio eseguo il metodo updateSemestersAndOffCourses
             //con il quale vedo per i diversi semestri se c'è quel determinato corso ora diventato "spento" e in tal caso:
             //- lo tolgo dai corsi attivi
@@ -937,7 +942,6 @@ bool University::insertCourses(const std::string &fin) {
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         //prendo le info degli anni precedenti e li copio, prima di inserire le nuove info
         iterCourse->second.fillAcYearsEmpty();
-
     }
 
 ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
@@ -948,9 +952,9 @@ bool University::insertCourses(const std::string &fin) {
     return true;
 }
 
+
 ///riscrive il database degli studenti
 void University::dbStudsWrite() {
-
     std::fstream fout;
     fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
 
@@ -1123,6 +1127,7 @@ bool University::setSessionPeriod(std::string &acYear, std::string &winterSessio
     //popolo mappa in university
     _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
     dateSessionsWrite();
+    std::cout << "comando -s current_a correttamente eseguito" << std::endl;
     return true;
 }
 
@@ -1153,8 +1158,8 @@ bool University::setProfsNoAvailability(std::string acYear, const std::string &f
         }
     }
     fileIn.close();
-
     noAvailabilityWrite();
+    std::cout << "comando -s set_availability correttamente eseguito" << std::endl;
 
     return true;
 }
@@ -1218,6 +1223,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     if (!esito) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
+    std::cout << "comando -g correttamente eseguito" << std::endl;
     return esito;
 }
 
@@ -1347,16 +1353,17 @@ void University::controlReciprocyGrouped() {
                 for(int k=0; k<groupedOfThisYear.size(); k++){
                     auto pos = std::find(groupedOfThisYear2.begin(), groupedOfThisYear2.end(), groupedOfThisYear[k]);
                     if(pos == groupedOfThisYear2.end())
-                        throw InvalidDbException("Proprietà di reciprocità dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: ",name,". Il codice assente e':",groupedOfThisYear[k]);
+                        throw InvalidDbException("Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: ",name,". Il codice assente e':",groupedOfThisYear[k]);
                     groupedOfThisYear2.erase(pos);
                 }
                 if(groupedOfThisYear2.empty() == false){
-                    throw InvalidDbException("Proprietà di reciprocità dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in più: ",name);
+                    throw InvalidDbException("Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in piu': ",name);
                 }
             }
         }
     }
 }
+
 
 
 

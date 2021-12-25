@@ -44,3 +44,9 @@ InvalidDbException::InvalidDbException(std::string mex, int line) {
     mexAndInfo<<mex<<line;
     _message=mexAndInfo.str();
 }
+
+InvalidDbException::InvalidDbException(std::string mex1, std::string cod, std::string mex2) {
+    std::stringstream mexAndInfo;
+    mexAndInfo<<mex1<<cod<<mex2;
+    _message=mexAndInfo.str();
+}

@@ -257,6 +257,13 @@ std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
     }
     return  allGrouped;
 }
+///controlla se è stato già spento
+void Course::oneTimeNotActive() {
+     for(auto iterSpecific = _courseOfTheYear.begin(); iterSpecific != _courseOfTheYear.end();iterSpecific++){
+         if(iterSpecific->second.getisActive() == false)
+             throw InvalidDbException("Il corso con codice:",getId()," e' gia' stato spento! non puo' essere riattivato!");
+     }
+}
 
 
 std::ostream &operator<<(std::ostream &course, Course &s) {

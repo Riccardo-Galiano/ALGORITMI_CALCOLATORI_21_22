@@ -50,6 +50,7 @@ public:
     bool controlGroupedCourses(int,std::vector<std::string>&,std::vector<std::string>&,int,std::string);
     void controlReciprocyGrouped();
 
+
 private:
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
