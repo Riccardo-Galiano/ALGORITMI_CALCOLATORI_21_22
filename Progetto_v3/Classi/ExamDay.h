@@ -19,6 +19,8 @@ public:
     bool sameStudyCourseAndYear(Course,int);
     bool setSlot();
     std::vector<std::string> getSlotsToString();
+    bool allSLotsAreEmpty();
+
 
 private:
     std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);

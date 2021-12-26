@@ -111,17 +111,20 @@ bool ExamDay::setSlot() {
 ///ritorna gli slot sottoforma di stringa
 std::vector<std::string> ExamDay::getSlotsToString() {
     std::vector<std::string> slotsToReturn;
-    std::stringstream genericSlot;
     std::vector<Course> CoursesPrintedSoFar;
+
     for (auto iterSlots = _slots.begin(); iterSlots != _slots.end(); iterSlots++) {
+        std::stringstream genericSlot;
+
         int hStart = iterSlots->first;
         int hFinish = hStart + 2;
         //set hh_slot
         genericSlot << std::setfill('0') << std::setw(2) << hStart << ":00-" << hFinish << ":00;";
+
         //set coursesSlot
         std::vector<Course> coursesOfThisSlot = iterSlots->second;
         std::string formattedCoursesPerSlot = getFormattedCoursesPerSlot(coursesOfThisSlot, CoursesPrintedSoFar);
-        genericSlot << formattedCoursesPerSlot << std::endl;
+        genericSlot << formattedCoursesPerSlot;
         slotsToReturn.push_back(genericSlot.str());
     }
         return slotsToReturn;
@@ -131,23 +134,31 @@ std::vector<std::string> ExamDay::getSlotsToString() {
 std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course>& coursesOfThisSlot, std::vector<Course>& CoursesPrintedSoFar) {
     std::stringstream singleSlotSS;
     for (int i = 0; i < coursesOfThisSlot.size(); i++){
-        SpecificYearCourse sp = coursesOfThisSlot[i].getThisYearCourse(_date.getYear());
+        SpecificYearCourse sp = coursesOfThisSlot[i].getThisYearCourse(_date.getYear()-1);
         ///se questo corso è iniziato a uno slot precedente, dobbiamo scrivere una stringa vuota
         bool firstTime = firstSlotCourses(coursesOfThisSlot[i], CoursesPrintedSoFar);
+
         if (firstTime){
-            singleSlotSS << coursesOfThisSlot[i].getId();
+
             int numVersion = sp.getParalleleCours();
             if (numVersion != 1) {
-                for (int j = 0; j < numVersion; j++)
-                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << sp.getStudyCourseAssigned()[0] << ")";
+                for (int j = 0; j < numVersion; j++) {
+                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C"<< std::setfill('0') << std::setw(3)<< sp.getStudyCourseAssigned()[0] << ")";
+                    if(j < numVersion-1)
+                        singleSlotSS<<";";
+                }
             } else {
-                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << sp.getStudyCourseAssigned()[0] << ")";
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(C"<< std::setfill('0') << std::setw(3)<< sp.getStudyCourseAssigned()[0] << ")";
             }
+            if(i<coursesOfThisSlot.size()-1)
+                singleSlotSS << ";";
             ///push nel vettore di corsi finora considerati
             CoursesPrintedSoFar.push_back(coursesOfThisSlot[i]);
-        }
-        ///se non è la prima volta scrivo ';'
-        singleSlotSS << ";";
+        } else ///se non è la prima volta scrivo ';'
+            singleSlotSS<<";";
+
+
+
     }
     return singleSlotSS.str();
 }
@@ -156,6 +167,14 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course>& coursesOfTh
 bool ExamDay::firstSlotCourses(Course courseToFind, std::vector<Course>& CoursesPrintedSoFar) {
     for(int i = 0; i < CoursesPrintedSoFar.size(); i++){
         if(courseToFind.getId() == CoursesPrintedSoFar[i].getId())
+            return false;
+    }
+    return true;
+}
+
+bool ExamDay::allSLotsAreEmpty() {
+    for(auto iterSLots = _slots.begin(); iterSLots != _slots.end();iterSLots++){
+        if(iterSLots->second.empty() == false)
             return false;
     }
     return true;

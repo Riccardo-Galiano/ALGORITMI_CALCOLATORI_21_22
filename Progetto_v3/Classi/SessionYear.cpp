@@ -131,13 +131,15 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 
                 ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
                 bool dateIsOk = true;
-                for(int i = 0; i < coursesToConsiderInThisLoop.size() && dateIsOk; i++){
-                    Course courseToConsider = courses.at(coursesToConsiderInThisLoop[i]);
-                    //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
-                    //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-                    if(dateIsOK(currentExamDay, courseToConsider, sessName, gapAppeals) == false){
+                if(sessName != "autumn"){
+                    for(int i = 0; i < coursesToConsiderInThisLoop.size() && dateIsOk; i++){
+                        Course courseToConsider = courses.at(coursesToConsiderInThisLoop[i]);
+                        //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
+                        //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
+                         if(dateIsOK(currentExamDay, courseToConsider, sessName, gapAppeals) == false){
                         //se non va bene per uno non va bene per tutti
                         dateIsOk = false;
+                         }
                     }
                 }
                 if(dateIsOk){
@@ -178,26 +180,42 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 }
 
 ///genera i file di output per le sessioni
-void SessionYear::generateOutputFiles(std::string& OutputFileName,int session,std::map<std::string, Course>& courses) {
+void SessionYear::generateOutputFiles(std::string& outputFileName,int session,std::map<std::string, Course>& courses) {
     std::stringstream ssFout;
-    std::string key = _sessionNames[session];
-    std::ofstream outputSession (ssFout.str());
+    std::string key = _sessionNames[session-1];
+    ssFout<<outputFileName.substr(0,19);
+    if(key == "winter")
+        ssFout<<"_s1.txt";
+    else if(key == "summer")
+        ssFout<<"_s2.txt";
+    else if(key == "autumn")
+        ssFout<<"_s3.txt";
+
+    std::fstream outputSession;
+    outputSession.open(ssFout.str(), std::fstream::out | std::fstream::trunc);
+
     if(!outputSession.is_open()){
         throw std::exception();
     }
     Date dayOne=_yearSessions.at(key).startDate;
     Date lastDay=_yearSessions.at(key).endDate;
-    for (auto iterDateCalendar = _yearCalendar.find(dayOne.toString()); iterDateCalendar != _yearCalendar.find((++lastDay).toString()); iterDateCalendar++){
+    bool continueLoop = true;
+    for (auto iterDateCalendar = _yearCalendar.find(dayOne.toString()); continueLoop ; iterDateCalendar++) {
         ///giorno della sessione
+        if (iterDateCalendar->first == lastDay.toString())
+            continueLoop = false;
         ExamDay examDay = iterDateCalendar->second;
         std::string day = iterDateCalendar->first;
-        outputSession << day << std::endl;
-        ///prendo un vettore di stringhe, dell'intera giornata; una (stringa/riga) per ogni slot
-        std::vector<std::string> allSlots = examDay.getSlotsToString();
-        for(int i = 0; i < allSlots.size(); i++){
-            outputSession << allSlots[i] << std::endl;
+        if (examDay.allSLotsAreEmpty() == false) {//se tutti gli slot sono vuoti vuol dire che non ho assegnato alcun esame in quella data, non lo stampo
+            outputSession << day << std::endl;
+            ///prendo un vettore di stringhe, dell'intera giornata; una (stringa/riga) per ogni slot
+            std::vector<std::string> allSlots = examDay.getSlotsToString();
+            for (int i = 0; i < allSlots.size(); i++) {
+                outputSession << allSlots[i] << std::endl;
+            }
         }
     }
+    outputSession.close();
 }
 
 ///prende tutti gli appelli da fare nella sessione sessName
@@ -309,7 +327,7 @@ bool SessionYear::dateIsOK(Date& newDate,const Course& course, std::string& sess
         else
             return true;
     }
-    else
+
         ///non è stato assegnato già, quindi ok cosi
         return true;
 }
