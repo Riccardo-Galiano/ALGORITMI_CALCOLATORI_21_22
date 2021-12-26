@@ -77,7 +77,7 @@ bool Professor::amIavailable(std::string date, int hh) {
     int year = Parse::getAcStartYear(date);
     Date d(date);
     /// controllo indisponibilità docenti compatibile con data esame
-    if(_noAvailab.count(year - 1) != 0) {//per quell'anno abbiamo delle indisponibilità del prof? se si controllo i periodi
+    if(_noAvailab.find(year - 1) != _noAvailab.end()) {//per quell'anno abbiamo delle indisponibilità del prof? se si controllo i periodi
         for (auto iterNoAvailab = _noAvailab.at(year - 1).begin(); iterNoAvailab !=_noAvailab.at(year - 1).end(); iterNoAvailab++ ){
             //controllo tutti i periodi di indisponibilità del prof
             Date lower = iterNoAvailab->first;

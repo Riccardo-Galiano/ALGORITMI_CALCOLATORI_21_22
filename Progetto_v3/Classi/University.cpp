@@ -231,8 +231,7 @@ void University::readStudyCourse() {
         std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
 
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
                                                             len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
@@ -270,8 +269,7 @@ void University::readStudyCourse() {
         if (InteroCorsoDiStudi.size() == 4) {
             SCourse.addOffCourses(corsiSpenti);
         }
-        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso,
-                                                        SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
+        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
     }
 
     fileIn.close();
@@ -387,20 +385,16 @@ bool University::addStudyCourses(const std::string &fin) {
         std::vector<int> posSem;
         ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
         std::size_t found = tokens[1].find_first_of("{}");
-        while (found !=
-               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            posSem.push_back(
-                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
             found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
         } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
         std::vector<std::string> semestri;
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1;// tolgo la graffa
             int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-            semestri.push_back(tokens[1].substr(posStart,
-                                                len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            semestri.push_back(tokens[1].substr(posStart,len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
         } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
         ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
         ///controllo che formato file sia corretto:
@@ -422,8 +416,7 @@ bool University::addStudyCourses(const std::string &fin) {
         for (i = 0; i < semestri.size(); i++) {
             year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
             numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,
-                                       line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
         _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
         line_counter++;
@@ -484,6 +477,7 @@ bool University::addCourses(const std::string &fin) {
                                                                            stoi(specificYearCourse[5]))));
 
         acYear = specificYearCourse[0]; //anno accademico
+        int startAcYear = Parse::getAcStartYear(specificYearCourse[0]);
 
         num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
         profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() -
@@ -505,22 +499,31 @@ bool University::addCourses(const std::string &fin) {
             std::string result = _studyCourse.at(i).isInWhichSemester(newIdCourse);
             if (!result.empty()) {
                 //ho trovato il suo corso di studi
-                ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, newIdCourse);
+
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = result;
+                ///controllo i corsi raggruppati (genera eccezione se errore)
+                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, newIdCourse);
             }
         }
         if (yy_semester.empty())
-            throw InvalidDbException(
-                    "un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",
-                    newIdCourse);
+            throw InvalidDbException("un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",newIdCourse);
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                         splittedExamData, idGrouped, yy_semester, studyCourse, line_counter);
         ///controllo che i professori di questo corso esistano già in _professors
         _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors, Parse::getAcStartYear(acYear));
+
         line_counter++;
+    }
+    ///controlli che possono essere fatti solo dopo aver letto tutto il file
+    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+        ///se c'è un gap tra anni prendo il precedente
+        iterCourse->second.fillAcYearsEmpty();
+        ///se il corso è stato disattivato non può essere riattivato
+        iterCourse->second.notActive();
+        ///controllo se i corsi raggruppati siano dello stesso semestre del principale
+        iterCourse->second.sameSemesterGrouped(_courses);
     }
     ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
     controlReciprocyGrouped();
@@ -888,13 +891,10 @@ bool University::insertCourses(const std::string &fin) {
         }
 
         acYear = specificYearCourse[1]; //anno accademico
+        int acStartYear = stoi(specificYearCourse[1].substr(2,1));
 
-        if (specificYearCourse[2] == "attivo") { //se attivo o meno
+        if (specificYearCourse[2] == "attivo") //se attivo o meno
             isActive = true;
-            if(_courses.at(specificYearCourse[0]).courseOfTheYearIsEmpty() == false)
-            //se attivo e ci sono anni precedenti devo vedere se è stato già dichiarato non attivo
-              _courses.at(specificYearCourse[0]).oneTimeNotActive();
-        }
         else {
             isActive = false;
 
@@ -924,24 +924,30 @@ bool University::insertCourses(const std::string &fin) {
             std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
             if (!res.empty()) {
                 //ho trovato il suo corso di studi
-                ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, specificYearCourse[0]);
+
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = res;
+                ///controllo i corsi raggruppati (genera eccezione se errore)
+                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, specificYearCourse[0]);
             }
         }
         _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                   splittedExamData, idGrouped, yy_semester,
                                                                   studyCourse, line_counter);
+
         line_counter++;
     }
     fileIn.close();
 
-    ///se c'è un gap tra anni prendo quello precedente per ogni anno mancante
+    ///controlli che posso fare solo dopo aver inserito le info da file
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-        //prendo le info degli anni precedenti e li copio, prima di inserire le nuove info
+        ///se c'è un gap tra anni prendo il precedente
         iterCourse->second.fillAcYearsEmpty();
+        ///se il corso è stato disattivato non può essere riattivato
+        iterCourse->second.notActive();
+        ///controllo se i corsi raggruppati siano dello stesso semestre del principale
+        iterCourse->second.sameSemesterGrouped(_courses);
     }
 
 ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
@@ -1215,8 +1221,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
-        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,
-                                                                       constraintRelaxParameter);
+        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,constraintRelaxParameter);
         constraintRelaxParameter++;
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
@@ -1260,12 +1265,14 @@ bool University::controlGroupedCourses(int idStudyCourse, std::vector<std::strin
                                        std::vector<std::string> &specificYearCourse, int line_counter,
                                        std::string idCourse) {
     std::vector<std::string> allCoursesOfCdS = _studyCourse.at(idStudyCourse).getAllCoursesOfStudyCourse();
+
     for (int j = 0; j < idGrouped.size(); j++) {
         auto found = std::find(allCoursesOfCdS.begin(), allCoursesOfCdS.end(), idGrouped[j]);
         if (found != allCoursesOfCdS.end())
             throw InvalidDbException("stesso corso di studio tra: ", specificYearCourse[1], "(corrispondente al corso:",
-                                     idCourse, ") e ", idGrouped[j],
-                                     " alla riga: ", line_counter, ". Corso di studio non coerente: ", idStudyCourse);
+                                     idCourse, ") e ", idGrouped[j], " alla riga: ", line_counter,
+                                     ". Corso di studio non coerente: ", idStudyCourse);
+
     }
     return true;
 }

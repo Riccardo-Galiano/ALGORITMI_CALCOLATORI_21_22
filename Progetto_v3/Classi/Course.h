@@ -43,7 +43,9 @@ public:
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
     std::map<int,std::vector<std::string>> getGroupedCourseFromAllYear();
-    void oneTimeNotActive();
+    void notActive();
+    int getSemesterAtYear(int,std::string);
+    bool sameSemesterGrouped(std::map<std::string,Course>);
 
 private:
     std::string _id;///codice identificativo del corso

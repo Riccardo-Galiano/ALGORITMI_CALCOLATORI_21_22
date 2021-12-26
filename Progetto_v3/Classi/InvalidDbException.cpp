@@ -45,8 +45,14 @@ InvalidDbException::InvalidDbException(std::string mex, int line) {
     _message=mexAndInfo.str();
 }
 
-InvalidDbException::InvalidDbException(std::string mex1, std::string cod, std::string mex2) {
+InvalidDbException::InvalidDbException(std::string mex1, std::string cod, std::string mex2,int year) {
     std::stringstream mexAndInfo;
-    mexAndInfo<<mex1<<cod<<mex2;
+    mexAndInfo<<mex1<<cod<<mex2<<year;
+    _message=mexAndInfo.str();
+}
+
+InvalidDbException::InvalidDbException(std::string mex1, std::string idGroupedCourse, std::string mex2, std::string nameCourse, std::string mex3, std::string idCourse) {
+    std::stringstream mexAndInfo;
+    mexAndInfo<<mex1<<idGroupedCourse<<mex2<<nameCourse<<mex3<<idCourse;
     _message=mexAndInfo.str();
 }

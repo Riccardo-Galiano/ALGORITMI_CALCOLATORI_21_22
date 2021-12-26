@@ -14,6 +14,7 @@ CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: ../Classi/Parse.hpp
 CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: ../Classi/Professor.h
 CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: ../Classi/SpecificYearCourse.h
 CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: ../Classi/Student.h
+CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: ../Classi/StudyCourse.h
 CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj: ../Classi/UniversityMember.h
 
 CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.obj: ../Classi/Date.cpp

@@ -9,6 +9,9 @@
 #include "ExamDay.h"
 #include "StudyCourse.h"
 
+bool winter = false;
+bool summer = false;
+bool autumn = false;
 
 
 enum{caso_estremo, caso_medio, caso_lasco};
@@ -65,14 +68,18 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
     int gapAppealsSameCourse=14;
     bool result=false;
     bool exitloop= false;
+
     ///eseguo il ciclo finchè posso rilassare ulteriormente il vincolo dei giorni tra appelli di uno stesso esame (14 giorni,13,12...)
     for (; gapAppealsSameCourse>=0 && !exitloop; gapAppealsSameCourse--){
         ///generare sessione invernale
-        bool winter = generateThisSession("winter", courses, professors, relaxPar, gapAppealsSameCourse);
+        if(winter == false)
+        winter = generateThisSession("winter", courses, professors, relaxPar, gapAppealsSameCourse);
         ///generare sessione estiva
-        bool summer = generateThisSession("summer", courses, professors,relaxPar, gapAppealsSameCourse);
+        if(summer == false)
+        summer = generateThisSession("summer", courses, professors,relaxPar, gapAppealsSameCourse);
         ///generare sessione autunnale
-        bool autumn = generateThisSession("autumn",courses, professors, relaxPar, gapAppealsSameCourse);
+        if(autumn == false)
+        autumn = generateThisSession("autumn",courses, professors, relaxPar, gapAppealsSameCourse);
 
         ///se le tre sessioni sono state generate passo all'output su file
         if (winter && summer && autumn) {
@@ -162,7 +169,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
             }
         }
     }
-    ///devo controllare che tutti gli appelli sono stati inseriti
+    ///devo controllare che tutti gli appelli siano stati inseriti
     if(allExamAppealsToDo.empty())
         return true;
     else

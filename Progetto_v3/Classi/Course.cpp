@@ -7,6 +7,7 @@
 #include "Parse.hpp"
 #include "DbException.h"
 #include "InvalidDbException.h"
+#include "StudyCourse.h"
 #include <algorithm>
 
 Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
@@ -258,11 +259,38 @@ std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
     return  allGrouped;
 }
 ///controlla se è stato già spento
-void Course::oneTimeNotActive() {
-     for(auto iterSpecific = _courseOfTheYear.begin(); iterSpecific != _courseOfTheYear.end();iterSpecific++){
-         if(iterSpecific->second.getisActive() == false)
-             throw InvalidDbException("Il corso con codice:",getId()," e' gia' stato spento! non puo' essere riattivato!");
-     }
+void Course::notActive() {
+     bool firstTime = false;
+    for(auto iterSpecific = _courseOfTheYear.begin(); iterSpecific != _courseOfTheYear.end();iterSpecific++){
+         if(iterSpecific->second.getisActive() == false)///controllo se il corso è non attivo
+             firstTime = true;
+         else if(firstTime)///se è attivo ma negli anni precedenti era già disattivato
+             throw InvalidDbException("Il corso con codice:", getId(),"e' gia' stato spento! non puo' essere riattivato! Controllare l'anno:",iterSpecific->first);
+
+    }
+}
+
+int Course::getSemesterAtYear(int acStartYear,std::string name) {
+   int sem = 0;
+    if(_courseOfTheYear.find(acStartYear) != _courseOfTheYear.end())
+          sem =_courseOfTheYear.at(acStartYear).getSemester();
+    else
+        throw InvalidDbException("non esistono info per il corso: ",name);
+    return sem;
+}
+
+bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
+
+    for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
+        std::vector<std::string> groupedCourse = iterSpecificYear->second.getIdGroupedCourses();
+        int sem = iterSpecificYear->second.getSemester();
+        for (int i = 0; i < groupedCourse.size();i++){
+            int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,groupedCourse[i]);
+            if(semGrouped != sem)
+                throw InvalidDbException("il seguente corso raggruppato ",groupedCourse[i]," non è dello stesso semestre di: ",getName()," ;corrispondente al codice: ",getId());
+        }
+    }
+    return true;
 }
 
 
