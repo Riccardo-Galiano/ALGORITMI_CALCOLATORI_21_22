@@ -57,6 +57,12 @@ University::University() {
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
+    try {
+        readDbCourseNotActive();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+    }
 }
 
 ///leggo il database degli studenti
@@ -504,7 +510,7 @@ bool University::addCourses(const std::string &fin) {
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = result;
                 ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, newIdCourse);
+                controlGroupedCourses(i, idGrouped, specificYearCourse[1], line_counter, newIdCourse);
             }
         }
         if (yy_semester.empty())
@@ -886,55 +892,52 @@ bool University::insertCourses(const std::string &fin) {
                     }
                 }
             }
-
         }
 
         acYear = specificYearCourse[1]; //anno accademico
         int acStartYear = stoi(specificYearCourse[1].substr(2,1));
 
-        if (specificYearCourse[2] == "attivo") //se attivo o meno
-            isActive = true;
-        else {
-            isActive = false;
-
-            //se un corso viene aggiornato diventando "spento" in quell'anno allora per ogni corso di studio eseguo il metodo updateSemestersAndOffCourses
-            //con il quale vedo per i diversi semestri se c'è quel determinato corso ora diventato "spento" e in tal caso:
-            //- lo tolgo dai corsi attivi
-            //- lo aggiungo tra i corsi spenti
-            for (auto iterStudyCourse = _studyCourse.begin();
-                 iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
-                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0],_tempInfoNotActiveCoursesToWriteInTheDB);
-            }
-        }
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
-        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
-                                                          2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
         std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
                                                                   num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[5];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
         idGrouped = Parse::SplittedGroupedID(specificYearCourse[6]);
+
         ///ricerca "anno-semestre" di questo corso
         std::string yy_semester;
         std::vector<int> studyCourse;
-        for (int i = 1; i < _studyCourse.size(); i++) {
+        for (int i = 1; i <= _studyCourse.size(); i++) {
             std::string res = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
             if (!res.empty()) {
                 //ho trovato il suo corso di studi
-
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = res;
                 ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i, idGrouped, specificYearCourse, line_counter, specificYearCourse[0]);
+                controlGroupedCourses(i, idGrouped, _courses.at(specificYearCourse[0]).getName(), line_counter, specificYearCourse[0]);
             }
         }
+
+        if (specificYearCourse[2] == "attivo") //se attivo o meno
+            isActive = true;
+        else {
+            isActive = false;
+            //se un corso viene aggiornato diventando "spento" in quell'anno allora per ogni corso di studio eseguo il metodo updateSemestersAndOffCourses
+            //con il quale vedo per i diversi semestri se c'è quel determinato corso ora diventato "spento" e in tal caso:
+            //- lo tolgo dai corsi attivi
+            //- lo aggiungo tra i corsi spenti
+            for (auto iterStudyCourse = _studyCourse.begin();iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
+                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0],_tempInfoNotActiveCoursesToWriteInTheDB);
+            }
+        }
+
         _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                   splittedExamData, idGrouped, yy_semester,
                                                                   studyCourse, line_counter);
-
         line_counter++;
     }
     fileIn.close();
@@ -945,12 +948,14 @@ bool University::insertCourses(const std::string &fin) {
         iterCourse->second.fillAcYearsEmpty();
         ///se il corso è stato disattivato non può essere riattivato
         iterCourse->second.notActive();
+    }
+    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         ///controllo se i corsi raggruppati siano dello stesso semestre del principale
         iterCourse->second.sameSemesterGrouped(_courses);
     }
-
     ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
     controlReciprocyGrouped();
+
     ///tutto ok, posso aggiornare effettivamente db
     dbCourseNotActive();
     dbCourseWrite();
@@ -1023,8 +1028,7 @@ void University::dbCourseWrite() {
     fout.open("db_corsi.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-        Course generalCourse = _courses.at(
-                iterCourse->first);//prendo lintero oggetto Course generale per scrivere su file la riga che inizia con "c"
+        Course generalCourse = _courses.at(iterCourse->first);//prendo l'intero oggetto Course generale per scrivere su file la riga che inizia con "c"
         fout << generalCourse;
     }
     fout.close();
@@ -1264,14 +1268,14 @@ bool University::dataBaseIsEmpty(int startAcYear) {
 
 /// controllo che idGrouped NON siano corsi dello stesso CdS
 bool University::controlGroupedCourses(int idStudyCourse, std::vector<std::string> &idGrouped,
-                                       std::vector<std::string> &specificYearCourse, int line_counter,
+                                       std::string nameCourse, int line_counter,
                                        std::string idCourse) {
     std::vector<std::string> allCoursesOfCdS = _studyCourse.at(idStudyCourse).getAllCoursesOfStudyCourse();
 
     for (int j = 0; j < idGrouped.size(); j++) {
         auto found = std::find(allCoursesOfCdS.begin(), allCoursesOfCdS.end(), idGrouped[j]);
         if (found != allCoursesOfCdS.end())
-            throw InvalidDbException("stesso corso di studio tra: ", specificYearCourse[1], "(corrispondente al corso:",
+            throw InvalidDbException("stesso corso di studio tra: ", nameCourse, "(corrispondente al corso:",
                                      idCourse, ") e ", idGrouped[j], " alla riga: ", line_counter,
                                      ". Corso di studio non coerente: ", idStudyCourse);
 
@@ -1373,10 +1377,28 @@ void University::controlReciprocyGrouped() {
     }
 }
 
+
 void University::dbCourseNotActive() {
-    //std::fstream fout ("offCourses_db.txt",std::ios::out)
-    fout << _tempInfoNotActiveCoursesToWriteInTheDB;
+    std::fstream fout;
+    fout.open("offCourses_db.txt", std::fstream::out | std::fstream::trunc);
+    for(int i = 0; i<_tempInfoNotActiveCoursesToWriteInTheDB.size();i++) {
+        fout << _tempInfoNotActiveCoursesToWriteInTheDB[i]<<std::endl;
+    }
     fout.close();
+}
+
+void University::readDbCourseNotActive() {
+    std::ifstream fileIn("offCourses_db.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file offCourses_db.txt non esistente");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+          _tempInfoNotActiveCoursesToWriteInTheDB.push_back(line);
+          std::vector<std::string> token = Parse::splittedLine(line,';');
+          _courses.at(token[0]).assignYY_Sem(token[1]);
+    }
+    fileIn.close();
 }
 
 

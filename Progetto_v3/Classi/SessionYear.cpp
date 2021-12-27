@@ -17,8 +17,7 @@ bool autumn = false;
 enum{caso_estremo, caso_medio, caso_lasco};
 
 ///costruttore
-SessionYear::SessionYear(std::string& acYear, std::string& winterSession, std::string& summerSession,
-                         std::string& autumnSession, std::string& output_file_name): _sysLog(output_file_name,Parse::getAcStartYear(acYear)){
+SessionYear::SessionYear(std::string& acYear, std::string& winterSession, std::string& summerSession,std::string& autumnSession, std::string& output_file_name): _sysLog(output_file_name,Parse::getAcStartYear(acYear)){
     _acYear = Parse::getAcStartYear(acYear);
     _sessionNames.emplace_back("winter");
     _sessionNames.emplace_back("summer");

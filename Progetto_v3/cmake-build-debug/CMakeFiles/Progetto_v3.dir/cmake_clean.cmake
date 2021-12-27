@@ -11,6 +11,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj"
+  "CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.obj"
   "CMakeFiles/Progetto_v3.dir/main.cpp.obj"

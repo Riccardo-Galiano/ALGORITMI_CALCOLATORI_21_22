@@ -185,10 +185,8 @@ bool Course::fillAcYearsEmpty() {
         auto token = iterCourseOfTheYear;//iteratore all'elemento corrente
         auto iterSuccessiveCourse = ++token;//iteratore al successivo elemento in memoria
 
-        if ((iterSuccessiveCourse->first - iterCourseOfTheYear->first > 1) && iterSuccessiveCourse !=
-                                                                              _courseOfTheYear.end()) {//se c'è un gap di almeno 2 anni (mancano degli anni accademici) e non sono alla fine di _courseOfTheYear
-            int range = iterSuccessiveCourse->first - iterCourseOfTheYear->first -
-                        1;//quanti anni accademici mancano e che devo aggiungere
+        if ((iterSuccessiveCourse->first - iterCourseOfTheYear->first > 1) && iterSuccessiveCourse != _courseOfTheYear.end()) {//se c'è un gap di almeno 2 anni (mancano degli anni accademici) e non sono alla fine di _courseOfTheYear
+            int range = (iterSuccessiveCourse->first - iterCourseOfTheYear->first) - 1;//quanti anni accademici mancano e che devo aggiungere
             int lastYear = iterCourseOfTheYear->first;//ultimo anno prima del gap
             for (int i = 0; i < range; i++) {//per il numero di anni accademici da aggiungere
                 //riscrivo l'anno precedente
@@ -291,6 +289,13 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
         }
     }
     return true;
+}
+
+bool Course::assignYY_Sem(std::string yy_semester) {
+    for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
+        iterSpecific->second.assignYY_SemToAllYear(yy_semester);
+    }
+    return  true;
 }
 
 

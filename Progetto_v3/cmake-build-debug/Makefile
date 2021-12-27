@@ -446,6 +446,33 @@ Classi/StudyCourse.cpp.s:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.s
 .PHONY : Classi/StudyCourse.cpp.s
 
+Classi/SystemLog.obj: Classi/SystemLog.cpp.obj
+
+.PHONY : Classi/SystemLog.obj
+
+# target to build an object file
+Classi/SystemLog.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj
+.PHONY : Classi/SystemLog.cpp.obj
+
+Classi/SystemLog.i: Classi/SystemLog.cpp.i
+
+.PHONY : Classi/SystemLog.i
+
+# target to preprocess a source file
+Classi/SystemLog.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.i
+.PHONY : Classi/SystemLog.cpp.i
+
+Classi/SystemLog.s: Classi/SystemLog.cpp.s
+
+.PHONY : Classi/SystemLog.s
+
+# target to generate assembly for a file
+Classi/SystemLog.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.s
+.PHONY : Classi/SystemLog.cpp.s
+
 Classi/University.obj: Classi/University.cpp.obj
 
 .PHONY : Classi/University.obj
@@ -572,6 +599,9 @@ help:
 	@echo ... Classi/StudyCourse.obj
 	@echo ... Classi/StudyCourse.i
 	@echo ... Classi/StudyCourse.s
+	@echo ... Classi/SystemLog.obj
+	@echo ... Classi/SystemLog.i
+	@echo ... Classi/SystemLog.s
 	@echo ... Classi/University.obj
 	@echo ... Classi/University.i
 	@echo ... Classi/University.s

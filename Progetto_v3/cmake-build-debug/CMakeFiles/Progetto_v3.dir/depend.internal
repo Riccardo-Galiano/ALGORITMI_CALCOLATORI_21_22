@@ -58,6 +58,7 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
@@ -85,6 +86,16 @@ CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.cpp
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
+CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.cpp
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
@@ -99,6 +110,7 @@ CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
@@ -117,6 +129,7 @@ CMakeFiles/Progetto_v3.dir/main.cpp.obj
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
  C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp

@@ -1,7 +1,3 @@
-//
-// Created by lucam on 11/11/2021.
-//
-
 #ifndef PROGETTO_V3_CLASSROOM_H
 #define PROGETTO_V3_CLASSROOM_H
 

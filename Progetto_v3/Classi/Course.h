@@ -46,6 +46,7 @@ public:
     void notActive();
     int getSemesterAtYear(int,std::string);
     bool sameSemesterGrouped(std::map<std::string,Course>);
+    bool assignYY_Sem(std::string);
 
 private:
     std::string _id;///codice identificativo del corso

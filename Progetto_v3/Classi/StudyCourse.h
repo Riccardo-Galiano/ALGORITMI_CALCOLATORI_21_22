@@ -22,7 +22,7 @@ public:
     std::string getOffCoursesString() const;
     std::vector<std::string> getAllCoursesOfStudyCourse();
     bool offCoursesEmpty() const;
-    bool updateSemestersAndOffCourses( const std::string&, std::string&);
+    bool updateSemestersAndOffCourses( const std::string&,std::vector<std::string>&);
     std::string setCod(int) const ;
     //param: corso da cercare
     //return "" stringa vuoota se non esiste in questo corso di studio, oppure "anno-semestre" corrispondente

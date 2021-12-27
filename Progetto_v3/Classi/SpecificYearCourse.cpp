@@ -276,6 +276,11 @@ bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mar
     return true;
 }
 
+bool SpecificYearCourse::assignYY_SemToAllYear(std::string yy_semester) {
+    _yy_semester = yy_semester;
+    return true;
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

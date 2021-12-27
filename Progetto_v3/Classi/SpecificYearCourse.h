@@ -58,6 +58,7 @@ public:
     int amIAssignedAlreadyInThisSession(int);
     Date lastDateAssignationInGivenSession(int);
     bool assignExamInThisSpecificYearCourse(Date,int);
+    bool assignYY_SemToAllYear(std::string);
 
 private:
     std::string _yy_semester; //unico per tutti i corsi!!!

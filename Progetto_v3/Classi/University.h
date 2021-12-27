@@ -46,8 +46,9 @@ public:
     void noAvailabilityWrite();
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
-    bool controlGroupedCourses(int,std::vector<std::string>&,std::vector<std::string>&,int,std::string);
+    bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
     void controlReciprocyGrouped();
+    void readDbCourseNotActive();
 private:
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
@@ -58,7 +59,7 @@ private:
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
     std::map<int,SessionYear> _acYearSessions;
-    std::string _tempInfoNotActiveCoursesToWriteInTheDB;
+    std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     void readStudents();
     void readProfessor();
     void readClassroom();
