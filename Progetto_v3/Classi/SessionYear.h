@@ -10,6 +10,7 @@
 #include "Date.h"
 #include "ExamDay.h"
 #include "StudyCourse.h"
+#include "SystemLog.h"
 
 typedef struct {
     std::string season;
@@ -20,7 +21,7 @@ typedef struct {
 class SessionYear {
 
 public:
-    SessionYear(std::string&, std::string&,std::string&,std::string&);
+    SessionYear(std::string&, std::string&,std::string&,std::string&,std::string&);
     bool addSession(std::string&, std::string&,  std::string&);
     int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,int, int, int);
     bool setCaldendar(std::vector<Date>);
@@ -32,11 +33,13 @@ public:
     std::vector<std::string> getAllExamAppealsToDo(std::string, std::map<std::string, Course>&);
 
 private:
+    SystemLog _sysLog;
     int _acYear;
     //key: "autumn" , "winter", "summer"
     //value: session struct
     std::map<std::string,session> _yearSessions;
     std::vector<std::string> _sessionNames;
+    std::vector<std::string> _allExamAppealsToDo;
     //key: data come stringa "aaaa-mm-gg"
     //value: oggetto Exam Day --> controllo: non ci deve essere nessuna domenica
     std::map<std::string,ExamDay> _yearCalendar;
@@ -51,8 +54,6 @@ private:
     static void popAppealFromVector(std::vector<std::string>&,std::string);
     static bool checkHours(std::vector<int>&);
     std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>&, std::string);
-
-
 };
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

@@ -856,7 +856,6 @@ bool University::insertCourses(const std::string &fin) {
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file per inserimento di una nuova organizzazione del corso");
     }
-
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
@@ -904,7 +903,7 @@ bool University::insertCourses(const std::string &fin) {
             //- lo aggiungo tra i corsi spenti
             for (auto iterStudyCourse = _studyCourse.begin();
                  iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
-                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0]);
+                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0],_tempInfoNotActiveCoursesToWriteInTheDB);
             }
         }
         ///come per la readCourse, aggiorno la mappa _courses
@@ -950,14 +949,15 @@ bool University::insertCourses(const std::string &fin) {
         iterCourse->second.sameSemesterGrouped(_courses);
     }
 
-///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
+    ///controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
     controlReciprocyGrouped();
+    ///tutto ok, posso aggiornare effettivamente db
+    dbCourseNotActive();
     dbCourseWrite();
     dbStudyCourseWrite();
     std::cout << "comando -i:c eseguito correttamente" << std::endl;
     return true;
 }
-
 
 ///riscrive il database degli studenti
 void University::dbStudsWrite() {
@@ -1087,7 +1087,8 @@ void University::readSessionAcYear() {
     while (std::getline(fileIn, line)) {
         std::vector<std::string> infoSessions = Parse::splittedLine(line, ';');
         int acStartYear = Parse::getAcStartYear(infoSessions[0]);
-        SessionYear sessionYear(infoSessions[0], infoSessions[1], infoSessions[2], infoSessions[3]);
+        std::string output_file_name = std::string("output_file");
+        SessionYear sessionYear(infoSessions[0], infoSessions[1], infoSessions[2], infoSessions[3],output_file_name);
         _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
     }
     fileIn.close();
@@ -1129,7 +1130,8 @@ bool University::setSessionPeriod(std::string &acYear, std::string &winterSessio
         _acYearSessions.erase(acStartYear);
     }
     //creo oggetto session da aggiungere
-    SessionYear sessionYear(acYear, winterSession, summerSession, autumnSession);
+    std::string output_file_name = std::string("output_file");
+    SessionYear sessionYear(acYear, winterSession, summerSession, autumnSession, output_file_name);
     //popolo mappa in university
     _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
     dateSessionsWrite();
@@ -1369,6 +1371,12 @@ void University::controlReciprocyGrouped() {
             }
         }
     }
+}
+
+void University::dbCourseNotActive() {
+    //std::fstream fout ("offCourses_db.txt",std::ios::out)
+    fout << _tempInfoNotActiveCoursesToWriteInTheDB;
+    fout.close();
 }
 
 

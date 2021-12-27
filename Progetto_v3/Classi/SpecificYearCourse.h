@@ -34,7 +34,6 @@ typedef struct {
 class SpecificYearCourse {
 public:
     SpecificYearCourse(std::string ,bool ,int , std::vector<std::string> , std::vector<std::string> ,std::vector<std::string> , std::string , std::vector<int>, int);
-
     int getStartYear() const;
     int getEndYear() const;
     bool getisActive() const;
@@ -60,13 +59,10 @@ public:
     Date lastDateAssignationInGivenSession(int);
     bool assignExamInThisSpecificYearCourse(Date,int);
 
-
-
-
 private:
     std::string _yy_semester; //unico per tutti i corsi!!!
     std::vector<int> _studyCourseAssigned;
-    int _startYear;    ///anno di inizio
+    int _startYear;   ///anno di inizio
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?
     int _parallelCourses;    ///numero di corsi in parallelo

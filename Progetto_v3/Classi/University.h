@@ -22,7 +22,6 @@ public:
     const int getNewClassroomId() const;
     const int getNewStudyCourseId() const;
     const std::string getNewCourseId()const;
-
     bool addStuds(const std::string &fileIn);
     bool addProfessors(const std::string &fileIn);
     bool addClassrooms(const std::string &fileIn);
@@ -35,8 +34,8 @@ public:
     bool enrollStudents(const std::string &fin);
     bool setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
     std::vector<std::string> allProfsNoAvailabilities();
-
     void dbStudsWrite();
+    void dbCourseNotActive();
     void dbProfsWrite();
     void dbClassRoomWrite();
     void dbStudyCourseWrite();
@@ -49,8 +48,6 @@ public:
     bool dataBaseIsEmpty(int);
     bool controlGroupedCourses(int,std::vector<std::string>&,std::vector<std::string>&,int,std::string);
     void controlReciprocyGrouped();
-
-
 private:
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
@@ -61,6 +58,7 @@ private:
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
     std::map<int,SessionYear> _acYearSessions;
+    std::string _tempInfoNotActiveCoursesToWriteInTheDB;
     void readStudents();
     void readProfessor();
     void readClassroom();

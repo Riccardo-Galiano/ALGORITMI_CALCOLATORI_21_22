@@ -55,8 +55,6 @@ int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Profe
            }
        }
    }
-
-
     return foundedStartHourSlot; //se arrivato qui, tutti i prof sono disponibili
 }
 
