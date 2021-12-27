@@ -281,11 +281,25 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
 
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         std::vector<std::string> groupedCourse = iterSpecificYear->second.getIdGroupedCourses();
-        int sem = iterSpecificYear->second.getSemester();
+        int sem;
+        bool active = iterSpecificYear->second.getisActive();
         for (int i = 0; i < groupedCourse.size();i++){
-            int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,groupedCourse[i]);
-            if(semGrouped != sem)
-                throw InvalidDbException("il seguente corso raggruppato ",groupedCourse[i]," non è dello stesso semestre di: ",getName()," ;corrispondente al codice: ",getId());
+            ///controllo che i raggruppati siano o tutti spenti o tutti attivi
+            SpecificYearCourse sp = courses.at(groupedCourse[i]).getThisYearCourse(iterSpecificYear->first);
+            bool activeGrouped = sp.getisActive();
+            ///se i due corsi non si trovano nello stato di attività non posso raggrupparli
+            if(active != activeGrouped)
+                throw  InvalidDbException("il seguente corso raggruppato ",groupedCourse[i]," non e' nello stesso stato di attivita' del corso: ",getName()," ;corrispondente al codice: ",getId());
+            ///se sono entrambi attivi mi chiedo se sono dello stesso semestre
+            if(active != false && activeGrouped != false) {
+                sem = iterSpecificYear->second.getSemester();
+                int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,
+                                                                                groupedCourse[i]);
+                if (semGrouped != sem)
+                    throw InvalidDbException("il seguente corso raggruppato ", groupedCourse[i],
+                                             " non è dello stesso semestre di: ", getName(),
+                                             " ;corrispondente al codice: ", getId());
+               }
         }
     }
     return true;

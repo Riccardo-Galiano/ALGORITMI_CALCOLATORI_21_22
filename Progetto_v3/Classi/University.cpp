@@ -900,8 +900,7 @@ bool University::insertCourses(const std::string &fin) {
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
         profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
-                                                                  num_parallel_courses);//divido i vari corsi in parallelo
+        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[5];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami

@@ -135,6 +135,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                 for(int i=0; i<coursesGrouped.size(); i++){
                     coursesToConsiderInThisLoop.push_back(courses.at(coursesGrouped[i]));
                 }
+
                 ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
                 bool dateIsOk = true;
                 if(sessName != "autumn"){
@@ -164,7 +165,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         pop = true;
                         ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
                         for(int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
-                            Course& courseToConsider = coursesToConsiderInThisLoop[i];
+                            Course& courseToConsider = courses.at(coursesToConsiderInThisLoop[i].getId());
                             assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, courseToConsider, sessName, _allExamAppealsToDo);
                             _sysLog.generateWarnings(coursesToConsiderInThisLoop,relaxPar,gapAppeals,_acYear);
                         }

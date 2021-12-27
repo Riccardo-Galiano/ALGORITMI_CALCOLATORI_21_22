@@ -35,18 +35,22 @@ void SystemLog::generateWarnings(std::vector<Course> &courses, int relaxPar, int
     switch (relaxPar) {
         case (0): {
             ///no warnings
+        break;
         }
         case (1): {
-            generateWarningGapSameStudyCourse(courses, gap);
+            generateWarningGapSameStudyCourse(courses, year);
+            break;
         }
         case (2): {
-            generateWarningGapSameStudyCourse(courses, gap);
+            generateWarningGapSameStudyCourse(courses, year);
             generateWarningGapAppeals(courses, gap, year);
+            break;
         }
         case (3): {
-            generateWarningGapSameStudyCourse(courses, gap);
+            generateWarningGapSameStudyCourse(courses, year);
             generateWarningGapAppeals(courses, gap, year);
-            generateWarningGapAvaibilityProfs(courses, gap);
+            generateWarningGapAvaibilityProfs(courses, year);
+            break;
         }
         default:
             break;
