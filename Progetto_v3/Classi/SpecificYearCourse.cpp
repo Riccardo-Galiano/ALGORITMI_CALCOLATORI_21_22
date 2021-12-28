@@ -276,9 +276,14 @@ bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mar
     return true;
 }
 
-bool SpecificYearCourse::assignYY_SemToAllYear(std::string yy_semester) {
+bool SpecificYearCourse::assignYY_SemToAllYear(std::string& acYYoff,std::string& yy_semester) {
     _yy_semester = yy_semester;
+    _acYearOff = acYYoff;
     return true;
+}
+
+std::string &SpecificYearCourse::getAcYearOff(){
+    return _acYearOff;
 }
 
 

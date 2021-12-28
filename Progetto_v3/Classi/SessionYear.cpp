@@ -238,14 +238,22 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
 
         semester = specificYY.getSemester();
         isActive = specificYY.getisActive();
+        int acYearOff = Parse::getAcStartYear(specificYY.getAcYearOff());
         ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
         if (semester == semesterOfThisSession && isActive) {
             ///devo fare due appelli se i semestri sono uguali!!!!
             allExamAppealsToDo.push_back(iterCourse->first);
             allExamAppealsToDo.push_back(iterCourse->first);
-        } else
+        } else if (semester == semesterOfThisSession && _acYear<acYearOff){
+            /// se stesso semestre ma spento nel futuro
+            /// allora ancora attivo per questo acYear
+            allExamAppealsToDo.push_back(iterCourse->first);
+            allExamAppealsToDo.push_back(iterCourse->first);
+        } else {
             ///altrimenti solo uno...
             allExamAppealsToDo.push_back(iterCourse->first);
+        }
+
 
     }
     return allExamAppealsToDo;

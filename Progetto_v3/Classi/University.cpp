@@ -143,7 +143,7 @@ void University::readCourse() {
     if (!fileIn.is_open()) {
         throw DbException("file db_corsi.txt non esistente");
     }
-    int line_counter=1;
+    int line_counter = 1;
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> interoCorso;    //accoglierà il vettore con la riga del file scissa
     std::vector<std::string> specificYearCourse;
@@ -204,14 +204,15 @@ void University::readCourse() {
                     }
                 }
                 auto iterStudyCourse = _studyCourse.find(i);
-                if(iterStudyCourse->second.assignStudyCourse(lastReadCourse))
+                if (iterStudyCourse->second.assignStudyCourse(lastReadCourse))
                     studyCourse.push_back(iterStudyCourse->first);
             }
 
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData, idGrouped, yy_semester,
-                                                               studyCourse, line_counter);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
+                                                               studyCourse,
+                                                               line_counter);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
     }
     line_counter++;
@@ -242,7 +243,8 @@ void University::readStudyCourse() {
         std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
 
-        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i +
+                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
                                                             len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
@@ -280,7 +282,8 @@ void University::readStudyCourse() {
         if (InteroCorsoDiStudi.size() == 4) {
             SCourse.addOffCourses(corsiSpenti);
         }
-        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
+        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso,
+                                                        SCourse));//inserisco il corso alla mappa dei corsi di studio la cui chiave è il codice del corso privato di "A" iniziale
     }
 
     fileIn.close();
@@ -396,16 +399,20 @@ bool University::addStudyCourses(const std::string &fin) {
         std::vector<int> posSem;
         ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
         std::size_t found = tokens[1].find_first_of("{}");
-        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        while (found !=
+               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            posSem.push_back(
+                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
             found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
         } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
         std::vector<std::string> semestri;
-        for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i +
+                                               2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1;// tolgo la graffa
             int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-            semestri.push_back(tokens[1].substr(posStart,len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            semestri.push_back(tokens[1].substr(posStart,
+                                                len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
         } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
         ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
         ///controllo che formato file sia corretto:
@@ -427,7 +434,8 @@ bool University::addStudyCourses(const std::string &fin) {
         for (i = 0; i < semestri.size(); i++) {
             year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
             numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,
+                                       line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
         }
         _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
         line_counter++;
@@ -519,9 +527,12 @@ bool University::addCourses(const std::string &fin) {
             }
         }
         if (yy_semester.empty())
-            throw InvalidDbException("un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",newIdCourse);
+            throw InvalidDbException(
+                    "un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",
+                    newIdCourse);
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                        splittedExamData, idGrouped, yy_semester, studyCourse, line_counter);
+                                                        splittedExamData, idGrouped, yy_semester, studyCourse,
+                                                        line_counter);
         ///controllo che i professori di questo corso esistano già in _professors
         _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors, Parse::getAcStartYear(acYear));
 
@@ -881,7 +892,7 @@ bool University::insertCourses(const std::string &fin) {
         ///fillSpecificYearCourse mi aggiorna il vettore specificYearCourse aggiungendo le info dell'anno accademico precedente negli spazi vuoti
         if (!(course_with_given_id->second.courseOfTheYearIsEmpty())) {
             course_with_given_id->second.fillSpecificYearCourse(
-                    specificYearCourse,line_counter);//passo l'intero vettore di stringhe by reference
+                    specificYearCourse, line_counter);//passo l'intero vettore di stringhe by reference
         } else {
             //non esistono informazioni riguardo anni precedenti
             if (specificYearCourse.size() != 7) {
@@ -900,12 +911,14 @@ bool University::insertCourses(const std::string &fin) {
         }
 
         acYear = specificYearCourse[1]; //anno accademico
-        int acStartYear = stoi(specificYearCourse[1].substr(2,1));
+        int acStartYear = stoi(specificYearCourse[1].substr(2, 1));
 
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
-        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
-        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,num_parallel_courses);//divido i vari corsi in parallelo
+        profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
+                                                          2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+        std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
+                                                                  num_parallel_courses);//divido i vari corsi in parallelo
         examData = specificYearCourse[5];//informazioni sull'esame
         examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
@@ -922,7 +935,8 @@ bool University::insertCourses(const std::string &fin) {
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = res;
                 ///controllo i corsi raggruppati (genera eccezione se errore)
-                controlGroupedCourses(i, idGrouped, _courses.at(specificYearCourse[0]).getName(), line_counter, specificYearCourse[0]);
+                controlGroupedCourses(i, idGrouped, _courses.at(specificYearCourse[0]).getName(), line_counter,
+                                      specificYearCourse[0]);
             }
         }
 
@@ -934,8 +948,10 @@ bool University::insertCourses(const std::string &fin) {
             //con il quale vedo per i diversi semestri se c'è quel determinato corso ora diventato "spento" e in tal caso:
             //- lo tolgo dai corsi attivi
             //- lo aggiungo tra i corsi spenti
-            for (auto iterStudyCourse = _studyCourse.begin();iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
-                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0],_tempInfoNotActiveCoursesToWriteInTheDB);
+            for (auto iterStudyCourse = _studyCourse.begin();
+                 iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
+                iterStudyCourse->second.updateSemestersAndOffCourses(specificYearCourse[0],specificYearCourse[1],
+                                                                     _tempInfoNotActiveCoursesToWriteInTheDB);
             }
         }
 
@@ -1032,7 +1048,8 @@ void University::dbCourseWrite() {
     fout.open("db_corsi.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-        Course generalCourse = _courses.at(iterCourse->first);//prendo l'intero oggetto Course generale per scrivere su file la riga che inizia con "c"
+        Course generalCourse = _courses.at(
+                iterCourse->first);//prendo l'intero oggetto Course generale per scrivere su file la riga che inizia con "c"
         fout << generalCourse;
     }
     fout.close();
@@ -1040,47 +1057,52 @@ void University::dbCourseWrite() {
 }
 
 ///inserimento delle info per gli studenti che si iscrivono
-bool University::enrollStudents(const std::string &fin) {
-    std::fstream fileIn(fin);
-    if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
-        throw DbException("file input non esistente");
-    }
-    std::string line;     //stringa di appoggio in cui mettere l'intero rigo
-    std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa
-    char c;    //accoglierà la s della matricola presa dal file, a noi inutile
-    int nMatr; //accoglierà il codice identificativo della matricola presa dal file, a noi utile
-    std::vector<std::string> tokens;
-    std::getline(fileIn, line);
-    std::string cds, course;
-    std::string coursesWithoutSquareBrackets;
-    std::vector<std::string> courses;
-    std::vector<std::string> infoStud;
-    std::string idCorso, endrolAcYear;
-    int mark;
-    int year;
-    cds = line.substr(0, 4);
-    year = stoi(line.substr(5, 4));
-    while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
-        tokens = Parse::splittedLine(line, ';');
-        std::stringstream ss(tokens[0]);
-        ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
-        Student stud = _students.at(nMatr); //preso l'istanza dello studente di cui si parla
-        coursesWithoutSquareBrackets = tokens[1].substr(1, tokens[1].size() - 2);
-        courses = Parse::splittedLine(coursesWithoutSquareBrackets, '%');
-        for (int i = 0; i < courses.size(); i++) {
-            course = courses[i].substr(1, courses[i].size() - 2);
-            infoStud = Parse::splittedLine(course, ',');
-            idCorso = infoStud[0];
-            endrolAcYear = infoStud[1];
-            if (infoStud[2].empty())
-                mark = -1;
-            else
-                mark = stoi(infoStud[2]);
-            _courses.at(idCorso).addStudentToSpecYearCourse(year, stud, endrolAcYear, mark);
+bool University::enrollStudents(std::string &yearSession) {
+    int year = Parse::getAcStartYear(yearSession);
+    for (int i = 0; i < _studyCourse.size(); i++) {
+        std::stringstream nomeFile;
+        nomeFile << "../input/studenti/" << 'c' << std::setfill('0') << std::setw(3) << i + 1 << '_' << year;
+        std::fstream fileIn(nomeFile.str());
+        if (!fileIn.is_open()) {
+            //std::cerr << "errore apertura database studenti" << std::endl;
+            throw DbException("file input non esistente");
         }
+        std::string line;     //stringa di appoggio in cui mettere l'intero rigo
+        std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa
+        char c;    //accoglierà la s della matricola presa dal file, a noi inutile
+        int nMatr; //accoglierà il codice identificativo della matricola presa dal file, a noi utile
+        std::vector<std::string> tokens;
+        std::getline(fileIn, line);
+        std::string cds, course;
+        std::string coursesWithoutSquareBrackets;
+        std::vector<std::string> courses;
+        std::vector<std::string> infoStud;
+        std::string idCorso, endrolAcYear;
+        int mark;
+        int year;
+        cds = line.substr(0, 4);
+        year = stoi(line.substr(5, 4));
+        while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
+            tokens = Parse::splittedLine(line, ';');
+            std::stringstream ss(tokens[0]);
+            ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
+            Student stud = _students.at(nMatr); //preso l'istanza dello studente di cui si parla
+            coursesWithoutSquareBrackets = tokens[1].substr(1, tokens[1].size() - 2);
+            courses = Parse::splittedLine(coursesWithoutSquareBrackets, '%');
+            for (int i = 0; i < courses.size(); i++) {
+                course = courses[i].substr(1, courses[i].size() - 2);
+                infoStud = Parse::splittedLine(course, ',');
+                idCorso = infoStud[0];
+                endrolAcYear = infoStud[1];
+                if (infoStud[2].empty())
+                    mark = -1;
+                else
+                    mark = stoi(infoStud[2]);
+                _courses.at(idCorso).addStudentToSpecYearCourse(year, stud, endrolAcYear, mark);
+            }
+        }
+        fileIn.close();
     }
-    fileIn.close();
     return true;
 }
 
@@ -1096,7 +1118,7 @@ void University::readSessionAcYear() {
         std::vector<std::string> infoSessions = Parse::splittedLine(line, ';');
         int acStartYear = Parse::getAcStartYear(infoSessions[0]);
         std::string output_file_name = std::string("output_file");
-        SessionYear sessionYear(infoSessions[0], infoSessions[1], infoSessions[2], infoSessions[3],output_file_name);
+        SessionYear sessionYear(infoSessions[0], infoSessions[1], infoSessions[2], infoSessions[3], output_file_name);
         _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
     }
     fileIn.close();
@@ -1231,7 +1253,8 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
-        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,constraintRelaxParameter);
+        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,
+                                                                       constraintRelaxParameter);
         constraintRelaxParameter++;
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
@@ -1355,26 +1378,31 @@ void University::controlReciprocyGrouped() {
         std::map<int, std::vector<std::string>> allGroupedCourse = iterCourse->second.getGroupedCourseFromAllYear();
         ///per ogni anno accademico del corso
         for (auto iterSpecific = allGroupedCourse.begin(); iterSpecific != allGroupedCourse.end(); iterSpecific++) {
-            
+
             std::vector<std::string> groupedOfThisYear = allGroupedCourse.at(iterSpecific->first); //(b,c,d)
             groupedOfThisYear.push_back(iterCourse->second.getId()); //(b,c,d,a)
             ///controllo tutti nel vettore, meno l'ultimo che è lui stesso (a)
             for (int j = 0; j < groupedOfThisYear.size() - 1; j++) {
                 //b
-                std::map<int, std::vector<std::string>> allGroupedCourse2 = _courses.at(groupedOfThisYear[j]).getGroupedCourseFromAllYear();
+                std::map<int, std::vector<std::string>> allGroupedCourse2 = _courses.at(
+                        groupedOfThisYear[j]).getGroupedCourseFromAllYear();
                 std::string name = _courses.at(groupedOfThisYear[j]).getName();
                 ///prendo anno accademico considerato
                 std::vector<std::string> groupedOfThisYear2 = allGroupedCourse2.at(iterSpecific->first); //(a,c,d)
                 groupedOfThisYear2.push_back(groupedOfThisYear[j]); //(a,c,d,b)
                 ///rimuoviamo corso per corso -> alla fine dovrà rimanere 0
-                for(int k=0; k<groupedOfThisYear.size(); k++){
+                for (int k = 0; k < groupedOfThisYear.size(); k++) {
                     auto pos = std::find(groupedOfThisYear2.begin(), groupedOfThisYear2.end(), groupedOfThisYear[k]);
-                    if(pos == groupedOfThisYear2.end())
-                        throw InvalidDbException("Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: ",name,". Il codice assente e':",groupedOfThisYear[k]);
+                    if (pos == groupedOfThisYear2.end())
+                        throw InvalidDbException(
+                                "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: ",
+                                name, ". Il codice assente e':", groupedOfThisYear[k]);
                     groupedOfThisYear2.erase(pos);
                 }
-                if(groupedOfThisYear2.empty() == false){
-                    throw InvalidDbException("Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in piu': ",name);
+                if (groupedOfThisYear2.empty() == false) {
+                    throw InvalidDbException(
+                            "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in piu': ",
+                            name);
                 }
             }
         }
@@ -1385,8 +1413,8 @@ void University::controlReciprocyGrouped() {
 void University::dbCourseNotActive() {
     std::fstream fout;
     fout.open("offCourses_db.txt", std::fstream::out | std::fstream::trunc);
-    for(int i = 0; i<_tempInfoNotActiveCoursesToWriteInTheDB.size();i++) {
-        fout << _tempInfoNotActiveCoursesToWriteInTheDB[i]<<std::endl;
+    for (int i = 0; i < _tempInfoNotActiveCoursesToWriteInTheDB.size(); i++) {
+        fout << _tempInfoNotActiveCoursesToWriteInTheDB[i] << std::endl;
     }
     fout.close();
 }
@@ -1397,12 +1425,12 @@ void University::readDbCourseNotActive() {
         throw DbException("file offCourses_db.txt non esistente");
     }
     std::string line;
-    while (std::getline(fileIn, line)){
-          _tempInfoNotActiveCoursesToWriteInTheDB.push_back(line);
-          std::vector<std::string> token = Parse::splittedLine(line,';');
+    while (std::getline(fileIn, line)) {
+        _tempInfoNotActiveCoursesToWriteInTheDB.push_back(line);
+        std::vector<std::string> token = Parse::splittedLine(line, ';');
 
-          if(_courses.find(token[0]) != _courses.end())
-                _courses.at(token[0]).assignYY_Sem(token[1]);
+        if (_courses.find(token[0]) != _courses.end())
+            _courses.at(token[0]).assignYY_Sem(token[1],token[2]);
     }
     fileIn.close();
 }

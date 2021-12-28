@@ -77,7 +77,7 @@ bool StudyCourse::offCoursesEmpty() const {
 }
 
 ///aggiorna semestri e corsi spenti. Se un corso diventa spento dovrò toglierlo dal semestre a cui era assegnato
-bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse, std::vector<std::string>& temp) {
+bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse,std::string& acYY ,std::vector<std::string>& temp) {
 for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++){
      //prendo il vettore con i codici del corso
      std::vector<std::string> &corsi = iterSemesters->second;
@@ -85,8 +85,8 @@ for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); 
      auto found = std::find(corsi.begin(),corsi.end(),idCourse);
         if(found != corsi.end()) {
             std::stringstream ss;
-            ss << idCourse << ";" << iterSemesters->first;
-            ///aggiorno temp ---> aggiungo "<codOffCourse>-<year>-<semester>"
+            ss << idCourse << ";" <<acYY<<";"<<iterSemesters->first;
+            ///aggiorno temp ---> aggiungo "<codOffCourse>;<acYear(in cui è stato spento)>;<year>-<semester>"
             temp.push_back(ss.str());
             ///tolgo il corso dai semestri e lo aggiungo a offCourses
              corsi.erase(found);

@@ -18,7 +18,6 @@ enum {
     update_professor,
     update_classroom,
     insert_course,
-    enroll_students,
     set_session_period,
     set_availability,
     set_exam_date
@@ -46,8 +45,6 @@ int returnCode(char *argv[]) {
         return update_classroom;
     else if (paramInput.compare("-i:c") == 0)
         return insert_course;
-    else if (paramInput.compare("-e:s") == 0)
-        return enroll_students;
     else if(paramInput.compare("-s") == 0 && secondParamInput.compare("current_a")==0)
         return set_session_period;
     else if(paramInput.compare("-s") == 0 && secondParamInput.compare("set_availability")==0)
@@ -96,10 +93,6 @@ void startProgram(University &uni, char *argv[]) {
             uni.insertCourses(argv[2]);
             break;
         }
-        case enroll_students:{
-            uni.enrollStudents(argv[2]);
-            break;
-        }
         case set_session_period: {
             std::string acyear(argv[3]);
             std::string one(argv[4]);
@@ -113,6 +106,8 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_exam_date:{
+            std::string year (argv[2]);
+            uni.enrollStudents(year);
             uni.setExamDate(argv[2],argv[3]);
             break;
         }

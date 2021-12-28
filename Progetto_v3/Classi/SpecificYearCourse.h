@@ -58,10 +58,17 @@ public:
     int amIAssignedAlreadyInThisSession(int);
     Date lastDateAssignationInGivenSession(int);
     bool assignExamInThisSpecificYearCourse(Date,int);
-    bool assignYY_SemToAllYear(std::string);
-
+    bool assignYY_SemToAllYear(std::string&,std::string&);
+    bool addRoomToSession(std::string&);//aggiunge le aule nella mappa _roomsEachAppeal
+    std::vector<std::string> getAllRoomsForThisSession(int); //ritorna tutte le aule per quell'appello
 private:
     std::string _yy_semester; //unico per tutti i corsi!!!
+    std::string _acYearOff;
+public:
+    std::string &getAcYearOff();
+
+private:
+    //anno accademico in cui il corso è stato spento
     std::vector<int> _studyCourseAssigned;
     int _startYear;   ///anno di inizio
     int _endYear;    ///anno di fine
@@ -81,6 +88,9 @@ private:
     //key: semester (session)
     //value: quante volte è stato programmato un suo esame in quel semestre
     std::map<int, std::vector<Date>> _howManyTimesIAmAssignedInASession;
+    //key: num appello: 0, 1, 2, 3. (4 nell'intero anno)
+    //value: vettore di aule per quel'appello
+    std::map<int, std::vector<std::string>> _roomsEachAppeal;
 
 };
 

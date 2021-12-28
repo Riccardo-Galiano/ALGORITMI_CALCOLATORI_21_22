@@ -75,6 +75,17 @@ std::string Classroom::setCod(int nCod) const {
     return output.str();
 }
 
+bool Classroom::checkAvailability(std::string& key) {
+    if(_disavailableRooms.count(key)==1)
+        return false;
+    else
+        return true;
+}
+
+void Classroom::setDisavailability(std::string & key) {
+    _disavailableRooms.insert(std::pair<std::string,int>(key,1));
+}
+
 std::ostream &operator<<(std::ostream &room, const Classroom &s) {
 
     int nCod = s.getId();

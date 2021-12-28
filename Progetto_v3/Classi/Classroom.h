@@ -3,6 +3,7 @@
 
 
 #include <cstring>
+#include <map>
 
 class Classroom {
 public:
@@ -22,6 +23,8 @@ public:
 
     std::string setCod(int) const ;
 
+    bool checkAvailability(std::string &);
+    void setDisavailability(std::string&);
 private:
 
     int _id; //codice identificativo
@@ -29,6 +32,10 @@ private:
     bool _lab; //lab o aula?
     int _nSeats; //capienza massima dell'aula
     int _nExamSeats; //capienza all'esame
+    //key: "Date;Slot"
+    //value: non ci interessa.. se esiste la tupla -> allora occupata!
+    std::map<std::string,int> _disavailableRooms;
+
 };
 std::ostream &operator<<(std::ostream &room, const Classroom &s);
 

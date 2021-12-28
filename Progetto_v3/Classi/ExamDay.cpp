@@ -5,6 +5,7 @@
 #include <sstream>
 #include "ExamDay.h"
 #include "StudyCourse.h"
+#include "Classroom.h"
 #include <algorithm>
 #include <iomanip>
 #include <unordered_set>
@@ -19,21 +20,30 @@ ExamDay::ExamDay(Date date) {
 int ExamDay::isPossibleToAssignThisExamToProf(Course course, std::map<int, Professor>& allUniversityProfs, int numSlotsRequired, int relaxPar) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day (-1)
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
-    // esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
+
+    //!!! esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
+
     int startHourSlot = -1;
     int numSlotsFoundedSoFar = 0;
     int foundedStartHourSlot = -1;  //rimarrà -1 se non riesco a trovare nulla, altrimenti l'orario di inizio
+
+   //questo for non va bene. cerca solo slot vuoti!!
+   //per ogni slot controllare disponibilità di aule!!!
+   //da costruire funzione di ricerca aule!!!!
+
     for (int i = 0; i < 6 && foundedStartHourSlot == -1; i++ ) {
-        if (_slots.at(8 + 2 * i).empty()) {//controllo sugli slot; 8-10-12....
-            //slot i-esimo non occupato
-            numSlotsFoundedSoFar++;
-            if (numSlotsFoundedSoFar == 1)
-                startHourSlot = 8 + 2 * i; //se dovessi trovare il numero di slot necessari partirei da lì
-            if (numSlotsFoundedSoFar == numSlotsRequired)//se il numero di slot trovati coincide con il numero di slot necessari
-                foundedStartHourSlot = startHourSlot;//ho lo slot di inizio
-        } else
-            //slot già occupato
-            numSlotsFoundedSoFar = 0; //reset, perchè ho bisogno di slot consecutivi
+
+         if (_slots.at(8 + 2 * i).empty()) {//controllo sugli slot; 8-10-12....
+             //slot i-esimo non occupato
+             numSlotsFoundedSoFar++;
+             if (numSlotsFoundedSoFar == 1)
+                 startHourSlot = 8 + 2 * i; //se dovessi trovare il numero di slot necessari partirei da lì
+             if (numSlotsFoundedSoFar == numSlotsRequired)//se il numero di slot trovati coincide con il numero di slot necessari
+                 foundedStartHourSlot = startHourSlot;//ho lo slot di inizio
+         } else
+             //slot già occupato
+             numSlotsFoundedSoFar = 0; //reset, perchè ho bisogno di slot consecutivi
+
     }
     if (foundedStartHourSlot == -1)
         //non trovato un buco abbastanza grande
