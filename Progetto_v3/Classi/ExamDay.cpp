@@ -145,8 +145,10 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course>& coursesOfTh
                     if(j < numVersion-1)
                         singleSlotSS<<";";
                 }
+                std::string ciao = singleSlotSS.str();
             } else {
                 singleSlotSS << coursesOfThisSlot[i].getId() << "(C"<< std::setfill('0') << std::setw(3)<< sp.getStudyCourseAssigned()[0] << ")";
+
             }
             if(i<coursesOfThisSlot.size()-1)
                 singleSlotSS << ";";

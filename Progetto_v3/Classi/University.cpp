@@ -195,14 +195,19 @@ void University::readCourse() {
             std::string yy_semester;
             std::vector<int> studyCourse;
             for (int i = 1; i <= _studyCourse.size(); i++) {
-                std::string result = _studyCourse.at(i).isInWhichSemester(lastReadCourse);
-                if (!result.empty()) {
-                    //ho trovato il suo corso di studi
-                    auto iterStudyCourse = _studyCourse.find(i);
-                    studyCourse.push_back(iterStudyCourse->first);
-                    yy_semester = result;
+
+                if (isActive) {
+                    std::string result = _studyCourse.at(i).isInWhichSemester(lastReadCourse);
+                    if (!result.empty()) {
+                        //ho trovato il suo corso di studi ed è attivo
+                        yy_semester = result;
+                    }
                 }
+                auto iterStudyCourse = _studyCourse.find(i);
+                if(iterStudyCourse->second.assignStudyCourse(lastReadCourse))
+                    studyCourse.push_back(iterStudyCourse->first);
             }
+
             ///la addSpecificYearCourses serve per accedere e aggiornare una map (_courseOfTheYear) presente in ogni oggetto Course della mappa _courses, che contiene i vari anni accademici per ogni corso
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                                splittedExamData, idGrouped, yy_semester,
@@ -1395,7 +1400,9 @@ void University::readDbCourseNotActive() {
     while (std::getline(fileIn, line)){
           _tempInfoNotActiveCoursesToWriteInTheDB.push_back(line);
           std::vector<std::string> token = Parse::splittedLine(line,';');
-          _courses.at(token[0]).assignYY_Sem(token[1]);
+
+          if(_courses.find(token[0]) != _courses.end())
+                _courses.at(token[0]).assignYY_Sem(token[1]);
     }
     fileIn.close();
 }

@@ -182,6 +182,11 @@ std::string StudyCourse::isInWhichSemester(std::string codCourse) const {
     return "";
 }
 
+bool StudyCourse::assignStudyCourse(std::string course) {
+    std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();
+    return std::find(allCourses.begin(), allCourses.end(), course) != allCourses.end();
+}
+
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
     int nCod = s.getId();

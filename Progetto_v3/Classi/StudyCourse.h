@@ -28,6 +28,7 @@ public:
     //return "" stringa vuoota se non esiste in questo corso di studio, oppure "anno-semestre" corrispondente
     std::string isInWhichSemester(std::string) const;
     bool sameSemester(std::string,const std::map<int, StudyCourse>&,int);
+    bool assignStudyCourse(std::string);
 
 private:
     int _id; //codice del corso di studi
