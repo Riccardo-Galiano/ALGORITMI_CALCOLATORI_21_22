@@ -253,8 +253,6 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
             ///altrimenti solo uno...
             allExamAppealsToDo.push_back(iterCourse->first);
         }
-
-
     }
     return allExamAppealsToDo;
 }
@@ -297,7 +295,6 @@ std::string SessionYear::getSessions() const {
             output << ";";
         i++;
     }
-
     return output.str();
 }
 

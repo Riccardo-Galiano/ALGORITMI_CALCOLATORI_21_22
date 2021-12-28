@@ -1310,6 +1310,7 @@ bool University::controlGroupedCourses(int idStudyCourse, std::vector<std::strin
     return true;
 }
 
+///verifica che non ci siano buchi negli id dei corsi nei corsi di studio
 void University::thereIsAHoleInTheCoursesCodes() {
     ///controllo non ci siano buchi, se c'è mi ritorna la stringa non consecutiva che crea il buco
     std::vector<std::string> allCoursesCodesFromSemesters;
@@ -1328,7 +1329,7 @@ void University::thereIsAHoleInTheCoursesCodes() {
         checkDistance(allCoursesCodesFromSemesters[i - 1], allCoursesCodesFromSemesters[i]);
     }
 }
-
+///verifica la distanza tra due id successivi
 void University::checkDistance(std::string &minor, std::string &major) {
     int size_min = minor.size();
     int size_maj = major.size();
@@ -1349,7 +1350,6 @@ void University::checkDistance(std::string &minor, std::string &major) {
         int distance = lettMaj - lettMin;
         if (distance == 1 && other_equal && penultimaLettMaj == penultimaLettMin) {
             ///OK
-
             return;
         } else if (lettMaj == 'A' && lettMin == 'Z' && penultimaLettMaj != penultimaLettMin && other_equal) {
             ///penul diverse, devo controllare che penultima_maj > pen_min
@@ -1409,7 +1409,7 @@ void University::controlReciprocyGrouped() {
     }
 }
 
-
+///tiene traccia delle info di corsi ormai spenti(per sessioni precedenti alla data di disattivazione)
 void University::dbCourseNotActive() {
     std::fstream fout;
     fout.open("offCourses_db.txt", std::fstream::out | std::fstream::trunc);
@@ -1419,6 +1419,7 @@ void University::dbCourseNotActive() {
     fout.close();
 }
 
+///lettura delle info di corsi ormai spenti(per sessioni precedenti alla data di disattivazione)
 void University::readDbCourseNotActive() {
     std::ifstream fileIn("offCourses_db.txt");
     if (!fileIn.is_open()) {
@@ -1426,9 +1427,11 @@ void University::readDbCourseNotActive() {
     }
     std::string line;
     while (std::getline(fileIn, line)) {
+        ///salvo l'intera riga del file
         _tempInfoNotActiveCoursesToWriteInTheDB.push_back(line);
         std::vector<std::string> token = Parse::splittedLine(line, ';');
 
+        ///per il corso letto nella riga vado ad assegnare il semestre a cui era associato il corso
         if (_courses.find(token[0]) != _courses.end())
             _courses.at(token[0]).assignYY_Sem(token[1],token[2]);
     }

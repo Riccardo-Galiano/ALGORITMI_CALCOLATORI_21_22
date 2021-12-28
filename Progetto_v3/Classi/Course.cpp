@@ -305,6 +305,7 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
     return true;
 }
 
+///tengo traccia del semstre e dell'anno del corso spento
 bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
     for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
         iterSpecific->second.assignYY_SemToAllYear(acYYoff, yy_semester);
