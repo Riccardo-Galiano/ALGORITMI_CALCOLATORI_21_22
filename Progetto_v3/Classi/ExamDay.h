@@ -13,7 +13,7 @@
 
 class ExamDay {
 public:
-    ExamDay(Date);
+    explicit ExamDay(Date);
     bool assignExamToProf(std::map<int,Professor>&, Course , int , int );
     bool assignExamToExamDay(int, Course, int);
     int isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor>& allUniversityProfs,
@@ -23,8 +23,10 @@ public:
     bool setSlot();
     std::vector<std::string> getSlotsToString();
     bool allSLotsAreEmpty();
-    bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour);
+    bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour,int numSlotsRequired);
     bool checkProfsAvaibility(SpecificYearCourse& specificCourse, std::map<int, Professor>& allUniversityProfs, int relaxPar, int slotHour);
+    void eraseTempGroupedCourseClassrooms();
+    bool checkAvailabilityOfClassroom(std::map<int, Classroom>& allUniversityClassrooms,std::vector<int>&idRoomsFounded,int numSlotsRequired);
 private:
     std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);
     bool firstSlotCourses(Course,std::vector<Course>&);
@@ -33,6 +35,7 @@ private:
     //slots dalle 8 alle 20; uno slot dura due ore --> 8, 10, 12, 14, 16, 18
     std::map<int,std::vector<Course>> _slots;
     Date _date;
+    std::vector<int> _tempGroupedCourseClassrooms;
 
 };
 

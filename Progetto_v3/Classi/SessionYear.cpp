@@ -151,23 +151,31 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                 if(dateIsOk){
                     ///se i primi requisiti sono rispettati, dobbiamo controllare se i prof sono disponibili e se nei due giorni precedenti non ci siano corsi dello stesso corso di studio e semestre
                     std::vector<int> startHourPerCourse;
-                    std::map<int,std::vector<int>> roomsFoundedPerCourse;
+                    std::map<std::string,std::vector<int>> roomsFoundedPerCourse;
                     ///ciclo sull'appello del codCOurse in posizione indexExam di _allExamAppealsToDo e i suoi raggruppati se il primo controllo sulle date è andato bene
                     for(int i = 0; i < coursesToConsiderInThisLoop.size(); i++){
                         Course courseToConsider = coursesToConsiderInThisLoop[i];
+                        std::vector<int> roomsFounded;
                         ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
-                        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,currentExamDay,profs, relaxPar,getSemester(sessName));
-                        startHourPerCourse.push_back(startExamHour);
+                         int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,currentExamDay,profs,allUniversityClassrooms, relaxPar,getSemester(sessName),roomsFounded);
+                         startHourPerCourse.push_back(startExamHour);
+                        if(roomsFoundedPerCourse.count(courseToConsider.getId())==0)
+                            roomsFoundedPerCourse.insert(std::pair<std::string,std::vector<int>>(courseToConsider.getId(),roomsFounded));
+                        else
+                            roomsFoundedPerCourse.at(courseToConsider.getId()).insert(roomsFounded.begin(),roomsFounded.begin(),roomsFounded.end());
                     }
+                    ///pulisco il vettore di aule temporaneo per i raggruppati
+                     _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
                     ///controlliamo che non ci siano -1 nel vettore
                     bool againOk = checkHours(startHourPerCourse);
                     if(againOk){
                         pop = true;
                         ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
                         for(int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
-                            Course& courseToConsider = courses.at(coursesToConsiderInThisLoop[i].getId());
-                            std::vector<int> rooms = roomsFoundedPerCourse.at(i);
-                            assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, allUniversityClassrooms, courseToConsider, sessName, _allExamAppealsToDo, rooms);
+                            std::string idCourse = coursesToConsiderInThisLoop[i].getId();
+                            Course& courseToConsider = courses.at(idCourse);
+                            std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
+                             assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, allUniversityClassrooms, courseToConsider, sessName, _allExamAppealsToDo, rooms);
                             _sysLog.generateWarnings(coursesToConsiderInThisLoop,relaxPar,gapAppeals,_acYear);
                         }
                         ///check terminazione funzione
@@ -192,7 +200,8 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 void SessionYear::generateOutputFiles(std::string& outputFileName,int session,std::map<std::string, Course>& courses) {
     std::stringstream ssFout;
     std::string key = _sessionNames[session-1];
-    ssFout<<outputFileName.substr(0,19);
+     std::vector<std::string> token = Parse::splittedLine(outputFileName,'.');
+    ssFout<<token[0];
     if(key == "winter")
         ssFout<<"_s1.txt";
     else if(key == "summer")
@@ -239,7 +248,9 @@ std::vector<std::string> SessionYear::getAllExamAppealsToDo(std::string sessName
 
         semester = specificYY.getSemester();
         isActive = specificYY.getisActive();
-        int acYearOff = Parse::getAcStartYear(specificYY.getAcYearOff());
+        int acYearOff;
+        if(isActive == false)
+                acYearOff = Parse::getAcStartYear(specificYY.getAcYearOff());
         ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
         if (semester == semesterOfThisSession && isActive) {
             ///devo fare due appelli se i semestri sono uguali!!!!
@@ -347,14 +358,14 @@ bool SessionYear::dateIsOK(Date& newDate,const Course& course, std::string& sess
 }
 
 /// controlla se i prof sono disponibili e se l'esame da assegnare è dello stesso corso di studi e dello stesso anno di un altro, nel range di due giorni precedenti alla data controllata
-int SessionYear::checkIfProfsAvailableAndGapSameSemesterCourses(Course& course, Date& currentExamDay, std::map<int, Professor>& profs,int relaxPar, int session) {
+int SessionYear::checkIfProfsAvailableAndGapSameSemesterCourses(Course& course, Date& currentExamDay, std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms,int relaxPar, int session,std::vector<int>& roomsFounded) {
     Exam examToAssign = course.getExamSpecificYear(_acYear);//tempi, aule o lab, modalità
     int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
-    return isPossibleToAssignThisExam(course,currentExamDay,profs,numSlots,relaxPar, session);//ora di inizio dello slot per l'esame
+    return isPossibleToAssignThisExam(course,currentExamDay,profs,classrooms,numSlots,relaxPar, session,roomsFounded);//ora di inizio dello slot per l'esame
 }
 
 ///controlla se può e dove può essere inserito l'esame ed eventualmente prende l'ora di inizio
-int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,int numSlot , int relaxPar, int session) {
+int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms,int numSlot , int relaxPar, int session,std::vector<int>& roomsFounded) {
     ///controlliamo che il corso da inserire non abbia in un range di due giorni precedenti alla data analizzata un esame dello stesso corso di studi e dello stesso anno
     ///rilassamento del range da uno a due giorni: faccio il controllo dello stesso corso di studio e dello stesso anno solo se il vincolo non è rilassato
     if(relaxPar<1){
@@ -380,8 +391,8 @@ int SessionYear::isPossibleToAssignThisExam(Course course,Date currentExamDay,st
         }
     }
     ///controlliamo se ci sono slot liberi ed eventualmente se i prof in quegli slot sono liberi
-    ExamDay examCurrentDay = _yearCalendar.at(currentExamDay.toString());
-    int start = examCurrentDay.isPossibleToAssignThisExamToProfs(course, profs, numSlot, relaxPar);
+    ExamDay &examCurrentDay = _yearCalendar.at(currentExamDay.toString());
+    int start = examCurrentDay.isPossibleToAssignThisExamToProfs(course, profs,classrooms, numSlot, relaxPar,roomsFounded);
 
     return start;
 }

@@ -85,7 +85,8 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 
 ///aggiunge uno studente ad un anno specifico
 bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string enrolYear, int mark) {
-    return _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
+    _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
+    return true;
 }
 
 ///prende l'ultimo oggetto SpecificYearCourse dalla map _coursOfTheYear
@@ -297,7 +298,7 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
                                                                                 groupedCourse[i]);
                 if (semGrouped != sem)
                     throw InvalidDbException("il seguente corso raggruppato ", groupedCourse[i],
-                                             " non è dello stesso semestre di: ", getName(),
+                                             " non e' dello stesso semestre di: ", getName(),
                                              " ;corrispondente al codice: ", getId());
                }
         }

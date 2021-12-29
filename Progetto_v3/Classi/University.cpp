@@ -1061,7 +1061,7 @@ bool University::enrollStudents(std::string &yearSession) {
     int year = Parse::getAcStartYear(yearSession);
     for (int i = 0; i < _studyCourse.size(); i++) {
         std::stringstream nomeFile;
-        nomeFile << "../input/studenti/" << 'c' << std::setfill('0') << std::setw(3) << i + 1 << '_' << year;
+        nomeFile << "../input/studenti/" << 'c' << std::setfill('0') << std::setw(3) << i + 1 << '_' << year<<".txt";
         std::fstream fileIn(nomeFile.str());
         if (!fileIn.is_open()) {
             //std::cerr << "errore apertura database studenti" << std::endl;
@@ -1094,7 +1094,7 @@ bool University::enrollStudents(std::string &yearSession) {
                 infoStud = Parse::splittedLine(course, ',');
                 idCorso = infoStud[0];
                 endrolAcYear = infoStud[1];
-                if (infoStud[2].empty())
+                if (infoStud.size() == 2)
                     mark = -1;
                 else
                     mark = stoi(infoStud[2]);
@@ -1191,8 +1191,7 @@ bool University::setProfsNoAvailability(std::string acYear, const std::string &f
         iterProf->second.noAvailabilityClear(year);//facciamo il controllo se vuoto????
         for (int i = 1; i < profAvailability.size(); i++) {//per ogni campo della riga letta
 
-            _professors.at(nMatr).setNoAvaibilities(year,
-                                                    profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
+            _professors.at(nMatr).setNoAvaibilities(year, profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
         }
     }
     fileIn.close();
@@ -1253,7 +1252,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
-        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,
+        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,_classroom,
                                                                        constraintRelaxParameter);
         constraintRelaxParameter++;
     }
@@ -1281,15 +1280,17 @@ bool University::controlDatabase(int startAcYear) {
 ///i database sono vuoti?
 bool University::dataBaseIsEmpty(int startAcYear) {
     if (_professors.empty())
-        throw InvalidDbException("Il database dei professori è vuoto");
+        throw InvalidDbException("Il database dei professori e' vuoto");
     else if (_students.empty())
-        throw InvalidDbException("Il database degli studenti è vuoto");
+        throw InvalidDbException("Il database degli studenti e' vuoto");
     else if (_courses.empty())
-        throw InvalidDbException("Il database dei corsi è vuoto");
+        throw InvalidDbException("Il database dei corsi e' vuoto");
     else if (_studyCourse.empty())
-        throw InvalidDbException("Il database dei corsi di studio è vuoto");
+        throw InvalidDbException("Il database dei corsi di studio e' vuoto");
+    else if (_acYearSessions.find(startAcYear) == _acYearSessions.end())
+        throw InvalidDbException("non ci sono informazioni sulle sessioni per questo anno");
     else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty())
-        throw InvalidDbException("Il database delle date delle sessioni è vuoto");
+        throw InvalidDbException("Il database dei corsi di studio e' vuoto");
     return false;
 }
 

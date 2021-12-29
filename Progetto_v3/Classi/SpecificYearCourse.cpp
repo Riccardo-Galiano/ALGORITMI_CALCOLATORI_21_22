@@ -268,11 +268,15 @@ bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mar
     studToAdd._startEnrolYear = stoi(enrolYear.substr(0, 4));
     studToAdd._endEnrolYear = stoi(enrolYear.substr(5, 4));
     studToAdd.stud = stud;
+
+    totStudentsEnrolled++;
+    if (mark == -1) { //da controllare da stringa vuota a int cosa succede
+        totStudentsNotPassed++;
+        studToAdd._passed = false;
+    } else
+        studToAdd._passed = true;
     std::pair<int, student> pair(stud.getId(), studToAdd);
     _student.insert(pair);
-    totStudentsEnrolled++;
-    if (mark == -1) //da controllare da stringa vuota a int cosa succede
-        totStudentsNotPassed++;
     return true;
 }
 
@@ -286,8 +290,8 @@ std::string &SpecificYearCourse::getAcYearOff(){
     return _acYearOff;
 }
 
-int SpecificYearCourse::getTotStudentsNotPassed() const {
-    return totStudentsNotPassed;
+int SpecificYearCourse::getTotStudentsExam() {
+    return totStudentsNotPassed; //(tot enroled - (tot enroled-totNot))
 }
 
 bool SpecificYearCourse::addClassroomsToAppeal(int numAppeal, std::vector<int> &rooms) {

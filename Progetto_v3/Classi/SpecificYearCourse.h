@@ -28,7 +28,7 @@ typedef struct {
     int _startEnrolYear; ///inizio corso
     int _endEnrolYear; ///fine corso
     int _grade;   ///voto
-    bool _passed; ///promosso o bocciato
+    bool _passed;
 } student;
 
 class SpecificYearCourse {
@@ -75,9 +75,11 @@ private:
     int totStudentsEnrolled = 0;
     int totStudentsNotPassed = 0;
 public:
-    int getTotStudentsNotPassed() const;
+    int getTotStudentsExam();
     bool addClassroomsToAppeal(int numAppeal,std::vector<int>& rooms);
     int getNumNextAppeal();
+
+
 private:
     std::vector<std::string> _idGroupedCourses;
     Exam _exam;
