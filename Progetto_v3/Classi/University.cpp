@@ -1065,7 +1065,7 @@ bool University::enrollStudents(std::string &yearSession) {
         std::fstream fileIn(nomeFile.str());
         if (!fileIn.is_open()) {
             //std::cerr << "errore apertura database studenti" << std::endl;
-            throw DbException("file input non esistente");
+            throw DbException("file " + nomeFile.str() + "non esistente");
         }
         std::string line;     //stringa di appoggio in cui mettere l'intero rigo
         std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa

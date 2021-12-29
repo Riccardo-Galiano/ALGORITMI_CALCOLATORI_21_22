@@ -75,15 +75,22 @@ std::string Classroom::setCod(int nCod) const {
     return output.str();
 }
 
-bool Classroom::checkAvailability(std::string& key) {
-    if(_disavailableRooms.count(key)==1)
+bool Classroom::checkAvailability(Date& date,int slotHour) {
+    std::stringstream ss;
+    ss << date.toString() << ';' << slotHour;
+    if(_disavailableRooms.count(ss.str())==1)
         return false;
     else
         return true;
 }
 
-void Classroom::setDisavailability(std::string & key) {
-    _disavailableRooms.insert(std::pair<std::string,int>(key,1));
+void Classroom::setDisavailability(Date& date, int slotHour, int numSlot) {
+    for(int s=0; s < numSlot; s++) {
+        int hour = slotHour + (s*2);
+        std::stringstream ss;
+        ss << date.toString() << ';' << hour;
+        _disavailableRooms.insert(std::pair<std::string, int>(ss.str(), 1));
+    }
 }
 
 std::ostream &operator<<(std::ostream &room, const Classroom &s) {

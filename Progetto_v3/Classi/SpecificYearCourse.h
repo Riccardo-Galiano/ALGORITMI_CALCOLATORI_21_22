@@ -59,8 +59,6 @@ public:
     Date lastDateAssignationInGivenSession(int);
     bool assignExamInThisSpecificYearCourse(Date,int);
     bool assignYY_SemToAllYear(std::string&,std::string&);
-    bool addRoomToSession(std::string&);//aggiunge le aule nella mappa _roomsEachAppeal
-    std::vector<std::string> getAllRoomsForThisSession(int); //ritorna tutte le aule per quell'appello
 private:
     std::string _yy_semester; //unico per tutti i corsi!!!
     std::string _acYearOff;
@@ -76,6 +74,11 @@ private:
     int _parallelCourses;    ///numero di corsi in parallelo
     int totStudentsEnrolled = 0;
     int totStudentsNotPassed = 0;
+public:
+    int getTotStudentsNotPassed() const;
+    bool addClassroomsToAppeal(int numAppeal,std::vector<int>& rooms);
+    int getNumNextAppeal();
+private:
     std::vector<std::string> _idGroupedCourses;
     Exam _exam;
     // per ogni corso in parallelo ho un vettore dei prof
@@ -90,8 +93,7 @@ private:
     std::map<int, std::vector<Date>> _howManyTimesIAmAssignedInASession;
     //key: num appello: 0, 1, 2, 3. (4 nell'intero anno)
     //value: vettore di aule per quel'appello
-    std::map<int, std::vector<std::string>> _roomsEachAppeal;
-
+    std::map<int, std::vector<int>> _roomsEachAppeal;
 };
 
 std::ostream& operator<<(std::ostream& output, const SpecificYearCourse& s);

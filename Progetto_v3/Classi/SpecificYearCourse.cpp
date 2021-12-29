@@ -286,6 +286,25 @@ std::string &SpecificYearCourse::getAcYearOff(){
     return _acYearOff;
 }
 
+int SpecificYearCourse::getTotStudentsNotPassed() const {
+    return totStudentsNotPassed;
+}
+
+bool SpecificYearCourse::addClassroomsToAppeal(int numAppeal, std::vector<int> &rooms) {
+    _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(numAppeal,rooms));
+    return true;
+}
+
+int SpecificYearCourse::getNumNextAppeal() {
+    int tot = 0;
+    auto start = _howManyTimesIAmAssignedInASession.begin();
+    auto end = _howManyTimesIAmAssignedInASession.end();
+    for(auto iter = start; iter != end; iter++){
+        tot += iter->second.size();
+    }
+    return tot;
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

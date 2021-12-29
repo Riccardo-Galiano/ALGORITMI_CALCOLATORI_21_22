@@ -4,6 +4,8 @@
 
 #include <cstring>
 #include <map>
+#include "Date.h"
+#include "Course.h"
 
 class Classroom {
 public:
@@ -23,8 +25,8 @@ public:
 
     std::string setCod(int) const ;
 
-    bool checkAvailability(std::string &);
-    void setDisavailability(std::string&);
+    bool checkAvailability(Date&,int);
+    void setDisavailability(Date&,int,int);
 private:
 
     int _id; //codice identificativo
