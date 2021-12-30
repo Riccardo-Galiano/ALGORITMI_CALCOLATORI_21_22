@@ -94,7 +94,7 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-g 2023-2024 exam.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-up 3" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -161,7 +161,8 @@
       <workItem from="1640612182722" duration="11119000" />
       <workItem from="1640678049555" duration="8813000" />
       <workItem from="1640720639305" duration="2613000" />
-      <workItem from="1640769325273" duration="30325000" />
+      <workItem from="1640769325273" duration="31078000" />
+      <workItem from="1640849700966" duration="16871000" />
     </task>
     <servers />
   </component>
@@ -169,50 +170,54 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="272" y="146" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1640789352611">
+    <state x="272" y="146" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1640858621746">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state x="272" y="146" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1640789352611" />
-    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1640169633132">
+    <state x="272" y="146" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1368.872@0.0.1368.872" timestamp="1640858621746" />
+    <state x="242" y="149" key="#com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog" timestamp="1640870116621">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872@0.0.1368.872" timestamp="1640169633132" />
+    <state x="242" y="149" key="#com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog/0.0.1368.872@0.0.1368.872" timestamp="1640870116621" />
+    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser" timestamp="1640862703537">
+      <screen x="0" y="0" width="1368" height="872" />
+    </state>
+    <state x="446" y="84" key="#com.intellij.ide.util.MemberChooser/0.0.1368.872@0.0.1368.872" timestamp="1640862703537" />
     <state width="604" height="546" key="DebuggerActiveHint" timestamp="1640622403365">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state width="604" height="546" key="DebuggerActiveHint/0.0.1368.872@0.0.1368.872" timestamp="1640622403365" />
-    <state width="1314" height="269" key="GridCell.Tab.0.bottom" timestamp="1640804805582">
+    <state width="1314" height="181" key="GridCell.Tab.0.bottom" timestamp="1640858980247">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1640804805582" />
-    <state width="1314" height="269" key="GridCell.Tab.0.center" timestamp="1640804805582">
+    <state width="1314" height="181" key="GridCell.Tab.0.bottom/0.0.1368.872@0.0.1368.872" timestamp="1640858980247" />
+    <state width="1314" height="181" key="GridCell.Tab.0.center" timestamp="1640858980246">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1640804805582" />
-    <state width="1314" height="269" key="GridCell.Tab.0.left" timestamp="1640804805582">
+    <state width="1314" height="181" key="GridCell.Tab.0.center/0.0.1368.872@0.0.1368.872" timestamp="1640858980246" />
+    <state width="1314" height="181" key="GridCell.Tab.0.left" timestamp="1640858980246">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1640804805582" />
-    <state width="1314" height="269" key="GridCell.Tab.0.right" timestamp="1640804805582">
+    <state width="1314" height="181" key="GridCell.Tab.0.left/0.0.1368.872@0.0.1368.872" timestamp="1640858980246" />
+    <state width="1314" height="181" key="GridCell.Tab.0.right" timestamp="1640858980246">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1640804805582" />
-    <state width="1314" height="269" key="GridCell.Tab.1.bottom" timestamp="1640804806857">
+    <state width="1314" height="181" key="GridCell.Tab.0.right/0.0.1368.872@0.0.1368.872" timestamp="1640858980246" />
+    <state width="1314" height="181" key="GridCell.Tab.1.bottom" timestamp="1640858982336">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.1.bottom/0.0.1368.872@0.0.1368.872" timestamp="1640804806857" />
-    <state width="1314" height="269" key="GridCell.Tab.1.center" timestamp="1640804806857">
+    <state width="1314" height="181" key="GridCell.Tab.1.bottom/0.0.1368.872@0.0.1368.872" timestamp="1640858982336" />
+    <state width="1314" height="181" key="GridCell.Tab.1.center" timestamp="1640858982335">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.1.center/0.0.1368.872@0.0.1368.872" timestamp="1640804806857" />
-    <state width="1314" height="269" key="GridCell.Tab.1.left" timestamp="1640804806857">
+    <state width="1314" height="181" key="GridCell.Tab.1.center/0.0.1368.872@0.0.1368.872" timestamp="1640858982335" />
+    <state width="1314" height="181" key="GridCell.Tab.1.left" timestamp="1640858982335">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.1.left/0.0.1368.872@0.0.1368.872" timestamp="1640804806857" />
-    <state width="1314" height="269" key="GridCell.Tab.1.right" timestamp="1640804806857">
+    <state width="1314" height="181" key="GridCell.Tab.1.left/0.0.1368.872@0.0.1368.872" timestamp="1640858982335" />
+    <state width="1314" height="181" key="GridCell.Tab.1.right" timestamp="1640858982335">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state width="1314" height="269" key="GridCell.Tab.1.right/0.0.1368.872@0.0.1368.872" timestamp="1640804806857" />
+    <state width="1314" height="181" key="GridCell.Tab.1.right/0.0.1368.872@0.0.1368.872" timestamp="1640858982335" />
     <state x="70" y="0" key="SettingsEditor" timestamp="1640517584498">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
@@ -221,10 +226,10 @@
       <screen x="0" y="0" width="1368" height="872" />
     </state>
     <state width="623" height="498" key="SwitcherDM/0.0.1368.872@0.0.1368.872" timestamp="1640274774227" />
-    <state x="304" y="219" key="com.intellij.ide.util.TipDialog" timestamp="1640769325417">
+    <state x="304" y="219" key="com.intellij.ide.util.TipDialog" timestamp="1640849775839">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
-    <state x="304" y="219" key="com.intellij.ide.util.TipDialog/0.0.1368.872@0.0.1368.872" timestamp="1640769325417" />
+    <state x="304" y="219" key="com.intellij.ide.util.TipDialog/0.0.1368.872@0.0.1368.872" timestamp="1640849775839" />
     <state x="367" y="11" key="refactoring.ChangeSignatureDialog" timestamp="1640556279060">
       <screen x="0" y="0" width="1368" height="872" />
     </state>
@@ -243,12 +248,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
-          <line>1328</line>
+          <line>1331</line>
           <option name="timeStamp" value="267" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
-          <line>547</line>
+          <line>552</line>
           <option name="timeStamp" value="288" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -258,7 +263,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
-          <line>1254</line>
+          <line>1257</line>
           <option name="timeStamp" value="429" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -285,6 +290,16 @@
           <url>file://$PROJECT_DIR$/Progetto_v3/Classi/SessionYear.cpp</url>
           <line>83</line>
           <option name="timeStamp" value="571" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
+          <line>1464</line>
+          <option name="timeStamp" value="578" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Progetto_v3/Classi/University.cpp</url>
+          <line>37</line>
+          <option name="timeStamp" value="579" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

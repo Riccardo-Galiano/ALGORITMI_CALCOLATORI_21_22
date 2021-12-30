@@ -20,7 +20,10 @@ enum {
     insert_course,
     set_session_period,
     set_availability,
-    set_exam_date
+    set_exam_date,
+    versioning,
+    add_study_plan_student,
+    update_study_plan_student
 };
 
 
@@ -51,6 +54,13 @@ int returnCode(char *argv[]) {
         return set_availability;
     else if (paramInput.compare("-g")==0)
         return set_exam_date;
+    else if (paramInput.compare("-up")==0)
+        return versioning;
+    else if (paramInput.compare("-a:p")==0)
+        return add_study_plan_student;
+    else if (paramInput.compare("-u:p")==0)
+        return update_study_plan_student;
+
     return -1;
 }
 
@@ -105,12 +115,26 @@ void startProgram(University &uni, char *argv[]) {
             uni.setProfsNoAvailability(argv[3], argv[4]);
             break;
         }
-        case set_exam_date:{
-            std::string year (argv[2]);
+        case set_exam_date: {
+            std::string year(argv[2]);
             uni.enrollStudents(year);
-            uni.setExamDate(argv[2],argv[3]);
+            uni.setExamDate(argv[2], argv[3]);
             break;
         }
+        case versioning:{
+           uni.versioning(argv[2]);
+
+            break;
+        }
+        case add_study_plan_student:{
+            uni.addStudyPlan(argv[2]);
+            break;
+        }
+        case update_study_plan_student:{
+            uni.updateSudyPlan(argv[2]);
+            break;
+        }
+
 
         default:
             throw std::invalid_argument("comando non trovato");

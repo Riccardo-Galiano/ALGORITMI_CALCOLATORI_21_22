@@ -20,7 +20,10 @@ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int 
     } else {
         throw std::invalid_argument("errore aula o lab");
     }
-
+    _othersInfoClassroom._blackBoard = -1;
+    _othersInfoClassroom._computer = -1;
+    _othersInfoClassroom._drawingTable = -1;
+    _othersInfoClassroom._projector = -1;
 }
 
 ///prende l'id
@@ -91,6 +94,12 @@ void Classroom::setDisavailability(Date& date, int slotHour, int numSlot) {
         ss << date.toString() << ';' << std::setfill('0')<<std::setw(2)<< hour;
         _disavailableRooms.insert(std::pair<std::string, int>(ss.str(), 1));
     }
+}
+
+std::string Classroom::getOthersInfo() {
+    std::stringstream ss;
+    ss<<_othersInfoClassroom._blackBoard <<";"<<_othersInfoClassroom._drawingTable <<";"<<_othersInfoClassroom._computer<<";"<<_othersInfoClassroom._projector;
+    return ss.str();
 }
 
 std::ostream &operator<<(std::ostream &room, const Classroom &s) {

@@ -62,6 +62,11 @@ University::University() {
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
+    }try {
+        readDbStudyPlan();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
     }
 }
 
@@ -990,10 +995,8 @@ void University::dbStudsWrite() {
     fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
-        Student stud = _students.at(
-                iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
-        fout << stud
-             << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
+        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        fout << stud << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
     }
     fout.close();
 
@@ -1021,7 +1024,7 @@ void University::dbClassRoomWrite() {
 
     for (auto iterClassRoom = _classroom.begin(); iterClassRoom != _classroom.end(); iterClassRoom++) {
         Classroom room = _classroom.at(iterClassRoom->first);
-        fout << room << std::endl; //mettendo direttamente fout<<room come per stud e prof non funziona....
+        fout << room << std::endl;
     }
     fout.close();
 }
@@ -1438,6 +1441,175 @@ void University::readDbCourseNotActive() {
     }
     fileIn.close();
 }
+
+///versione dei database con informazioni aggiuntive
+bool University::versioning(std::string v) {
+    int version = std::stoi(v);
+    renameOldDataBase(version);
+    if(version == 2) {
+        //studenti e professori
+        writeNewDbStudent();
+        writeNewDbProfessor();
+    }
+    if(version == 3) {
+        //aule
+        writeNewDbAule();
+    }
+    return false;
+}
+
+///rename del database con _old prima dell'estensione .txt
+bool University::renameOldDataBase(int version) {
+    if(version == 2) {
+        //rename student e professor database
+        int result;
+        char oldname[] = "db_studenti.txt";
+        char newname[] = "db_studenti_old.txt";
+        result = rename(oldname, newname);
+        if(result != 0)
+            throw InvalidDbException("file db_studenti.txt non rinominato adeguatamente");
+
+        //rename student e professor database
+        int result2;
+        char oldname2[] = "db_professori.txt";
+        char newname2[] = "db_professori_old.txt";
+        result2 = rename(oldname2, newname2);
+        if(result2 != 0)
+            throw InvalidDbException("file db_professori.txt non rinominato adeguatamente");
+    }
+    if(version == 3) {
+        //rename student e professor database
+        int result;
+        char oldname[] = "db_aule.txt";
+        char newname[] = "db_aule_old.txt";
+        result = rename(oldname, newname);
+        if (result != 0)
+            throw InvalidDbException("file db_aule.txt non rinominato adeguatamente");
+    }
+    return false;
+}
+
+///scrittura nuovo database studenti
+void University::writeNewDbStudent() {
+    std::fstream fout;
+    fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
+
+    for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
+        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        std::string otherInfo = stud.getOtherInfoString();
+        fout << stud <<";"<< otherInfo << std::endl;
+    }
+    fout.close();
+}
+
+///scrittura nuovo database professori
+void University::writeNewDbProfessor() {
+    std::fstream fout;
+    fout.open("db_professori.txt", std::fstream::out | std::fstream::trunc);
+
+    for (auto iterProf = _professors.begin(); iterProf != _professors.end(); iterProf++) {
+        Professor prof = _professors.at(iterProf->first);
+        std::string otherInfo = prof.getOtherInfoString();
+
+        fout << prof << ";"<<otherInfo<< std::endl;
+    }
+    fout.close();
+}
+
+///scrittura nuovo database aule
+void University::writeNewDbAule() {
+    std::fstream fout;
+    fout.open("db_aule.txt", std::fstream::out | std::fstream::trunc);
+
+    for (auto iterClassRoom = _classroom.begin(); iterClassRoom != _classroom.end(); iterClassRoom++) {
+        Classroom room = _classroom.at(iterClassRoom->first);
+        std::string otherInfo = room.getOthersInfo();
+        fout << room <<";"<<otherInfo<< std::endl;
+    }
+    fout.close();
+}
+
+bool University::addStudyPlan(std::string fin) {
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("errore apertura file inserimento nuovi piani di studio");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::string matr = line.substr(0,7);
+        std::string acYearRegistration = line.substr(8,9);
+        std::size_t pos = line.find('}');
+        std::string allCourses = line.substr(19,pos-1);
+        std::stringstream ss(matr);
+        char c;
+        int id;
+        ss>>c>>id;
+        std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
+        _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
+    }
+    fileIn.close();
+    writeDBstudyPlan();
+    return false;
+}
+
+void University::writeDBstudyPlan() {
+    std::fstream fout;
+    fout.open("db_piano_studi.txt", std::fstream::out | std::fstream::trunc);
+
+    for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
+        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        std::string otherInfo = stud.getOtherInfoString();
+        fout << "s"<<std::setfill('0')<<std::setw(6)<<stud.getId() <<";"<< stud.getYearRegistration() <<"-"<<stud.getYearRegistration()-1 <<";"<<stud.getPlanStudyCourseString()<<std::endl;
+    }
+    fout.close();
+}
+
+void University::readDbStudyPlan() {
+    std::ifstream fileIn("db_piano_studi.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file db_piano_studi.txt non esistente");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::string matr = line.substr(0,7);
+        std::string acYearRegistration = line.substr(8,9);
+        std::size_t pos = line.find('}');
+        std::string allCourses = line.substr(19,pos-1);
+        std::stringstream ss(matr);
+        char c;
+        int id;
+        ss>>c>>id;
+        std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
+        _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
+    }
+    fileIn.close();
+}
+
+void University::updateSudyPlan(std::string fin) {
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("errore apertura file aggiornamento piani di studio");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::string matr = line.substr(0,7);
+        std::string acYearRegistration = line.substr(8,9);
+        std::size_t pos = line.find('}');
+        std::string allCourses = line.substr(19,pos-1);
+        std::stringstream ss(matr);
+        char c;
+        int id;
+        ss>>c>>id;
+        std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
+        _students.at(id).clearStudyPlan();
+        _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
+    }
+    fileIn.close();
+}
+
+
+
+
 
 
 

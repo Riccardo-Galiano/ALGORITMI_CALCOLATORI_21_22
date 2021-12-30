@@ -6,6 +6,12 @@
 #include <map>
 #include "Date.h"
 #include "Course.h"
+typedef struct {
+    int _drawingTable;
+    int _computer;
+    int _projector;
+    int _blackBoard;
+} updateClassroom;
 
 class Classroom {
 public:
@@ -27,6 +33,7 @@ public:
 
     bool checkAvailability(Date&,int);
     void setDisavailability(Date&,int,int);
+    std::string getOthersInfo();
 private:
 
     int _id; //codice identificativo
@@ -37,6 +44,7 @@ private:
     //key: "Date;Slot"
     //value: non ci interessa.. se esiste la tupla -> allora occupata!
     std::map<std::string,int> _disavailableRooms;
+    updateClassroom _othersInfoClassroom;
 
 };
 std::ostream &operator<<(std::ostream &room, const Classroom &s);

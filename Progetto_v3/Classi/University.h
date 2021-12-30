@@ -49,6 +49,16 @@ public:
     bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
     void controlReciprocyGrouped();
     void readDbCourseNotActive();
+    bool versioning(std::string);
+    bool renameOldDataBase(int);
+    void writeNewDbStudent();
+    void writeNewDbProfessor();
+    void writeNewDbAule();
+    bool addStudyPlan(std::string fin);
+    void writeDBstudyPlan();
+    void readDbStudyPlan();
+    void updateSudyPlan(std::string fin);
+
 private:
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);

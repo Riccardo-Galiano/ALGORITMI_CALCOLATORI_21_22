@@ -9,8 +9,12 @@
 #include <map>
 #include "UniversityMember.h"
 #include "Date.h"
+typedef struct {
+    Date _birth;
+    Date _entry;
+    std::string _address;
+} updateProfessor;
 
-//std::cout << std::put_time(std::localtime(&now), "%Y-%m-%d") << "\n";
 class Professor : public UniversityMember {
 public:
 
@@ -22,6 +26,7 @@ public:
     void noAvailabilityClear(int);
     bool addNewExam(std::string, int, std::string);
     bool amIavailable(std::string, int);
+    std::string getOtherInfoString();
 
 private:
     //key: inizio anno accademico
@@ -31,6 +36,7 @@ private:
     //value: vettore di esami in ogni slot (hh,codice_esame)
     //NB!! se un esame dura più di uno slot, altrettanti pair ci saranno qui
     std::map<std::string,std::map<int,std::string>> _examsToDo;//data-slot-esame. Ogni prof avrà una mappa in cui salveremo gli esami che dovrà fare, in che giorno e a che ora
+    updateProfessor _othersInfoProf;
 };
 
 std::ostream &operator<<(std::ostream &prof, const Professor &s);
