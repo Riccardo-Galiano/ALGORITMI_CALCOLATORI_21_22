@@ -1539,7 +1539,7 @@ bool University::addStudyPlan(std::string fin) {
         std::string matr = line.substr(0,7);
         std::string acYearRegistration = line.substr(8,9);
         std::size_t pos = line.find('}');
-        std::string allCourses = line.substr(19,pos-1);
+        std::string allCourses = line.substr(19,pos-19);
         std::stringstream ss(matr);
         char c;
         int id;
@@ -1558,9 +1558,12 @@ void University::writeDBstudyPlan() {
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
         Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
-        std::string otherInfo = stud.getOtherInfoString();
-        fout << "s"<<std::setfill('0')<<std::setw(6)<<stud.getId() <<";"<< stud.getYearRegistration() <<"-"<<stud.getYearRegistration()-1 <<";"<<stud.getPlanStudyCourseString()<<std::endl;
-    }
+        if(stud.studyPlanIsEmpty() == false) {
+            std::string otherInfo = stud.getOtherInfoString();
+            fout << "s" << std::setfill('0') << std::setw(6) << stud.getId() << ";" << stud.getYearRegistration() << "-"
+                 << stud.getYearRegistration() - 1 << ";" << stud.getPlanStudyCourseString() << std::endl;
+        }
+     }
     fout.close();
 }
 
@@ -1574,13 +1577,14 @@ void University::readDbStudyPlan() {
         std::string matr = line.substr(0,7);
         std::string acYearRegistration = line.substr(8,9);
         std::size_t pos = line.find('}');
-        std::string allCourses = line.substr(19,pos-1);
+        std::string allCourses = line.substr(19,pos-19);
         std::stringstream ss(matr);
         char c;
         int id;
         ss>>c>>id;
         std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
         _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
+
     }
     fileIn.close();
 }
@@ -1595,7 +1599,7 @@ void University::updateSudyPlan(std::string fin) {
         std::string matr = line.substr(0,7);
         std::string acYearRegistration = line.substr(8,9);
         std::size_t pos = line.find('}');
-        std::string allCourses = line.substr(19,pos-1);
+        std::string allCourses = line.substr(19,pos-19);
         std::stringstream ss(matr);
         char c;
         int id;
@@ -1605,6 +1609,7 @@ void University::updateSudyPlan(std::string fin) {
         _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
     }
     fileIn.close();
+    writeDBstudyPlan();
 }
 
 

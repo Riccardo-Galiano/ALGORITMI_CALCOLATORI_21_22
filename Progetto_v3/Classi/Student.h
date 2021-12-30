@@ -23,6 +23,7 @@ public:
     bool addStudyPlanPerStudent(std::string,std::vector<std::string>);
     std::string getPlanStudyCourseString();
     bool clearStudyPlan();
+    bool studyPlanIsEmpty();
 
 private:
     updateStudent _othersInfoStud;

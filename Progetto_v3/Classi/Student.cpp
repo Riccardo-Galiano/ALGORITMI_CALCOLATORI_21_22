@@ -48,6 +48,10 @@ bool Student::clearStudyPlan() {
     return true;
 }
 
+bool Student::studyPlanIsEmpty() {
+    return  _studyPlan.empty();
+}
+
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &stud, const Student &s){
     int Id = s.getId();
