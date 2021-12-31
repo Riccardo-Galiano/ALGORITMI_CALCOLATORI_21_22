@@ -27,7 +27,7 @@ public:
 
 private:
     updateStudent _othersInfoStud;
-    std::vector<std::string> _studyPlan;
+    std::vector<std::string> _studyPlan; //vettore di codici corso
     int _yearRegistration;
 public:
     int getYearRegistration() const;

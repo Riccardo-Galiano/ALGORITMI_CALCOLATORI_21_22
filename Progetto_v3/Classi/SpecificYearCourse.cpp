@@ -262,21 +262,12 @@ bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int ses
 }
 
 ///aggiunge uno studente
-bool SpecificYearCourse::addStudent(Student stud, std::string enrolYear, int mark) {
-    student studToAdd;
-    studToAdd._grade = mark;
-    studToAdd._startEnrolYear = stoi(enrolYear.substr(0, 4));
-    studToAdd._endEnrolYear = stoi(enrolYear.substr(5, 4));
-    studToAdd.stud = stud;
-
-    totStudentsEnrolled++;
-    if (mark == -1) { //da controllare da stringa vuota a int cosa succede
-        totStudentsNotPassed++;
-        studToAdd._passed = false;
-    } else
-        studToAdd._passed = true;
-    std::pair<int, student> pair(stud.getId(), studToAdd);
-    _student.insert(pair);
+bool SpecificYearCourse::addGradeToStudent(Student& stud, int _passYear, int mark) {
+    student& studToUpdate = _studentsEnrolled.at(stud.getId());
+    studToUpdate._grade = mark;
+    studToUpdate._passYear = _passYear;
+    totStudentsNotPassed--;
+    studToUpdate._passed = true;
     return true;
 }
 
@@ -309,6 +300,26 @@ int SpecificYearCourse::getNumNextAppeal() {
     return tot;
 }
 
+bool SpecificYearCourse::addStudent(int acYearRegistration, Student& stud) {
+    student studToAdd;
+    studToAdd._grade = -1;
+    studToAdd._startEnrolYear = acYearRegistration;
+    studToAdd._passYear = -1;
+    totStudentsEnrolled++;
+    totStudentsNotPassed++;
+    studToAdd._passed = false;
+    std::pair<int, student> pair(stud.getId(), studToAdd);
+    _studentsEnrolled.insert(pair);
+    return true;
+}
+
+int SpecificYearCourse::getTotStudentsNotPassed() const {
+    return totStudentsNotPassed;
+}
+
+int SpecificYearCourse::getTotStudentsEnrolled() const {
+    return totStudentsEnrolled;
+}
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

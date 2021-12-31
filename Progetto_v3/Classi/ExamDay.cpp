@@ -236,13 +236,13 @@ bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<
             ///controllo se i prof del corso sono liberi.
             // Considerato il fatto che corsi paralleli hanno l'esame lo stesso giorno alla
             // stessa ora devo controllare che tutti i prof di tutti i corsi in parallelo siano disponibili
-            if (allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, slotHour)) {
-                ///se tutti i prof sono disponibili in questo slot, ho trovato un nuovo slot potenzialmente valido per l'esame
-                return true;
-            } else
+            if (allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, slotHour) == false) {
                 return false;
+            }
         }
     }
+    ///se tutti i prof sono disponibili in questo slot, ho trovato un nuovo slot potenzialmente valido per l'esame
+    return true;
 }
 
 void ExamDay::eraseTempGroupedCourseClassrooms() {

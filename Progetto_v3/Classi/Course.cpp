@@ -83,9 +83,9 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     return true;
 }
 
-///aggiunge uno studente ad un anno specifico
-bool Course::addStudentToSpecYearCourse(int acYear, Student stud, std::string enrolYear, int mark) {
-    _courseOfTheYear.at(acYear).addStudent(stud, enrolYear, mark);
+///modifica uno studente in un anno specifico con il suo voto
+bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark) {
+    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark);
     return true;
 }
 
@@ -312,6 +312,10 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
         iterSpecific->second.assignYY_SemToAllYear(acYYoff, yy_semester);
     }
     return  true;
+}
+
+bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
+    return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
 }
 
 

@@ -14,6 +14,8 @@
 
 
 //namespace fs = std::filesystem;
+int versioning = 0;
+
 University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
     //fs::create_directory("../Database");
@@ -58,12 +60,12 @@ University::University() {
         std::cerr << exc.what() << std::endl;
     }
     try {
-        readDbCourseNotActive();
+        readCourseNotActive();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }try {
-        readDbStudyPlan();
+        readStudyPlan();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
@@ -73,6 +75,7 @@ University::University() {
 ///leggo il database degli studenti
 void University::readStudents() {
     std::ifstream fileIn("db_studenti.txt");
+    ///leggi version
     if (!fileIn.is_open()) {
         //std::cerr << "errore apertura database studenti" << std::endl;
         throw DbException("file db_studenti.txt non esistente");
@@ -1059,56 +1062,6 @@ void University::dbCourseWrite() {
 
 }
 
-///inserimento delle info per gli studenti che si iscrivono
-bool University::enrollStudents(std::string &yearSession) {
-    int year = Parse::getAcStartYear(yearSession);
-    for (int i = 0; i < _studyCourse.size(); i++) {
-        std::stringstream nomeFile;
-        nomeFile << "../input/studenti/" << 'c' << std::setfill('0') << std::setw(3) << i + 1 << '_' << year<<".txt";
-        std::fstream fileIn(nomeFile.str());
-        if (!fileIn.is_open()) {
-            //std::cerr << "errore apertura database studenti" << std::endl;
-            throw DbException("file " + nomeFile.str() + "non esistente");
-        }
-        std::string line;     //stringa di appoggio in cui mettere l'intero rigo
-        std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa
-        char c;    //accoglierà la s della matricola presa dal file, a noi inutile
-        int nMatr; //accoglierà il codice identificativo della matricola presa dal file, a noi utile
-        std::vector<std::string> tokens;
-        std::getline(fileIn, line);
-        std::string cds, course;
-        std::string coursesWithoutSquareBrackets;
-        std::vector<std::string> courses;
-        std::vector<std::string> infoStud;
-        std::string idCorso, endrolAcYear;
-        int mark;
-        int year;
-        cds = line.substr(0, 4);
-        year = stoi(line.substr(5, 4));
-        while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta = 1 studente
-            tokens = Parse::splittedLine(line, ';');
-            std::stringstream ss(tokens[0]);
-            ss >> c >> nMatr; //la "s" la scarto in "c", tengo il codice identificativo da mettere in un intero
-            Student stud = _students.at(nMatr); //preso l'istanza dello studente di cui si parla
-            coursesWithoutSquareBrackets = tokens[1].substr(1, tokens[1].size() - 2);
-            courses = Parse::splittedLine(coursesWithoutSquareBrackets, '%');
-            for (int i = 0; i < courses.size(); i++) {
-                course = courses[i].substr(1, courses[i].size() - 2);
-                infoStud = Parse::splittedLine(course, ',');
-                idCorso = infoStud[0];
-                endrolAcYear = infoStud[1];
-                if (infoStud.size() == 2)
-                    mark = -1;
-                else
-                    mark = stoi(infoStud[2]);
-                _courses.at(idCorso).addStudentToSpecYearCourse(year, stud, endrolAcYear, mark);
-            }
-        }
-        fileIn.close();
-    }
-    return true;
-}
-
 ///legge le date delle sessioni in base all'anno
 void University::readSessionAcYear() {
     std::ifstream fileIn("dateSessioni.txt");
@@ -1167,7 +1120,7 @@ bool University::setSessionPeriod(std::string &acYear, std::string &winterSessio
     SessionYear sessionYear(acYear, winterSession, summerSession, autumnSession, output_file_name);
     //popolo mappa in university
     _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
-    dateSessionsWrite();
+    dbDateSessionsWrite();
     std::cout << "comando -s current_a correttamente eseguito" << std::endl;
     return true;
 }
@@ -1198,7 +1151,7 @@ bool University::setProfsNoAvailability(std::string acYear, const std::string &f
         }
     }
     fileIn.close();
-    noAvailabilityWrite();
+    dbNoAvailabilityWrite();
     std::cout << "comando -s set_availability correttamente eseguito" << std::endl;
 
     return true;
@@ -1220,7 +1173,7 @@ std::vector<std::string> University::allProfsNoAvailabilities() {
 }
 
 ///salva le date delle sessioni su file
-void University::dateSessionsWrite() {
+void University::dbDateSessionsWrite() {
 
     std::fstream fout;
     fout.open("dateSessioni.txt", std::fstream::out | std::fstream::trunc);
@@ -1235,7 +1188,7 @@ void University::dateSessionsWrite() {
 }
 
 ///scrittura indisponibilità professori di tutti gli anni
-void University::noAvailabilityWrite() {
+void University::dbNoAvailabilityWrite() {
     std::fstream fout;
     fout.open("tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
     std::vector<std::string> allprofsAvailabilities = allProfsNoAvailabilities();//ritorna le indisponibilità per tutti gli anni per prof già sottoforma di stringhe da salvare sul file.txt
@@ -1274,9 +1227,7 @@ bool University::controlDatabase(int startAcYear) {
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         ///controllo che il corso abbia info relativamente all'anno accademico richiesto
         iterCourse->second.controlExistenceSpecificYear(iterCourse->first, startAcYear);
-        SpecificYearCourse sp = iterCourse->second.getThisYearCourse(startAcYear);
     }
-
     return true;
 }
 
@@ -1288,12 +1239,20 @@ bool University::dataBaseIsEmpty(int startAcYear) {
         throw InvalidDbException("Il database degli studenti e' vuoto");
     else if (_courses.empty())
         throw InvalidDbException("Il database dei corsi e' vuoto");
+    else if (_courses.empty())
+        throw InvalidDbException("Il database dei corsi e' vuoto");
     else if (_studyCourse.empty())
         throw InvalidDbException("Il database dei corsi di studio e' vuoto");
     else if (_acYearSessions.find(startAcYear) == _acYearSessions.end())
         throw InvalidDbException("non ci sono informazioni sulle sessioni per questo anno");
     else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty())
         throw InvalidDbException("Il database dei corsi di studio e' vuoto");
+    ///controllo che gli studenti siano iscritti nei corsi di questo anno accademico
+    for(auto iter = _courses.begin(); iter != _courses.end(); iter++){
+        int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
+        if(studentsEnrolled == 0)
+            throw InvalidDbException("Il corso " + iter->second.getId() + " non ha studenti iscritti");
+    }
     return false;
 }
 
@@ -1424,7 +1383,7 @@ void University::dbCourseNotActive() {
 }
 
 ///lettura delle info di corsi ormai spenti(per sessioni precedenti alla data di disattivazione)
-void University::readDbCourseNotActive() {
+void University::readCourseNotActive() {
     std::ifstream fileIn("offCourses_db.txt");
     if (!fileIn.is_open()) {
         throw DbException("file offCourses_db.txt non esistente");
@@ -1448,12 +1407,12 @@ bool University::versioning(std::string v) {
     renameOldDataBase(version);
     if(version == 2) {
         //studenti e professori
-        writeNewDbStudent();
-        writeNewDbProfessor();
+        dbNewStudentWrite();
+        dbNewProfessorWrite();
     }
     if(version == 3) {
         //aule
-        writeNewDbAule();
+        dbNewAuleWrite();
     }
     return false;
 }
@@ -1490,7 +1449,7 @@ bool University::renameOldDataBase(int version) {
 }
 
 ///scrittura nuovo database studenti
-void University::writeNewDbStudent() {
+void University::dbNewStudentWrite() {
     std::fstream fout;
     fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
 
@@ -1503,10 +1462,9 @@ void University::writeNewDbStudent() {
 }
 
 ///scrittura nuovo database professori
-void University::writeNewDbProfessor() {
+void University::dbNewProfessorWrite() {
     std::fstream fout;
     fout.open("db_professori.txt", std::fstream::out | std::fstream::trunc);
-
     for (auto iterProf = _professors.begin(); iterProf != _professors.end(); iterProf++) {
         Professor prof = _professors.at(iterProf->first);
         std::string otherInfo = prof.getOtherInfoString();
@@ -1517,7 +1475,7 @@ void University::writeNewDbProfessor() {
 }
 
 ///scrittura nuovo database aule
-void University::writeNewDbAule() {
+void University::dbNewAuleWrite() {
     std::fstream fout;
     fout.open("db_aule.txt", std::fstream::out | std::fstream::trunc);
 
@@ -1544,18 +1502,19 @@ bool University::addStudyPlan(std::string fin) {
         char c;
         int id;
         ss>>c>>id;
+        Student& stud = _students.at(id);
         std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
-        _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
+        stud.addStudyPlanPerStudent(acYearRegistration,courses);
+        registerStudentsToSpecificYearCourses(courses,stud,stoi(acYearRegistration));
     }
     fileIn.close();
-    writeDBstudyPlan();
+    dbStudyPlanWrite();
     return false;
 }
 
-void University::writeDBstudyPlan() {
+void University::dbStudyPlanWrite() {
     std::fstream fout;
     fout.open("db_piano_studi.txt", std::fstream::out | std::fstream::trunc);
-
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
         Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
         if(stud.studyPlanIsEmpty() == false) {
@@ -1567,7 +1526,7 @@ void University::writeDBstudyPlan() {
     fout.close();
 }
 
-void University::readDbStudyPlan() {
+void University::readStudyPlan() {
     std::ifstream fileIn("db_piano_studi.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_piano_studi.txt non esistente");
@@ -1582,14 +1541,15 @@ void University::readDbStudyPlan() {
         char c;
         int id;
         ss>>c>>id;
+        Student& stud = _students.at(id);
         std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
         _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
-
+        registerStudentsToSpecificYearCourses(courses,stud,stoi(acYearRegistration));
     }
     fileIn.close();
 }
 
-void University::updateSudyPlan(std::string fin) {
+void University::updateStudyPlan(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file aggiornamento piani di studio");
@@ -1605,11 +1565,43 @@ void University::updateSudyPlan(std::string fin) {
         int id;
         ss>>c>>id;
         std::vector<std::string> courses = Parse::splittedLine(allCourses,';');
-        _students.at(id).clearStudyPlan();
-        _students.at(id).addStudyPlanPerStudent(acYearRegistration,courses);
+        Student& stud = _students.at(id);
+        stud.clearStudyPlan();
+        stud.addStudyPlanPerStudent(acYearRegistration,courses);
+        registerStudentsToSpecificYearCourses(courses,stud,stoi(acYearRegistration));
     }
     fileIn.close();
-    writeDBstudyPlan();
+    dbStudyPlanWrite();
+}
+
+bool University::insertStudentsGrades(std::string fin) {
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("errore apertura file inserimento appelli");
+    }
+    ///<id_corso>_<data_appello>(_[*]).csv
+    std::vector<std::string> tokens = Parse::splittedLine(fin,'_');
+    std::string idCorso = tokens[0];
+    std::string data_appello = tokens[1];
+    Course& corso = _courses.at(idCorso);
+    int appealYear = stoi(data_appello.substr(0,4));
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::string matr = line.substr(0,7);
+        int mark = stoi(line.substr(8,9));
+        Student& stud = _students.at(stoi(matr)); //preso l'istanza dello studente di cui si parla
+        int acYear = stud.getYearRegistration();
+        if(mark>=18) {
+            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark);
+        }
+    }
+    return true;
+}
+
+void University::registerStudentsToSpecificYearCourses(std::vector<std::string>& courses, Student& stud, int acYearRegistration) {
+    for(int i=0; i<courses.size(); i++) {
+        _courses.at(courses[i]).registerStudentsToSpecificYear(acYearRegistration,stud);
+    }
 }
 
 

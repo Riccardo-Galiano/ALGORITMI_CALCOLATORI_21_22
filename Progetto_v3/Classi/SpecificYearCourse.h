@@ -24,9 +24,8 @@ typedef struct {
 
 ///per ogni oggetto studente(in cui avrò matricola, nome, cognome e email) verrà tenuta traccia
 typedef struct {
-    Student stud;
     int _startEnrolYear; ///inizio corso
-    int _endEnrolYear; ///fine corso
+    int _passYear; ///fine corso
     int _grade;   ///voto
     bool _passed;
 } student;
@@ -53,7 +52,8 @@ public:
     bool setYear();
     std::string setId(int)const;
     bool setProfMap(int, std::vector<std::string>, int);
-    bool addStudent(Student,std::string,int);
+    bool addStudent(int acYearRegistration, Student &stud);
+    bool addGradeToStudent(Student &stud, int passYear, int mark);
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
     int amIAssignedAlreadyInThisSession(int);
     Date lastDateAssignationInGivenSession(int);
@@ -79,7 +79,6 @@ public:
     bool addClassroomsToAppeal(int numAppeal,std::vector<int>& rooms);
     int getNumNextAppeal();
 
-
 private:
     std::vector<std::string> _idGroupedCourses;
     Exam _exam;
@@ -89,7 +88,13 @@ private:
     std::map<int, std::vector<professor>> _professors;
     //key: student id
     //value: struct studente
-    std::map<int, student> _student;
+    std::map<int, student> _studentsEnrolled;
+public:
+    int getTotStudentsNotPassed() const;
+
+    int getTotStudentsEnrolled() const;
+
+private:
     //key: semester (session)
     //value: quante volte è stato programmato un suo esame in quel semestre
     std::map<int, std::vector<Date>> _howManyTimesIAmAssignedInASession;

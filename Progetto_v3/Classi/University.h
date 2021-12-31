@@ -17,47 +17,70 @@ public:
 
     University();
 
+    ///session management
+    bool setProfsNoAvailability(std::string ,const std::string& );
+    bool setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
+    std::vector<std::string> allProfsNoAvailabilities();
+    bool setExamDate(std::string,std::string);
+
+    ///DB management
+    bool versioning(std::string);
+    bool renameOldDataBase(int);
+    void dbNewStudentWrite();
+    void dbNewProfessorWrite();
+    void dbNewAuleWrite();
+    bool controlDatabase(int);
+    bool dataBaseIsEmpty(int);
+    bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
+    void controlReciprocyGrouped();
+
+    ///Input (from DB)
+    void readCourseNotActive();
+    void readStudyPlan();
+    void readStudents(); ///CHANGE
+    void readProfessor(); ///CHANGE
+    void readClassroom(); ///CHANGE
+    void readStudyCourse();
+    void readCourse();
+    void readSessionAcYear();
+    void readProfsNoAvailability();
+
+    ///Output(to DB)
+    void dbStudsWrite(); ///CHANGE
+    void dbCourseNotActive();
+    void dbProfsWrite(); ///CHANGE
+    void dbClassRoomWrite(); ///CHANGE
+    void dbStudyCourseWrite();
+    void dbCourseWrite();
+    void dbStudyPlanWrite();
+    void dbDateSessionsWrite();
+    void dbNoAvailabilityWrite();
+
+    ///get new ID
     const int getNewStudentId() const ;
     const int getNewProfessorId() const;
     const int getNewClassroomId() const;
     const int getNewStudyCourseId() const;
     const std::string getNewCourseId()const;
-    bool addStuds(const std::string &fileIn);
-    bool addProfessors(const std::string &fileIn);
-    bool addClassrooms(const std::string &fileIn);
+
+    ///add
+    bool addStuds(const std::string &fileIn);  ///CHANGE
+    bool addProfessors(const std::string &fileIn); ///CHANGE
+    bool addClassrooms(const std::string &fileIn); ///CHANGE
     bool addStudyCourses(const std::string &fileIn);
     bool addCourses(const std::string &fileIn);
-    bool updateStuds(const std::string &fin);
-    bool updateProfessors(const std::string &fin);
-    bool updateClassroom(const std::string &fin);
+
+    ///update
+    bool updateStuds(const std::string &fin); ///CHANGE
+    bool updateProfessors(const std::string &fin); ///CHANGE
+    bool updateClassroom(const std::string &fin); ///CHANGE
+
+
     bool insertCourses(const std::string &fin);
-    bool enrollStudents(std::string &fin);
-    bool setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
-    std::vector<std::string> allProfsNoAvailabilities();
-    void dbStudsWrite();
-    void dbCourseNotActive();
-    void dbProfsWrite();
-    void dbClassRoomWrite();
-    void dbStudyCourseWrite();
-    void dbCourseWrite();
-    void dateSessionsWrite();
-    bool setProfsNoAvailability(std::string ,const std::string& );
-    bool setExamDate(std::string,std::string);
-    void noAvailabilityWrite();
-    bool controlDatabase(int);
-    bool dataBaseIsEmpty(int);
-    bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
-    void controlReciprocyGrouped();
-    void readDbCourseNotActive();
-    bool versioning(std::string);
-    bool renameOldDataBase(int);
-    void writeNewDbStudent();
-    void writeNewDbProfessor();
-    void writeNewDbAule();
+    bool insertStudentsGrades(std::string fin);
     bool addStudyPlan(std::string fin);
-    void writeDBstudyPlan();
-    void readDbStudyPlan();
-    void updateSudyPlan(std::string fin);
+    void updateStudyPlan(std::string fin);
+    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
 
 private:
     void thereIsAHoleInTheCoursesCodes();
@@ -70,16 +93,6 @@ private:
     std::map<std::string, Course> _courses;
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
-    void readStudents();
-    void readProfessor();
-    void readClassroom();
-    void readStudyCourse();
-    void readCourse();
-    void readSessionAcYear();
-    void readProfsNoAvailability();
-
-
-
 };
 
 
