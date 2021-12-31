@@ -25,7 +25,7 @@ public:
     Course(const std::string&, const std::string&, const int , const int ,const int , const int );
 
     bool addSpecificYearCourses(std::string, bool, int, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, std::string, std::vector<int>, int );
-    bool modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark);
+    bool modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate);
     bool registerStudentsToSpecificYear(int acYear, Student& stud);
     bool fillSpecificYearCourse(std::vector<std::string>&, int  );
     bool courseOfTheYearIsEmpty();
@@ -48,6 +48,12 @@ public:
     int getSemesterAtYear(int,std::string);
     bool sameSemesterGrouped(std::map<std::string,Course>);
     bool assignYY_Sem(std::string&,std::string&);
+    std::vector<std::string>getAcYearStudExam();
+    bool assignStudToAppealPerYear(std::string,std::string,std::string);
+    std::vector<std::pair<std::string, int>> splittAllStudPassedExamString(std::string);
+    std::vector<std::string>getAcYearAppeals();
+    bool assignAppealsToSpecificyear(std::string,std::string);
+
 
 private:
     std::string _id;///codice identificativo del corso

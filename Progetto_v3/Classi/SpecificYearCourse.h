@@ -24,10 +24,12 @@ typedef struct {
 
 ///per ogni oggetto studente(in cui avrò matricola, nome, cognome e email) verrà tenuta traccia
 typedef struct {
+    int _studId;
     int _startEnrolYear; ///inizio corso
     int _passYear; ///fine corso
     int _grade;   ///voto
     bool _passed;
+    Date _appealPassed;
 } student;
 
 class SpecificYearCourse {
@@ -48,24 +50,32 @@ public:
     int getSemester() const;
     int getYearOfTheSemester() const;
     std::vector<int> getStudyCourseAssigned() const;
-
     bool setYear();
     std::string setId(int)const;
     bool setProfMap(int, std::vector<std::string>, int);
     bool addStudent(int acYearRegistration, Student &stud);
-    bool addGradeToStudent(Student &stud, int passYear, int mark);
+    bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate);
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
     int amIAssignedAlreadyInThisSession(int);
     Date lastDateAssignationInGivenSession(int);
     bool assignExamInThisSpecificYearCourse(Date,int);
     bool assignYY_SemToAllYear(std::string&,std::string&);
-private:
-    std::string _yy_semester; //unico per tutti i corsi!!!
-    std::string _acYearOff;
-public:
+    int getTotStudentsEnrolled() const;
     std::string &getAcYearOff();
+    int getTotStudentsExam();
+    bool addClassroomsToAppeal(int numAppeal,std::vector<int>& rooms);
+    int getNumNextAppeal();
+    const std::map<int, std::vector<Date>> &getHowManyTimesIAmAssignedInASession() const;
+    const std::map<int, student> &getStudentsEnrolled() const;
+    const std::vector<Date> &getAllAppeals() const;
+    bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
+    std::string getAppealsForAllSession();
+    bool assignAppeals(std::string);
 
 private:
+
+    std::string _yy_semester; //unico per tutti i corsi!!!
+    std::string _acYearOff;
     //anno accademico in cui il corso è stato spento
     std::vector<int> _studyCourseAssigned;
     int _startYear;   ///anno di inizio
@@ -74,12 +84,6 @@ private:
     int _parallelCourses;    ///numero di corsi in parallelo
     int totStudentsEnrolled = 0;
     int totStudentsNotPassed = 0;
-public:
-    int getTotStudentsExam();
-    bool addClassroomsToAppeal(int numAppeal,std::vector<int>& rooms);
-    int getNumNextAppeal();
-
-private:
     std::vector<std::string> _idGroupedCourses;
     Exam _exam;
     // per ogni corso in parallelo ho un vettore dei prof
@@ -89,18 +93,15 @@ private:
     //key: student id
     //value: struct studente
     std::map<int, student> _studentsEnrolled;
-public:
-    int getTotStudentsNotPassed() const;
 
-    int getTotStudentsEnrolled() const;
-
-private:
     //key: semester (session)
     //value: quante volte è stato programmato un suo esame in quel semestre
     std::map<int, std::vector<Date>> _howManyTimesIAmAssignedInASession;
+
     //key: num appello: 0, 1, 2, 3. (4 nell'intero anno)
     //value: vettore di aule per quel'appello
     std::map<int, std::vector<int>> _roomsEachAppeal;
+
 };
 
 std::ostream& operator<<(std::ostream& output, const SpecificYearCourse& s);

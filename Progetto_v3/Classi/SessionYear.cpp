@@ -85,6 +85,7 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
             generateOutputFiles(fout,1,courses);
             generateOutputFiles(fout,2,courses);
             generateOutputFiles(fout,3,courses);
+            allExamAppeals_db();
             result = true;
             //posso uscire dal loop, non aspetto che il vincolo sia meno di 14 giorni
             exitloop=true;
@@ -430,6 +431,8 @@ void SessionYear::popAppealFromVector(std::vector<std::string>& allExamAppealsTo
 bool SessionYear::sessionsPeriodIsEmpty() {
     return _yearSessions.empty();
 }
+
+
 
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"

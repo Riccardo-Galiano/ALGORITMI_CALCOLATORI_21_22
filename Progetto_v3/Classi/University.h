@@ -44,6 +44,8 @@ public:
     void readCourse();
     void readSessionAcYear();
     void readProfsNoAvailability();
+    void readPassedAppeals();
+    void readAllExamAppeals();
 
     ///Output(to DB)
     void dbStudsWrite(); ///CHANGE
@@ -55,6 +57,9 @@ public:
     void dbStudyPlanWrite();
     void dbDateSessionsWrite();
     void dbNoAvailabilityWrite();
+    void dbAppealsWrite();
+    void allExamAppealsWrite();
+
 
     ///get new ID
     const int getNewStudentId() const ;

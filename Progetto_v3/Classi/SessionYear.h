@@ -32,6 +32,7 @@ public:
     std::string getSessions() const;
     std::vector<std::string> getAllExamAppealsToDo(std::string, std::map<std::string, Course>&);
 
+
 private:
     SystemLog _sysLog;
     int _acYear;
@@ -53,7 +54,9 @@ private:
     void generateOutputFiles(std::string&,int,std::map<std::string, Course>&);
     static void popAppealFromVector(std::vector<std::string>&,std::string);
     static bool checkHours(std::vector<int>&);
-    std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>&, std::string);};
+    std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>&, std::string);
+  };
+
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 
 

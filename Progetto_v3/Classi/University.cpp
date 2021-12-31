@@ -69,6 +69,11 @@ University::University() {
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
+    }try {
+        readPassedAppeals();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
     }
 }
 
@@ -1216,6 +1221,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     if (!esito) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
+    allExamAppealsWrite();
     std::cout << "comando -g correttamente eseguito" << std::endl;
     return esito;
 }
@@ -1580,11 +1586,10 @@ bool University::insertStudentsGrades(std::string fin) {
         throw std::invalid_argument("errore apertura file inserimento appelli");
     }
     ///<id_corso>_<data_appello>(_[*]).csv
-    std::vector<std::string> tokens = Parse::splittedLine(fin,'_');
-    std::string idCorso = tokens[0];
-    std::string data_appello = tokens[1];
+    std::string idCorso = fin.substr(0,7);
+    std::string appealDate = fin.substr(8,12);
     Course& corso = _courses.at(idCorso);
-    int appealYear = stoi(data_appello.substr(0,4));
+    int appealYear = stoi(appealDate.substr(0,4));
     std::string line;
     while (std::getline(fileIn, line)){
         std::string matr = line.substr(0,7);
@@ -1592,9 +1597,11 @@ bool University::insertStudentsGrades(std::string fin) {
         Student& stud = _students.at(stoi(matr)); //preso l'istanza dello studente di cui si parla
         int acYear = stud.getYearRegistration();
         if(mark>=18) {
-            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark);
+            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark,appealDate);
         }
     }
+    fileIn.close();
+    dbAppealsWrite();
     return true;
 }
 
@@ -1603,6 +1610,70 @@ void University::registerStudentsToSpecificYearCourses(std::vector<std::string>&
         _courses.at(courses[i]).registerStudentsToSpecificYear(acYearRegistration,stud);
     }
 }
+
+void University::dbAppealsWrite() {
+    std::fstream fout;
+    fout.open("db_appelli.txt", std::fstream::out | std::fstream::trunc);
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
+        std::vector<std::string> acYearAppeals = iterCourse->second.getAcYearStudExam();
+        for(int i = 0; i<acYearAppeals.size();i++){
+            fout << acYearAppeals[i] << std::endl;
+        }
+    }
+    fout.close();
+}
+
+void University::readPassedAppeals() {
+    std::ifstream fileIn("db_appelli.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file db_appelli.txt non esistente");
+    }
+    std::string line;
+
+    while (std::getline(fileIn, line)){
+        std::vector<std::string> appeal = Parse::splittedLine(line,';');
+        std::string idCorso = appeal[0];
+        std::string acYear = appeal[1];
+        std::string appealDate = appeal[2];
+        int pos = appeal[3].find(']');
+        std::string allStudPassedExam = appeal[3].substr(1,pos-1);
+
+        _courses.at(idCorso).assignStudToAppealPerYear(acYear,appealDate,allStudPassedExam);///cambio _grade, _passed;appealPassed
+    }
+}
+
+void University::allExamAppealsWrite() {
+    std::fstream fout;
+    fout.open("allExamAppealsDb.txt", std::fstream::out | std::fstream::trunc);
+    if (!fout.is_open()) {
+        throw DbException("file allExamAppealsDb.txt non esistente");
+    }
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
+        std::vector<std::string> allAppealsPerCourses = iterCourse->second.getAcYearAppeals();
+        for(int i = 0; i < allAppealsPerCourses.size(); i++){
+            fout << allAppealsPerCourses[i] << std::endl;
+        }
+    }
+    fout.close();
+}
+
+void University::readAllExamAppeals() {
+    std::ifstream fileIn("allExamAppealsDb.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file allExamAppealsDb.txt non esistente");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::vector<std::string> appeals = Parse::splittedLine(line, ';');
+        std::string idCorso = appeals[0];
+        std::string acYear = appeals[1];
+        std::string appealsSession = appeals[2];
+        _courses.at(idCorso).assignAppealsToSpecificyear(acYear,appealsSession);
+        }
+}
+
+
+
 
 
 

@@ -9,6 +9,7 @@
 #include "InvalidDbException.h"
 #include "StudyCourse.h"
 #include <algorithm>
+#include <iomanip>
 
 Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
                const int oreEsercitazione, const int oreLaboratorio) {
@@ -84,8 +85,8 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 }
 
 ///modifica uno studente in un anno specifico con il suo voto
-bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark) {
-    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark);
+bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
+    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark,appealsDate);
     return true;
 }
 
@@ -315,7 +316,81 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
 }
 
 bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
+    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end())
+        throw InvalidDbException("il seguente corso: "+ getId() + "non esiste per questo studente");
     return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
+}
+
+std::vector<std::string> Course::getAcYearStudExam() {
+    std::vector<std::string> allAppealsPerYearToString;
+
+  for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
+      //controllo che la data esista
+      /*
+      std::map<int,std::vector<Date>> allSessionPerYear = iterSpecific->second.getHowManyTimesIAmAssignedInASession();
+      for(auto iterSession = allSessionPerYear.begin(); iterSession != allSessionPerYear.end();iterSession++){
+          std::vector<Date> appealsDate = iterSession->second.getDate();
+      }*/
+      std::map<int, student> allStudentEnrolled = iterSpecific->second.getStudentsEnrolled();
+      std::vector<Date> allAppealsPerYear = iterSpecific->second.getAllAppeals();
+      for(int i = 0; i < allAppealsPerYear.size(); i++) {
+          std::stringstream ss;
+          ss <<getId()<<";"<< iterSpecific->first <<"-"<<iterSpecific->first+1<<";"<<allAppealsPerYear[i]<<";[";
+          int count = 0;
+           for(auto iterStudent = allStudentEnrolled.begin();iterStudent != allStudentEnrolled.end();iterStudent++){
+               student currentStud = iterStudent->second;
+               if(currentStud._passed == true) {
+                   //controllo a quale appello si sta facendo riferimento
+                   Date appealPassed = currentStud._appealPassed;
+                   if(appealPassed == allAppealsPerYear[i]) {
+                       //l'appello è lui quindi deve essere scritto nel database
+                       ss<< "{s" << std::setfill('0') << std::setw(6) << currentStud._studId << "," << currentStud._grade << "}";
+                   }
+                   if(count<allStudentEnrolled.size()-1)
+                       ss<<",";
+               }
+               count++;
+           }
+          ss<<"]";
+          allAppealsPerYearToString.push_back(ss.str());
+      }
+  }
+    return  allAppealsPerYearToString;
+}
+
+bool Course::assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString) {
+    std::vector<std::pair<std::string, int>> allStudPassedExam = splittAllStudPassedExamString(allStudsPassedExamString);
+    int startAcYear = Parse::getAcStartYear(acYear);
+    _courseOfTheYear.at(startAcYear).assignAllStudsPassedExam(allStudPassedExam,appealDate);
+}
+
+std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(std::string allStudsPassedExamString) {
+    std::vector<std::pair<std::string, int>> allStudsPassedExam;
+    std::vector<int> posCB = Parse::posCurlyBrackets(allStudsPassedExamString);
+    for(int i = 0; i < posCB.size()-1; i = i+2){
+        std::string studAndGrade = allStudsPassedExamString.substr(posCB[i]+1,10);
+        std::vector<std::string> token = Parse::splittedLine(studAndGrade,',');
+        allStudsPassedExam.emplace_back(token[0],stoi(token[1]));
+    }
+    return allStudsPassedExam;
+}
+
+std::vector<std::string> Course::getAcYearAppeals() {
+    std::vector<std::string> allAppealsPerCourses;
+    std::stringstream ss;
+
+    for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
+        std::string appealsForSessions = iterSpecific->second.getAppealsForAllSession();
+             ss<< getId() <<";"<< iterSpecific->first << "_"<< iterSpecific->first + 1 <<";"<< appealsForSessions;
+             allAppealsPerCourses.push_back(ss.str());
+    }
+    return allAppealsPerCourses;
+}
+
+bool Course::assignAppealsToSpecificyear(std::string acYear, std::string allAppealsPerYear) {
+    int acStartYear = Parse::getAcStartYear(acYear);
+    _courseOfTheYear.at(acStartYear).assignAppeals(allAppealsPerYear);
+    return true;
 }
 
 
