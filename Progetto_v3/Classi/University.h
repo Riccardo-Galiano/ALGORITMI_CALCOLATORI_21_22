@@ -58,7 +58,6 @@ public:
     void dbDateSessionsWrite();
     void dbNoAvailabilityWrite();
     void dbAppealsWrite();
-    void allExamAppealsWrite();
 
 
     ///get new ID

@@ -31,7 +31,7 @@ public:
     int getAcYear() const;
     std::string getSessions() const;
     std::vector<std::string> getAllExamAppealsToDo(std::string, std::map<std::string, Course>&);
-
+    void allExamAppealsWrite(std::map<std::string, Course>& courses);
 
 private:
     SystemLog _sysLog;

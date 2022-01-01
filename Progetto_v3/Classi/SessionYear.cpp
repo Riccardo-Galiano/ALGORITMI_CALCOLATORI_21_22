@@ -8,6 +8,7 @@
 #include "Parse.hpp"
 #include "ExamDay.h"
 #include "StudyCourse.h"
+#include "DbException.h"
 
 bool winter = false;
 bool summer = false;
@@ -85,7 +86,7 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
             generateOutputFiles(fout,1,courses);
             generateOutputFiles(fout,2,courses);
             generateOutputFiles(fout,3,courses);
-            allExamAppeals_db();
+            allExamAppealsWrite(courses);
             result = true;
             //posso uscire dal loop, non aspetto che il vincolo sia meno di 14 giorni
             exitloop=true;
@@ -104,6 +105,20 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
 
 }
 
+void SessionYear::allExamAppealsWrite(std::map<std::string, Course>& courses) {
+    std::fstream fout;
+    fout.open("allExamAppealsDb.txt", std::fstream::out | std::fstream::trunc);
+    if (!fout.is_open()) {
+        throw DbException("file allExamAppealsDb.txt non esistente");
+    }
+    for(auto iterCourse = courses.begin(); iterCourse != courses.end();iterCourse++){
+        std::vector<std::string> allAppealsPerCourses = iterCourse->second.getAcYearAppeals();
+        for(int i = 0; i < allAppealsPerCourses.size(); i++){
+            fout << allAppealsPerCourses[i] << std::endl;
+        }
+    }
+    fout.close();
+}
 ///programma una sessione in particolare
 bool SessionYear::generateThisSession(std::string sessName, std::map<std::string, Course>& courses,std::map<int, Professor>& profs, std::map<int, Classroom>& allUniversityClassrooms, int relaxPar, int gapAppeals) {
     ///prendiamo l'intervallo di date della sessione richiesta su cui dobbiamo esguire il ciclo

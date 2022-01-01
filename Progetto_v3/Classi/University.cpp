@@ -1221,7 +1221,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     if (!esito) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
-    allExamAppealsWrite();
+
     std::cout << "comando -g correttamente eseguito" << std::endl;
     return esito;
 }
@@ -1243,8 +1243,6 @@ bool University::dataBaseIsEmpty(int startAcYear) {
         throw InvalidDbException("Il database dei professori e' vuoto");
     else if (_students.empty())
         throw InvalidDbException("Il database degli studenti e' vuoto");
-    else if (_courses.empty())
-        throw InvalidDbException("Il database dei corsi e' vuoto");
     else if (_courses.empty())
         throw InvalidDbException("Il database dei corsi e' vuoto");
     else if (_studyCourse.empty())
@@ -1585,6 +1583,7 @@ bool University::insertStudentsGrades(std::string fin) {
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file inserimento appelli");
     }
+    readAllExamAppeals();
     ///<id_corso>_<data_appello>(_[*]).csv
     std::string idCorso = fin.substr(0,7);
     std::string appealDate = fin.substr(8,12);
@@ -1607,6 +1606,9 @@ bool University::insertStudentsGrades(std::string fin) {
 
 void University::registerStudentsToSpecificYearCourses(std::vector<std::string>& courses, Student& stud, int acYearRegistration) {
     for(int i=0; i<courses.size(); i++) {
+        if(_courses.find(courses[i]) == _courses.end()){
+            throw std::invalid_argument("questo corso non esiste:" + courses[i]);
+        }
         _courses.at(courses[i]).registerStudentsToSpecificYear(acYearRegistration,stud);
     }
 }
@@ -1642,20 +1644,7 @@ void University::readPassedAppeals() {
     }
 }
 
-void University::allExamAppealsWrite() {
-    std::fstream fout;
-    fout.open("allExamAppealsDb.txt", std::fstream::out | std::fstream::trunc);
-    if (!fout.is_open()) {
-        throw DbException("file allExamAppealsDb.txt non esistente");
-    }
-    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
-        std::vector<std::string> allAppealsPerCourses = iterCourse->second.getAcYearAppeals();
-        for(int i = 0; i < allAppealsPerCourses.size(); i++){
-            fout << allAppealsPerCourses[i] << std::endl;
-        }
-    }
-    fout.close();
-}
+
 
 void University::readAllExamAppeals() {
     std::ifstream fileIn("allExamAppealsDb.txt");

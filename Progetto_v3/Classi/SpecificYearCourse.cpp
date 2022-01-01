@@ -20,6 +20,7 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _idGroupedCourses = idGrouped;
     _yy_semester = yy_semester;
     _studyCourseAssigned = studyCourse;
+    _numAppeal = 0;
     setProfMap(nCrsiPar, prof, line_counter);//setto la mappa dei prof per ogni corso
 
 }
@@ -331,7 +332,7 @@ const std::map<int, student> &SpecificYearCourse::getStudentsEnrolled() const {
     return _studentsEnrolled;
 }
 
-const std::vector<Date> &SpecificYearCourse::getAllAppeals() const {
+std::vector<Date> SpecificYearCourse::getAllAppeals() const {
     std::vector<Date> allAppeals;
     std::map<int,std::vector<Date>> allSessionPerYear = getHowManyTimesIAmAssignedInASession();
     for(auto iterSession = allSessionPerYear.begin(); iterSession != allSessionPerYear.end();iterSession++) {
@@ -416,6 +417,12 @@ bool SpecificYearCourse::assignAppeals(std::string allAppealsPerYear) {
                 _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, datesAppeals));
     }
     return false;
+}
+
+std::vector<int> SpecificYearCourse::getRoomsAppeal() {
+    std::vector<int> rooms = _roomsEachAppeal.at(_numAppeal);
+    _numAppeal++;
+    return rooms;
 }
 
 

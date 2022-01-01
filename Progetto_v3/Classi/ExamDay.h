@@ -15,7 +15,7 @@ class ExamDay {
 public:
     explicit ExamDay(Date);
     bool assignExamToProf(std::map<int,Professor>&, Course , int , int );
-    bool assignExamToExamDay(int, Course, int);
+    bool assignExamToExamDay(int, Course&, int);
     int isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor>& allUniversityProfs,
                                           std::map<int, Classroom>& allUniversityClassrooms, int numSlotsRequired,
                                           int relaxPar, std::vector<int>& idRoomsFounded); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
@@ -27,6 +27,7 @@ public:
     bool checkProfsAvaibility(SpecificYearCourse& specificCourse, std::map<int, Professor>& allUniversityProfs, int relaxPar, int slotHour);
     void eraseTempGroupedCourseClassrooms();
     bool checkAvailabilityOfClassroom(std::map<int, Classroom>& allUniversityClassrooms,std::vector<int>&idRoomsFounded,int numSlotsRequired);
+    std::string classroomString(std::vector<int>);
 private:
     std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);
     bool firstSlotCourses(Course,std::vector<Course>&);

@@ -57,6 +57,7 @@ CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj: ../Classi/UniversityMember.
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Classroom.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Course.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Date.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/DbException.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Exam.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/ExamDay.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Parse.hpp
@@ -72,6 +73,7 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/UniversityMembe
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/Date.h
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/Exam.h
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/InvalidDbException.h
+CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/Parse.hpp
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/Professor.h
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/SpecificYearCourse.cpp
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/SpecificYearCourse.h

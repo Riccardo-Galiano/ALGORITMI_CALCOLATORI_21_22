@@ -63,14 +63,15 @@ public:
     int getTotStudentsEnrolled() const;
     std::string &getAcYearOff();
     int getTotStudentsExam();
-    bool addClassroomsToAppeal(int numAppeal,std::vector<int>& rooms);
+    bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
     int getNumNextAppeal();
     const std::map<int, std::vector<Date>> &getHowManyTimesIAmAssignedInASession() const;
     const std::map<int, student> &getStudentsEnrolled() const;
-    const std::vector<Date> &getAllAppeals() const;
+    std::vector<Date> getAllAppeals() const;
     bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
     std::string getAppealsForAllSession();
     bool assignAppeals(std::string);
+    std::vector<int> getRoomsAppeal();
 
 private:
 
@@ -101,6 +102,7 @@ private:
     //key: num appello: 0, 1, 2, 3. (4 nell'intero anno)
     //value: vettore di aule per quel'appello
     std::map<int, std::vector<int>> _roomsEachAppeal;
+    int _numAppeal;
 
 };
 
