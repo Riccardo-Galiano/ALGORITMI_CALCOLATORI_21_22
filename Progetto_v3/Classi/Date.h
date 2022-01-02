@@ -15,7 +15,7 @@ class Date {
 
 public:
     //Date() = default;
-    Date(std::string);
+    Date(const std::string&);
 
 
     explicit Date(int y = 1900, int m = 1, int d = 1); // default constructor

@@ -86,7 +86,7 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 
 ///modifica uno studente in un anno specifico con il suo voto
 bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
-    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark,appealsDate);
+    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark,appealsDate,getId());
     return true;
 }
 
@@ -377,12 +377,13 @@ std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(s
 
 std::vector<std::string> Course::getAcYearAppeals() {
     std::vector<std::string> allAppealsPerCourses;
-    std::stringstream ss;
-
     for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
-        std::string appealsForSessions = iterSpecific->second.getAppealsForAllSession();
-             ss<< getId() <<";"<< iterSpecific->first << "_"<< iterSpecific->first + 1 <<";"<< appealsForSessions;
-             allAppealsPerCourses.push_back(ss.str());
+        if(iterSpecific->second.notExamsAssigned() == false) {
+            std::stringstream ss;
+            std::string appealsForSessions = iterSpecific->second.getAppealsForAllSession();
+            ss << getId() << ";" << iterSpecific->first << "_" << iterSpecific->first + 1 << ";" << appealsForSessions;
+            allAppealsPerCourses.push_back(ss.str());
+        }
     }
     return allAppealsPerCourses;
 }
@@ -390,6 +391,17 @@ std::vector<std::string> Course::getAcYearAppeals() {
 bool Course::assignAppealsToSpecificyear(std::string acYear, std::string allAppealsPerYear) {
     int acStartYear = Parse::getAcStartYear(acYear);
     _courseOfTheYear.at(acStartYear).assignAppeals(allAppealsPerYear);
+    return true;
+}
+
+bool Course::controlAppeal(std::string appealDate) {
+    Date appeal(appealDate);
+    int startAc = Parse::getAcStartYear(appealDate)-1;
+    if(_courseOfTheYear.find(startAc) == _courseOfTheYear.end())
+        throw std::invalid_argument("non esistono info per questo anno accademico" + std::to_string(startAc) + "_" + std::to_string(startAc+1) + ". Impossibile assegnare voti");
+    std::vector<Date> allAppealsPerYear = _courseOfTheYear.at(startAc).getAllAppeals();
+    if(std::find(allAppealsPerYear.begin(),allAppealsPerYear.end(),appeal)==allAppealsPerYear.end())
+        throw  std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso "+ getId());
     return true;
 }
 

@@ -191,7 +191,7 @@ Date Date::add(int daysToAdd) {
     return toReturn;
 }
 
-Date::Date(std::string date) {
+Date::Date(const std::string &date) {
     std::stringstream ss;
     int yy, mm, dd;
     char c;

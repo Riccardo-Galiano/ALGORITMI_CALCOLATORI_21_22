@@ -264,7 +264,13 @@ bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int ses
 }
 
 ///aggiunge uno studente
-bool SpecificYearCourse::addGradeToStudent(Student& stud, int _passYear, int mark,std::string appealsDate) {
+bool SpecificYearCourse::addGradeToStudent(Student& stud, int _passYear, int mark,std::string appealsDate,std::string idCourse) {
+    //controllo che lo studente sia associato al corso in quello specifico anno
+   if (_studentsEnrolled.find(stud.getId())==_studentsEnrolled.end())
+    {  std::stringstream matr;
+       matr<<"s"<<std::setfill('0')<<std::setw(6)<<stud.getId();
+        throw InvalidDbException("lo studente con  matricola " + matr.str() + " non e' iscritto al corso " + idCourse );
+    }
     student& studToUpdate = _studentsEnrolled.at(stud.getId());
     studToUpdate._grade = mark;
     studToUpdate._passYear = _passYear;
@@ -382,8 +388,11 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
                 break;
             }
             case 3: {
+                ss << "autumn{";
                 for (int i = 0; i < appeals.size(); i++) {
-                    ss << appeals[i] << "autumn";
+                    ss << appeals[i];
+                    if(i< appeals.size()-1)
+                        ss<<",";
                 }
                 ss<<"}";
                 break;
@@ -394,6 +403,7 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
         if(iterSessionAppeals->first < 3)
             ss<<"%";
     }
+
     return  ss.str();
 }
 
@@ -401,12 +411,19 @@ bool SpecificYearCourse::assignAppeals(std::string allAppealsPerYear) {
     std::vector<std::string> tokens = Parse::splittedLine(allAppealsPerYear,'%');
     for(int i  = 0; i < tokens.size() ; i++){
         std::vector<int> pos = Parse::posCurlyBrackets(tokens[i]);
-        std::string session = tokens[i].substr(0,pos[0]-1);
+        std::string session = tokens[i].substr(0,pos[0]);
         std::string appealsPerSessionString = tokens[i].substr(pos[0]+1,pos[1]-pos[0]-1);
-        std::vector<std::string> appealsPerSession = Parse::splittedLine(appealsPerSessionString,',');
         std::vector<Date> datesAppeals;
+        std::vector<std::string> appealsPerSession;
+        if(appealsPerSessionString.size()==21)
+            //se in quella sessione ci sono più appelli
+           appealsPerSession = Parse::splittedLine(appealsPerSessionString,',');
+        else
+            //alrimenti appealsPerSessionString è già l'unico appello
+           appealsPerSession.push_back(appealsPerSessionString);
+
         for(int j = 0; j<appealsPerSession.size();j++) {
-            Date dateAppeal(appealsPerSession[i]);
+            Date dateAppeal(appealsPerSession[j]);
             datesAppeals.push_back(dateAppeal);
         }
             if (session == "winter")
@@ -423,6 +440,10 @@ std::vector<int> SpecificYearCourse::getRoomsAppeal() {
     std::vector<int> rooms = _roomsEachAppeal.at(_numAppeal);
     _numAppeal++;
     return rooms;
+}
+
+bool SpecificYearCourse::notExamsAssigned() {
+    return _howManyTimesIAmAssignedInASession.empty();
 }
 
 

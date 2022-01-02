@@ -54,7 +54,7 @@ public:
     std::string setId(int)const;
     bool setProfMap(int, std::vector<std::string>, int);
     bool addStudent(int acYearRegistration, Student &stud);
-    bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate);
+    bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
     int amIAssignedAlreadyInThisSession(int);
     Date lastDateAssignationInGivenSession(int);
@@ -72,6 +72,7 @@ public:
     std::string getAppealsForAllSession();
     bool assignAppeals(std::string);
     std::vector<int> getRoomsAppeal();
+    bool notExamsAssigned();
 
 private:
 

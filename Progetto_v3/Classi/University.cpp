@@ -74,6 +74,11 @@ University::University() {
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
+    }try {
+        readAllExamAppeals();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
     }
 }
 
@@ -1581,19 +1586,27 @@ void University::updateStudyPlan(std::string fin) {
 bool University::insertStudentsGrades(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file inserimento appelli");
+        throw std::invalid_argument("errore apertura file inserimento voti");
     }
-    readAllExamAppeals();
     ///<id_corso>_<data_appello>(_[*]).csv
     std::string idCorso = fin.substr(0,7);
     std::string appealDate = fin.substr(8,12);
+    //controllo che il corso esista
+    if(_courses.find(idCorso)==_courses.end())
+        throw std::invalid_argument("il seguente corso non esiste" + idCorso + "impossibile assegnare i voti");
     Course& corso = _courses.at(idCorso);
+    //controllo che la data esista
+    corso.controlAppeal(appealDate);
     int appealYear = stoi(appealDate.substr(0,4));
     std::string line;
     while (std::getline(fileIn, line)){
-        std::string matr = line.substr(0,7);
+        std::string idmatr = line.substr(0,7);
+        int matr = Parse::getMatr(idmatr);
         int mark = stoi(line.substr(8,9));
-        Student& stud = _students.at(stoi(matr)); //preso l'istanza dello studente di cui si parla
+        //controllo che lo studente esista nel database
+        if(_students.find(matr) == _students.end())
+            throw InvalidDbException("lo studente "+ idmatr +"non esiste nel database");
+        Student& stud = _students.at(matr); //preso l'istanza dello studente di cui si parla
         int acYear = stud.getYearRegistration();
         if(mark>=18) {
             _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark,appealDate);
@@ -1643,8 +1656,6 @@ void University::readPassedAppeals() {
         _courses.at(idCorso).assignStudToAppealPerYear(acYear,appealDate,allStudPassedExam);///cambio _grade, _passed;appealPassed
     }
 }
-
-
 
 void University::readAllExamAppeals() {
     std::ifstream fileIn("allExamAppealsDb.txt");
