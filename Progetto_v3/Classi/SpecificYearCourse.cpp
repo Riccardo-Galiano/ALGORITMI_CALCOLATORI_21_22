@@ -361,10 +361,8 @@ bool SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::str
 }
 
 std::string SpecificYearCourse::getAppealsForAllSession() {
-
     std::stringstream ss;
     for(auto iterSessionAppeals = _howManyTimesIAmAssignedInASession.begin();iterSessionAppeals != _howManyTimesIAmAssignedInASession.end();iterSessionAppeals++){
-
         std::vector<Date> appeals = iterSessionAppeals->second;
         switch (iterSessionAppeals->first){
             case 1: {
@@ -444,6 +442,17 @@ std::vector<int> SpecificYearCourse::getRoomsAppeal() {
 
 bool SpecificYearCourse::notExamsAssigned() {
     return _howManyTimesIAmAssignedInASession.empty();
+}
+
+std::map<int, student> SpecificYearCourse::getStudentsPassed() {
+    std::map<int, student> allStudentsPassed;
+    for(auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end();iterStud++){
+        student currentStud = iterStud->second;
+        if(currentStud._passed == true)
+            allStudentsPassed.insert(std::pair<int,student>(currentStud._studId,currentStud));
+
+    }
+    return allStudentsPassed;
 }
 
 

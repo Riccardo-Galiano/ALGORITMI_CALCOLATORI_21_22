@@ -323,36 +323,33 @@ bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
 
 std::vector<std::string> Course::getAcYearStudExam() {
     std::vector<std::string> allAppealsPerYearToString;
-
+    bool push = false;
   for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
-      //controllo che la data esista
-      /*
-      std::map<int,std::vector<Date>> allSessionPerYear = iterSpecific->second.getHowManyTimesIAmAssignedInASession();
-      for(auto iterSession = allSessionPerYear.begin(); iterSession != allSessionPerYear.end();iterSession++){
-          std::vector<Date> appealsDate = iterSession->second.getDate();
-      }*/
-      std::map<int, student> allStudentEnrolled = iterSpecific->second.getStudentsEnrolled();
+      std::map<int, student> allStudentPassed = iterSpecific->second.getStudentsPassed();
       std::vector<Date> allAppealsPerYear = iterSpecific->second.getAllAppeals();
       for(int i = 0; i < allAppealsPerYear.size(); i++) {
           std::stringstream ss;
           ss <<getId()<<";"<< iterSpecific->first <<"-"<<iterSpecific->first+1<<";"<<allAppealsPerYear[i]<<";[";
           int count = 0;
-           for(auto iterStudent = allStudentEnrolled.begin();iterStudent != allStudentEnrolled.end();iterStudent++){
+           for(auto iterStudent = allStudentPassed.begin();iterStudent != allStudentPassed.end();iterStudent++){
                student currentStud = iterStudent->second;
-               if(currentStud._passed == true) {
                    //controllo a quale appello si sta facendo riferimento
                    Date appealPassed = currentStud._appealPassed;
                    if(appealPassed == allAppealsPerYear[i]) {
                        //l'appello è lui quindi deve essere scritto nel database
                        ss<< "{s" << std::setfill('0') << std::setw(6) << currentStud._studId << "," << currentStud._grade << "}";
-                   }
-                   if(count<allStudentEnrolled.size()-1)
+                       push = true;
+
+                       if(count<allStudentPassed.size()-1)
                        ss<<",";
                }
                count++;
            }
           ss<<"]";
-          allAppealsPerYearToString.push_back(ss.str());
+           if(push == true) {
+               push = false;
+               allAppealsPerYearToString.push_back(ss.str());
+           }
       }
   }
     return  allAppealsPerYearToString;

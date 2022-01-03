@@ -73,6 +73,7 @@ public:
     bool assignAppeals(std::string);
     std::vector<int> getRoomsAppeal();
     bool notExamsAssigned();
+    std::map<int, student> getStudentsPassed();
 
 private:
 

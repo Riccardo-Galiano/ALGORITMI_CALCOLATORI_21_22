@@ -1589,8 +1589,9 @@ bool University::insertStudentsGrades(std::string fin) {
         throw std::invalid_argument("errore apertura file inserimento voti");
     }
     ///<id_corso>_<data_appello>(_[*]).csv
-    std::string idCorso = fin.substr(0,7);
-    std::string appealDate = fin.substr(8,12);
+    //SOLO PE RFARE LE PROVE ../voti_studenti/ =16
+    std::string idCorso = fin.substr(17,7);
+    std::string appealDate = fin.substr(25,10);
     //controllo che il corso esista
     if(_courses.find(idCorso)==_courses.end())
         throw std::invalid_argument("il seguente corso non esiste" + idCorso + "impossibile assegnare i voti");
