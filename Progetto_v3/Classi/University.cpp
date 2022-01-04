@@ -456,7 +456,6 @@ bool University::addStudyCourses(const std::string &fin) {
             throw DbException("errore formato file corsi di studio alla riga: ", line_counter);
         }
         int codCorso = getNewStudyCourseId();
-
         std::string levelCourse = tokens[0];//triennale o magistrale
         ///devo leggere i semestri
         std::vector<int> posSem;
@@ -515,7 +514,6 @@ bool University::addStudyCourses(const std::string &fin) {
 bool University::addCourses(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi");
         return false;
     }
@@ -559,6 +557,8 @@ bool University::addCourses(const std::string &fin) {
                                                                            stoi(specificYearCourse[5]))));
 
         acYear = specificYearCourse[0]; //anno accademico
+        if(_acYearSessions.count(Parse::getAcStartYear(acYear))!=0)
+            throw std::invalid_argument("Non puoi aggiungere un corso in un anno in cui gli esami sono già stati generati");
         int startAcYear = Parse::getAcStartYear(specificYearCourse[0]);
 
         num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
@@ -927,7 +927,6 @@ bool University::updateClassroom(const std::string &fin) {
 
 ///inserisce un nuovo anno accademico ad un corso già esistente
 bool University::insertCourses(const std::string &fin) {
-
     std::vector<std::string> specificYearCourse;
     std::string acYear;
     std::string examData;
@@ -936,21 +935,18 @@ bool University::insertCourses(const std::string &fin) {
     std::string profSenzaQuadre;
     std::vector<std::string> idGrouped;
     std::vector<std::string> splittedExamData;
-
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file per inserimento di una nuova organizzazione del corso");
     }
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
-    while (std::getline(fileIn, line)) {//finchè il file non sarà finito
+    while (std::getline(fileIn, line)){//finchè il file non sarà finito
         std::vector<std::string> specificYearCourse = Parse::splittedLine(line, ';');
-
         if (_courses.find(specificYearCourse[0]) ==
             _courses.end()) {//find mi restituisce literatore alla chiave inserita(IdCorso). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("IdCorso non presente");
         }
-
         auto course_with_given_id = _courses.find(specificYearCourse[0]);//iteratore al corso da aggiornare
         ///fillSpecificYearCourse mi aggiorna il vettore specificYearCourse aggiungendo le info dell'anno accademico precedente negli spazi vuoti
         if (!(course_with_given_id->second.courseOfTheYearIsEmpty())) {
@@ -1261,7 +1257,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     bool esito = false;
     controlDatabase(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
-    while (!esito && constraintRelaxParameter < 4) {
+    while (!esito && constraintRelaxParameter < 4){
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
         esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,_classroom,
                                                                        constraintRelaxParameter);
@@ -1271,7 +1267,6 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
     if (!esito) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
-
     std::cout << "comando -g correttamente eseguito" << std::endl;
     return esito;
 }
@@ -1629,15 +1624,17 @@ void University::updateStudyPlan(std::string fin) {
     dbStudyPlanWrite();
 }
 
+
 bool University::insertStudentsGrades(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file inserimento voti");
     }
-    ///<id_corso>_<data_appello>(_[*]).csv
+    ///folder/<id_corso>_<data_appello>(_[*]).csv
+    std::string base_filename = fin.substr(fin.find_last_of("/\\") + 1);
     //SOLO PE RFARE LE PROVE ../voti_studenti/ =16
-    std::string idCorso = fin.substr(17,7);
-    std::string appealDate = fin.substr(25,10);
+    std::string idCorso = base_filename.substr(0,7);
+    std::string appealDate = base_filename.substr(8,10);
     //controllo che il corso esista
     if(_courses.find(idCorso)==_courses.end())
         throw std::invalid_argument("il seguente corso non esiste" + idCorso + "impossibile assegnare i voti");
@@ -1724,6 +1721,27 @@ void University::writeVersion(int version) {
     fout.open("versione.txt", std::fstream::out | std::fstream::trunc);
     fout<<version;
     fout.close();
+}
+
+bool University::setMinDistance(std::string& acYear, std::string& name) {
+    int year = Parse::getAcStartYear(acYear);
+    std::fstream fin;
+    fin.open(name, std::ios::in);
+    if (!fin.is_open()) {
+        throw DbException("");
+    }
+    std::string line, matr, idCorso, dist;
+    while (std::getline(fin, line)){
+        std::vector<std::string> tokens = Parse::splittedLine(line,';');
+        matr = tokens[0];
+        idCorso = tokens[1];
+        dist = tokens[2];
+        std::string matr_idC(matr + "_" + idCorso);
+        if(_acYearSessions.count(year)==0 || stoi(dist)<14)
+            throw std::invalid_argument("");
+        _acYearSessions.at(year).addProfGap(matr_idC,stoi(dist));
+    }
+    return true;
 }
 
 

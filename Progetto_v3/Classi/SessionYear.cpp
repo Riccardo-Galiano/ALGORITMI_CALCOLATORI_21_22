@@ -65,10 +65,9 @@ bool SessionYear::setCaldendar(std::vector<Date> dates) {
 
 ///genera le sessioni dell'anno accademico considerato
 bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string, Course>& courses,std::map<int, Professor> &professors, std::map<int, Classroom>& allUniversityClassrooms, int relaxPar) {
-    int gapAppealsSameCourse=14;
+    int gapAppealsSameCourse = _gapAppealsSameCourse;
     bool result=false;
     bool exitloop= false;
-
     ///eseguo il ciclo finchè posso rilassare ulteriormente il vincolo dei giorni tra appelli di uno stesso esame (14 giorni,13,12...)
     for (; gapAppealsSameCourse>=0 && !exitloop; gapAppealsSameCourse--){
         ///generare sessione invernale
@@ -80,7 +79,6 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
         ///generare sessione autunnale
         if(autumn == false)
         autumn = generateThisSession("autumn",courses, professors, allUniversityClassrooms, relaxPar, gapAppealsSameCourse);
-
         ///se le tre sessioni sono state generate passo all'output su file
         if (winter && summer && autumn) {
             generateOutputFiles(fout,1,courses);
@@ -102,7 +100,6 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
         }
     }
     return result;
-
 }
 
 void SessionYear::allExamAppealsWrite(std::map<std::string, Course>& courses) {
@@ -192,7 +189,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             Course& courseToConsider = courses.at(idCourse);
                             std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
                              assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, allUniversityClassrooms, courseToConsider, sessName, _allExamAppealsToDo, rooms);
-                            _sysLog.generateWarnings(coursesToConsiderInThisLoop,relaxPar,gapAppeals,_acYear);
+                            _sysLog.generateWarnings(coursesToConsiderInThisLoop,relaxPar,gapAppeals,_acYear,_gapProfs);
                         }
                         ///check terminazione funzione
                         if (_allExamAppealsToDo.empty()) {
@@ -342,6 +339,8 @@ std::vector<std::string> SessionYear::getGroupedCourses(const std::map<std::stri
 ///valuta se la data è accettabile per quell'esame
 bool SessionYear::dateIsOK(Date& newDate,const Course& course, std::string& sessName, int gapAppeals) {
     SpecificYearCourse sp = course.getThisYearCourse(getAcYear());//corso per un anno specifico
+    std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
+    std::string idCorso = course.getId();
     ///controllo sulla data della sessione
     bool iCanBeAssigneToFirstTwoWeekOfExamSession = sp.canIBeAssigneToFirstTwoWeekOfExamSession(this->getSemester(sessName));//se stesso semestre della sessione ed è attivo
     if(iCanBeAssigneToFirstTwoWeekOfExamSession == false){
@@ -352,7 +351,6 @@ bool SessionYear::dateIsOK(Date& newDate,const Course& course, std::string& sess
         /// prime due settimane ok?
         if(startDate.whatIsTheGap(newDate) < 14){
             return false;
-
         }
     }
     //stesso semestre della sessione ed attivo o siamo oltre i 14 giorni(quindi esame semestre diverso, spento, entrambi o secondo appello di uno dello stesso semestre della sessione ed attivo)
@@ -365,12 +363,22 @@ bool SessionYear::dateIsOK(Date& newDate,const Course& course, std::string& sess
         if(lastDateAssignation.whatIsTheGap(newDate) < gapAppeals){//dal primo appello sono passati 14 giorni?
             return false;
         }
-        else
+        else {
+            ///cotrollo aggiuntivo se il gap deve essere più largo (profsGap)
+            for(int matr : allProfsMatrThisCourse){
+                std::stringstream ss;
+                ss << matr << "_" << idCorso;
+                std::string keyToSearchProfsGap = ss.str();
+                if(_gapProfs.count(keyToSearchProfsGap)!=0){
+                    int requiredGap = _gapProfs.at(keyToSearchProfsGap);
+                    if(gapAppeals < requiredGap)
+                        return false;
+                }
+            }
             return true;
+        }
     }
-
-        ///non è stato assegnato già, quindi ok cosi
-        return true;
+    return true;
 }
 
 /// controlla se i prof sono disponibili e se l'esame da assegnare è dello stesso corso di studi e dello stesso anno di un altro, nel range di due giorni precedenti alla data controllata
@@ -447,7 +455,10 @@ bool SessionYear::sessionsPeriodIsEmpty() {
     return _yearSessions.empty();
 }
 
-
+bool SessionYear::addProfGap(std::string& matr_idC, int gap) {
+    _gapProfs.insert(std::pair<std::string,int>(matr_idC,gap));
+    return true;
+}
 
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"

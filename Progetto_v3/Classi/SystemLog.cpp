@@ -31,12 +31,9 @@ void SystemLog::appendLog(std::string &input) {
     fout << input;
 }
 
-void SystemLog::generateWarnings(std::vector<Course> &courses, int relaxPar, int gap, int year) {
+void SystemLog::generateWarnings(std::vector<Course> &courses, int relaxPar, int gap, int year,std::map<std::string,int> gapProfs) {
+    generateWarningGapProfs(gapProfs,year);
     switch (relaxPar) {
-        case (0): {
-            ///no warnings
-        break;
-        }
         case (1): {
             generateWarningGapSameStudyCourse(courses, year);
             break;
@@ -89,6 +86,17 @@ std::string SystemLog::cdsCodes(SpecificYearCourse &sp) {
         ss << "C" << cds[j];
         if (j != cds.size() - 1)
             ss << ",";
+    }
+    ss << "}";
+    std::string toReturn = ss.str();
+    return toReturn;
+}
+
+void SystemLog::generateWarningGapProfs(std::map<std::string,int> gapProfs, int year) {
+    std::stringstream ss;
+    ss << year << ";{";
+    for (auto iter = gapProfs.begin(); iter != gapProfs.end(); iter++) {
+        ss << iter->first << " GAP_PROFESSORE di " << iter->second << " non rispettata\n";
     }
     ss << "}";
     std::string toReturn = ss.str();

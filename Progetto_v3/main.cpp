@@ -24,7 +24,8 @@ enum {
     versioning,
     add_study_plan_student,
     update_study_plan_student,
-    insert_students_grades
+    insert_students_grades,
+    set_min_distance
 };
 
 
@@ -63,6 +64,8 @@ int returnCode(char *argv[]) {
         return update_study_plan_student;
     else if (paramInput.compare("-i:v")==0)
         return insert_students_grades;
+    else if (paramInput.compare("-s set_min_distance")==0)
+        return set_min_distance;
     return -1;
 }
 
@@ -136,6 +139,10 @@ void startProgram(University &uni, char *argv[]) {
         }
         case insert_students_grades:{
             uni.insertStudentsGrades(argv[2]);
+            break;
+        }
+        case set_min_distance:{
+            uni.setMinDistance(argv[2],argv[3]);
             break;
         }
         default:

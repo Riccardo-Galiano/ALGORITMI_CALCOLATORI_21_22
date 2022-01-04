@@ -22,7 +22,7 @@ public:
     bool setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
     std::vector<std::string> allProfsNoAvailabilities();
     bool setExamDate(std::string,std::string);
-
+    bool setMinDistance(std::string&,std::string&);
     ///DB management
     bool versioning(std::string);
     bool renameOldDataBase(int);

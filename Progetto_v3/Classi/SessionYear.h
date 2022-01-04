@@ -32,6 +32,7 @@ public:
     std::string getSessions() const;
     std::vector<std::string> getAllExamAppealsToDo(std::string, std::map<std::string, Course>&);
     void allExamAppealsWrite(std::map<std::string, Course>& courses);
+    bool addProfGap(std::string& matr_idC, int gap);
 
 private:
     SystemLog _sysLog;
@@ -55,7 +56,13 @@ private:
     static void popAppealFromVector(std::vector<std::string>&,std::string);
     static bool checkHours(std::vector<int>&);
     std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>&, std::string);
-  };
+
+    ///gap stuff
+    int _gapAppealsSameCourse = 14;
+    //key: data come stringa "matricola-idCorso"
+    //value: gap
+    std::map<std::string,int> _gapProfs;
+};
 
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);
 

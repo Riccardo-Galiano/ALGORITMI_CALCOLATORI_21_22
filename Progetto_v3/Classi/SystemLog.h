@@ -10,10 +10,11 @@
 class SystemLog {
 public:
     explicit SystemLog(std::string&, int);
-    void generateWarnings(std::vector<Course>&,int,int,int);
+    void generateWarnings(std::vector<Course>&,int,int,int,std::map<std::string,int>);
     void generateWarningGapAppeals(std::vector<Course>&,int,int);
     void generateWarningGapSameStudyCourse(std::vector<Course>&,int);
     void generateWarningGapAvaibilityProfs(std::vector<Course>&,int);
+    void generateWarningGapProfs(std::map<std::string,int>, int);
     void appendLog(std::string&);
 
 private:
