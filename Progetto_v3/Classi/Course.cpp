@@ -325,24 +325,24 @@ std::vector<std::string> Course::getAcYearStudExam() {
     std::vector<std::string> allAppealsPerYearToString;
     bool push = false;
   for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
-      std::map<int, student> allStudentPassed = iterSpecific->second.getStudentsPassed();
+
       std::vector<Date> allAppealsPerYear = iterSpecific->second.getAllAppeals();
       for(int i = 0; i < allAppealsPerYear.size(); i++) {
           std::stringstream ss;
+          std::map<int, student> allStudentPassed = iterSpecific->second.getStudentsPassedInThisAppeal(allAppealsPerYear[i]);
           ss <<getId()<<";"<< iterSpecific->first <<"-"<<iterSpecific->first+1<<";"<<allAppealsPerYear[i]<<";[";
           int count = 0;
            for(auto iterStudent = allStudentPassed.begin();iterStudent != allStudentPassed.end();iterStudent++){
                student currentStud = iterStudent->second;
                    //controllo a quale appello si sta facendo riferimento
-                   Date appealPassed = currentStud._appealPassed;
-                   if(appealPassed == allAppealsPerYear[i]) {
+
                        //l'appello è lui quindi deve essere scritto nel database
                        ss<< "{s" << std::setfill('0') << std::setw(6) << currentStud._studId << "," << currentStud._grade << "}";
                        push = true;
 
                        if(count<allStudentPassed.size()-1)
                        ss<<",";
-               }
+
                count++;
            }
           ss<<"]";

@@ -21,6 +21,7 @@ public:
     Professor():UniversityMember(){};
     Professor(int);
     Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
+    Professor(int, std::string, std::string, std::string,std::string, std::string, std::string); ///matricola,nome, cognome, email
     bool setNoAvaibilities(int, std::string&);
     std::vector<std::string> outputNoAvailabilities(int);
     void noAvailabilityClear(int);

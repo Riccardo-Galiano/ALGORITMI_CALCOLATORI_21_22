@@ -26,6 +26,25 @@ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int 
     _othersInfoClassroom._projector = -1;
 }
 
+Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int examSeats, int blackBoard, int computer, int drawingTable, int projector) {
+    _id = id;
+    _name = name;
+    _nSeats = seats;
+    _nExamSeats = examSeats;
+    if (AorL == "L") {
+        _lab = true;
+    } else if (AorL == "A") {
+        _lab = false;
+    } else {
+        throw std::invalid_argument("errore aula o lab");
+    }
+    _othersInfoClassroom._blackBoard = blackBoard;
+    _othersInfoClassroom._computer = computer;
+    _othersInfoClassroom._drawingTable = drawingTable;
+    _othersInfoClassroom._projector = projector;
+}
+
+
 ///prende l'id
 const int Classroom::getId() const {
     return _id;
@@ -101,6 +120,7 @@ std::string Classroom::getOthersInfo() {
     ss<<_othersInfoClassroom._blackBoard <<";"<<_othersInfoClassroom._drawingTable <<";"<<_othersInfoClassroom._computer<<";"<<_othersInfoClassroom._projector;
     return ss.str();
 }
+
 
 std::ostream &operator<<(std::ostream &room, const Classroom &s) {
 

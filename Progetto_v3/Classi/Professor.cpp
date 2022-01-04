@@ -19,6 +19,13 @@ Professor::Professor(int matr) : UniversityMember() {
     _id = matr;
 }
 
+Professor::Professor(int matr, std::string name, std::string surname, std::string email, std::string birth, std::string registration, std::string address): UniversityMember(matr, name,surname, email) {
+    _othersInfoProf._birth = birth;
+    _othersInfoProf._entry = registration;
+    _othersInfoProf._address = address;
+}
+
+
 ///setta uno dei periodi di indisponibilità del prof analizzato
 bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     std::vector<std::string> dates;
@@ -114,6 +121,7 @@ std::string Professor::getOtherInfoString() {
     ss<< _othersInfoProf._birth <<";"<<_othersInfoProf._entry <<";"<<_othersInfoProf._address;
     return ss.str();
 }
+
 
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &prof, const Professor &s) {

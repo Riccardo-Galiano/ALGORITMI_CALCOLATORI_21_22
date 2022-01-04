@@ -84,10 +84,19 @@ University::University() {
 
 ///leggo il database degli studenti
 void University::readStudents() {
+    //versione
+    int version;
+    try {
+        version = readVersion();
+    }catch(DbException &exc) {
+            std::cerr << exc.what() << std::endl;
+            version = 1;
+    }
+
+    //dbstudenti
     std::ifstream fileIn("db_studenti.txt");
     ///leggi version
     if (!fileIn.is_open()) {
-        //std::cerr << "errore apertura database studenti" << std::endl;
         throw DbException("file db_studenti.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -100,17 +109,37 @@ void University::readStudents() {
         ///controllo se la matricola è già esistente; in quel caso lancio un'eccezione, altrimenti inserisco lo studente con tutti i suoi dati
         if (_students.count(nMatr))
             throw std::logic_error("due matricole uguali");
-        else
-            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
-                                                                    InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
+        else if (version == 2) {
+                _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
+                                                                        InteroStudente[3], InteroStudente[4],
+                                                                        InteroStudente[5], InteroStudente[6])));
+            } else
+                _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
     }
-
     fileIn.close();
-
+}
+int University::readVersion() {
+    std::ifstream file("versione.txt");
+    if (!file.is_open()) {
+        throw DbException("file versione.txt non esistente. Non e' ancora stato usato il comando di versioning");
+    }
+    std::string version;
+    std::getline(file, version);
+    file.close();
+    return stoi(version);
 }
 
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice
 void University::readProfessor() {
+    //versione
+    int version;
+    try {
+        version = readVersion();
+    }catch(DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+        version = 1;
+    }
+    //dbprofessori
     std::ifstream fileIn("db_professori.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_professori.txt non esistente");
@@ -123,16 +152,26 @@ void University::readProfessor() {
         nMatr = Parse::getMatr(InteroProfessore[0]);
         if (_professors.count(nMatr))
             throw std::logic_error("due matricole uguali");
-        else
-            _professors.insert(std::pair<int, Professor>(nMatr,
-                                                         Professor(nMatr, InteroProfessore[1], InteroProfessore[2],
-                                                                   InteroProfessore[3])));
+
+        else if(version == 2){
+            _professors.insert(std::pair<int, Professor>(nMatr,Professor(nMatr, InteroProfessore[1], InteroProfessore[2],InteroProfessore[3],InteroProfessore[4],InteroProfessore[5],InteroProfessore[6])));
+        }else
+            _professors.insert(std::pair<int, Professor>(nMatr,Professor(nMatr, InteroProfessore[1], InteroProfessore[2],InteroProfessore[3])));
     }
     fileIn.close();
 }
 
 ///lettura delle aule dal database
 void University::readClassroom() {
+    //versione
+    int version;
+    try {
+        version = readVersion();
+    }catch(DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+        version = 1;
+    }
+    //dbClassroom
     std::ifstream fileIn("db_aule.txt");
     if (!fileIn.is_open()) {
         throw DbException("file db_aule.txt non esistente");
@@ -146,11 +185,17 @@ void University::readClassroom() {
 
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
-        else {
+        else if(version == 2) {
+            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
+                                                                        std::stoi(InteraClasse[3]),std::stoi(InteraClasse[4]),
+                                                                        std::stoi(InteraClasse[5]),std::stoi(InteraClasse[6]),
+                                                                        std::stoi(InteraClasse[7]), std::stoi(InteraClasse[8]))));
+
+        }else
             _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
                                                                         std::stoi(InteraClasse[3]),
                                                                         std::stoi(InteraClasse[4]))));
-        }
+
     }
     fileIn.close();
 }
@@ -1423,6 +1468,7 @@ bool University::versioning(std::string v) {
         //aule
         dbNewAuleWrite();
     }
+    writeVersion(version);
     return false;
 }
 
@@ -1672,6 +1718,15 @@ void University::readAllExamAppeals() {
         _courses.at(idCorso).assignAppealsToSpecificyear(acYear,appealsSession);
         }
 }
+
+void University::writeVersion(int version) {
+    std::fstream fout;
+    fout.open("versione.txt", std::fstream::out | std::fstream::trunc);
+    fout<<version;
+    fout.close();
+}
+
+
 
 
 

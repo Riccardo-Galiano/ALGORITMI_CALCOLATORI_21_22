@@ -444,13 +444,16 @@ bool SpecificYearCourse::notExamsAssigned() {
     return _howManyTimesIAmAssignedInASession.empty();
 }
 
-std::map<int, student> SpecificYearCourse::getStudentsPassed() {
+std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) {
     std::map<int, student> allStudentsPassed;
     for(auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end();iterStud++){
         student currentStud = iterStud->second;
-        if(currentStud._passed == true)
-            allStudentsPassed.insert(std::pair<int,student>(currentStud._studId,currentStud));
-
+        if(currentStud._passed == true) {
+            Date appealPassed = currentStud._appealPassed;
+            if (appealPassed == dateAppeal) {
+                allStudentsPassed.insert(std::pair<int, student>(currentStud._studId, currentStud));
+            }
+        }
     }
     return allStudentsPassed;
 }

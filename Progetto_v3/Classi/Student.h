@@ -18,6 +18,7 @@ typedef struct {
 class Student : public UniversityMember {
 public:
     explicit Student(int, std::string, std::string, std::string); ///matricola, nome, cognome, email
+    explicit  Student(int, std::string, std::string, std::string,std::string,std::string,std::string);
     Student()= default;
     std::string getOtherInfoString();
     bool addStudyPlanPerStudent(std::string,std::vector<std::string>);

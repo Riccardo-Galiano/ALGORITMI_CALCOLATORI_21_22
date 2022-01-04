@@ -46,6 +46,7 @@ public:
     void readProfsNoAvailability();
     void readPassedAppeals();
     void readAllExamAppeals();
+    int readVersion();
 
     ///Output(to DB)
     void dbStudsWrite(); ///CHANGE
@@ -58,6 +59,7 @@ public:
     void dbDateSessionsWrite();
     void dbNoAvailabilityWrite();
     void dbAppealsWrite();
+    void writeVersion(int);
 
 
     ///get new ID

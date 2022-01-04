@@ -17,6 +17,7 @@ class Classroom {
 public:
 
     Classroom(int , std::string, std::string, int, int);
+    Classroom(int , std::string, std::string, int, int,int,int,int,int);
 
     const int getId() const;
     const std::string getName() const;
