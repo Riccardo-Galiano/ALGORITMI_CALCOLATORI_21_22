@@ -11,18 +11,15 @@
 ///costruttori
 Professor::Professor(int matr, std::string name, std::string surname, std::string email) : UniversityMember(matr, name,surname, email) {
 
-    _othersInfoProf._birth = Date();
-    _othersInfoProf._entry = Date();
-    _othersInfoProf._address = "indefinito";
 }
 Professor::Professor(int matr) : UniversityMember() {
     _id = matr;
 }
 
-Professor::Professor(int matr, std::string name, std::string surname, std::string email, std::string birth, std::string registration, std::string address): UniversityMember(matr, name,surname, email) {
-    _othersInfoProf._birth = birth;
-    _othersInfoProf._entry = registration;
-    _othersInfoProf._address = address;
+Professor::Professor(int matr, std::string name, std::string surname, std::string email, std::string birth, std::string registration, std::string address): UniversityMember(matr, name,surname, email,birth,
+registration,
+address) {
+
 }
 
 
@@ -116,11 +113,7 @@ bool Professor::amIavailable(std::string date, int hh) {
 
 }
 
-std::string Professor::getOtherInfoString() {
-    std::stringstream ss;
-    ss<< _othersInfoProf._birth <<";"<<_othersInfoProf._entry <<";"<<_othersInfoProf._address;
-    return ss.str();
-}
+
 
 
 ///overload operatore <<

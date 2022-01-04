@@ -8,23 +8,14 @@
 #include "Parse.hpp"
 
 Student::Student(int matr, std::string name, std::string surname, std::string email): UniversityMember(matr, name, surname, email) {
-    _othersInfoStud._birth = Date();
-    _othersInfoStud._registration = Date();
-    _othersInfoStud._address = "indefinito";
+
 }
 
-Student::Student(int matr, std::string name, std::string surname, std::string email,std::string birth, std::string registration, std::string address ): UniversityMember(matr, name, surname, email) {
-    _othersInfoStud._birth = birth;
-    _othersInfoStud._registration = registration;
-    _othersInfoStud._address = address;
+Student::Student(int matr, std::string name, std::string surname, std::string email,std::string birth, std::string registration, std::string address ): UniversityMember(matr, name, surname, email, birth, registration,address) {
+
 }
 
 
-std::string Student::getOtherInfoString() {
-    std::stringstream ss;
-    ss << _othersInfoStud._birth <<";"<< _othersInfoStud._registration << ";" <<_othersInfoStud._address;
-    return ss.str();
-}
 
 bool Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan) {
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);

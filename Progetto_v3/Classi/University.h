@@ -26,9 +26,6 @@ public:
     ///DB management
     bool versioning(std::string);
     bool renameOldDataBase(int);
-    void dbNewStudentWrite();
-    void dbNewProfessorWrite();
-    void dbNewAuleWrite();
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
     bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
@@ -46,7 +43,7 @@ public:
     void readProfsNoAvailability();
     void readPassedAppeals();
     void readAllExamAppeals();
-    int readVersion();
+    void readVersion();
 
     ///Output(to DB)
     void dbStudsWrite(); ///CHANGE
@@ -99,6 +96,7 @@ private:
     std::map<std::string, Course> _courses;
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
+    int _version;
 };
 
 

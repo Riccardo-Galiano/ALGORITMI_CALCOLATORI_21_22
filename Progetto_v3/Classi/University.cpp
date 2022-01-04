@@ -20,6 +20,12 @@ University::University() {
     //if(!fs::exists(fs::file_status(std::string("../Database"))))
     //fs::create_directory("../Database");
     try {
+        readVersion();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+    }
+    try {
         readStudents();
     }
     catch (DbException &exc) {
@@ -84,15 +90,6 @@ University::University() {
 
 ///leggo il database degli studenti
 void University::readStudents() {
-    //versione
-    int version;
-    try {
-        version = readVersion();
-    }catch(DbException &exc) {
-            std::cerr << exc.what() << std::endl;
-            version = 1;
-    }
-
     //dbstudenti
     std::ifstream fileIn("db_studenti.txt");
     ///leggi version
@@ -109,7 +106,7 @@ void University::readStudents() {
         ///controllo se la matricola è già esistente; in quel caso lancio un'eccezione, altrimenti inserisco lo studente con tutti i suoi dati
         if (_students.count(nMatr))
             throw std::logic_error("due matricole uguali");
-        else if (version == 2) {
+        else if (_version == 2) {
                 _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
                                                                         InteroStudente[3], InteroStudente[4],
                                                                         InteroStudente[5], InteroStudente[6])));
@@ -118,27 +115,19 @@ void University::readStudents() {
     }
     fileIn.close();
 }
-int University::readVersion() {
+void University::readVersion() {
     std::ifstream file("versione.txt");
     if (!file.is_open()) {
         throw DbException("file versione.txt non esistente. Non e' ancora stato usato il comando di versioning");
     }
     std::string version;
     std::getline(file, version);
+    _version = stoi(version);
     file.close();
-    return stoi(version);
 }
 
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice
 void University::readProfessor() {
-    //versione
-    int version;
-    try {
-        version = readVersion();
-    }catch(DbException &exc) {
-        std::cerr << exc.what() << std::endl;
-        version = 1;
-    }
     //dbprofessori
     std::ifstream fileIn("db_professori.txt");
     if (!fileIn.is_open()) {
@@ -153,7 +142,7 @@ void University::readProfessor() {
         if (_professors.count(nMatr))
             throw std::logic_error("due matricole uguali");
 
-        else if(version == 2){
+        else if(_version == 2){
             _professors.insert(std::pair<int, Professor>(nMatr,Professor(nMatr, InteroProfessore[1], InteroProfessore[2],InteroProfessore[3],InteroProfessore[4],InteroProfessore[5],InteroProfessore[6])));
         }else
             _professors.insert(std::pair<int, Professor>(nMatr,Professor(nMatr, InteroProfessore[1], InteroProfessore[2],InteroProfessore[3])));
@@ -163,14 +152,7 @@ void University::readProfessor() {
 
 ///lettura delle aule dal database
 void University::readClassroom() {
-    //versione
-    int version;
-    try {
-        version = readVersion();
-    }catch(DbException &exc) {
-        std::cerr << exc.what() << std::endl;
-        version = 1;
-    }
+
     //dbClassroom
     std::ifstream fileIn("db_aule.txt");
     if (!fileIn.is_open()) {
@@ -185,7 +167,7 @@ void University::readClassroom() {
 
         if (_classroom.count(nCod))
             throw std::logic_error("due codici uguali");
-        else if(version == 2) {
+        else if(_version == 2) {
             _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
                                                                         std::stoi(InteraClasse[3]),std::stoi(InteraClasse[4]),
                                                                         std::stoi(InteraClasse[5]),std::stoi(InteraClasse[6]),
@@ -354,10 +336,10 @@ void University::readStudyCourse() {
 
 ///inserisco un nuovo studente (privo di matricola che bisogna quindi ricavare)
 bool University::addStuds(const std::string &fileIn) {
+
     std::fstream fIn(fileIn, std::ios::in); //apro il file in lettura
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuovi studenti");
-        return false;
     }
     int line_counter = 1;
     std::string line; //stringa di appoggio per l'intera riga del file
@@ -365,16 +347,25 @@ bool University::addStuds(const std::string &fileIn) {
     while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
         tokens = Parse::splittedLine(line, ';');
         //controllo che formato file sia corretto: 3 campi
-        if (tokens.size() != 3) {
-            throw DbException("errore formato file studenti alla riga: ", line_counter);
+        if(_version == 2){
+            if (tokens.size() != 6) {
+                throw DbException("errore formato file studenti alla riga: ", line_counter);
+            }
+            int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
+            _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
+                                                                   tokens[2],tokens[3],tokens[4],tokens[5]))); //inserisco il nuovo studente nella mappatura interna
+            line_counter++;
+        }else {
+            if (tokens.size() != 3) {
+                throw DbException("errore formato file studenti alla riga: ", line_counter);
+            }
+            int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
+            _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
+                                                                   tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+            line_counter++;
         }
-        int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-        _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
-                                                               tokens[2]))); //inserisco il nuovo studente nella mappatura interna
-        line_counter++;
     }
     fIn.close();
-
     dbStudsWrite();
     std::cout << "comando -a:s correttamente eseguito" << std::endl;
     return true;
@@ -382,6 +373,8 @@ bool University::addStuds(const std::string &fileIn) {
 
 ///identico alla insertStudents(); si evita di commentare per non sporcare il codice
 bool University::addProfessors(const std::string &fileIn) {
+
+    //addprofessor
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuovi professori");
@@ -392,16 +385,25 @@ bool University::addProfessors(const std::string &fileIn) {
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
         tokens = Parse::splittedLine(line, ';');
-        //controllo che formato file sia corretto: 3 campi
-        if (tokens.size() != 3) {
-            throw DbException("errore formato file professori alla riga: ", line_counter);
+        if(_version == 2) {
+            //controllo che formato file sia corretto: 3 campi
+            if (tokens.size() != 6) {
+                throw DbException("errore formato file professori alla riga: ", line_counter);
+            }
+            int matr = getNewProfessorId();
+            _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2],tokens[3],tokens[4],tokens[5])));
+            line_counter++;
+        }else{
+            //controllo che formato file sia corretto: 3 campi
+            if (tokens.size() != 3) {
+                throw DbException("errore formato file professori alla riga: ", line_counter);
+            }
+            int matr = getNewProfessorId();
+            _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
+            line_counter++;
         }
-        int matr = getNewProfessorId();
-        _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
-        line_counter++;
     }
     fIn.close();
-
     dbProfsWrite();
     std::cout << "comando -a:d correttamente eseguito" << std::endl;
 
@@ -413,27 +415,34 @@ bool University::addClassrooms(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuove aule");
-        return false;
     }
     std::string line;
     int line_counter = 1;
     std::vector<std::string> tokens;
     while (std::getline(fIn, line)) {
         tokens = Parse::splittedLine(line, ';');
-        //controllo che formato file sia corretto: 4 campi
-        if (tokens.size() != 4) {
-            throw DbException("errore formato file aule alla riga: ", line_counter);
-        }
         int id = getNewClassroomId();
-        _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
-                                                                  std::stoi(tokens[3]))));
-        line_counter++;
+        if(_version == 3) {
+            //controllo che formato file sia corretto: 7 campi
+            if (tokens.size() != 7) {
+                throw DbException("errore formato file aule alla riga: ", line_counter);
+            }
+            _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
+                                                                      std::stoi(tokens[3]),std::stoi(tokens[4]),std::stoi(tokens[5]),std::stoi(tokens[6]),std::stoi(tokens[7]))));
+            line_counter++;
+        }else{
+            //controllo che formato file sia corretto: 4 campi
+            if (tokens.size() != 4) {
+                throw DbException("errore formato file aule alla riga: ", line_counter);
+            }
+            _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
+                                                                      std::stoi(tokens[3]))));
+            line_counter++;
+        }
     }
     fIn.close();
-
     dbClassRoomWrite();
     std::cout << "comando -a:a correttamente eseguito" << std::endl;
-
     return true;
 }
 
@@ -647,8 +656,7 @@ const int University::getNewClassroomId() const {
     if (_classroom.empty())
         return 1;
     auto last = _classroom.rbegin();  //
-    int toReturn = last->second.getId() +
-                   1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
+    int toReturn = last->second.getId() + 1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
 }
 
@@ -698,7 +706,7 @@ const std::string University::getNewCourseId() const {
 
 ///aggiorno gli studenti
 enum {
-    update_name = 1, update_surName = 2, update_eMail = 3
+    update_name = 1, update_surName = 2, update_eMail = 3, update_birth = 4, update_registrationOrEntry = 5, update_address = 6
 };
 
 bool University::updateStuds(const std::string &fin) {
@@ -716,7 +724,6 @@ bool University::updateStuds(const std::string &fin) {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoStud = Parse::splittedLine(line, ';');
-
         if (infoStud[0].empty()) {
             throw DbException("manca la matricola dello studente alla riga: ", line_counter);
         }
@@ -724,43 +731,61 @@ bool University::updateStuds(const std::string &fin) {
         ss >> c >> nMatr;
 
         ///se la matricola non esiste nel database
-        if (_students.find(nMatr) ==
-            _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_students.find(nMatr) == _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
-
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
+        if(_version == 2) {
+            if (infoStud.size() != 7)
+                throw DbException("errore formato file aule alla riga: ", line_counter);
+        }
+        else if (infoStud.size() != 4)
+                throw DbException("errore formato file aule alla riga: ", line_counter);
 
-        for (i = 1; i <
-                    infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
-
-            if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
-                switch (i) {
-                    case update_name ://analizzo il nome
-                        if (!(iter->second.getName() ==
-                              infoStud[i])) { //se il nome letto dal file è diverso dal nome del database
-                            iter->second.updateName(infoStud[i]); //cambio il nome
+            for (i = 0; i < infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+                if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                    switch (i) {
+                        case update_name : {//analizzo il nome
+                            if (!(iter->second.getName() == infoStud[i])) { //se il nome letto dal file è diverso dal nome del database
+                                iter->second.updateName(infoStud[i]); //cambio il nome
+                            }
+                            break;
                         }
-                        break;
-
-                    case update_surName ://analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              infoStud[i])) {//se il cognome letto dal file è diverso dal cognome del database
-                            iter->second.updateSurnName(infoStud[i]); //cambio il cognome
+                        case update_surName : {//analizzo il cognome
+                            if (!(iter->second.getSurname() ==  infoStud[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                                iter->second.updateSurnName(infoStud[i]); //cambio il cognome
+                            }
+                            break;
                         }
-                        break;
-                    case update_eMail : //analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              infoStud[i])) {//se l'email letta dal file è diversa dall'email del database
-                            iter->second.updateEmail(infoStud[i]); //cambia l'email
+                        case update_eMail : { //analizzo l'email
+                            if (!(iter->second.getEmail() == infoStud[i])) {//se l'email letta dal file è diversa dall'email del database
+                                iter->second.updateEmail(infoStud[i]); //cambia l'email
+                            }
+                            break;
                         }
-                        break;
+                        case update_birth: {
+                            if (!(iter->second.getBirth() == infoStud[i])) {//se la data di nascitaletta dal file è diversa dall'email del database
+                                iter->second.updateBirth(infoStud[i]); //cambia Data di nascita
+                            }
+                            break;
+                        }
+                        case update_registrationOrEntry: {
+                            if (!(iter->second.getRegistrationOrEntry() ==  infoStud[i])) {//se la data di registrazione letta dal file è diversa dall'email del database
+                                iter->second.updateRegistration(infoStud[i]); //cambia Data di registrazione
+                            }
+                            break;
+                        }
+                        case update_address: {
+                            if (!(iter->second.getAddress() == infoStud[i])) {//se l'indirizzo letto dal file è diversa dall'email del database
+                                iter->second.updateAdress(infoStud[i]); //cambia l'indirizzo
+                            }
+                            break;
+                        }
+                    }
 
                 }
-
             }
-        }
-        line_counter++;
+            line_counter++;
     }
 
     fileIn.close();
@@ -792,46 +817,70 @@ bool University::updateProfessors(const std::string &fin) {
         std::stringstream ss(infoProf[0]);
         ss >> c >> nMatr;
 
-        if (_professors.find(nMatr) ==
-            _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+        if (_professors.find(nMatr) == _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
 
-        for (i = 1; i <
-                    infoProf.size(); i++) {//analizzo i campi della riga del file passato come parametro che andranno aggiornati
+        if(_version == 2) {
+            if (infoProf.size() != 7)
+                throw DbException("errore formato file aule alla riga: ", line_counter);
+        }else if(infoProf.size() != 4)
+                throw DbException("errore formato file aule alla riga: ", line_counter);
 
-            if (!(infoProf[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+            for (i = 0; i < infoProf.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
-                switch (i) {
-                    case update_name ://analizzo il nome
-                        if (!(iter->second.getName() ==
-                              infoProf[i])) {//se il nome letto dal file è diverso dal nome del database
-                            iter->second.updateName(infoProf[i]); //cambia il nome
+                if (!(infoProf[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                    switch (i) {
+                        case update_name : {//analizzo il nome
+                            if (!(iter->second.getName() ==
+                                  infoProf[i])) { //se il nome letto dal file è diverso dal nome del database
+                                iter->second.updateName(infoProf[i]); //cambio il nome
+                            }
+                            break;
                         }
-                        break;
-
-                    case update_surName : //analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              infoProf[i])) {//se il cognome letto dal file è diverso dal cognome del database
-                            iter->second.updateSurnName(infoProf[i]); //cambia il cognome
+                        case update_surName : {//analizzo il cognome
+                            if (!(iter->second.getSurname() ==
+                                  infoProf[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                                iter->second.updateSurnName(infoProf[i]); //cambio il cognome
+                            }
+                            break;
                         }
-                        break;
-                    case update_eMail ://analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              infoProf[i])) {//se l'email letta dal file è diversa dall'email letta dal database
-                            iter->second.updateEmail(infoProf[i]); //cambia l'email
+                        case update_eMail : { //analizzo l'email
+                            if (!(iter->second.getEmail() ==
+                                  infoProf[i])) {//se l'email letta dal file è diversa dall'email del database
+                                iter->second.updateEmail(infoProf[i]); //cambia l'email
+                            }
+                            break;
                         }
-                        break;
+                        case update_birth: {
+                            if (!(iter->second.getBirth() ==
+                                  infoProf[i])) {//se la data di nascitaletta dal file è diversa dall'email del database
+                                iter->second.updateBirth(infoProf[i]); //cambia Data di nascita
+                            }
+                            break;
+                        }
+                        case update_registrationOrEntry: {
+                            if (!(iter->second.getRegistrationOrEntry() ==
+                                  infoProf[i])) {//se la data di registrazione letta dal file è diversa dall'email del database
+                                iter->second.updateRegistration(infoProf[i]); //cambia Data di registrazione
+                            }
+                            break;
+                        }
+                        case update_address: {
+                            if (!(iter->second.getAddress() ==
+                                  infoProf[i])) {//se l'indirizzo letto dal file è diversa dall'email del database
+                                iter->second.updateAdress(infoProf[i]); //cambia l'indirizzo
+                            }
+                            break;
+                        }
+                    }
 
                 }
-
             }
+            line_counter++;
         }
-        line_counter++;
-    }
-
     fileIn.close();
     dbProfsWrite();
     std::cout << "comando -u:d correttamente eseguito" << std::endl;
@@ -840,7 +889,7 @@ bool University::updateProfessors(const std::string &fin) {
 
 ///aggiornamento aule
 enum {
-    update_lab = 1, update_nameClassroom = 2, update_nSeats = 3, update_nSeatsExam = 4
+    update_lab = 1, update_nameClassroom = 2, update_nSeats = 3, update_nSeatsExam = 4, update_drawingTable = 5, update_computer = 6, update_projector = 7,update_blackBoard = 8
 };
 
 ///aggiorno le Classroom
@@ -871,52 +920,75 @@ bool University::updateClassroom(const std::string &fin) {
             throw std::invalid_argument("matricola non presente");
 
         auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
+        if (_version == 3) {
+            if (infoClassroom.size() != 8)
+                throw DbException("errore formato file aule alla riga: ", line_counter);
+        } else if(infoClassroom.size() != 5) {
+                throw DbException("errore formato file aule alla riga: ", line_counter);
+        }
+            for (i = 1; i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
+                if (!(infoClassroom[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                    switch (i) {
+                        case update_lab : {//analizzo il tipo di classroom: aula o lab
+                            bool lab;
+                            if (infoClassroom[i] == "L") //se il carattere intercettato è L allora l'aula da aggiungee sarà un lab
+                                lab = true;
+                            else//altrimenti sarà un'aula
+                                lab = false;
 
-        for (i = 1; i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
-
-            if (!(infoClassroom[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
-
-                switch (i) {
-
-                    case update_lab : {//analizzo il tipo di classroom: aula o lab
-                        bool lab;
-                        if (infoClassroom[i] ==
-                            "L") //se il carattere intercettato è L allora l'aula da aggiungee sarà un lab
-                            lab = true;
-                        else//altrimenti sarà un'aula
-                            lab = false;
-
-                        if (iter->second.getLab() != lab) {//se è cambiata da aula a lab o viceversa
-                            iter->second.updateType(lab); //cambia il tipo: lab o aula
+                            if (iter->second.getLab() != lab) {//se è cambiata da aula a lab o viceversa
+                                iter->second.updateType(lab); //cambia il tipo: lab o aula
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_nameClassroom : {//analizzo il nome della classroom
-                        if (!(iter->second.getName() ==
-                              infoClassroom[i])) {//se il nome letto dal file è diverso dal nome nel database
-                            iter->second.updateName(infoClassroom[i]); //cambia il nome
+                        case update_nameClassroom : {//analizzo il nome della classroom
+                            if (!(iter->second.getName() ==
+                                  infoClassroom[i])) {//se il nome letto dal file è diverso dal nome nel database
+                                iter->second.updateName(infoClassroom[i]); //cambia il nome
+                            }
+                            break;
                         }
-                        break;
-                    }
-
-                    case update_nSeats : {//analizzo la capienza
-                        if (iter->second.getNSeats() !=
-                            stoi(infoClassroom[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
-                            iter->second.updateNSeats(stoi(infoClassroom[i])); //cambia la capienza dell'aula
+                        case update_nSeats : {//analizzo la capienza
+                            if (iter->second.getNSeats() !=
+                                stoi(infoClassroom[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
+                                iter->second.updateNSeats(stoi(infoClassroom[i])); //cambia la capienza dell'aula
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_nSeatsExam : {//analizzo la capienza dell'aula per gli esami
-                        if (iter->second.getNExamSeats() !=
-                            stoi(infoClassroom[i])) {//se la capienza dell'aula pe gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
-                            iter->second.updateNExamSeats(stoi(infoClassroom[i])); //cambia l'email
+                        case update_nSeatsExam : {
+                            if (iter->second.getNExamSeats() != stoi(infoClassroom[i])) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
+                                iter->second.updateNExamSeats(stoi(infoClassroom[i])); //cambia l'email
+                            }
+                            break;
+                        }
+                        case update_drawingTable:{
+                            if (iter->second.getDrawingTable() != stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateDrawingTable(stoi(infoClassroom[i])); //cambia il numero di tavoli da disegno
+                            }
+                            break;
+                        }
+                        case update_computer:{
+                            if (iter->second.getComputer() != stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateComputer(stoi(infoClassroom[i])); //cambia il numero di computer
+                            }
+                            break;
+                        }
+                        case update_projector:{
+                            if (iter->second.getProjector() != stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateProjector(stoi(infoClassroom[i])); //cambia il numero di proiettori
+                            }
+                            break;
+                        }
+                        case update_blackBoard:{
+                            if (iter->second.getBlackBoard() != stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateBlackBoard(stoi(infoClassroom[i])); //cambia il numero di lavagne
+                            }
+                            break;
                         }
                     }
                 }
-
             }
-        }
-        line_counter++;
+            line_counter++;
     }
     fileIn.close();
     dbClassRoomWrite();
@@ -1050,7 +1122,11 @@ void University::dbStudsWrite() {
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
         Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
-        fout << stud << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
+        if(_version == 2){
+            std::string otherInfo = stud.getOtherInfoString();
+            fout << stud <<";"<< otherInfo << std::endl;
+        } else
+            fout << stud << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
     }
     fout.close();
 
@@ -1064,8 +1140,11 @@ void University::dbProfsWrite() {
 
     for (auto iterProf = _professors.begin(); iterProf != _professors.end(); iterProf++) {
         Professor prof = _professors.at(iterProf->first);
-
-        fout << prof << std::endl;
+        if(_version == 2){
+            std::string otherInfo = prof.getOtherInfoString();
+            fout << prof << ";"<<otherInfo<< std::endl;
+        }else
+            fout << prof << std::endl;
     }
     fout.close();
 }
@@ -1078,7 +1157,11 @@ void University::dbClassRoomWrite() {
 
     for (auto iterClassRoom = _classroom.begin(); iterClassRoom != _classroom.end(); iterClassRoom++) {
         Classroom room = _classroom.at(iterClassRoom->first);
-        fout << room << std::endl;
+        if(_version == 3){
+            std::string otherInfo = room.getOthersInfo();
+            fout << room <<";"<<otherInfo<< std::endl;
+        }else
+            fout << room << std::endl;
     }
     fout.close();
 }
@@ -1456,12 +1539,12 @@ bool University::versioning(std::string v) {
     renameOldDataBase(version);
     if(version == 2) {
         //studenti e professori
-        dbNewStudentWrite();
-        dbNewProfessorWrite();
+        dbStudsWrite();
+        dbProfsWrite();
     }
     if(version == 3) {
         //aule
-        dbNewAuleWrite();
+        dbClassRoomWrite();
     }
     writeVersion(version);
     return false;
@@ -1496,45 +1579,6 @@ bool University::renameOldDataBase(int version) {
             throw InvalidDbException("file db_aule.txt non rinominato adeguatamente");
     }
     return false;
-}
-
-///scrittura nuovo database studenti
-void University::dbNewStudentWrite() {
-    std::fstream fout;
-    fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
-
-    for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
-        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
-        std::string otherInfo = stud.getOtherInfoString();
-        fout << stud <<";"<< otherInfo << std::endl;
-    }
-    fout.close();
-}
-
-///scrittura nuovo database professori
-void University::dbNewProfessorWrite() {
-    std::fstream fout;
-    fout.open("db_professori.txt", std::fstream::out | std::fstream::trunc);
-    for (auto iterProf = _professors.begin(); iterProf != _professors.end(); iterProf++) {
-        Professor prof = _professors.at(iterProf->first);
-        std::string otherInfo = prof.getOtherInfoString();
-
-        fout << prof << ";"<<otherInfo<< std::endl;
-    }
-    fout.close();
-}
-
-///scrittura nuovo database aule
-void University::dbNewAuleWrite() {
-    std::fstream fout;
-    fout.open("db_aule.txt", std::fstream::out | std::fstream::trunc);
-
-    for (auto iterClassRoom = _classroom.begin(); iterClassRoom != _classroom.end(); iterClassRoom++) {
-        Classroom room = _classroom.at(iterClassRoom->first);
-        std::string otherInfo = room.getOthersInfo();
-        fout << room <<";"<<otherInfo<< std::endl;
-    }
-    fout.close();
 }
 
 bool University::addStudyPlan(std::string fin) {

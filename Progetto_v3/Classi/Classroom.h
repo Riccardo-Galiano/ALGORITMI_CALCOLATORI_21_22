@@ -35,6 +35,14 @@ public:
     bool checkAvailability(Date&,int);
     void setDisavailability(Date&,int,int);
     std::string getOthersInfo();
+    int getDrawingTable();
+    int getComputer();
+    int getProjector();
+    int getBlackBoard();
+    void updateDrawingTable(int);
+    void updateComputer(int);
+    void updateProjector(int);
+    void updateBlackBoard(int);
 private:
 
     int _id; //codice identificativo

@@ -194,16 +194,6 @@ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/
 Exam.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
 
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.cpp
-sstream
--
-iomanip
--
-Student.h
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
-Parse.hpp
-C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
-
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h
 UniversityMember.h
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
@@ -291,6 +281,8 @@ C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h
 string
 -
+Date.h
+C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
 
 C:/Users/Andrea/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp
 iostream

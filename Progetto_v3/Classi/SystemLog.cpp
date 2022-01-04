@@ -100,6 +100,6 @@ void SystemLog::generateWarningGapProfs(std::map<std::string,int> gapProfs, int 
     }
     ss << "}";
     std::string toReturn = ss.str();
-    return toReturn;
+//    return toReturn;
 }
 

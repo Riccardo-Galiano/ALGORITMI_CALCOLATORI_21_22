@@ -142,7 +142,7 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_min_distance:{
-            uni.setMinDistance(argv[2],argv[3]);
+           // uni.setMinDistance(argv[2],argv[3]);
             break;
         }
         default:

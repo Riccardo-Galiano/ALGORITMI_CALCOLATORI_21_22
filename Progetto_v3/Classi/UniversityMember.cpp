@@ -11,7 +11,27 @@ UniversityMember::UniversityMember(const int &matricola, const std::string &name
     _surname = surname;
     _email = email;
     _id = matricola;
+    _othersInfoMember._birth = Date();
+    _othersInfoMember._registrationOrEntry = Date();
+    _othersInfoMember._address = "indefinito";
 }
+UniversityMember::UniversityMember(const int & matricola, const std::string & name, const std::string &surname, const std::string &email,
+                                   const std::string &birth, const std::string &registrationOrEntry, const std::string &address) {
+    _name = name;
+    _surname = surname;
+    _email = email;
+    _id = matricola;
+    _othersInfoMember._birth = birth;
+    _othersInfoMember._registrationOrEntry = registrationOrEntry;
+    _othersInfoMember._address = address;
+}
+
+std::string UniversityMember::getOtherInfoString() {
+    std::stringstream ss;
+    ss << _othersInfoMember._birth <<";"<< _othersInfoMember._registrationOrEntry << ";" <<_othersInfoMember._address;
+    return ss.str();
+}
+
 
 ///prende il nome, solo lettura
 const std::string &UniversityMember::getName() const {
@@ -57,3 +77,29 @@ const std::string UniversityMember::setId(int nMatr) const {
     output<<std::setfill('0')<<std::setw(6)<<nMatr;
     return output.str();
 }
+
+Date UniversityMember::getBirth() {
+    return _othersInfoMember._birth;
+}
+
+Date UniversityMember::getRegistrationOrEntry() {
+    return _othersInfoMember._registrationOrEntry;
+}
+
+std::string UniversityMember::getAddress() {
+    return _othersInfoMember._address;
+}
+
+void UniversityMember::updateBirth(const std::string & birth) {
+  _othersInfoMember._birth = birth;
+}
+
+void UniversityMember::updateRegistration(const std::string &registrationOrEntry) {
+_othersInfoMember._registrationOrEntry = registrationOrEntry;
+}
+
+void UniversityMember::updateAdress(const std::string & address) {
+_othersInfoMember._address = address;
+}
+
+

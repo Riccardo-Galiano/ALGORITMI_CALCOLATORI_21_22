@@ -121,6 +121,38 @@ std::string Classroom::getOthersInfo() {
     return ss.str();
 }
 
+int Classroom::getDrawingTable() {
+    return _othersInfoClassroom._drawingTable;
+}
+
+int Classroom::getComputer() {
+    return _othersInfoClassroom._computer;
+}
+
+int Classroom::getProjector() {
+    return _othersInfoClassroom._projector;
+}
+
+int Classroom::getBlackBoard() {
+    return _othersInfoClassroom._blackBoard;
+}
+
+void Classroom::updateComputer(int computer) {
+    _othersInfoClassroom._computer = computer;
+}
+
+void Classroom::updateDrawingTable(int drawingTable) {
+    _othersInfoClassroom._drawingTable = drawingTable;
+}
+
+void Classroom::updateProjector(int projector) {
+    _othersInfoClassroom._projector = projector;
+}
+
+void Classroom::updateBlackBoard(int blackBoard) {
+   _othersInfoClassroom._blackBoard = blackBoard;
+}
+
 
 std::ostream &operator<<(std::ostream &room, const Classroom &s) {
 

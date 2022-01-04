@@ -7,13 +7,20 @@
 
 
 #include <string>
+#include "Date.h"
 
 class UniversityMember {
+    typedef struct {
+        Date _birth;
+        Date _registrationOrEntry;
+        std::string _address;
+    } updateMember;
+
 public:
     UniversityMember();
 
     UniversityMember(const int &, const std::string &, const std::string &,const  std::string &);
-
+    UniversityMember(const int &, const std::string &, const std::string &,const  std::string &,const std::string &, const std::string &,const  std::string &);
     const std::string &getName() const;
     const std::string &getSurname() const;
     const int getId() const;
@@ -22,6 +29,13 @@ public:
     void updateName(const std::string &);
     void updateSurnName(const std::string &);
     void updateEmail(const std::string &);
+    void updateBirth(const std::string &);
+    void updateRegistration(const std::string &);
+    void updateAdress(const std::string &);
+    std::string getOtherInfoString();
+    Date getBirth();
+    Date getRegistrationOrEntry();
+    std::string getAddress();
 
     const std::string setId(int) const;
 
@@ -30,6 +44,7 @@ protected:
     std::string _surname;
     int _id;
     std::string _email;
+    updateMember _othersInfoMember;
 };
 
 
