@@ -13,7 +13,10 @@
 
 class ExamDay {
 public:
+    ///constructor
     explicit ExamDay(Date);
+
+    ///ExamDay management
     bool assignExamToProf(std::map<int,Professor>&, Course , int , int );
     bool assignExamToExamDay(int, Course&, int);
     int isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor>& allUniversityProfs,
@@ -26,11 +29,11 @@ public:
     bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour,int numSlotsRequired);
     bool checkProfsAvaibility(SpecificYearCourse& specificCourse, std::map<int, Professor>& allUniversityProfs, int relaxPar, int slotHour);
     void eraseTempGroupedCourseClassrooms();
-    bool checkAvailabilityOfClassroom(std::map<int, Classroom>& allUniversityClassrooms,std::vector<int>&idRoomsFounded,int numSlotsRequired);
     std::string classroomString(std::vector<int>);
-private:
     std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);
     bool firstSlotCourses(Course,std::vector<Course>&);
+
+private:
 
     //key: orario inizio slot. value:corsi associati (paralleli compresi)
     //slots dalle 8 alle 20; uno slot dura due ore --> 8, 10, 12, 14, 16, 18

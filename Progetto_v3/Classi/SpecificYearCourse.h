@@ -34,7 +34,21 @@ typedef struct {
 
 class SpecificYearCourse {
 public:
+    ///constructor
     SpecificYearCourse(std::string ,bool ,int , std::vector<std::string> , std::vector<std::string> ,std::vector<std::string> , std::string , std::vector<int>, int);
+
+    ///SpecificYearCourse management
+    bool addStudent(int acYearRegistration, Student &stud);
+    bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
+    int amIAssignedAlreadyInThisSession(int);
+    Date lastDateAssignationInGivenSession(int);
+    bool assignExamInThisSpecificYearCourse(Date,int);
+    bool assignYY_SemToAllYear(std::string&,std::string&);
+    bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
+    bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
+    bool assignAppeals(std::string);
+
+    ///getter
     int getStartYear() const;
     int getEndYear() const;
     bool getisActive() const;
@@ -50,30 +64,27 @@ public:
     int getSemester() const;
     int getYearOfTheSemester() const;
     std::vector<int> getStudyCourseAssigned() const;
-    bool setYear();
-    std::string setId(int)const;
-    bool setProfMap(int, std::vector<std::string>, int);
-    bool addStudent(int acYearRegistration, Student &stud);
-    bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
-    bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
-    int amIAssignedAlreadyInThisSession(int);
-    Date lastDateAssignationInGivenSession(int);
-    bool assignExamInThisSpecificYearCourse(Date,int);
-    bool assignYY_SemToAllYear(std::string&,std::string&);
     int getTotStudentsEnrolled() const;
     std::string &getAcYearOff();
     int getTotStudentsExam();
-    bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
+    std::vector<Date> getAllAppeals() const;
+    std::vector<int> getRoomsAppeal();
     int getNumNextAppeal();
     const std::map<int, std::vector<Date>> &getHowManyTimesIAmAssignedInASession() const;
-    const std::map<int, student> &getStudentsEnrolled() const;
-    std::vector<Date> getAllAppeals() const;
-    bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
-    std::string getAppealsForAllSession();
-    bool assignAppeals(std::string);
-    std::vector<int> getRoomsAppeal();
-    bool notExamsAssigned();
     std::map<int, student> getStudentsPassedInThisAppeal(Date dateAppeal);
+    std::string getAppealsForAllSession();
+
+    ///setter
+    bool setYear();
+    std::string setId(int)const;
+    bool setProfMap(int, std::vector<std::string>, int);
+
+    ///control
+    bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
+    bool notExamsAssigned();
+
+
+
 
 private:
 

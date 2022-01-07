@@ -349,7 +349,7 @@ bool University::addStuds(const std::string &fileIn) {
         //controllo che formato file sia corretto: 3 campi
         if(_version == 2){
             if (tokens.size() != 6) {
-                throw DbException("errore formato file studenti alla riga: ", line_counter);
+                throw std::invalid_argument("errore formato file studenti alla riga: " + std::to_string(line_counter));
             }
             int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
             _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
@@ -357,7 +357,7 @@ bool University::addStuds(const std::string &fileIn) {
             line_counter++;
         }else {
             if (tokens.size() != 3) {
-                throw DbException("errore formato file studenti alla riga: ", line_counter);
+                throw std::invalid_argument("errore formato file studenti alla riga: " +  std::to_string(line_counter));
             }
             int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
             _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
@@ -388,7 +388,7 @@ bool University::addProfessors(const std::string &fileIn) {
         if(_version == 2) {
             //controllo che formato file sia corretto: 3 campi
             if (tokens.size() != 6) {
-                throw DbException("errore formato file professori alla riga: ", line_counter);
+                throw std::invalid_argument("errore formato file professori alla riga: " + std::to_string(line_counter));
             }
             int matr = getNewProfessorId();
             _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2],tokens[3],tokens[4],tokens[5])));
@@ -396,7 +396,7 @@ bool University::addProfessors(const std::string &fileIn) {
         }else{
             //controllo che formato file sia corretto: 3 campi
             if (tokens.size() != 3) {
-                throw DbException("errore formato file professori alla riga: ", line_counter);
+                throw std::invalid_argument("errore formato file professori alla riga: " + std::to_string(line_counter));
             }
             int matr = getNewProfessorId();
             _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
@@ -425,7 +425,7 @@ bool University::addClassrooms(const std::string &fileIn) {
         if(_version == 3) {
             //controllo che formato file sia corretto: 7 campi
             if (tokens.size() != 7) {
-                throw DbException("errore formato file aule alla riga: ", line_counter);
+                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
             }
             _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
                                                                       std::stoi(tokens[3]),std::stoi(tokens[4]),std::stoi(tokens[5]),std::stoi(tokens[6]),std::stoi(tokens[7]))));
@@ -433,7 +433,7 @@ bool University::addClassrooms(const std::string &fileIn) {
         }else{
             //controllo che formato file sia corretto: 4 campi
             if (tokens.size() != 4) {
-                throw DbException("errore formato file aule alla riga: ", line_counter);
+                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
             }
             _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
                                                                       std::stoi(tokens[3]))));
@@ -462,7 +462,7 @@ bool University::addStudyCourses(const std::string &fin) {
         ///codice, livello
         tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
         if (tokens.size() != 2) {
-            throw DbException("errore formato file corsi di studio alla riga: ", line_counter);
+            throw std::invalid_argument("errore formato file corsi di studio alla riga: " + std::to_string(line_counter));
         }
         int codCorso = getNewStudyCourseId();
         std::string levelCourse = tokens[0];//triennale o magistrale
@@ -489,9 +489,7 @@ bool University::addStudyCourses(const std::string &fin) {
         ///controllo che formato file sia corretto:
         ///se L3 -> 6 semestri, se LM -> 4 semestri
         if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
-            throw DbException(
-                    "formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:",
-                    line_counter);
+            throw std::invalid_argument("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:" + std::to_string(line_counter));
         }
 
         ///creo StudyCourse
@@ -542,12 +540,12 @@ bool University::addCourses(const std::string &fin) {
         specificYearCourse = Parse::splittedLine(line, ';');
         //controllo che il formato file sia corretto: 10 campi
         if (specificYearCourse.size() != 10) {
-            throw DbException("formato file corsi non valido alla riga: ", line_counter);
+            throw std::invalid_argument("formato file corsi non valido alla riga: "+ std::to_string(line_counter));
         }
         //controllo che tuttii campi siano specificati
         for (int i = 0; i < specificYearCourse.size(); i++) {
             if (specificYearCourse[i].empty()) {
-                throw DbException("uno o più campi sono vuoti alla riga: ", line_counter);
+                throw std::invalid_argument("uno o più campi sono vuoti alla riga: "+ std::to_string(line_counter));
             }
         }
         //controllo che l'esame non sia già presente in base dati
@@ -555,7 +553,7 @@ bool University::addCourses(const std::string &fin) {
         for (auto iterCours = _courses.begin(); iterCours != _courses.end(); iterCours++) {
             if (iterCours->second.getName() == specificYearCourse[1] &&
                 iterCours->second.getCfu() == stoi(specificYearCourse[2])) {
-                throw DbException("c'è un corso già presente in base dati alla riga: ", line_counter);
+                throw std::logic_error("c'è un corso già presente in base dati alla riga: "+ std::to_string(line_counter));
             }
         }
         std::string newIdCourse = getNewCourseId();
@@ -567,7 +565,7 @@ bool University::addCourses(const std::string &fin) {
 
         acYear = specificYearCourse[0]; //anno accademico
         if(_acYearSessions.count(Parse::getAcStartYear(acYear))!=0)
-            throw std::invalid_argument("Non puoi aggiungere un corso in un anno in cui gli esami sono già stati generati");
+            throw std::logic_error("Non puoi aggiungere un corso in un anno in cui gli esami sono già stati generati");
         int startAcYear = Parse::getAcStartYear(specificYearCourse[0]);
 
         num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
@@ -599,8 +597,7 @@ bool University::addCourses(const std::string &fin) {
             }
         }
         if (yy_semester.empty())
-            throw InvalidDbException(
-                    "un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:",
+            throw InvalidDbException("un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:" +
                     newIdCourse);
         _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
                                                         splittedExamData, idGrouped, yy_semester, studyCourse,
@@ -715,7 +712,6 @@ bool University::updateStuds(const std::string &fin) {
     int nMatr = 0;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-
         throw std::invalid_argument("errore apertura file per aggiornamento studenti");
     }
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
@@ -725,22 +721,22 @@ bool University::updateStuds(const std::string &fin) {
 
         infoStud = Parse::splittedLine(line, ';');
         if (infoStud[0].empty()) {
-            throw DbException("manca la matricola dello studente alla riga: ", line_counter);
+            throw InvalidDbException("manca la matricola dello studente alla riga: " + std::to_string(line_counter));
         }
         std::stringstream ss(infoStud[0]);
         ss >> c >> nMatr;
 
         ///se la matricola non esiste nel database
         if (_students.find(nMatr) == _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            throw std::invalid_argument("matricola non presente");
+            throw InvalidDbException("Il professore " + infoStud[0] + "non e' presente nel database");
         auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
         if(_version == 2) {
-            if (infoStud.size() != 7)
-                throw DbException("errore formato file aule alla riga: ", line_counter);
+            if (std::count(line.begin(),line.end(),';') != 6)
+                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
         }
-        else if (infoStud.size() != 4)
-                throw DbException("errore formato file aule alla riga: ", line_counter);
+        else if (std::count(line.begin(),line.end(),';') != 3)
+                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
 
             for (i = 0; i < infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
                 if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
@@ -812,22 +808,22 @@ bool University::updateProfessors(const std::string &fin) {
 
         infoProf = Parse::splittedLine(line, ';'); //splitto il rigo nei vari campi di interesse
         if (infoProf[0].empty()) {
-            throw DbException("manca la matricola del professore alla riga: ", line_counter);
+            throw std::invalid_argument("manca la matricola del professore alla riga: " + std::to_string(line_counter));
         }
         std::stringstream ss(infoProf[0]);
         ss >> c >> nMatr;
 
         if (_professors.find(nMatr) == _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            throw std::invalid_argument("matricola non presente");
+            throw InvalidDbException("Il professore " + infoProf[0] + "non e' presente nel database");
 
         auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
 
         if(_version == 2) {
-            if (infoProf.size() != 7)
-                throw DbException("errore formato file aule alla riga: ", line_counter);
-        }else if(infoProf.size() != 4)
-                throw DbException("errore formato file aule alla riga: ", line_counter);
+            if (std::count(line.begin(),line.end(),';') != 6)
+                throw std::invalid_argument("errore formato file aule alla riga: "+ std::to_string(line_counter));
+        }else if(std::count(line.begin(),line.end(),';') != 3)
+                throw std::invalid_argument("errore formato file aule alla riga: "+ std::to_string(line_counter));
 
             for (i = 0; i < infoProf.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
 
@@ -911,20 +907,20 @@ bool University::updateClassroom(const std::string &fin) {
 
         infoClassroom = Parse::splittedLine(line, ';');
         if (infoClassroom[0].empty()) {
-            throw DbException("manca il codice dell' aula alla riga: ", line_counter);
+            throw std::invalid_argument("manca il codice dell' aula alla riga: "+ std::to_string(line_counter));
         }
         std::stringstream ss(infoClassroom[0]);
         ss >> c >> nMatr;
 
         if (_classroom.find(nMatr) == _classroom.end())//se non trovo il codice
-            throw std::invalid_argument("matricola non presente");
+            throw std::invalid_argument("L'aula" + infoClassroom[0] + "non e' presente nel database");
 
         auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
         if (_version == 3) {
-            if (infoClassroom.size() != 8)
-                throw DbException("errore formato file aule alla riga: ", line_counter);
-        } else if(infoClassroom.size() != 5) {
-                throw DbException("errore formato file aule alla riga: ", line_counter);
+            if (std::count(line.begin(),line.end(),';') != 7)
+                throw std::invalid_argument("errore formato file aule alla riga: "+ std::to_string(line_counter));
+        } else if(std::count(line.begin(),line.end(),';') != 4) {
+                throw std::invalid_argument("errore formato file aule alla riga: "+ std::to_string(line_counter));
         }
             for (i = 1; i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
                 if (!(infoClassroom[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
@@ -993,7 +989,6 @@ bool University::updateClassroom(const std::string &fin) {
     fileIn.close();
     dbClassRoomWrite();
     std::cout << "comando -u:a correttamente eseguito" << std::endl;
-
     return true;
 }
 
@@ -1027,22 +1022,17 @@ bool University::insertCourses(const std::string &fin) {
         } else {
             //non esistono informazioni riguardo anni precedenti
             if (specificYearCourse.size() != 7) {
-                throw DbException(
-                        "non esistono informazioni riguardo anni precedenti da poter ereditare; manca info sui corsi raggruppati alla riga: ",
-                        line_counter);
+                throw DbException("non esistono informazioni riguardo anni precedenti da poter ereditare; manca info sui corsi raggruppati alla riga: "+ std::to_string(line_counter));
             } else {
                 for (int i = 0; i < 7; i++) {
                     if (specificYearCourse[i].empty()) {
-                        throw DbException(
-                                "non esistono informazioni riguardo anni precedenti da poter ereditare; specificare tutti i campi alla riga: ",
-                                line_counter);
+                        throw DbException("non esistono informazioni riguardo anni precedenti da poter ereditare; specificare tutti i campi alla riga: " + std::to_string(line_counter));
                     }
                 }
             }
         }
 
         acYear = specificYearCourse[1]; //anno accademico
-        int acStartYear = stoi(specificYearCourse[1].substr(2, 1));
 
         ///come per la readCourse, aggiorno la mappa _courses
         num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
@@ -1396,11 +1386,12 @@ bool University::controlGroupedCourses(int idStudyCourse, std::vector<std::strin
 
     for (int j = 0; j < idGrouped.size(); j++) {
         auto found = std::find(allCoursesOfCdS.begin(), allCoursesOfCdS.end(), idGrouped[j]);
-        if (found != allCoursesOfCdS.end())
-            throw InvalidDbException("stesso corso di studio tra: ", nameCourse, "(corrispondente al corso:",
-                                     idCourse, ") e ", idGrouped[j], " alla riga: ", line_counter,
-                                     ". Corso di studio non coerente: ", idStudyCourse);
-
+        if (found != allCoursesOfCdS.end()) {
+            std::string settedId = Parse::setId('C',3,idStudyCourse);
+            throw std::logic_error("stesso corso di studio tra: " + nameCourse + "(corrispondente al corso:" +
+                                   idCourse + ") e " + idGrouped[j] + " alla riga: " + std::to_string(line_counter) +
+                                   ". Corso di studio non coerente: " + settedId);
+        }
     }
     return true;
 }
@@ -1428,37 +1419,37 @@ void University::thereIsAHoleInTheCoursesCodes() {
 void University::checkDistance(std::string &minor, std::string &major) {
     int size_min = minor.size();
     int size_maj = major.size();
+    std::string error("File non corretto: le stringhe dei corsi non sono consecutive -> ("+ major +")");
     if (size_maj != size_min)
         throw std::invalid_argument("errore codice corso!");
-    for (int i = size_maj; i >= 0; i--) {
-        char lettMaj = major[size_maj - 1]; //caso1: 01AAAAA, caso2: 01AAAAZ
-        char lettMin = minor[size_min - 1]; //caso1: 01AAAAB, caso2: 01AAABA
-        char penultimaLettMaj = major[size_maj - 2];
-        char penultimaLettMin = minor[size_min - 2];
-        bool other_equal = true;
-        for (int j = 0; j < size_maj - 2; j++) {
-            char lettMaj = major[j];
-            char lettMin = minor[j];
-            if (lettMaj != lettMin)
-                other_equal = false;
-        }
-        int distance = lettMaj - lettMin;
-        if (distance == 1 && other_equal && penultimaLettMaj == penultimaLettMin) {
-            ///OK
-            return;
-        } else if (lettMaj == 'A' && lettMin == 'Z' && penultimaLettMaj != penultimaLettMin && other_equal) {
-            ///penul diverse, devo controllare che penultima_maj > pen_min
-            distance = penultimaLettMaj - penultimaLettMin;
-            if (distance == 1)
-                ///OK
-                return;
+    bool notEqual = false;
+    int posNotEqual = 0;
+    ///prendo la posizione in cui i codici iniziano a cambiare
+    for (int j = 0; j < size_maj && !notEqual; j++) {
+        if (major[j] != minor[j]) {
+            notEqual = true;
+            posNotEqual = j;
         }
     }
-    ///se esco devo lanciare eccezione
-    std::string error("File non corretto: le stringhe dei corsi non sono consecutive -> (");
-    error = error + major;
-    error = error + ")";
-    throw std::invalid_argument(error.c_str());
+    //prendo le prime lettere diverse per la major e minor
+    char lettMaj = major[posNotEqual];
+    char lettMin = minor[posNotEqual];
+    int distance = lettMaj - lettMin;
+    //due possibili scenari:
+    // 1) il primo carattere(numero) è uguale per entrambi i codici. Esempio: minor = "01ZZZZZ". major = "02AAAAA" o minor = "01AAABA". major = "01AAABB"
+    // In questo caso se la distanza è 1 devo controllare che i successivi caratteri siano tutte A per major e Z per minor
+    //2)il primo carattere(numero) è diverso per i due codici. Esempio: minor = "19ZZZZZ". major = "20AAAAA"
+    //In questo caso se la distanza è 1 devo controllare che i successivi caratteri siano: 0 per major e 9 per minor, tutte A per major e Z per minor
+    if (distance == 1) {
+        for (int i = posNotEqual + 1; i < size_maj; i++) {
+            if ((major[i] != 'A' || minor[i] != 'Z') && (major[i] != '0' || minor[i] != '9'))
+                throw std::invalid_argument(error.c_str());//non consecutivi
+        }
+    }else{
+        //se la distanza non è 1
+        throw std::invalid_argument(error.c_str());//non consecutivi
+    }
+    ///se esco il check è andato bene, sono consecutivi
 }
 
 
@@ -1489,14 +1480,14 @@ void University::controlReciprocyGrouped() {
                 for (int k = 0; k < groupedOfThisYear.size(); k++) {
                     auto pos = std::find(groupedOfThisYear2.begin(), groupedOfThisYear2.end(), groupedOfThisYear[k]);
                     if (pos == groupedOfThisYear2.end())
-                        throw InvalidDbException(
-                                "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: ",
-                                name, ". Il codice assente e':", groupedOfThisYear[k]);
+                        throw std::logic_error(
+                                "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: " +
+                                name + ". Il codice assente e':" + groupedOfThisYear[k]);
                     groupedOfThisYear2.erase(pos);
                 }
                 if (groupedOfThisYear2.empty() == false) {
-                    throw InvalidDbException(
-                            "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in piu': ",
+                    throw std::logic_error(
+                            "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in piu': " +
                             name);
                 }
             }
@@ -1758,6 +1749,7 @@ void University::readAllExamAppeals() {
         std::string appealsSession = appeals[2];
         _courses.at(idCorso).assignAppealsToSpecificyear(acYear,appealsSession);
         }
+    fileIn.close();
 }
 
 void University::writeVersion(int version) {

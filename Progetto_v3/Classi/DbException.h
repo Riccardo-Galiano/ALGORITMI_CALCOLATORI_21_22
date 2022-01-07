@@ -13,11 +13,6 @@
 class DbException : public std::exception{
 public:
     explicit DbException(std::string);
-    explicit DbException(std::string,int);
-    explicit DbException(std::string,int,std::string,std::string);
-    explicit DbException(std::string,std::string ,std::string,std::string,std::string,int);
-
-
     const char * what() const noexcept override;
 private:
     std::string _message;

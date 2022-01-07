@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include "Date.h"
 
 class Parse {
@@ -88,6 +89,11 @@ public:
         std::stringstream ss(input);
         ss >> c >> nMatr;
         return nMatr;
+    }
+    static std::string setId(char letterId, int numTot, int cod){
+        std::stringstream ss;
+        ss << letterId << std::setfill('0') <<std::setw(numTot)<<cod;
+        return ss.str();
     }
 };
 

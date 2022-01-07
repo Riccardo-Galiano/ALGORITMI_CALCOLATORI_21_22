@@ -11,11 +11,18 @@
 
 class Student : public UniversityMember {
 public:
+    ///constructor
+    Student()= default;
     explicit Student(int, std::string, std::string, std::string); ///matricola, nome, cognome, email
     explicit  Student(int, std::string, std::string, std::string,std::string,std::string,std::string);
-    Student()= default;
+
+    ///Student management
     bool addStudyPlanPerStudent(std::string,std::vector<std::string>);
+
+    ///getter
     std::string getPlanStudyCourseString();
+
+    ///control
     bool clearStudyPlan();
     bool studyPlanIsEmpty();
 

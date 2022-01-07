@@ -46,7 +46,8 @@ std::vector<std::string> Professor::outputNoAvailabilities(int nMatr) {
         for(auto iterNoAvailab = _noAvailab.begin(); iterNoAvailab != _noAvailab.end();iterNoAvailab++) {
             int i = 0;
             std::stringstream output;
-            output << iterNoAvailab->first << "-" << iterNoAvailab->first + 1 << ";" << "d" << setId(nMatr) << ";";//aaaa-aaaa ; dxxxxxx ;
+            std::string settedId = Parse::setId('d',6,nMatr);
+            output << iterNoAvailab->first << "-" << iterNoAvailab->first + 1 << ";" <<settedId << ";";//aaaa-aaaa ; dxxxxxx ;
                 for (auto iterDate = iterNoAvailab->second.begin(); iterDate != iterNoAvailab->second.end(); iterDate++) {//per tutti i periodi di indisponibilità
                     output << iterDate->first << "|" << iterDate->second; //aaaa-mm-gg|aaaa-mm-gg
                     if (i < iterNoAvailab->second.size() - 1)//se è l'ultimo periodo non va messo il punto e virgola
@@ -118,8 +119,7 @@ bool Professor::amIavailable(std::string date, int hh) {
 
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &prof, const Professor &s) {
-
-    int Id = s.getId();
-    prof << "d" << s.setId(Id) << ";" << s.getName() << ";" << s.getSurname() << ";" << s.getEmail();
+    std::string settedId = Parse::setId('d',6,s.getId());
+    prof << "d" << settedId << ";" << s.getName() << ";" << s.getSurname() << ";" << s.getEmail();
     return prof;
 }

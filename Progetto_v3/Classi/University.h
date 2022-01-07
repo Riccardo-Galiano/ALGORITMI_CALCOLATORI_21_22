@@ -23,6 +23,7 @@ public:
     std::vector<std::string> allProfsNoAvailabilities();
     bool setExamDate(std::string,std::string);
     bool setMinDistance(std::string&,std::string&);
+
     ///DB management
     bool versioning(std::string);
     bool renameOldDataBase(int);
@@ -30,13 +31,20 @@ public:
     bool dataBaseIsEmpty(int);
     bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
     void controlReciprocyGrouped();
+    bool insertCourses(const std::string &fin);
+    bool insertStudentsGrades(std::string fin);
+    bool addStudyPlan(std::string fin);
+    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
+    void thereIsAHoleInTheCoursesCodes();
+    void checkDistance(std::string&, std::string&);
+
 
     ///Input (from DB)
     void readCourseNotActive();
     void readStudyPlan();
-    void readStudents(); ///CHANGE
-    void readProfessor(); ///CHANGE
-    void readClassroom(); ///CHANGE
+    void readStudents();
+    void readProfessor();
+    void readClassroom();
     void readStudyCourse();
     void readCourse();
     void readSessionAcYear();
@@ -46,10 +54,10 @@ public:
     void readVersion();
 
     ///Output(to DB)
-    void dbStudsWrite(); ///CHANGE
+    void dbStudsWrite();
     void dbCourseNotActive();
-    void dbProfsWrite(); ///CHANGE
-    void dbClassRoomWrite(); ///CHANGE
+    void dbProfsWrite();
+    void dbClassRoomWrite();
     void dbStudyCourseWrite();
     void dbCourseWrite();
     void dbStudyPlanWrite();
@@ -67,27 +75,20 @@ public:
     const std::string getNewCourseId()const;
 
     ///add
-    bool addStuds(const std::string &fileIn);  ///CHANGE
-    bool addProfessors(const std::string &fileIn); ///CHANGE
-    bool addClassrooms(const std::string &fileIn); ///CHANGE
+    bool addStuds(const std::string &fileIn);
+    bool addProfessors(const std::string &fileIn);
+    bool addClassrooms(const std::string &fileIn);
     bool addStudyCourses(const std::string &fileIn);
     bool addCourses(const std::string &fileIn);
 
     ///update
-    bool updateStuds(const std::string &fin); ///CHANGE
-    bool updateProfessors(const std::string &fin); ///CHANGE
-    bool updateClassroom(const std::string &fin); ///CHANGE
-
-
-    bool insertCourses(const std::string &fin);
-    bool insertStudentsGrades(std::string fin);
-    bool addStudyPlan(std::string fin);
+    bool updateStuds(const std::string &fin);
+    bool updateProfessors(const std::string &fin);
+    bool updateClassroom(const std::string &fin);
     void updateStudyPlan(std::string fin);
-    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
 
 private:
-    void thereIsAHoleInTheCoursesCodes();
-    void checkDistance(std::string&, std::string&);
+
     friend SpecificYearCourse;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;

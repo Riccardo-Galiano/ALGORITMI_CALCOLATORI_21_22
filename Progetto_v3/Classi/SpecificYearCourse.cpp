@@ -113,7 +113,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         std::stringstream ss(singoliProfDaLeggere[i]);
         ss >> c >> id >> c >> hlez >> c >> hexe >> c >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
         if(id == -1 || hlez == -1 || hexe == -1 || hlab == -1)
-            throw InvalidDbException("ore professore non valide alla riga:",line_counter);
+            throw std::invalid_argument("ore professore non valide alla riga:" + std::to_string(line_counter));
         professor p{};//struct
         p.prof_id = id;
         p.hLez = hlez;
@@ -126,9 +126,8 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
     if(mainProfFound==false){
-        throw InvalidDbException("manca il professore titolare alla riga: ", line_counter);
+        throw std::invalid_argument("manca il professore titolare alla riga: "+ std::to_string(line_counter));
     }
-
     return profToReturn;
 }
 
@@ -334,9 +333,6 @@ const std::map<int, std::vector<Date>> &SpecificYearCourse::getHowManyTimesIAmAs
     return _howManyTimesIAmAssignedInASession;
 }
 
-const std::map<int, student> &SpecificYearCourse::getStudentsEnrolled() const {
-    return _studentsEnrolled;
-}
 
 std::vector<Date> SpecificYearCourse::getAllAppeals() const {
     std::vector<Date> allAppeals;

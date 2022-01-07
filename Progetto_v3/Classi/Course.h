@@ -63,7 +63,7 @@ private:
     hours _hours;///ore impiegate nel corso; suddivise in ore di lezione,laboratori ed esame(struct hours)
     std::map<int, SpecificYearCourse> _courseOfTheYear;//key: accademic yy
 };
-std::ostream &operator<<(std::ostream &course, Course&s);
+std::ostream &operator<<(std::ostream &course, Course&c);
 
 
 #endif //PROGETTO_V3_COURSE_H

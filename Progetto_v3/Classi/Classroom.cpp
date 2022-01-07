@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include "Classroom.h"
+#include "Parse.hpp"
 
 
 Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int examSeats) {
@@ -90,13 +91,6 @@ void Classroom::updateNExamSeats(const int &NExamSeats) {
     _nExamSeats = NExamSeats;
 }
 
-///setto il codice con n 0 davanti
-std::string Classroom::setCod(int nCod) const {
-    std::stringstream output;
-    output << std::setfill('0') << std::setw(3) << nCod;
-    return output.str();
-}
-
 bool Classroom::checkAvailability(Date& date,int slotHour) {
     std::stringstream ss;
     ss << date.toString() << ';' << slotHour;
@@ -117,7 +111,7 @@ void Classroom::setDisavailability(Date& date, int slotHour, int numSlot) {
 
 std::string Classroom::getOthersInfo() {
     std::stringstream ss;
-    ss<<_othersInfoClassroom._blackBoard <<";"<<_othersInfoClassroom._drawingTable <<";"<<_othersInfoClassroom._computer<<";"<<_othersInfoClassroom._projector;
+    ss<<_othersInfoClassroom._drawingTable <<";"<<_othersInfoClassroom._computer <<";"<<_othersInfoClassroom._projector<<";"<<_othersInfoClassroom._blackBoard;
     return ss.str();
 }
 
@@ -154,16 +148,14 @@ void Classroom::updateBlackBoard(int blackBoard) {
 }
 
 
-std::ostream &operator<<(std::ostream &room, const Classroom &s) {
-
-    int nCod = s.getId();
-
-    room << "A" << s.setCod(nCod) << ";";
-    if (s.getLab())
+std::ostream &operator<<(std::ostream &room, const Classroom &c) {
+    std::string settedId = Parse::setId('A', 3, c.getId());
+    room << settedId << ";";
+    if (c.getLab())
         room << "L;";
     else
         room << "A;";
 
-    room << s.getName() << ";" << s.getNSeats() << ";" << s.getNExamSeats();
+    room << c.getName() << ";" << c.getNSeats() << ";" << c.getNExamSeats();
     return room;
 }

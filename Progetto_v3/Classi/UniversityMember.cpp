@@ -72,11 +72,6 @@ void UniversityMember::updateEmail(const std::string & eMail) {
 
 UniversityMember::UniversityMember() {}
 
-const std::string UniversityMember::setId(int nMatr) const {
-    std::stringstream output;
-    output<<std::setfill('0')<<std::setw(6)<<nMatr;
-    return output.str();
-}
 
 Date UniversityMember::getBirth() {
     return _othersInfoMember._birth;

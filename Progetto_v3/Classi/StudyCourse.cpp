@@ -31,7 +31,7 @@ bool StudyCourse::addSemesterCourses(const int year, const int semester, const s
             int num_occ = std::count(allCoursesSoFar.begin(), allCoursesSoFar.end(), *iterCourses);
             if (num_occ != 0) {
                 ///il corso esiste già
-                throw InvalidDbException("Avere due corsi uguali all'interno dello stesso corso di studi non e' consentito! ",*iterCourses,posFile);
+                throw std::logic_error("Avere due corsi uguali all'interno dello stesso corso di studi non e' consentito! " + *iterCourses + std::to_string(posFile));
             }
         }
         ///se abbiamo un corso in comune con più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
@@ -149,13 +149,6 @@ std::string StudyCourse::getOffCoursesString() const {
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
-///setta il codice del cosro si studi aggiungendo 0 dove necessario
-std::string StudyCourse::setCod(int nCod) const {
-    std::stringstream output;
-    output<<std::setfill('0')<<std::setw(3)<<nCod;
-    return output.str();
-}
-
 ///controlla se un corso presente in altri corsi di studio è posto sempre allo stesso semestre
 bool StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> & studyCourse,int semester) {
     int sem = 0;
@@ -164,7 +157,7 @@ bool StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCo
        if(result != "") {
            sem = stoi(result.substr(2, 1));
            if(semester != sem)
-           throw InvalidDbException("I corsi in parallelo devono appartenere allo stesso semestre.",idCourse);
+           throw std::logic_error("I corsi in parallelo devono appartenere allo stesso semestre." + idCourse);
        }
     }
     return true;
@@ -189,8 +182,8 @@ bool StudyCourse::assignStudyCourse(std::string course) {
 
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
-    int nCod = s.getId();
-    studC << "C"<<s.setCod(nCod)<<";";
+    std::string settedId = Parse::setId('C',3,s.getId());
+    studC << "C"<<settedId<<";";
     if(s.getIsBachelor())
         studC << "BS;";
     else

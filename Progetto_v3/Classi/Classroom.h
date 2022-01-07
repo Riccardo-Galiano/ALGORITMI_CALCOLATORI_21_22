@@ -29,9 +29,6 @@ public:
     void updateType(const bool&);
     void updateNSeats(const int&);
     void updateNExamSeats(const int&);
-
-    std::string setCod(int) const ;
-
     bool checkAvailability(Date&,int);
     void setDisavailability(Date&,int,int);
     std::string getOthersInfo();
@@ -56,6 +53,6 @@ private:
     updateClassroom _othersInfoClassroom;
 
 };
-std::ostream &operator<<(std::ostream &room, const Classroom &s);
+std::ostream &operator<<(std::ostream &room, const Classroom &c);
 
 #endif //PROGETTO_V3_CLASSROOM_H
