@@ -64,7 +64,7 @@ int returnCode(char *argv[]) {
         return update_study_plan_student;
     else if (paramInput.compare("-i:v")==0)
         return insert_students_grades;
-    else if (paramInput.compare("-s set_min_distance")==0)
+    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("set_min_distance")==0)
         return set_min_distance;
     return -1;
 }
@@ -142,7 +142,7 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case set_min_distance:{
-           // uni.setMinDistance(argv[2],argv[3]);
+            uni.setMinDistance(argv[3],argv[4]);
             break;
         }
         default:

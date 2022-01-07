@@ -83,9 +83,6 @@ public:
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
     bool notExamsAssigned();
 
-
-
-
 private:
 
     std::string _yy_semester; //unico per tutti i corsi!!!

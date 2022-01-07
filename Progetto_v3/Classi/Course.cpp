@@ -245,7 +245,7 @@ hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCou
 bool Course::controlExistenceSpecificYear(std::string codCourse, int year) {
     if(_courseOfTheYear.count(year)==0){
         ///non ci sono corsi per quell'anno
-        throw DbException ("il seguente corso non presenta informazioni relative alla'anno accademico richiesto:" + codCourse);
+        throw DbException ("il seguente corso non presenta informazioni relative all'anno accademico richiesto:" + codCourse);
     }
     return true;
 }
@@ -402,6 +402,11 @@ bool Course::controlAppeal(std::string appealDate) {
     if(std::find(allAppealsPerYear.begin(),allAppealsPerYear.end(),appeal)==allAppealsPerYear.end())
         throw  std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso "+ getId());
     return true;
+}
+
+bool Course::profHaveThisCourse(int matr, int acStartYear) {
+    std::vector<int> profOfCourse = _courseOfTheYear.at(acStartYear).getAllProfMatr();
+    return std::find(profOfCourse.begin(), profOfCourse.end(), matr) != profOfCourse.end();
 }
 
 

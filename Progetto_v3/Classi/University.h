@@ -22,7 +22,8 @@ public:
     bool setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
     std::vector<std::string> allProfsNoAvailabilities();
     bool setExamDate(std::string,std::string);
-    bool setMinDistance(std::string&,std::string&);
+    bool setMinDistance(std::string ,std::string );
+    void minDistanceRequestWrite();
 
     ///DB management
     bool versioning(std::string);
@@ -52,6 +53,7 @@ public:
     void readPassedAppeals();
     void readAllExamAppeals();
     void readVersion();
+    void readAllMinDistanceRequest();
 
     ///Output(to DB)
     void dbStudsWrite();

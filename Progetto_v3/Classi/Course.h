@@ -54,6 +54,7 @@ public:
     std::vector<std::string>getAcYearAppeals();
     bool assignAppealsToSpecificyear(std::string,std::string);
     bool controlAppeal(std::string);
+    bool profHaveThisCourse(int, int);
 
 
 private:

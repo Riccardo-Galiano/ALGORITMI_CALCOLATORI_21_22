@@ -17,8 +17,6 @@
 int versioning = 0;
 
 University::University() {
-    //if(!fs::exists(fs::file_status(std::string("../Database"))))
-    //fs::create_directory("../Database");
     try {
         readVersion();
     }
@@ -39,12 +37,14 @@ University::University() {
     }
     try {
         readClassroom();
-    } catch (DbException &exc) {
+    }
+    catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
     try {
         readStudyCourse();
-    } catch (DbException &exc) {
+    }
+    catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
     }
     try {
@@ -70,18 +70,27 @@ University::University() {
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
-    }try {
+    }
+    try {
         readStudyPlan();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
-    }try {
+    }
+    try {
         readPassedAppeals();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
-    }try {
+    }
+    try {
         readAllExamAppeals();
+    }
+    catch (DbException &exc) {
+        std::cerr << exc.what() << std::endl;
+    }
+    try {
+        readAllMinDistanceRequest();
     }
     catch (DbException &exc) {
         std::cerr << exc.what() << std::endl;
@@ -1234,8 +1243,8 @@ void University::readProfsNoAvailability() {
 ///setta il periodo delle sessioni
 bool University::setSessionPeriod(std::string &acYear, std::string &winterSession,
                                   std::string &summerSession, std::string &autumnSession) {
-    std::string prova = acYear;
-    int acStartYear = Parse::getAcStartYear(prova);
+    std::string ac = acYear;
+    int acStartYear = Parse::getAcStartYear(ac);
     if (_acYearSessions.count(acStartYear) != 0) {
         _acYearSessions.erase(acStartYear);
     }
@@ -1667,7 +1676,6 @@ bool University::insertStudentsGrades(std::string fin) {
     }
     ///folder/<id_corso>_<data_appello>(_[*]).csv
     std::string base_filename = fin.substr(fin.find_last_of("/\\") + 1);
-    //SOLO PE RFARE LE PROVE ../voti_studenti/ =16
     std::string idCorso = base_filename.substr(0,7);
     std::string appealDate = base_filename.substr(8,10);
     //controllo che il corso esista
@@ -1758,27 +1766,71 @@ void University::writeVersion(int version) {
     fout<<version;
     fout.close();
 }
-
-bool University::setMinDistance(std::string& acYear, std::string& name) {
+void University::readAllMinDistanceRequest() {
+    std::ifstream fileIn("tutte_le_richieste.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file tutte_le_richieste.txt non esistente. Non e' ancora stato usato il comando set_min_distance");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::vector<std::string> infoRequest = Parse::splittedLine(line,';');
+        int acStartYear = Parse::getAcStartYear(infoRequest[0]);
+        std::string matrString = infoRequest[1];
+        std::string idCorso = infoRequest[2];
+        int distance = stoi(infoRequest[3]);
+        std::string matr_idC(matrString + "_" + idCorso);
+        _acYearSessions.at(acStartYear).addProfGap(matr_idC, distance);
+    }
+}
+bool University::setMinDistance(std::string acYear, std::string name) {
     int year = Parse::getAcStartYear(acYear);
     std::fstream fin;
     fin.open(name, std::ios::in);
     if (!fin.is_open()) {
-        throw DbException("");
+        std::string base_filename = name.substr(name.find_last_of("/\\") + 1);
+        throw DbException("Il file" + base_filename + "non esiste");
     }
-    std::string line, matr, idCorso, dist;
+    std::string line;
     while (std::getline(fin, line)){
-        std::vector<std::string> tokens = Parse::splittedLine(line,';');
-        matr = tokens[0];
-        idCorso = tokens[1];
-        dist = tokens[2];
-        std::string matr_idC(matr + "_" + idCorso);
-        if(_acYearSessions.count(year)==0 || stoi(dist)<14)
-            throw std::invalid_argument("");
-        _acYearSessions.at(year).addProfGap(matr_idC,stoi(dist));
+        std::vector<std::string> infoRequest = Parse::splittedLine(line, ';');
+        int matr = Parse::getMatr(infoRequest[0]);
+        std::string matrString = infoRequest[0];
+        std::string idCorso = infoRequest[1];
+        int distance = stoi(infoRequest[2]);
+        if(distance >=14) {
+                //controllo che il corso esista
+                if(_courses.find(idCorso) == _courses.end())
+                     throw InvalidDbException("il corso " + idCorso + " non esiste nel database dei corsi");
+                //controllo che quel prof esista
+                if(_professors.find(matr) == _professors.end())
+                     throw InvalidDbException("il professore " + matrString + " non esiste nel database dei professori");
+                //controllo che quel prof abbia quel corso in quell'anno accademico
+                if(_courses.at(idCorso).profHaveThisCourse(matr,year) == false)
+                     throw InvalidDbException("il professore " + matrString + " non è stato assegnato al corso " + idCorso + " nel " + acYear);
+                 //se la distanza è minore di 14 ignoro la riga del file
+                std::string matr_idC(matrString + "_" + idCorso);
+                if (_acYearSessions.count(year) == 0)
+                    throw std::invalid_argument("Bisogna prima settare i periodi delle sessioni per il " + acYear);
+                _acYearSessions.at(year).addProfGap(matr_idC, distance);
+        }
     }
+    minDistanceRequestWrite();
     return true;
 }
+
+void University::minDistanceRequestWrite() {
+    std::fstream fout;
+    //anno accademico;idProf;codiceCorso;distanza
+    fout.open("tutte_le_richieste.txt", std::fstream::out | std::fstream::trunc);
+    for(auto iterSession = _acYearSessions.begin(); iterSession != _acYearSessions.end();iterSession++){
+        std::vector<std::string> profsOfSpecificSessionYear = iterSession->second.getProfsOfGapProfsString();
+       for(int i = 0; i < profsOfSpecificSessionYear.size(); i++)
+          fout << profsOfSpecificSessionYear[i] <<std::endl;
+    }
+fout.close();
+}
+
+
 
 
 

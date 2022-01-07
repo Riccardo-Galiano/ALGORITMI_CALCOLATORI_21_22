@@ -460,6 +460,17 @@ bool SessionYear::addProfGap(std::string& matr_idC, int gap) {
     return true;
 }
 
+std::vector<std::string> SessionYear::getProfsOfGapProfsString() {
+    std::vector<std::string> gapProfsString;
+    for(auto iterGap = _gapProfs.begin(); iterGap != _gapProfs.end(); iterGap++){
+        std::stringstream ss;
+        std::vector<std::string> id_codCourse = Parse::splittedLine(iterGap->first,'_');
+        ss << getAcYear() << "-" << getAcYear() + 1 <<";"<< id_codCourse[0] << ";" << id_codCourse[1] << ";" << iterGap->second;
+        gapProfsString.push_back(ss.str());
+    }
+    return gapProfsString;
+}
+
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"
              << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg

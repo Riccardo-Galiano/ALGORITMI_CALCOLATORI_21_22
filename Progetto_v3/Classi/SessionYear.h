@@ -35,6 +35,7 @@ public:
     bool generateThisSession(std::string, std::map<std::string, Course>&,std::map<int, Professor>&, std::map<int, Classroom>& allUniversityClassrooms, int, int);
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, std::map<int, Classroom>& allUniversityClassrooms, Course& , std::string, std::vector<std::string>&, std::vector<int> rooms);
     static void popAppealFromVector(std::vector<std::string>&,std::string);
+    std::vector<std::string> getProfsOfGapProfsString();
 
     ///getter
     int getAcYear() const;
