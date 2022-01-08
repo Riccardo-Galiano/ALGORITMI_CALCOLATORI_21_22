@@ -18,7 +18,7 @@ bool autumn = false;
 enum{caso_estremo, caso_medio, caso_lasco};
 
 ///costruttore
-SessionYear::SessionYear(std::string& acYear, std::string& winterSession, std::string& summerSession,std::string& autumnSession, std::string& output_file_name): _sysLog(output_file_name,Parse::getAcStartYear(acYear)){
+SessionYear::SessionYear(std::string& acYear, std::string& winterSession, std::string& summerSession,std::string& autumnSession, std::string& output_file_name): _sysLog(output_file_name){
     _acYear = Parse::getAcStartYear(acYear);
     _sessionNames.emplace_back("winter");
     _sessionNames.emplace_back("summer");
@@ -84,13 +84,14 @@ bool SessionYear::generateNewYearSession(std::string& fout, std::map<std::string
             generateOutputFiles(fout,1,courses);
             generateOutputFiles(fout,2,courses);
             generateOutputFiles(fout,3,courses);
+            ///stampa warnigs
+            _sysLog.writeWarnings();
             allExamAppealsWrite(courses);
             result = true;
             //posso uscire dal loop, non aspetto che il vincolo sia meno di 14 giorni
             exitloop=true;
         }
-        else {///se non sono state generate
-            ///reset strutture dati ToDo
+        else {
             result = false;
             if (relaxPar<2){
                 ///se non ci sono vincoli rilassati oppure relaxPar=1 esco
@@ -188,8 +189,8 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             std::string idCourse = coursesToConsiderInThisLoop[i].getId();
                             Course& courseToConsider = courses.at(idCourse);
                             std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
-                             assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, allUniversityClassrooms, courseToConsider, sessName, _allExamAppealsToDo, rooms);
-                            _sysLog.generateWarnings(coursesToConsiderInThisLoop,relaxPar,gapAppeals,_acYear,_gapProfs);
+                            assignTheExamToThisExamDay(startHourPerCourse[i], currentExamDay, profs, allUniversityClassrooms, courseToConsider, sessName, _allExamAppealsToDo, rooms);
+                            _sysLog.generateWarnings(coursesToConsiderInThisLoop,relaxPar,gapAppeals,_acYear,_gapProfs,getSemester(sessName));
                         }
                         ///check terminazione funzione
                         if (_allExamAppealsToDo.empty()) {

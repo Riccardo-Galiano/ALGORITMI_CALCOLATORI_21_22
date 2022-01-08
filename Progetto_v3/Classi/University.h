@@ -26,7 +26,11 @@ public:
     void minDistanceRequestWrite();
 
     ///DB management
-    bool versioning(std::string);
+    bool versioning(int);
+    bool checkVersioningRequest(int);
+    void revertChanges(int);
+    void revertChanges2to1();
+    void revertChanges3to2();
     bool renameOldDataBase(int);
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);

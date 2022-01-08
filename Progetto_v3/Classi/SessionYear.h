@@ -23,7 +23,6 @@ class SessionYear {
 public:
     ///constructor
     SessionYear(std::string&, std::string&,std::string&,std::string&,std::string&);
-
     ///SessionYear management
     bool addSession(std::string&, std::string&,  std::string&);
     bool setCaldendar(std::vector<Date>);

@@ -9,17 +9,21 @@
 
 class SystemLog {
 public:
-    explicit SystemLog(std::string&, int);
-    void generateWarnings(std::vector<Course>&,int,int,int,std::map<std::string,int>);
-    void generateWarningGapAppeals(std::vector<Course>&,int,int);
-    void generateWarningGapSameStudyCourse(std::vector<Course>&,int);
-    void generateWarningGapAvaibilityProfs(std::vector<Course>&,int);
-    void generateWarningGapProfs(std::map<std::string,int>, int);
-    void appendLog(std::string&);
+    explicit SystemLog(std::string&);
+    void generateWarnings(std::vector<Course>&,int,int,int,std::map<std::string,int>,int session);
+    void generateWarningGapAppeals(std::vector<Course>&,int,int,int);
+    void generateWarningGapSameStudyCourse(std::vector<Course>&,int,int);
+    void generateWarningGapAvaibilityProfs(std::vector<Course>&,int,int);
+    void generateWarningGapProfs(std::map<std::string,int>, int,int);
+    void writeWarnings();
+    void appendLogPerSession(int session, std::string&);
 
 private:
     std::string _output_file_name;
     std::string cdsCodes(SpecificYearCourse&);
+    //key: sessione
+    //value: tutti i warning relativi
+    std::map<int,std::string> _logPerSession;
 };
 
 

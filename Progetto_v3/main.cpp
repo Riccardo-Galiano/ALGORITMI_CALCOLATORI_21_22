@@ -126,7 +126,7 @@ void startProgram(University &uni, char *argv[]) {
             break;
         }
         case versioning:{
-           uni.versioning(argv[2]);
+           uni.versioning(atoi(argv[2]));
             break;
         }
         case add_study_plan_student:{

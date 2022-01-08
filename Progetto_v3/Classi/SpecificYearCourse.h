@@ -105,6 +105,7 @@ private:
     //value: struct studente
     std::map<int, student> _studentsEnrolled;
 
+    ///exam stuff
     //key: semester (session)
     //value: quante volte è stato programmato un suo esame in quel semestre
     std::map<int, std::vector<Date>> _howManyTimesIAmAssignedInASession;
@@ -113,7 +114,6 @@ private:
     //value: vettore di aule per quel'appello
     std::map<int, std::vector<int>> _roomsEachAppeal;
     int _numAppeal;
-
 };
 
 std::ostream& operator<<(std::ostream& output, const SpecificYearCourse& s);
