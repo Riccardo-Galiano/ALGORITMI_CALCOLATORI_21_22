@@ -265,17 +265,19 @@ bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int ses
 ///aggiunge uno studente
 bool SpecificYearCourse::addGradeToStudent(Student& stud, int _passYear, int mark,std::string appealsDate,std::string idCourse) {
     //controllo che lo studente sia associato al corso in quello specifico anno
-   if (_studentsEnrolled.find(stud.getId())==_studentsEnrolled.end())
-    {  std::stringstream matr;
-       matr<<"s"<<std::setfill('0')<<std::setw(6)<<stud.getId();
-        throw InvalidDbException("lo studente con  matricola " + matr.str() + " non e' iscritto al corso " + idCourse );
+   if (_studentsEnrolled.find(stud.getId())==_studentsEnrolled.end()){
+       std::string settedId = Parse::setId('s',6,stud.getId());
+       throw InvalidDbException("lo studente con  matricola " + settedId + " non e' iscritto al corso " + idCourse );
     }
     student& studToUpdate = _studentsEnrolled.at(stud.getId());
     studToUpdate._grade = mark;
-    studToUpdate._passYear = _passYear;
-    totStudentsNotPassed--;
-    studToUpdate._passed = true;
-    studToUpdate._appealPassed = appealsDate;
+    if(mark >18 && mark<30){
+        studToUpdate._passYear = _passYear;
+        totStudentsNotPassed--;
+        studToUpdate._passed = true;
+        studToUpdate._appealPassed = appealsDate;
+    }
+
     return true;
 }
 

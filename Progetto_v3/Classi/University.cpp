@@ -1766,9 +1766,8 @@ bool University::insertStudentsGrades(std::string fin) {
             throw InvalidDbException("lo studente " + idmatr + "non esiste nel database");
         Student &stud = _students.at(matr); //preso l'istanza dello studente di cui si parla
         int acYear = stud.getYearRegistration();
-        if (mark >= 18) {
-            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark, appealDate);
-        }
+        _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark, appealDate);
+
     }
     fileIn.close();
     dbAppealsWrite();

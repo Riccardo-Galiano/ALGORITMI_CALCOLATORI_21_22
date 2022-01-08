@@ -75,11 +75,9 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     int new_num_par_courses = stoi(specificYearCourse[3]);
     //check correttezza
 
-    profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
-                                                      2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
+    profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
     //tornerà errore se non congruenti
-    std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
-                                                              new_num_par_courses);//divido i vari corsi in parallelo
+    std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, new_num_par_courses);//divido i vari corsi in parallelo
 
     return true;
 }
