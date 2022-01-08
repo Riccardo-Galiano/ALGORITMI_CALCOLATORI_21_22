@@ -6,6 +6,15 @@ cmake-build-debug/CMakeFiles
 cmake-build-debug/CMakeFiles/*
 cmake-build-debug/Testing
 
+./cmake-build-debug/CMakeFiles
+./cmake-build-debug/CMakeFiles/*
+./cmake-build-debug/Testing
+
+./cmake-build-debug/CMakeFiles/
+./cmake-build-debug/CMakeFiles/*
+./cmake-build-debug/Testing/
+
+
 *.cmake
 *.log
 
