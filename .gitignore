@@ -1,3 +1,6 @@
 Progetto_v3/cmake-build-debug/Testing
 Progetto_v3/cmake-build-debug/CMakeFiles
 .idea/workspace.xml
+
+*.cmake
+*.log
