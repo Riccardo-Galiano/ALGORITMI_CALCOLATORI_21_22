@@ -1,1 +1,3 @@
-cmake-build-debug
+#Clion
+cmake-build-debug/Testing
+cmake-build-debug/CMakeFiles
