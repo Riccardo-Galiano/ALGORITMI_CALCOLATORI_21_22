@@ -3,6 +3,7 @@
 ./cmake-build-debug/CMakeFiles
 
 cmake-build-debug/CMakeFiles
+cmake-build-debug/CMakeFiles/*
 cmake-build-debug/Testing
 
 *.cmake
