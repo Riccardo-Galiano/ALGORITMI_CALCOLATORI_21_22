@@ -78,6 +78,7 @@ public:
     bool setYear();
     std::string setId(int)const;
     bool setProfMap(int, std::vector<std::string>, int);
+    void assignGrouped (std::vector<std::string>&, std::string&,std::string&);
 
     ///control
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;

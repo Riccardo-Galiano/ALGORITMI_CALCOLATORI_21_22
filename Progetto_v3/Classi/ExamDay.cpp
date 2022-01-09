@@ -19,7 +19,7 @@ ExamDay::ExamDay(Date date) {
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
 int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor> &allUniversityProfs,
                                                std::map<int, Classroom> &allUniversityClassrooms, int numSlotsRequired,
-                                               int relaxPar, std::vector<int>& idRoomsFounded) {
+                                               int relaxPar, std::vector<int>& idRoomsFounded, int endHourSlot) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day (-1)
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
     //!!! esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
@@ -31,35 +31,45 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     bool classroomIsOk = false;
     bool thereAreEnoughClassrooms;
     ///ricerca slot->aule->profs
+    bool toContinue = true;
     for (int i = 0; i < 6 && foundedStartHourSlot == -1; i++) {
+        toContinue=true;
         int slotHour = 8 + 2 * i;
-        ///cerchiamo delle aule con la giusta capienza
-        //se ho già effettuato la search dovrò rieffettuarla solo se per gli stessi slot i prof non sono disponibili
-        if(!classroomIsOk)
-            thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,idRoomsFounded, slotHour,numSlotsRequired);
+        if (endHourSlot != -1) {
+            if (endHourSlot - slotHour < 6) {
+                toContinue = false;
+            }
+        }
+        if (toContinue) {
+            ///cerchiamo delle aule con la giusta capienza
+            //se ho già effettuato la search dovrò rieffettuarla solo se per gli stessi slot i prof non sono disponibili
+            if (!classroomIsOk)
+                thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
+                                                                               idRoomsFounded, slotHour,
+                                                                               numSlotsRequired);
 
-        ///controlliamo se abbiamo trovato ABBASTANZA posti
-        if (thereAreEnoughClassrooms) {
-            classroomIsOk = true;
-            if(checkProfsAvaibility(specificCourse,allUniversityProfs,relaxPar,slotHour)==true)
-                numSlotsFoundedSoFar ++;
-            else {
+            ///controlliamo se abbiamo trovato ABBASTANZA posti
+            if (thereAreEnoughClassrooms) {
+                classroomIsOk = true;
+                if (checkProfsAvaibility(specificCourse, allUniversityProfs, relaxPar, slotHour) == true)
+                    numSlotsFoundedSoFar++;
+                else {
+                    classroomIsOk = false;
+                    numSlotsFoundedSoFar = 0;
+                }
+                if (numSlotsFoundedSoFar == 1)
+                    startHourSlot = 8 + 2 * i; //se dovessi trovare il numero di slot necessari partirei da lì
+                if (numSlotsFoundedSoFar == numSlotsRequired) {
+                    ///se il numero di slot trovati coincide con il numero di slot necessari
+                    foundedStartHourSlot = startHourSlot;//ho lo slot di inizio
+                }
+            } else {
+                ///reset, perchè ho bisogno di slot consecutivi
                 classroomIsOk = false;
                 numSlotsFoundedSoFar = 0;
             }
-            if (numSlotsFoundedSoFar == 1)
-                startHourSlot = 8 + 2 * i; //se dovessi trovare il numero di slot necessari partirei da lì
-            if (numSlotsFoundedSoFar == numSlotsRequired) {
-                ///se il numero di slot trovati coincide con il numero di slot necessari
-                foundedStartHourSlot = startHourSlot;//ho lo slot di inizio
-            }
-        } else {
-            ///reset, perchè ho bisogno di slot consecutivi
-            classroomIsOk = false;
-            numSlotsFoundedSoFar = 0;
         }
     }
-
     if (foundedStartHourSlot == -1)
         ///non trovato un buco abbastanza grande
         return -1;
@@ -256,6 +266,20 @@ std::string ExamDay::classroomString(std::vector<int> rooms) {
         classroomsString<<"|A"<<std::setfill('0')<<std::setw(3)<<rooms[i];
     }
     return classroomsString.str();
+}
+
+int ExamDay::getEndHourOfThisCourseExam(const Course &course) {
+    int lastSlotFounded=0;
+    for (auto iterSlots = _slots.begin(); iterSlots != _slots.end(); iterSlots++){
+        std::vector<Course> allExamInThisSlot = iterSlots->second;
+        for(int i=0;i<allExamInThisSlot.size();i++){
+            if(allExamInThisSlot[i].getId()==course.getId()){
+                lastSlotFounded=iterSlots->first;
+            }
+        }
+    }
+    //ora di fine esame
+    return lastSlotFounded+2;
 }
 
 

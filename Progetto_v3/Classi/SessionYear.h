@@ -31,7 +31,7 @@ public:
     bool addProfGap(std::string& matr_idC, int gap);
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
-    bool generateThisSession(std::string, std::map<std::string, Course>&,std::map<int, Professor>&, std::map<int, Classroom>& allUniversityClassrooms, int, int);
+    bool generateThisSession(std::string, std::map<std::string, Course>&,std::map<int, Professor>&, std::map<int, Classroom>& allUniversityClassrooms, int, int, bool sixHours);
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, std::map<int, Classroom>& allUniversityClassrooms, Course& , std::string, std::vector<std::string>&, std::vector<int> rooms);
     static void popAppealFromVector(std::vector<std::string>&,std::string);
     std::vector<std::string> getProfsOfGapProfsString();
@@ -44,10 +44,10 @@ public:
     std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>&, std::string);
 
     ///control
-    int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&);
+    int isPossibleToAssignThisExam(Course ,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&, int endHour);
     bool sessionsPeriodIsEmpty();
     bool dateIsOK(Date& newDate,const Course& course, std::string& sessName, int);
-    int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&,std::map<int, Classroom>&, int,int,std::vector<int>&);
+    int checkIfProfsAvailableAndGapSameSemesterCourses(Course&,Date&,std::map<int, Professor>&,std::map<int, Classroom>&, int,int,std::vector<int>&, int endHour);
     static bool checkHours(std::vector<int>&);
 
     ///output

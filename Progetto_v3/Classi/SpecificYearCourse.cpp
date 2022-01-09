@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 #include "SpecificYearCourse.h"
 #include "InvalidDbException.h"
 #include "Parse.hpp"
@@ -243,9 +244,9 @@ int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
 
 ///ritorna la data dell'appello precedentemente assegnato per un corso
 Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
-    //ATTENZIONE: non può essere chiamata se amIAssignedAlreadyInThisSession(session) == 0
+    //ritorna 1900-01-01 se non trova la data del primo appello
     if(amIAssignedAlreadyInThisSession(session) == 0){
-        throw std::exception();
+        return Date ();
     }
     return _howManyTimesIAmAssignedInASession.at(session)[0];
 }
@@ -454,6 +455,13 @@ std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date da
         }
     }
     return allStudentsPassed;
+}
+///inserisco tutti i corsi raggruppati nello spYY e cancello il suo id
+void SpecificYearCourse::assignGrouped(std::vector<std::string> & idGrouped, std::string & idCourse, std::string & thisCourse) {
+_idGroupedCourses=idGrouped;
+_idGroupedCourses.push_back(idCourse);
+auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(),thisCourse);
+_idGroupedCourses.erase(pos);
 }
 
 

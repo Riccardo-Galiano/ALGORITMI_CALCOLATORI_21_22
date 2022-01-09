@@ -573,7 +573,7 @@ bool University::addCourses(const std::string &fin) {
         if (specificYearCourse.size() != 10) {
             throw std::invalid_argument("formato file corsi non valido alla riga: " + std::to_string(line_counter));
         }
-        //controllo che tuttii campi siano specificati
+        //controllo che tutti campi siano specificati
         for (int i = 0; i < specificYearCourse.size(); i++) {
             if (specificYearCourse[i].empty()) {
                 throw std::invalid_argument("uno o più campi sono vuoti alla riga: " + std::to_string(line_counter));
@@ -624,6 +624,9 @@ bool University::addCourses(const std::string &fin) {
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = result;
+                if (!idGrouped.empty()){
+                    fillGroupedCourse(idGrouped,newIdCourse, acYear, line_counter);
+                }
                 ///controllo i corsi raggruppati (genera eccezione se errore)
                 controlGroupedCourses(i, idGrouped, specificYearCourse[1], line_counter, newIdCourse);
             }
@@ -1121,6 +1124,9 @@ bool University::insertCourses(const std::string &fin) {
                 auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                 studyCourse.push_back(iterStudyCourse->first);
                 yy_semester = res;
+
+                fillGroupedCourse(idGrouped,specificYearCourse[0], acYear, line_counter);
+
                 ///controllo i corsi raggruppati (genera eccezione se errore)
                 controlGroupedCourses(i, idGrouped, _courses.at(specificYearCourse[0]).getName(), line_counter,
                                       specificYearCourse[0]);
@@ -1953,6 +1959,16 @@ void University::revertChanges2to1() {
 }
 
 void University::revertChanges3to2() {
+}
+
+void University::fillGroupedCourse(std::vector<std::string>& idGrouped, std::string& idCourse, std::string& acYear, int line) {
+    for(int i=0; i<idGrouped.size();i++){
+        if(_courses.count(idGrouped[i])==0){
+            throw std::invalid_argument("corso raggrupato "+ idGrouped[i] +"non esiste, errore alla linea "+ std::to_string(line));
+        }
+        SpecificYearCourse& specificYY = _courses.at(idGrouped[i]).getThisYearCourseReference(Parse::getAcStartYear(acYear));//corso per un anno specifico
+        specificYY.assignGrouped(idGrouped,idCourse, idGrouped[i]);
+    }
 }
 
 

@@ -104,6 +104,7 @@ private:
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     int _version;
+    void fillGroupedCourse (std::vector<std::string>&, std::string&, std::string&, int);
 };
 
 
