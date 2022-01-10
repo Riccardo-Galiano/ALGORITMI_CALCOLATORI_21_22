@@ -23,6 +23,7 @@ public:
     std::vector<std::string> allProfsNoAvailabilities();
     bool setExamDate(std::string,std::string);
     bool setMinDistance(std::string ,std::string );
+    bool requestChanges(std::string,std::string);
     void minDistanceRequestWrite();
 
     ///DB management
@@ -42,6 +43,9 @@ public:
     void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
+    void assignInfoAppealPerSession(std::string,std::string,std::string, std::vector<std::string> infoPerSession);
+    void assignAppealsToProf(std::string,std::string, int, int,std::vector<int>);
+    void assignAppealsToClassroom(std::string,int,std::string,int);
 
 
     ///Input (from DB)

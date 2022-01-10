@@ -100,9 +100,9 @@ bool Classroom::checkAvailability(Date& date,int slotHour) {
         return true;
 }
 
-void Classroom::setDisavailability(Date& date, int slotHour, int numSlot) {
-    for(int s=0; s < numSlot; s++) {
-        int hour = slotHour + (s*2);
+void Classroom::setDisavailability(Date& date, int slotStartHour, int numSlot) {
+    for(int slot=0; slot < numSlot; slot++) {
+        int hour = slotStartHour + (slot * 2);
         std::stringstream ss;
         ss << date.toString() << ';' << std::setfill('0')<<std::setw(2)<< hour;
         _disavailableRooms.insert(std::pair<std::string, int>(ss.str(), 1));

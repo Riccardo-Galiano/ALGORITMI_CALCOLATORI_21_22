@@ -260,9 +260,13 @@ void ExamDay::eraseTempGroupedCourseClassrooms() {
 
 std::string ExamDay::classroomString(std::vector<int> rooms) {
     std::stringstream classroomsString;
+    classroomsString <<"{";
     for(int i = 0; i<rooms.size();i++){
-        classroomsString<<"|A"<<std::setfill('0')<<std::setw(3)<<rooms[i];
+        classroomsString<<"A"<<std::setfill('0')<<std::setw(3)<<rooms[i];
+        if(i<rooms.size()-1)
+            classroomsString<<",";
     }
+    classroomsString<<"}";
     return classroomsString.str();
 }
 

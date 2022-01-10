@@ -396,8 +396,14 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
     return  ss.str();
 }
 
-bool SpecificYearCourse::assignAppeals(std::string allAppealsPerYear) {
-
+bool SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> appealPerSession) {
+    if (session == "winter")
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, appealPerSession));
+    else if (session == "summer")
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(2, appealPerSession));
+    else if (session == "autumn")
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, appealPerSession));
+    return true;
 }
 
 std::vector<int> SpecificYearCourse::getRoomsAppeal() {

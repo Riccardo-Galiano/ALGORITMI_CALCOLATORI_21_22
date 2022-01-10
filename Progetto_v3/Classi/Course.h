@@ -52,11 +52,11 @@ public:
     bool assignStudToAppealPerYear(std::string,std::string,std::string);
     std::vector<std::pair<std::string, int>> splittAllStudPassedExamString(std::string);
     std::vector<std::string>getAcYearAppeals();
-    bool assignAppealsToSpecificyear(std::string,std::string);
+    bool assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession);
     bool controlAppeal(std::string);
     bool profHaveThisCourse(int, int);
-
-
+    int getExamSlotPerYear(std::string acYear);
+    std::vector<int> getProfsPerYear(std::string acYear);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

@@ -1833,50 +1833,27 @@ void University::readAllExamAppeals() {
         std::string idCorso = appeals[0];
         std::string acYear = appeals[1];
         std::string appealsSession = appeals[2];
-        std::vector<std::string> tokens = Parse::splittedLine(appeals[2], '%');
+        std::vector<std::string> infoEachSession = Parse::splittedLine(appeals[2], '%');
         //per ogni sessione
-        for (int i = 0; i < tokens.size(); i++) {
+        for (int i = 0; i < infoEachSession.size(); i++) {
             //tolgo le quadre
-            std::vector<int> posSquareBrackets = Parse::posSquareBrackets(tokens[i]);
+            std::vector<int> posSquareBrackets = Parse::posSquareBrackets(infoEachSession[i]);
             //prendo la sessione
-            std::string session = tokens[i].substr(0, posSquareBrackets[0]);
+            std::string session = infoEachSession[i].substr(0, posSquareBrackets[0]);
             //prendo le info di tutti gli appelli
-            std::string appealsPerSessionString = tokens[i].substr(posSquareBrackets[0] + 1, posSquareBrackets[1] - posSquareBrackets[0] - 1);
+            std::string appealsPerSessionString = infoEachSession[i].substr(posSquareBrackets[0] + 1, posSquareBrackets[1] - posSquareBrackets[0] - 1);
             std::vector<int> posCurlyBrackets = Parse::posCurlyBrackets(appealsPerSessionString);
             std::vector<std::string> appealInfo;
-            //prendo le info per ogni appello
+            //prendo le info per ogni appello per ogni sessione
             for(int j = 0; j<posCurlyBrackets.size(); j = j +2) {
                 appealInfo.push_back(appealsPerSessionString.substr(posCurlyBrackets[j]+1, posCurlyBrackets[j+1]-posCurlyBrackets[j]-1));
             }
-            std::vector<std::string> infoOfSingleAppeal = Parse::splittedLine(appealInfo[i],',');
-            std::vector<Date> datesAppeals;
-            std::vector<std::string> appealsPerSession;
-            /*
-               if(appealsPerSessionString.size()==21)
-                   //se in quella sessione ci sono più appelli
-                   appealsPerSession = Parse::splittedLine(appealsPerSessionString,',');
-               else
-                   //alrimenti appealsPerSessionString è già l'unico appello
-                   appealsPerSession.push_back(appealsPerSessionString);
-
-               for(int j = 0; j<appealsPerSession.size();j++) {
-                   Date dateAppeal(appealsPerSession[j]);
-                   datesAppeals.push_back(dateAppeal);
-               }
-               if (session == "winter")
-                   _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, datesAppeals));
-               else if (session == "summer")
-                   _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(2, datesAppeals));
-               else if (session == "autumn")
-                   _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, datesAppeals));
+            assignInfoAppealPerSession(acYear,idCorso,session,appealInfo);
            }
-           return false;
-           _courses.at(idCorso).assignAppealsToSpecificyear(acYear, appealsSession);
-       }*/
+       }
             fileIn.close();
-        }
-    }
 }
+
 void University::writeVersion(int version) {
     std::fstream fout;
     fout.open("versione.txt", std::fstream::out | std::fstream::trunc);
@@ -1887,8 +1864,7 @@ void University::writeVersion(int version) {
 void University::readAllMinDistanceRequest() {
     std::ifstream fileIn("tutte_le_richieste.txt");
     if (!fileIn.is_open()) {
-        throw DbException(
-                "file tutte_le_richieste.txt non esistente. Non e' ancora stato usato il comando set_min_distance");
+        throw DbException("file tutte_le_richieste.txt non esistente. Non e' ancora stato usato il comando set_min_distance");
     }
     std::string line;
     while (std::getline(fileIn, line)) {
@@ -1995,9 +1971,46 @@ void University::revertChanges(int newVersion) {
 }
 
 void University::revertChanges2to1() {
+    ///rimuove il nuovo db degli studenti
+    if( remove( "db_studenti.txt" ) != 0 )
+        perror( "Error deleting file" );
+    else
+        puts( "File successfully deleted" );
+
+    ///rimuove il nuovo db dei professori
+    if( remove( "db_professori.txt" ) != 0 )
+        perror( "Error deleting file" );
+    else
+        puts( "File successfully deleted" );
+
+    int result;
+    char oldname[] = "db_studenti_old.txt";
+    char newname[] = "db_studenti.txt";
+    result = rename(oldname, newname);
+    if (result != 0)
+        throw InvalidDbException("file db_studenti_old.txt non rinominato adeguatamente");
+
+    char oldname2[] = "db_professori_old.txt";
+    char newname2[] = "db_professori.txt";
+    result = rename(oldname2, newname2);
+    if (result != 0)
+        throw InvalidDbException("file db_studenti_old.txt non rinominato adeguatamente");
 }
 
 void University::revertChanges3to2() {
+    ///rimuove il nuovo db delle aule
+    if( remove( "db_aule.txt" ) != 0 )
+        perror( "Error deleting file" );
+    else
+        puts( "File successfully deleted" );
+
+    int result;
+    char oldname2[] = "db_aule_old.txt";
+    char newname2[] = "db_aule.txt";
+    result = rename(oldname2, newname2);
+    if (result != 0)
+        throw InvalidDbException("file db_studenti_old.txt non rinominato adeguatamente");
+
 }
 
 void University::fillGroupedCourse(std::vector<std::string>& idGrouped, std::string& idCourse, std::string& acYear, int line) {
@@ -2009,6 +2022,63 @@ void University::fillGroupedCourse(std::vector<std::string>& idGrouped, std::str
         specificYY.assignGrouped(idGrouped,idCourse, idGrouped[i]);
     }
 }
+
+void University::assignInfoAppealPerSession(std::string acYear,std::string idCorso,std::string session,std::vector<std::string> appealInfo) {
+    std::vector<Date> appealDate;
+    int numSlot = _courses.at(idCorso).getExamSlotPerYear(acYear);
+    int startAcYear = Parse::getAcStartYear(acYear);
+    std::vector<int> allProfsPerYearCourse= _courses.at(idCorso).getProfsPerYear(acYear);
+    for(int i = 0; i<appealInfo.size(); i++) {
+        std::vector<std::string> infoOfSingleAppeal = Parse::splittedLine(appealInfo[i], ',');
+        ///prendo le date degli appelli per quella sessione
+        appealDate.emplace_back(infoOfSingleAppeal[0]);
+        ///segno l'esame nei professori del corso(appello,ora di inizio,numero di slot)
+        assignAppealsToProf(idCorso,infoOfSingleAppeal[0],stoi(infoOfSingleAppeal[1]),numSlot,allProfsPerYearCourse);
+        ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
+        assignAppealsToClassroom(infoOfSingleAppeal[0],stoi(infoOfSingleAppeal[1]),infoOfSingleAppeal[2],numSlot);
+        ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
+        Course& course = _courses.at(idCorso);
+        _acYearSessions.at(startAcYear).assignAppealsToCalendar(infoOfSingleAppeal[0],stoi(infoOfSingleAppeal[1]),course,numSlot);
+    }
+    ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
+    _courses.at(idCorso).assignAppealToSpecificYear(acYear, session, appealDate);
+}
+
+void University::assignAppealsToProf(std::string idCorso,std::string appeal, int startHour,int numSlots,std::vector<int> allProfsPerYearCourse) {
+    for(int i = 0; i<allProfsPerYearCourse.size();i++){
+        for(int num_slot = 0; num_slot < numSlots; num_slot++) {
+            _professors.at(allProfsPerYearCourse[i]).addNewExam(appeal,startHour + (num_slot * 2), idCorso);
+        }
+    }
+}
+
+void University::assignAppealsToClassroom(std::string appeal,int startSlotHour, std::string classrooms,int numSlot) {
+    std::vector<std::string> allClassrooms = Parse::splittedLine(classrooms,'|');
+    Date appealDate(appeal);
+    for(int i = 0; i<allClassrooms.size(); i++) {
+        _classroom.at(stoi(allClassrooms[i])).setDisavailability(appealDate,startSlotHour, numSlot);
+    }
+}
+
+bool University::requestChanges(std::string acYear,std::string fin) {
+    //<id_corso>;<numero_sessione>;<numero_appello>;<direzione_spostamento>;<num_settimane>
+    std::ifstream fileIn(fin);
+    if (!fileIn.is_open()) {
+        throw DbException("Errore apertura del file per le richiesto del cambio data esami");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)){
+        std::vector<std::string> infoChanges = Parse::splittedLine(line,';');
+        std::string idCourse = infoChanges[0];
+        int numSession = stoi(infoChanges[1]);
+        int numAppeal = stoi(infoChanges[2]);
+        char shift = infoChanges[3][0];
+        int numWeeks = stoi(infoChanges[4]);
+    }
+ return true;
+}
+
+
 
 
 

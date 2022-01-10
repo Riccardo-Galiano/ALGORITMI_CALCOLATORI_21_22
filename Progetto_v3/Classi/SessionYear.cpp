@@ -144,8 +144,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     bool pop = false;
     ///raggruppiamo tutti gli esami specifici di quest'anno
     if (relaxPar == 0)
-        _allExamAppealsToDo = getAllExamAppealsToDo(sessName,
-                                                    courses); //contiene le stringhe dei codici esame per OGNI appello
+        _allExamAppealsToDo = getAllExamAppealsToDo(sessName,courses); //contiene le stringhe dei codici esame per OGNI appello
     ///else -> nulla, _allExamAppealsToDo già caricato
     ///cicliamo su ogni data della sessione per organizzare le date degli appelli
     for (Date currentExamDay(startDate.getYear(), startDate.getMonth(), startDate.getDay());
@@ -280,8 +279,7 @@ SessionYear::generateOutputFiles(std::string &outputFileName, int session, std::
             continueLoop = false;
         ExamDay examDay = iterDateCalendar->second;
         std::string day = iterDateCalendar->first;
-        if (examDay.allSLotsAreEmpty() ==
-            false) {//se tutti gli slot sono vuoti vuol dire che non ho assegnato alcun esame in quella data, non lo stampo
+        if (examDay.allSLotsAreEmpty() ==  false) {//se tutti gli slot sono vuoti vuol dire che non ho assegnato alcun esame in quella data, non lo stampo
             outputSession << day << std::endl;
             ///prendo un vettore di stringhe, dell'intera giornata; una (stringa/riga) per ogni slot
             std::vector<std::string> allSlots = examDay.getSlotsToString();
@@ -528,9 +526,12 @@ std::vector<std::string> SessionYear::getProfsOfGapProfsString() {
     return gapProfsString;
 }
 
+void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour, Course &course, int numSlots) {
+    _yearCalendar.at(appeal).assignExamToExamDay(startSlotHour, course, numSlots);
+}
+
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
-    sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"
-             << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg
+    sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";" << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg
     return sessions;
 }
 

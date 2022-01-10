@@ -385,9 +385,9 @@ std::vector<std::string> Course::getAcYearAppeals() {
     return allAppealsPerCourses;
 }
 
-bool Course::assignAppealsToSpecificyear(std::string acYear, std::string allAppealsPerYear) {
+bool Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession) {
     int acStartYear = Parse::getAcStartYear(acYear);
-    _courseOfTheYear.at(acStartYear).assignAppeals(allAppealsPerYear);
+    _courseOfTheYear.at(acStartYear).assignAppeals(session,appealsPerSession);
     return true;
 }
 
@@ -405,6 +405,17 @@ bool Course::controlAppeal(std::string appealDate) {
 bool Course::profHaveThisCourse(int matr, int acStartYear) {
     std::vector<int> profOfCourse = _courseOfTheYear.at(acStartYear).getAllProfMatr();
     return std::find(profOfCourse.begin(), profOfCourse.end(), matr) != profOfCourse.end();
+}
+
+int Course::getExamSlotPerYear(std::string acYear) {
+    int startAc = Parse::getAcStartYear(acYear);
+    Exam examInfo = _courseOfTheYear.at(startAc).getExam();
+    return examInfo.howManySlots();;
+}
+
+std::vector<int> Course::getProfsPerYear(std::string acYear) {
+    int startAc = Parse::getAcStartYear(acYear);
+    return  _courseOfTheYear.at(startAc).getAllProfMatr();
 }
 
 

@@ -23,6 +23,7 @@ class SessionYear {
 public:
     ///constructor
     SessionYear(std::string&, std::string&,std::string&,std::string&,std::string&);
+
     ///SessionYear management
     bool addSession(std::string&, std::string&,  std::string&);
     bool setCaldendar(std::vector<Date>);
@@ -35,6 +36,7 @@ public:
     void assignTheExamToThisExamDay(int,Date&,std::map<int, Professor>&, std::map<int, Classroom>& allUniversityClassrooms, Course& , std::string, std::vector<std::string>&, std::vector<int> rooms);
     static void popAppealFromVector(std::vector<std::string>&,std::string);
     std::vector<std::string> getProfsOfGapProfsString();
+    void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
 
     ///getter
     int getAcYear() const;

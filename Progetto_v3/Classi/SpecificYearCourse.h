@@ -46,7 +46,7 @@ public:
     bool assignYY_SemToAllYear(std::string&,std::string&);
     bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
     bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
-    bool assignAppeals(std::string);
+    bool assignAppeals(std::string,std::vector<Date>);
     bool addStartSlotToAppeal(int numAppeal, int startExamHour);
 
     ///getter
