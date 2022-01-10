@@ -361,42 +361,34 @@ bool SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::str
 
 std::string SpecificYearCourse::getAppealsForAllSession() {
     std::stringstream ss;
+    int numAppeals = 0;
     for(auto iterSessionAppeals = _howManyTimesIAmAssignedInASession.begin();iterSessionAppeals != _howManyTimesIAmAssignedInASession.end();iterSessionAppeals++){
         std::vector<Date> appeals = iterSessionAppeals->second;
         switch (iterSessionAppeals->first){
             case 1: {
-                ss << "winter{";
-                for (int i = 0; i < appeals.size(); i++) {
-                    ss << appeals[i];
-                    if(i< appeals.size()-1)
-                        ss<<",";
-                }
-                ss<<"}";
+                ss << "winter[";
                 break;
             }
             case 2: {
-                ss << "summer{";
-                for (int i = 0; i < appeals.size(); i++) {
-                    ss << appeals[i];
-                    if(i< appeals.size()-1)
-                        ss<<",";
-                }
-                ss<<"}";
+                ss << "summer[";
                 break;
             }
             case 3: {
-                ss << "autumn{";
-                for (int i = 0; i < appeals.size(); i++) {
-                    ss << appeals[i];
-                    if(i< appeals.size()-1)
-                        ss<<",";
-                }
-                ss<<"}";
+                ss << "autumn[";
                 break;
             }
             default:
                 break;
         }
+        for (int i = 0; i < appeals.size(); i++) {
+            ss << "{";
+            ss << appeals[i] << "," << getStartHourAppeal(numAppeals) << "," << getRoomsPerAppealsString(numAppeals);
+            ss << "}";
+            if(i < appeals.size()-1)
+                ss << ",";
+            numAppeals++;
+        }
+        ss<<"]";
         if(iterSessionAppeals->first < 3)
             ss<<"%";
     }
@@ -405,32 +397,7 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
 }
 
 bool SpecificYearCourse::assignAppeals(std::string allAppealsPerYear) {
-    std::vector<std::string> tokens = Parse::splittedLine(allAppealsPerYear,'%');
-    for(int i  = 0; i < tokens.size() ; i++){
-        std::vector<int> pos = Parse::posCurlyBrackets(tokens[i]);
-        std::string session = tokens[i].substr(0,pos[0]);
-        std::string appealsPerSessionString = tokens[i].substr(pos[0]+1,pos[1]-pos[0]-1);
-        std::vector<Date> datesAppeals;
-        std::vector<std::string> appealsPerSession;
-        if(appealsPerSessionString.size()==21)
-            //se in quella sessione ci sono più appelli
-           appealsPerSession = Parse::splittedLine(appealsPerSessionString,',');
-        else
-            //alrimenti appealsPerSessionString è già l'unico appello
-           appealsPerSession.push_back(appealsPerSessionString);
 
-        for(int j = 0; j<appealsPerSession.size();j++) {
-            Date dateAppeal(appealsPerSession[j]);
-            datesAppeals.push_back(dateAppeal);
-        }
-            if (session == "winter")
-                _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, datesAppeals));
-            else if (session == "summer")
-                _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(2, datesAppeals));
-            else if (session == "autumn")
-                _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, datesAppeals));
-    }
-    return false;
 }
 
 std::vector<int> SpecificYearCourse::getRoomsAppeal() {
@@ -462,6 +429,26 @@ _idGroupedCourses=idGrouped;
 _idGroupedCourses.push_back(idCourse);
 auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(),thisCourse);
 _idGroupedCourses.erase(pos);
+}
+
+std::string SpecificYearCourse::getRoomsPerAppealsString(int numAppeals) {
+     std::stringstream ss;
+     std::vector<int> roomsPerAppeals = _roomsEachAppeal.at(numAppeals);
+     for(int i = 0; i<roomsPerAppeals.size(); i++){
+         ss<<roomsPerAppeals[i];
+         if(i < roomsPerAppeals.size()-1)
+             ss<<"|";
+     }
+    return ss.str();
+}
+
+bool SpecificYearCourse::addStartSlotToAppeal(int numAppeal, int startExamHour) {
+    _startSlotPerEachAppeal.insert(std::pair<int,int>(numAppeal,startExamHour));
+    return true;
+}
+
+int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
+    return _startSlotPerEachAppeal.at(numAppeals);
 }
 
 

@@ -62,6 +62,15 @@ public:
         }
         return output;
     }
+    static std::vector<int> posSquareBrackets(std::string &input) {
+        std::vector<int> output;
+        std::size_t found = input.find_first_of("[]");
+        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            output.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            found = input.find_first_of("[]", found + 1);//continuo a controllare la stringa
+        }
+        return output;
+    }
     static std::vector<std::string> SplittedGroupedID(std::string &input){
         input = input.substr(1,input.size() - 2);// tolgo le { } che racchiudono gli id
         return splittedLine(input, ',');//scissione degli id dei corsi raggruppati

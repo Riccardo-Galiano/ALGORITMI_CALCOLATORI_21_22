@@ -1833,11 +1833,50 @@ void University::readAllExamAppeals() {
         std::string idCorso = appeals[0];
         std::string acYear = appeals[1];
         std::string appealsSession = appeals[2];
-        _courses.at(idCorso).assignAppealsToSpecificyear(acYear, appealsSession);
-    }
-    fileIn.close();
-}
+        std::vector<std::string> tokens = Parse::splittedLine(appeals[2], '%');
+        //per ogni sessione
+        for (int i = 0; i < tokens.size(); i++) {
+            //tolgo le quadre
+            std::vector<int> posSquareBrackets = Parse::posSquareBrackets(tokens[i]);
+            //prendo la sessione
+            std::string session = tokens[i].substr(0, posSquareBrackets[0]);
+            //prendo le info di tutti gli appelli
+            std::string appealsPerSessionString = tokens[i].substr(posSquareBrackets[0] + 1, posSquareBrackets[1] - posSquareBrackets[0] - 1);
+            std::vector<int> posCurlyBrackets = Parse::posCurlyBrackets(appealsPerSessionString);
+            std::vector<std::string> appealInfo;
+            //prendo le info per ogni appello
+            for(int j = 0; j<posCurlyBrackets.size(); j = j +2) {
+                appealInfo.push_back(appealsPerSessionString.substr(posCurlyBrackets[j]+1, posCurlyBrackets[j+1]-posCurlyBrackets[j]-1));
+            }
+            std::vector<std::string> infoOfSingleAppeal = Parse::splittedLine(appealInfo[i],',');
+            std::vector<Date> datesAppeals;
+            std::vector<std::string> appealsPerSession;
+            /*
+               if(appealsPerSessionString.size()==21)
+                   //se in quella sessione ci sono più appelli
+                   appealsPerSession = Parse::splittedLine(appealsPerSessionString,',');
+               else
+                   //alrimenti appealsPerSessionString è già l'unico appello
+                   appealsPerSession.push_back(appealsPerSessionString);
 
+               for(int j = 0; j<appealsPerSession.size();j++) {
+                   Date dateAppeal(appealsPerSession[j]);
+                   datesAppeals.push_back(dateAppeal);
+               }
+               if (session == "winter")
+                   _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, datesAppeals));
+               else if (session == "summer")
+                   _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(2, datesAppeals));
+               else if (session == "autumn")
+                   _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, datesAppeals));
+           }
+           return false;
+           _courses.at(idCorso).assignAppealsToSpecificyear(acYear, appealsSession);
+       }*/
+            fileIn.close();
+        }
+    }
+}
 void University::writeVersion(int version) {
     std::fstream fout;
     fout.open("versione.txt", std::fstream::out | std::fstream::trunc);

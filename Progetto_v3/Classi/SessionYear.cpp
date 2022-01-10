@@ -191,8 +191,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         std::vector<int> roomsFounded;
                         SpecificYearCourse sp = courseToConsider.getThisYearCourse(_acYear);
                         int endHourSlot=-1;
-                        Date lastDateAssignation = sp.lastDateAssignationInGivenSession(
-                                this->getSemester(sessName));//data primo appello
+                        Date lastDateAssignation = sp.lastDateAssignationInGivenSession( this->getSemester(sessName));//data primo appello
                         if (sixHours && lastDateAssignation.isEqual(currentExamDay)) {
                             if (lastDateAssignation.isEqual(Date())) {
                                 endHourSlot = -1;
@@ -408,8 +407,7 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
     if (howManyTimesIAmAssignedAlreadyInThisSession == 1) {//sarà un secondo appello
         ///se è stato già assegnato allora devo controllare le due settimane di scarto a meno di relaxPar
         /// se relaxPar>=2 ho il loop a monte che mi chiama la generateSession con un gap progressivamente più piccolo
-        Date lastDateAssignation = sp.lastDateAssignationInGivenSession(
-                this->getSemester(sessName));//data primo appello
+        Date lastDateAssignation = sp.lastDateAssignationInGivenSession( this->getSemester(sessName));//data primo appello
         if (lastDateAssignation.whatIsTheGap(newDate) < gapAppeals) {//dal primo appello sono passati 14 giorni?
             return false;
         }
@@ -487,6 +485,7 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date &currentExa
     ///aggiorno strutture dati degli esami dell'anno specifico
     specificYY.assignExamInThisSpecificYearCourse(currentExamDay, getSemester(sessName));
     specificYY.addClassroomsToAppeal(numAppeal, idRooms);
+    specificYY.addStartSlotToAppeal(numAppeal, startExamHour);
     ///aggiungo l'esame a quelli che i prof devono fare
     _yearCalendar.at(currentExamDay.toString()).assignExamToProf(profs, course, startExamHour, numSlots);
     ///aggiungo l'esame al calendario della sessione
