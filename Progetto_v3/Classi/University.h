@@ -35,8 +35,7 @@ public:
     bool renameOldDataBase(int);
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
-    bool controlGroupedCourses(int,std::vector<std::string>&,std::string,int,std::string);
-    void controlReciprocyGrouped();
+    bool controlGroupedCourses(std::vector<std::string>&,std::string,int,std::string);
     bool insertCourses(const std::string &fin);
     bool insertStudentsGrades(std::string fin);
     bool addStudyPlan(std::string fin);
@@ -46,7 +45,8 @@ public:
     void assignInfoAppealPerSession(std::string,std::string,std::string, std::vector<std::string> infoPerSession);
     void assignAppealsToProf(std::string,std::string, int, int,std::vector<int>);
     void assignAppealsToClassroom(std::string,int,std::string,int);
-
+    void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse&);
+    int whatIsMyStudyCourse(Course& course);
 
     ///Input (from DB)
     void readCourseNotActive();

@@ -23,7 +23,6 @@ class Course {
 public:
 
     Course(const std::string&, const std::string&, const int , const int ,const int , const int );
-
     bool addSpecificYearCourses(std::string, bool, int, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, std::string, std::vector<int>, int );
     bool modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate);
     bool registerStudentsToSpecificYear(int acYear, Student& stud);
@@ -32,7 +31,6 @@ public:
     bool fillAcYearsEmpty();
     bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> &,int);
     hours controlProfsOfSingleCourse(std::vector<professor>,const std::map<int,Professor> &);
-    bool controlExistenceSpecificYear(std::string, int);
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     const SpecificYearCourse & getThisYearCourse(int) const;
@@ -57,6 +55,7 @@ public:
     bool profHaveThisCourse(int, int);
     int getExamSlotPerYear(std::string acYear);
     std::vector<int> getProfsPerYear(std::string acYear);
+    void updateYYSemesterInAllSpecYearCourse(std::string& yy_semester);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

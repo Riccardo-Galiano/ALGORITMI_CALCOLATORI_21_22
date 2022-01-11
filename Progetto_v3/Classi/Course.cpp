@@ -239,15 +239,6 @@ hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCou
     return h;
 }
 
-///controllo che per quell'anno esista il corso
-bool Course::controlExistenceSpecificYear(std::string codCourse, int year) {
-    if(_courseOfTheYear.count(year)==0){
-        ///non ci sono corsi per quell'anno
-        throw DbException ("il seguente corso non presenta informazioni relative all'anno accademico richiesto:" + codCourse);
-    }
-    return true;
-}
-
 ///per anno accademico ho i corsi raggruppati di un corso
 std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
     std::map<int, std::vector<std::string>> allGrouped;
@@ -416,6 +407,12 @@ int Course::getExamSlotPerYear(std::string acYear) {
 std::vector<int> Course::getProfsPerYear(std::string acYear) {
     int startAc = Parse::getAcStartYear(acYear);
     return  _courseOfTheYear.at(startAc).getAllProfMatr();
+}
+
+void Course::updateYYSemesterInAllSpecYearCourse(std::string& yy_semester) {
+    for(auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
+        iter->second.setYySemester(yy_semester);
+    }
 }
 
 

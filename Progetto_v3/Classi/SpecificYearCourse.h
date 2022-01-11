@@ -89,7 +89,12 @@ public:
 
 private:
 
-    std::string _yy_semester; //unico per tutti i corsi!!!
+    std::string _yy_semester;
+public:
+    void setYySemester(const std::string &yySemester);
+
+private:
+    //unico per tutti i corsi!!!
     std::string _acYearOff;
     //anno accademico in cui il corso è stato spento
     std::vector<int> _studyCourseAssigned;

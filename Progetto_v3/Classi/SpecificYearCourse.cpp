@@ -457,6 +457,10 @@ int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
     return _startSlotPerEachAppeal.at(numAppeals);
 }
 
+void SpecificYearCourse::setYySemester(const std::string &yySemester) {
+    _yy_semester = yySemester;
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
