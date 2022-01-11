@@ -51,7 +51,7 @@ bool Student::studyPlanIsEmpty() {
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &stud, const Student &s){
     std::string settedId = Parse::setId('s',6,s.getId());
-    stud<< "s" << settedId<< ";"<< s.getName()<<";"<<s.getSurname()<<";"<<s.getEmail();
+    stud<< settedId<< ";"<< s.getName()<<";"<<s.getSurname()<<";"<<s.getEmail();
     return stud;
 }
 

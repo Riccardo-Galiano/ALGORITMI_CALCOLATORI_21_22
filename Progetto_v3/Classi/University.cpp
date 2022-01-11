@@ -93,7 +93,7 @@ University::University() : _version(1) {
         readAllMinDistanceRequest();
     }
     catch (DbException &exc) {
-        std::cerr << exc.what() << std::endl;
+        std::cerr << exc.what() << std::endl <<std::endl;
     }
 }
 
@@ -362,6 +362,7 @@ bool University::addStuds(const std::string &fileIn) {
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuovi studenti");
     }
+    bool doDbWrite = true;
     int line_counter = 1;
     std::string line; //stringa di appoggio per l'intera riga del file
     std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione splittedLine
@@ -370,26 +371,31 @@ bool University::addStuds(const std::string &fileIn) {
         //controllo che formato file sia corretto: 3 campi
         if (_version == 2) {
             if (tokens.size() != 6) {
-                throw std::invalid_argument("errore formato file studenti alla riga: " + std::to_string(line_counter));
+                std::cerr << "errore formato file studenti alla riga: " + std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
+            }else {
+                int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
+                _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2], tokens[3], tokens[4],tokens[5]))); //inserisco il nuovo studente nella mappatura interna
+                line_counter++;
             }
-            int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-            _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
-                                                                   tokens[2], tokens[3], tokens[4],
-                                                                   tokens[5]))); //inserisco il nuovo studente nella mappatura interna
-            line_counter++;
         } else {
             if (tokens.size() != 3) {
-                throw std::invalid_argument("errore formato file studenti alla riga: " + std::to_string(line_counter));
+                std::cerr << "errore formato file studenti alla riga: " + std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
+            }else {
+                int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
+                _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
+                line_counter++;
             }
-            int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-            _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],
-                                                                   tokens[2]))); //inserisco il nuovo studente nella mappatura interna
-            line_counter++;
         }
     }
     fIn.close();
-    dbStudsWrite();
-    std::cout << "comando -a:s correttamente eseguito" << std::endl;
+    if(doDbWrite) {
+        dbStudsWrite();
+        std::cout << "comando -a:s correttamente eseguito" << std::endl;
+    }else{
+        std::cerr <<"non e' possibile aggiornare il database degli studenti per gli errori elencati in precedenza.Si invita a fornire un file in input privo di errori" << std::endl;
+    }
     return true;
 }
 
@@ -400,8 +406,8 @@ bool University::addProfessors(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuovi professori");
-        return false;
     }
+    bool doDbWrite = true;
     std::string line;
     int line_counter = 1;
     std::vector<std::string> tokens;
@@ -410,29 +416,34 @@ bool University::addProfessors(const std::string &fileIn) {
         if (_version == 2) {
             //controllo che formato file sia corretto: 3 campi
             if (tokens.size() != 6) {
-                throw std::invalid_argument(
-                        "errore formato file professori alla riga: " + std::to_string(line_counter));
+               std::cerr <<"errore formato file professori alla riga: " + std::to_string(line_counter) <<std::endl;
+               doDbWrite = false;
+            }else {
+                int matr = getNewProfessorId();
+                _professors.insert(std::pair<int, Professor>(matr,
+                                                             Professor(matr, tokens[0], tokens[1], tokens[2], tokens[3],
+                                                                       tokens[4], tokens[5])));
+                line_counter++;
             }
-            int matr = getNewProfessorId();
-            _professors.insert(std::pair<int, Professor>(matr,
-                                                         Professor(matr, tokens[0], tokens[1], tokens[2], tokens[3],
-                                                                   tokens[4], tokens[5])));
-            line_counter++;
         } else {
             //controllo che formato file sia corretto: 3 campi
             if (tokens.size() != 3) {
-                throw std::invalid_argument(
-                        "errore formato file professori alla riga: " + std::to_string(line_counter));
+                std::cerr << "errore formato file professori alla riga: " + std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
+            }else {
+                int matr = getNewProfessorId();
+                _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
+                line_counter++;
             }
-            int matr = getNewProfessorId();
-            _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
-            line_counter++;
         }
     }
     fIn.close();
-    dbProfsWrite();
-    std::cout << "comando -a:d correttamente eseguito" << std::endl;
-
+    if(doDbWrite) {
+        dbProfsWrite();
+        std::cout << "comando -a:d correttamente eseguito" << std::endl;
+    }else{
+        std::cerr <<"non e' possibile aggiornare il database dei professori per gli errori elencati in precedenza.Si invita a fornire un file in input privo di errori" << std::endl;
+    }
     return true;
 }
 
@@ -443,36 +454,50 @@ bool University::addClassrooms(const std::string &fileIn) {
         throw std::invalid_argument("errore apertura file di inserimento nuove aule");
     }
     std::string line;
+    bool doDbWrite = true;
     int line_counter = 1;
-    std::vector<std::string> tokens;
+    std::vector<std::string> infoClassroom;
     while (std::getline(fIn, line)) {
-        tokens = Parse::splittedLine(line, ';');
+        infoClassroom = Parse::splittedLine(line, ';');
         int id = getNewClassroomId();
         if (_version == 3) {
-            //controllo che formato file sia corretto: 7 campi
-            if (tokens.size() != 7) {
-                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
+            //controllo che il formato del file sia corretto: 7 campi
+            if (infoClassroom.size() != 7) {
+                std::cerr<< "errore formato file aule alla riga: " + std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
             }
-            _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
-                                                                      std::stoi(tokens[3]), std::stoi(tokens[4]),
-                                                                      std::stoi(tokens[5]), std::stoi(tokens[6]),
-                                                                      std::stoi(tokens[7]))));
-            line_counter++;
+            if(Parse::controlClassroomNotIsEmpty(infoClassroom)){
+                std::cerr << "uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +  std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
+            }
+            if(doDbWrite)
+                _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1], std::stoi(infoClassroom[2]), std::stoi(infoClassroom[3]), std::stoi(infoClassroom[4]), std::stoi(infoClassroom[5]), std::stoi(infoClassroom[6]), std::stoi(infoClassroom[7]))));
+
         } else {
-            //controllo che formato file sia corretto: 4 campi
-            if (tokens.size() != 4) {
-                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
+            //controllo che il formato del file sia corretto: 4 campi
+            if (infoClassroom.size() != 4) {
+                std::cerr <<"errore formato file aule alla riga: " + std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
             }
-            _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, tokens[0], tokens[1], std::stoi(tokens[2]),
-                                                                      std::stoi(tokens[3]))));
-            line_counter++;
-        }
+            if(Parse::controlClassroomNotIsEmpty(infoClassroom)){
+                std::cerr << "uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +  std::to_string(line_counter) << std::endl;
+                doDbWrite = false;
+            }
+            if(doDbWrite)
+                _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],std::stoi(infoClassroom[2]),std::stoi(infoClassroom[3]))));
+            }
+        line_counter++;
     }
     fIn.close();
-    dbClassRoomWrite();
-    std::cout << "comando -a:a correttamente eseguito" << std::endl;
+    if(doDbWrite) {
+        dbClassRoomWrite();
+        std::cout << "comando -a:a correttamente eseguito" << std::endl;
+    }else{
+        std::cerr <<"non e' possibile aggiornare il database delle aule per gli errori elencati in precedenza.Si invita a fornire un file in input privo di errori" << std::endl;
+    }
     return true;
 }
+
 
 ///inserimento dei nuovi corsi di studio
 bool University::addStudyCourses(const std::string &fin) {
@@ -1209,14 +1234,12 @@ void University::dbStudsWrite() {
     fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
-        Student stud = _students.at(
-                iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
         if (_version == 2) {
             std::string otherInfo = stud.getOtherInfoString();
             fout << stud << ";" << otherInfo << std::endl;
         } else
-            fout << stud
-                 << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
+            fout << stud << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
     }
     fout.close();
 
@@ -2175,6 +2198,8 @@ int University::whatIsMyStudyCourse(Course& courseToConsider) {
     }
     return -1;
 }
+
+
 
 
 

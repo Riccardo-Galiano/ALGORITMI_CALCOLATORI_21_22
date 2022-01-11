@@ -118,7 +118,7 @@ Nella;Okun;nella.okun@cox.net
 Claudio;Maschio;claudio.maschio@gmx.de
 Elda;Fierro;elda.fierro@hotmail.com
 Patrizia;Pena;patrizia.pena@yahoo.com.mx
-Ndéyekhoudia;Morea;ndéyekhoudia.morea@yahoo.com.ar
+Ndï¿½yekhoudia;Morea;ndï¿½yekhoudia.morea@yahoo.com.ar
 Djillali;Tosques;djillali.tosques@tiscali.co.uk
 Manuella;Sinibaldi;manuella.sinibaldi@facebook.com
 Nicla;Cucchiararo;nicla.cucchiararo@web.de
@@ -325,7 +325,7 @@ Chunsong;Lucchesi;chunsong.lucchesi@planet.nl
 Claudia;Bangoura;claudia.bangoura@bellsouth.net
 Safire;Artuso;safire.artuso@libero.it
 Arona;Ronello;arona.ronello@mac.com
-Andrès;Staccione;andrès.staccione@frontiernet.net
+Andrï¿½s;Staccione;andrï¿½s.staccione@frontiernet.net
 Giuseppina;Galimberti;giuseppina.galimberti@tin.it
 Paolo;Vitu;paolo.vitu@aim.com
 Adriane;Cutrona;adriane.cutrona@cox.net
@@ -1832,7 +1832,7 @@ Claudio;Carenini;claudio.carenini@yahoo.com.br
 Mirko;Aliberto;mirko.aliberto@blueyonder.co.uk
 Doina;Bussone;doina.bussone@yahoo.com.mx
 Malena;Dura;malena.dura@yahoo.es
-Aylén;Immordino;aylén.immordino@aliceadsl.fr
+Aylï¿½n;Immordino;aylï¿½n.immordino@aliceadsl.fr
 Venera;Dogaru;venera.dogaru@sbcglobal.net
 Ishaak;Colicchia;ishaak.colicchia@yahoo.co.uk
 Petronilla;Calella;petronilla.calella@yahoo.co.id
@@ -2783,7 +2783,7 @@ Chathurangi;Chericoni;chathurangi.chericoni@chello.nl
 Italo;Soares;italo.soares@home.nl
 Ana;Machetti;ana.machetti@facebook.com
 Costel;Giammello;costel.giammello@rambler.ru
-Chlóe;Rebbali;chlóe.rebbali@windstream.net
+Chlï¿½e;Rebbali;chlï¿½e.rebbali@windstream.net
 Domenico;Buriyeva;domenico.buriyeva@hotmail.com
 Mattia;Susini;mattia.susini@yahoo.com.mx
 Fabrizio;Bezhani;fabrizio.bezhani@yahoo.com
@@ -3255,7 +3255,7 @@ Bakoutie;Lajolo;bakoutie.lajolo@yahoo.co.id
 Marsola;Deideri;marsola.deideri@chello.nl
 Adriano;Missenti;adriano.missenti@free.fr
 Biagio;Jimenez;biagio.jimenez@tiscali.it
-Desireè;Medau;desireè.medau@live.it
+Desireï¿½;Medau;desireï¿½.medau@live.it
 Englian;Ottavo;englian.ottavo@charter.net
 Ziye;Turra;ziye.turra@centurytel.net
 Harouna;Mazziotti;harouna.mazziotti@att.net
@@ -4032,7 +4032,7 @@ Geraldo;Negara;geraldo.negara@mail.ru
 Dhimiter;Primiceri;dhimiter.primiceri@tiscali.co.uk
 Graziella;Burgos;graziella.burgos@optonline.net
 Ardis;Manolita;ardis.manolita@windstream.net
-Pàmela;Mendoza;pàmela.mendoza@yandex.ru
+Pï¿½mela;Mendoza;pï¿½mela.mendoza@yandex.ru
 Omar;Piazzolla;omar.piazzolla@planet.nl
 Kafaze;Imade;kafaze.imade@yahoo.it
 Ting;Khadri;ting.khadri@yahoo.com.br
@@ -4352,7 +4352,7 @@ Jesus;Salvatico;jesus.salvatico@telenet.be
 Raffaella;Tagini;raffaella.tagini@bluewin.ch
 Vania;Presotto;vania.presotto@rambler.ru
 Segunda;Sekre;segunda.sekre@juno.com
-Elìa;Todorova;elìa.todorova@centurytel.net
+Elï¿½a;Todorova;elï¿½a.todorova@centurytel.net
 Carla;Vangeli;carla.vangeli@free.fr
 Clementina;Secrieru;clementina.secrieru@aol.com
 Franco;Lefter;franco.lefter@bluewin.ch
@@ -5336,7 +5336,7 @@ Fattouma;Haman;fattouma.haman@arcor.de
 Elias;Rotolo;elias.rotolo@telenet.be
 Danut;Dahshan;danut.dahshan@freenet.de
 Moazzam;Dos;moazzam.dos@hotmail.com
-Manuél;Osaghae;manuél.osaghae@neuf.fr
+Manuï¿½l;Osaghae;manuï¿½l.osaghae@neuf.fr
 Mansor;Cadamuro;mansor.cadamuro@orange.fr
 Idalia;Otgon;idalia.otgon@rambler.ru
 Bakhomious;Scigliano;bakhomious.scigliano@web.de
@@ -5918,7 +5918,7 @@ Klevi;Maglio;klevi.maglio@mac.com
 Nazifa;Roascio;nazifa.roascio@telenet.be
 Bibiana;Navoychik;bibiana.navoychik@tiscali.co.uk
 Ramona;Bucovani;ramona.bucovani@yandex.ru
-Heléna;Monfrecola;heléna.monfrecola@comcast.net
+Helï¿½na;Monfrecola;helï¿½na.monfrecola@comcast.net
 Johnpaul;El;johnpaul.el@live.ca
 Daniela;Mangalath;daniela.mangalath@yandex.ru
 Roberto;Shanaj;roberto.shanaj@tin.it
@@ -7677,7 +7677,7 @@ Aron;Mazzotta;aron.mazzotta@yahoo.com.au
 Tomas;Vullo;tomas.vullo@yahoo.com.au
 Aurica;Ye;aurica.ye@hotmail.com
 Maria;Mongioi;maria.mongioi@live.it
-Desirée;Zoppi;desirée.zoppi@tiscali.co.uk
+Desirï¿½e;Zoppi;desirï¿½e.zoppi@tiscali.co.uk
 Klaudia;Freilino;klaudia.freilino@mac.com
 Dorian;Valanzano;dorian.valanzano@zonnet.nl
 Domenico;Ieradi;domenico.ieradi@outlook.com
@@ -8244,7 +8244,7 @@ Tefta;Gaspri;tefta.gaspri@laposte.net
 Pellegrino;Alagna;pellegrino.alagna@sfr.fr
 Rosangela;Giovine;rosangela.giovine@bluewin.ch
 Wilma;Canale;wilma.canale@me.com
-Desirèe;Delaude;desirèe.delaude@windstream.net
+Desirï¿½e;Delaude;desirï¿½e.delaude@windstream.net
 Elettra;Alessandria;elettra.alessandria@t-online.de
 Anca;Spandonaro;anca.spandonaro@live.co.uk
 Fabio;Garbarino;fabio.garbarino@aliceadsl.fr

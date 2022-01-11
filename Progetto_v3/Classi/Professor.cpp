@@ -120,6 +120,6 @@ bool Professor::amIavailable(std::string date, int hh) {
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &prof, const Professor &s) {
     std::string settedId = Parse::setId('d',6,s.getId());
-    prof << "d" << settedId << ";" << s.getName() << ";" << s.getSurname() << ";" << s.getEmail();
+    prof << settedId << ";" << s.getName() << ";" << s.getSurname() << ";" << s.getEmail();
     return prof;
 }

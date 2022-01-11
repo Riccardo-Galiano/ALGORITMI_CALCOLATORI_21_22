@@ -104,6 +104,14 @@ public:
         ss << letterId << std::setfill('0') <<std::setw(numTot)<<cod;
         return ss.str();
     }
+    static bool controlClassroomNotIsEmpty(std::vector<std::string> infoVector) {
+        for (int i = 0; i < infoVector.size(); i++) {
+            if (infoVector[i].empty())
+                return true;
+
+        }
+        return false;
+    }
 };
 
 
