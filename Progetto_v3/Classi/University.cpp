@@ -114,7 +114,7 @@ void University::readStudents() {
         nMatr = Parse::getMatr(InteroStudente[0]);
         ///controllo se la matricola è già esistente; in quel caso lancio un'eccezione, altrimenti inserisco lo studente con tutti i suoi dati
         if (_students.count(nMatr))
-            throw std::logic_error("due matricole uguali");
+            throw std::logic_error("matricola già presente");
         else if (_version == 1) {
             _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
                                                                     InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
@@ -356,7 +356,7 @@ void University::readStudyCourse() {
 }
 
 ///inserisco un nuovo studente (privo di matricola che bisogna quindi ricavare)
-bool University::addStuds(const std::string &fileIn) {
+std::vector<std::string> University::addStuds(const std::string &fileIn) {
 
     std::fstream fIn(fileIn, std::ios::in); //apro il file in lettura
     if (!fIn.is_open()) {
@@ -365,43 +365,47 @@ bool University::addStuds(const std::string &fileIn) {
     bool doDbWrite = true;
     int line_counter = 1;
     std::string line; //stringa di appoggio per l'intera riga del file
-    std::vector<std::string> tokens; //vettore di stringhe che accoglierà il ritorno della funzione splittedLine
+    std::vector<std::string> infoStud; //vettore di stringhe che accoglierà il ritorno della funzione splittedLine
     while (std::getline(fIn, line)) {//fino alla fine del file leggo un rigo alla volta
-        tokens = Parse::splittedLine(line, ';');
+        infoStud = Parse::splittedLine(line, ';');
+        int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
         //controllo che formato file sia corretto: 3 campi
         if (_version == 2) {
-            if (tokens.size() != 6) {
-                std::cerr << "errore formato file studenti alla riga: " + std::to_string(line_counter) << std::endl;
+            if (infoStud.size() != 6) {
+                _errorStringUniversity.push_back("errore formato file studenti alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
-            }else {
-                int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-                _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2], tokens[3], tokens[4],tokens[5]))); //inserisco il nuovo studente nella mappatura interna
-                line_counter++;
+            }if(Parse::controlFieldsVectorAreEmpty(infoStud)){
+                _errorStringUniversity.push_back("uno dei campi di informazione per l'aggiunta degli studenti e' vuoto alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+                }
+            if(doDbWrite){
+
+                _students.insert(std::pair<int, Student>(matr, Student(matr, infoStud[0], infoStud[1], infoStud[2], infoStud[3], infoStud[4], infoStud[5]))); //inserisco il nuovo studente nella mappatura interna
             }
         } else {
-            if (tokens.size() != 3) {
-                std::cerr << "errore formato file studenti alla riga: " + std::to_string(line_counter) << std::endl;
+            if (infoStud.size() != 3) {
+                _errorStringUniversity.push_back("errore formato file studenti alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
-            }else {
-                int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
-                _students.insert(std::pair<int, Student>(matr, Student(matr, tokens[0], tokens[1],tokens[2]))); //inserisco il nuovo studente nella mappatura interna
-                line_counter++;
+            }
+            if(Parse::controlFieldsVectorAreEmpty(infoStud)){
+                _errorStringUniversity.push_back("uno dei campi di informazione per l'aggiunta degli studenti e' vuoto alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+            }
+            if(doDbWrite) {
+                _students.insert(std::pair<int, Student>(matr, Student(matr, infoStud[0], infoStud[1],
+                                                                       infoStud[2]))); //inserisco il nuovo studente nella mappatura interna
             }
         }
+        line_counter++;
     }
     fIn.close();
-    if(doDbWrite) {
+    if(doDbWrite)
         dbStudsWrite();
-        std::cout << "comando -a:s correttamente eseguito" << std::endl;
-    }else{
-        std::cerr <<"non e' possibile aggiornare il database degli studenti per gli errori elencati in precedenza.Si invita a fornire un file in input privo di errori" << std::endl;
-    }
-    return true;
+    return _errorStringUniversity;
 }
 
 ///identico alla insertStudents(); si evita di commentare per non sporcare il codice
-bool University::addProfessors(const std::string &fileIn) {
-
+std::vector<std::string> University::addProfessors(const std::string &fileIn) {
     //addprofessor
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
@@ -410,45 +414,51 @@ bool University::addProfessors(const std::string &fileIn) {
     bool doDbWrite = true;
     std::string line;
     int line_counter = 1;
-    std::vector<std::string> tokens;
+    std::vector<std::string> infoProf;
     while (std::getline(fIn, line)) {
-        tokens = Parse::splittedLine(line, ';');
+        int matr = getNewProfessorId();
+        infoProf = Parse::splittedLine(line, ';');
         if (_version == 2) {
             //controllo che formato file sia corretto: 3 campi
-            if (tokens.size() != 6) {
-               std::cerr <<"errore formato file professori alla riga: " + std::to_string(line_counter) <<std::endl;
+            if (infoProf.size() != 6) {
+               _errorStringUniversity.push_back("errore formato file professori alla riga: " + std::to_string(line_counter));
                doDbWrite = false;
-            }else {
-                int matr = getNewProfessorId();
+            }
+            if(Parse::controlFieldsVectorAreEmpty(infoProf)){
+                _errorStringUniversity.push_back("uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+            }
+            if(doDbWrite) {
                 _professors.insert(std::pair<int, Professor>(matr,
-                                                             Professor(matr, tokens[0], tokens[1], tokens[2], tokens[3],
-                                                                       tokens[4], tokens[5])));
-                line_counter++;
+                                                             Professor(matr, infoProf[0], infoProf[1], infoProf[2], infoProf[3],
+                                                                       infoProf[4], infoProf[5])));
+
             }
         } else {
             //controllo che formato file sia corretto: 3 campi
-            if (tokens.size() != 3) {
-                std::cerr << "errore formato file professori alla riga: " + std::to_string(line_counter) << std::endl;
+            if (infoProf.size() != 3) {
+                _errorStringUniversity.push_back("errore formato file professori alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
-            }else {
-                int matr = getNewProfessorId();
-                _professors.insert(std::pair<int, Professor>(matr, Professor(matr, tokens[0], tokens[1], tokens[2])));
-                line_counter++;
+            }if(Parse::controlFieldsVectorAreEmpty(infoProf)){
+                _errorStringUniversity.push_back("uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
             }
+            if(doDbWrite)
+                _professors.insert(std::pair<int, Professor>(matr, Professor(matr, infoProf[0], infoProf[1], infoProf[2])));
+
         }
+        line_counter++;
     }
     fIn.close();
-    if(doDbWrite) {
+
+    if(doDbWrite)
         dbProfsWrite();
-        std::cout << "comando -a:d correttamente eseguito" << std::endl;
-    }else{
-        std::cerr <<"non e' possibile aggiornare il database dei professori per gli errori elencati in precedenza.Si invita a fornire un file in input privo di errori" << std::endl;
-    }
-    return true;
+
+    return _errorStringUniversity;
 }
 
 ///inserisci nuove aule
-bool University::addClassrooms(const std::string &fileIn) {
+std::vector<std::string> University::addClassrooms(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuove aule");
@@ -463,24 +473,31 @@ bool University::addClassrooms(const std::string &fileIn) {
         if (_version == 3) {
             //controllo che il formato del file sia corretto: 7 campi
             if (infoClassroom.size() != 7) {
-                std::cerr<< "errore formato file aule alla riga: " + std::to_string(line_counter) << std::endl;
+                _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
             }
-            if(Parse::controlClassroomNotIsEmpty(infoClassroom)){
-                std::cerr << "uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +  std::to_string(line_counter) << std::endl;
+            if(Parse::controlFieldsVectorAreEmpty(infoClassroom)){
+                _errorStringUniversity.push_back("uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
             }
             if(doDbWrite)
-                _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1], std::stoi(infoClassroom[2]), std::stoi(infoClassroom[3]), std::stoi(infoClassroom[4]), std::stoi(infoClassroom[5]), std::stoi(infoClassroom[6]), std::stoi(infoClassroom[7]))));
+                _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
+                                                                          std::stoi(infoClassroom[2]),
+                                                                          std::stoi(infoClassroom[3]),
+                                                                          std::stoi(infoClassroom[4]),
+                                                                          std::stoi(infoClassroom[5]),
+                                                                          std::stoi(infoClassroom[6]),
+                                                                          std::stoi(infoClassroom[7]))));
+
 
         } else {
             //controllo che il formato del file sia corretto: 4 campi
             if (infoClassroom.size() != 4) {
-                std::cerr <<"errore formato file aule alla riga: " + std::to_string(line_counter) << std::endl;
+                _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
             }
-            if(Parse::controlClassroomNotIsEmpty(infoClassroom)){
-                std::cerr << "uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +  std::to_string(line_counter) << std::endl;
+            if(Parse::controlFieldsVectorAreEmpty(infoClassroom)){
+                _errorStringUniversity.push_back("uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter));
                 doDbWrite = false;
             }
             if(doDbWrite)
@@ -489,96 +506,95 @@ bool University::addClassrooms(const std::string &fileIn) {
         line_counter++;
     }
     fIn.close();
+
     if(doDbWrite) {
         dbClassRoomWrite();
-        std::cout << "comando -a:a correttamente eseguito" << std::endl;
-    }else{
-        std::cerr <<"non e' possibile aggiornare il database delle aule per gli errori elencati in precedenza.Si invita a fornire un file in input privo di errori" << std::endl;
     }
-    return true;
+    return _errorStringUniversity;
 }
 
 
 ///inserimento dei nuovi corsi di studio
-bool University::addStudyCourses(const std::string &fin) {
-    int i;
+std::vector<std::string> University::addStudyCourses(const std::string &fin) {
+
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi di studio");
-        return false;
     }
+    int i;
+    bool doDbwrite = true;
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
-    std::vector<std::string> tokens;    //accoglierà il vettore con la riga del file scissa
+    std::vector<std::string> infoStudyCourse;    //accoglierà il vettore con la riga del file scissa
     while (std::getline(fileIn, line)) {
         ///codice, livello
-        tokens = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
-        if (tokens.size() != 2) {
-            throw std::invalid_argument(
-                    "errore formato file corsi di studio alla riga: " + std::to_string(line_counter));
-        }
-        int codCorso = getNewStudyCourseId();
-        std::string levelCourse = tokens[0];//triennale o magistrale
-        ///devo leggere i semestri
-        std::vector<int> posSem;
-        ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
-        std::size_t found = tokens[1].find_first_of("{}");
-        while (found !=
-               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            posSem.push_back(
-                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
-            found = tokens[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
-        } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
+        infoStudyCourse = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
+        if (infoStudyCourse.size() != 2) {
+            _errorStringUniversity.push_back("errore formato file corsi di studio alla riga: " + std::to_string(line_counter));
+            doDbwrite = false;
+        } else {
+            int codCorso = getNewStudyCourseId();
+            std::string levelCourse = infoStudyCourse[0];//triennale o magistrale
+            ///devo leggere i semestri
+            std::vector<int> posSem;
+            ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
+            std::size_t found = infoStudyCourse[1].find_first_of("{}");
+            while (found !=  std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+                posSem.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+                found = infoStudyCourse[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
+            } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
 
-        std::vector<std::string> semestri;
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
-            int posStart = posSem[i] + 1;// tolgo la graffa
-            int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-            semestri.push_back(tokens[1].substr(posStart,
-                                                len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
-        } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
-        ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
-        ///controllo che formato file sia corretto:
-        ///se L3 -> 6 semestri, se LM -> 4 semestri
-        if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
-            throw std::invalid_argument(
-                    "formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:" +
-                    std::to_string(line_counter));
-        }
+            std::vector<std::string> semestri;
+            for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+                int posStart = posSem[i] + 1;// tolgo la graffa
+                int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
+                semestri.push_back(infoStudyCourse[1].substr(posStart, len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+            } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
+            ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
+            ///controllo che formato file sia corretto:
+            ///se L3 -> 6 semestri, se LM -> 4 semestri
+            if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
+                _errorStringUniversity.push_back("formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:" + std::to_string(line_counter));
+                doDbwrite = false;
+            }
 
-        ///creo StudyCourse
-        bool isBachelor = false;
-        if (levelCourse.compare("BS") == 0)
-            isBachelor = true;
-        StudyCourse SCourse(codCorso, isBachelor);
-        //carico corsi e semestri letti nello studycourse
-        int year = 1;
-        int numSemester = 1;
-        for (i = 0; i < semestri.size(); i++) {
-            year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
-            numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,
-                                       line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+            ///creo StudyCourse
+            bool isBachelor = false;
+            if (levelCourse.compare("BS") == 0)
+                isBachelor = true;
+            StudyCourse SCourse(codCorso, isBachelor);
+            //carico corsi e semestri letti nello studycourse
+            int year = 1;
+            int numSemester = 1;
+            for (i = 0; i < semestri.size(); i++) {
+                year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
+                numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
+                std::vector<std::string> possibleErrors = SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse, _courses,line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+                if(possibleErrors.empty() == false) {
+                    _errorStringUniversity.insert(_errorStringUniversity.end(), possibleErrors.begin(),
+                                                  possibleErrors.end());
+                    doDbwrite = false;
+                }
+                }
+            _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
+            ifThereAreAlreadyCoursesFillYYSemesterVar(SCourse);
         }
-        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
         line_counter++;
-        ifThereAreAlreadyCoursesFillYYSemesterVar(SCourse);
     }
     ///controllo non ci siano buchi, se c'è mi ritorna eccezione
     //thereIsAHoleInTheCoursesCodes();
     fileIn.close();
-    dbStudyCourseWrite();
-    std::cout << "comando -a:f correttamente eseguito" << std::endl;
-    return true;
+    if(doDbwrite)
+       dbStudyCourseWrite();
+
+    return _errorStringUniversity;
 }
 
 ///inserisco dei nuovi corsi
-bool University::addCourses(const std::string &fin) {
+std::vector<std::string> University::addCourses(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file inserimento nuovi corsi");
-        return false;
     }
     std::string line;
     int line_counter = 1;
@@ -704,7 +720,7 @@ bool University::addCourses(const std::string &fin) {
         std::cout << "comando -a:c eseguito correttamente" << std::endl;
     }
     else
-        return false;
+        return _errorStringUniversity;
 }
 
 ///cerco la nuova matricola da associare al nuovo studente
@@ -745,7 +761,6 @@ const int University::getNewClassroomId() const {
 const int University::getNewStudyCourseId() const {
     if (_studyCourse.empty())
         return 1;
-
     auto last = _studyCourse.rbegin();  //iteratore che punta all'ultimo studente della mappa
     int toReturn =
             last->first + 1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
@@ -795,10 +810,11 @@ enum {
     update_address = 6
 };
 
-bool University::updateStuds(const std::string &fin) {
+std::vector<std::string> University::updateStuds(const std::string &fin) {
     int i;
     char c;
     int nMatr = 0;
+    bool doDbWrite = true;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file per aggiornamento studenti");
@@ -809,93 +825,93 @@ bool University::updateStuds(const std::string &fin) {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoStud = Parse::splittedLine(line, ';');
-        if (infoStud[0].empty()) {
-            throw InvalidDbException("manca la matricola dello studente alla riga: " + std::to_string(line_counter));
-        }
-        std::stringstream ss(infoStud[0]);
-        ss >> c >> nMatr;
-
-        ///se la matricola non esiste nel database
-        if (_students.find(nMatr) ==
-            _students.end()) //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            throw InvalidDbException("Il professore " + infoStud[0] + "non e' presente nel database");
-        auto iter = _students.find(nMatr);//prendo la posizione della matricola
-
         if (_version == 2) {
-            if (std::count(line.begin(), line.end(), ';') != 6)
-                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
-        } else if (std::count(line.begin(), line.end(), ';') != 3)
-            throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
+            if (std::count(line.begin(), line.end(), ';') != 6) {
+                _errorStringUniversity.push_back("errore formato file alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+            }
+        } else if (std::count(line.begin(), line.end(), ';') != 3) {
+            _errorStringUniversity.push_back(
+                    "errore formato file alla riga: " + std::to_string(line_counter));
+            doDbWrite = false;
+        }
+        if (infoStud[0].empty()) {
+            _errorStringUniversity.push_back("manca la matricola dello studente alla riga: " + std::to_string(line_counter));
+            doDbWrite = false;
+        }else {
+            std::stringstream ss(infoStud[0]);
+            ss >> c >> nMatr;
+            ///se la matricola non esiste nel database
+            if (_students.find(nMatr) == _students.end()) { //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+                _errorStringUniversity.push_back("Lo studente " + infoStud[0] + " non e' presente nel database. (Riga: " + std::to_string(line_counter) + ")");
+                doDbWrite = false;
+            }else {
+                auto iter = _students.find(nMatr);//prendo la posizione della matricola
 
-        for (i = 0; i <
-                    infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
-            if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
-                switch (i) {
-                    case update_name : {//analizzo il nome
-                        if (!(iter->second.getName() ==
-                              infoStud[i])) { //se il nome letto dal file è diverso dal nome del database
-                            iter->second.updateName(infoStud[i]); //cambio il nome
+                if(doDbWrite){
+                for (i = 0; i < infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+                    if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                        switch (i) {
+                            case update_name : {//analizzo il nome
+                                if (!(iter->second.getName() == infoStud[i])) { //se il nome letto dal file è diverso dal nome del database
+                                    iter->second.updateName(infoStud[i]); //cambio il nome
+                                }
+                                break;
+                            }
+                            case update_surName : {//analizzo il cognome
+                                if (!(iter->second.getSurname() == infoStud[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                                    iter->second.updateSurnName(infoStud[i]); //cambio il cognome
+                                }
+                                break;
+                            }
+                            case update_eMail : { //analizzo l'email
+                                if (!(iter->second.getEmail() == infoStud[i])) {//se l'email letta dal file è diversa dall'email del database
+                                    iter->second.updateEmail(infoStud[i]); //cambia l'email
+                                }
+                                break;
+                            }
+                            case update_birth: {
+                                if (!(iter->second.getBirth() == infoStud[i])) {//se la data di nascitaletta dal file è diversa dall'email del database
+                                    iter->second.updateBirth(infoStud[i]); //cambia Data di nascita
+                                }
+                                break;
+                            }
+                            case update_registrationOrEntry: {
+                                if (!(iter->second.getRegistrationOrEntry() == infoStud[i])) {//se la data di registrazione letta dal file è diversa dall'email del database
+                                    iter->second.updateRegistration(infoStud[i]); //cambia Data di registrazione
+                                }
+                                break;
+                            }
+                            case update_address: {
+                                if (!(iter->second.getAddress() ==  infoStud[i])) {//se l'indirizzo letto dal file è diversa dall'email del database
+                                    iter->second.updateAdress(infoStud[i]); //cambia l'indirizzo
+                                }
+                                break;
+                                }
+                            }
                         }
-                        break;
-                    }
-                    case update_surName : {//analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              infoStud[i])) {//se il cognome letto dal file è diverso dal cognome del database
-                            iter->second.updateSurnName(infoStud[i]); //cambio il cognome
-                        }
-                        break;
-                    }
-                    case update_eMail : { //analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              infoStud[i])) {//se l'email letta dal file è diversa dall'email del database
-                            iter->second.updateEmail(infoStud[i]); //cambia l'email
-                        }
-                        break;
-                    }
-                    case update_birth: {
-                        if (!(iter->second.getBirth() ==
-                              infoStud[i])) {//se la data di nascitaletta dal file è diversa dall'email del database
-                            iter->second.updateBirth(infoStud[i]); //cambia Data di nascita
-                        }
-                        break;
-                    }
-                    case update_registrationOrEntry: {
-                        if (!(iter->second.getRegistrationOrEntry() ==
-                              infoStud[i])) {//se la data di registrazione letta dal file è diversa dall'email del database
-                            iter->second.updateRegistration(infoStud[i]); //cambia Data di registrazione
-                        }
-                        break;
-                    }
-                    case update_address: {
-                        if (!(iter->second.getAddress() ==
-                              infoStud[i])) {//se l'indirizzo letto dal file è diversa dall'email del database
-                            iter->second.updateAdress(infoStud[i]); //cambia l'indirizzo
-                        }
-                        break;
-                    }
+                   }
                 }
-
             }
         }
         line_counter++;
     }
-
     fileIn.close();
-    dbStudsWrite();
-    std::cout << "comando -u:s correttamente eseguito" << std::endl;
-    return false;
+    if(doDbWrite)
+        dbStudsWrite();
+
+    return _errorStringUniversity;
 }
 
 ///aggiorno i professori
-bool University::updateProfessors(const std::string &fin) {
+std::vector<std::string> University::updateProfessors(const std::string &fin) {
     int i;
     char c;
     int nMatr = 0;
+    bool doDbWrite = true;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-
         throw std::invalid_argument("errore apertura file per aggiornamento professori");
-
     }
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
@@ -903,82 +919,85 @@ bool University::updateProfessors(const std::string &fin) {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoProf = Parse::splittedLine(line, ';'); //splitto il rigo nei vari campi di interesse
-        if (infoProf[0].empty()) {
-            throw std::invalid_argument("manca la matricola del professore alla riga: " + std::to_string(line_counter));
-        }
-        std::stringstream ss(infoProf[0]);
-        ss >> c >> nMatr;
-
-        if (_professors.find(nMatr) ==
-            _professors.end())//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            throw InvalidDbException("Il professore " + infoProf[0] + "non e' presente nel database");
-
-        auto iter = _professors.find(nMatr);//prendo la posizione della matricola
-
-
         if (_version == 2) {
-            if (std::count(line.begin(), line.end(), ';') != 6)
-                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
-        } else if (std::count(line.begin(), line.end(), ';') != 3)
-            throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
-
-        for (i = 0; i <
-                    infoProf.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
-
-            if (!(infoProf[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
-                switch (i) {
-                    case update_name : {//analizzo il nome
-                        if (!(iter->second.getName() ==
-                              infoProf[i])) { //se il nome letto dal file è diverso dal nome del database
-                            iter->second.updateName(infoProf[i]); //cambio il nome
+            if (std::count(line.begin(), line.end(), ';') != 6) {
+                _errorStringUniversity.push_back("errore formato file professori alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+            }
+        } else if (std::count(line.begin(), line.end(), ';') != 3) {
+            _errorStringUniversity.push_back("errore formato file professori alla riga: " + std::to_string(line_counter));
+            doDbWrite = false;
+        }
+        if (infoProf[0].empty()) {
+                _errorStringUniversity.push_back("manca la matricola del professore alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+            }else {
+                std::stringstream ss(infoProf[0]);
+                ss >> c >> nMatr;
+                if (_professors.find(nMatr) == _professors.end()) {//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+                _errorStringUniversity.push_back("Il professore " + infoProf[0] + " non e' presente nel database");
+                doDbWrite = false;
+                 } else {
+                    auto iter = _professors.find(nMatr);//prendo la posizione della matricola
+                    if (doDbWrite) {
+                        for (i = 0; i < infoProf.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+                            if (!(infoProf[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                             switch (i) {
+                                case update_name : {//analizzo il nome
+                                    if (!(iter->second.getName() ==
+                                          infoProf[i])) { //se il nome letto dal file è diverso dal nome del database
+                                        iter->second.updateName(infoProf[i]); //cambio il nome
+                                    }
+                                    break;
+                                }
+                                case update_surName : {//analizzo il cognome
+                                    if (!(iter->second.getSurname() ==
+                                          infoProf[i])) {//se il cognome letto dal file è diverso dal cognome del database
+                                        iter->second.updateSurnName(infoProf[i]); //cambio il cognome
+                                    }
+                                    break;
+                                }
+                                case update_eMail : { //analizzo l'email
+                                    if (!(iter->second.getEmail() ==
+                                          infoProf[i])) {//se l'email letta dal file è diversa dall'email del database
+                                        iter->second.updateEmail(infoProf[i]); //cambia l'email
+                                    }
+                                    break;
+                                }
+                                case update_birth: {
+                                    if (!(iter->second.getBirth() ==
+                                          infoProf[i])) {//se la data di nascitaletta dal file è diversa dall'email del database
+                                        iter->second.updateBirth(infoProf[i]); //cambia Data di nascita
+                                    }
+                                    break;
+                                }
+                                case update_registrationOrEntry: {
+                                    if (!(iter->second.getRegistrationOrEntry() ==
+                                          infoProf[i])) {//se la data di registrazione letta dal file è diversa dall'email del database
+                                        iter->second.updateRegistration(infoProf[i]); //cambia Data di registrazione
+                                    }
+                                    break;
+                                }
+                                case update_address: {
+                                    if (!(iter->second.getAddress() ==
+                                          infoProf[i])) {//se l'indirizzo letto dal file è diversa dall'email del database
+                                        iter->second.updateAdress(infoProf[i]); //cambia l'indirizzo
+                                    }
+                                    break;
+                                }
+                            }
                         }
-                        break;
-                    }
-                    case update_surName : {//analizzo il cognome
-                        if (!(iter->second.getSurname() ==
-                              infoProf[i])) {//se il cognome letto dal file è diverso dal cognome del database
-                            iter->second.updateSurnName(infoProf[i]); //cambio il cognome
-                        }
-                        break;
-                    }
-                    case update_eMail : { //analizzo l'email
-                        if (!(iter->second.getEmail() ==
-                              infoProf[i])) {//se l'email letta dal file è diversa dall'email del database
-                            iter->second.updateEmail(infoProf[i]); //cambia l'email
-                        }
-                        break;
-                    }
-                    case update_birth: {
-                        if (!(iter->second.getBirth() ==
-                              infoProf[i])) {//se la data di nascitaletta dal file è diversa dall'email del database
-                            iter->second.updateBirth(infoProf[i]); //cambia Data di nascita
-                        }
-                        break;
-                    }
-                    case update_registrationOrEntry: {
-                        if (!(iter->second.getRegistrationOrEntry() ==
-                              infoProf[i])) {//se la data di registrazione letta dal file è diversa dall'email del database
-                            iter->second.updateRegistration(infoProf[i]); //cambia Data di registrazione
-                        }
-                        break;
-                    }
-                    case update_address: {
-                        if (!(iter->second.getAddress() ==
-                              infoProf[i])) {//se l'indirizzo letto dal file è diversa dall'email del database
-                            iter->second.updateAdress(infoProf[i]); //cambia l'indirizzo
-                        }
-                        break;
                     }
                 }
-
             }
-        }
+          }
         line_counter++;
     }
     fileIn.close();
-    dbProfsWrite();
-    std::cout << "comando -u:d correttamente eseguito" << std::endl;
-    return true;
+    if(doDbWrite)
+        dbProfsWrite();
+
+    return _errorStringUniversity;
 }
 
 ///aggiornamento aule
@@ -994,14 +1013,14 @@ enum {
 };
 
 ///aggiorno le Classroom
-bool University::updateClassroom(const std::string &fin) {
+std::vector<std::string> University::updateClassroom(const std::string &fin) {
     int i;
     char c;
     int nMatr = 0;
+    bool doDbWrite = true;
 
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-
         throw std::invalid_argument("errore apertura file per aggiornamento aule");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -1011,87 +1030,93 @@ bool University::updateClassroom(const std::string &fin) {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoClassroom = Parse::splittedLine(line, ';');
-        if (infoClassroom[0].empty()) {
-            throw std::invalid_argument("manca il codice dell' aula alla riga: " + std::to_string(line_counter));
-        }
         std::stringstream ss(infoClassroom[0]);
         ss >> c >> nMatr;
-
-        if (_classroom.find(nMatr) == _classroom.end())//se non trovo il codice
-            throw std::invalid_argument("L'aula" + infoClassroom[0] + "non e' presente nel database");
-
-        auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
         if (_version == 3) {
-            if (std::count(line.begin(), line.end(), ';') != 7)
-                throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
+            if (std::count(line.begin(), line.end(), ';') != 7) {
+                _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
+                doDbWrite = false;
+            }
         } else if (std::count(line.begin(), line.end(), ';') != 4) {
-            throw std::invalid_argument("errore formato file aule alla riga: " + std::to_string(line_counter));
+            _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
+            doDbWrite = false;
         }
-        for (i = 1; i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
-            if (!(infoClassroom[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
-                switch (i) {
-                    case update_lab : {//analizzo il tipo di classroom: aula o lab
-                        bool lab;
-                        if (infoClassroom[i] ==
-                            "L") //se il carattere intercettato è L allora l'aula da aggiungee sarà un lab
-                            lab = true;
-                        else//altrimenti sarà un'aula
-                            lab = false;
+        if (infoClassroom[0].empty()) {
+            _errorStringUniversity.push_back("manca il codice dell' aula alla riga: " + std::to_string(line_counter));
+            doDbWrite = false;
+        }else if(_classroom.find(nMatr) == _classroom.end()) {//se non trovo il codice
+            _errorStringUniversity.push_back("L'aula" + infoClassroom[0] + "non e' presente nel database");
+            doDbWrite = false;
+        }
+        if(doDbWrite) {
+            auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
+            for (i = 1;
+                 i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
+                if (!(infoClassroom[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
+                    switch (i) {
+                        case update_lab : {//analizzo il tipo di classroom: aula o lab
+                            bool lab;
+                            if (infoClassroom[i] ==
+                                "L") //se il carattere intercettato è L allora l'aula da aggiungee sarà un lab
+                                lab = true;
+                            else//altrimenti sarà un'aula
+                                lab = false;
 
-                        if (iter->second.getLab() != lab) {//se è cambiata da aula a lab o viceversa
-                            iter->second.updateType(lab); //cambia il tipo: lab o aula
+                            if (iter->second.getLab() != lab) {//se è cambiata da aula a lab o viceversa
+                                iter->second.updateType(lab); //cambia il tipo: lab o aula
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_nameClassroom : {//analizzo il nome della classroom
-                        if (!(iter->second.getName() ==
-                              infoClassroom[i])) {//se il nome letto dal file è diverso dal nome nel database
-                            iter->second.updateName(infoClassroom[i]); //cambia il nome
+                        case update_nameClassroom : {//analizzo il nome della classroom
+                            if (!(iter->second.getName() ==
+                                  infoClassroom[i])) {//se il nome letto dal file è diverso dal nome nel database
+                                iter->second.updateName(infoClassroom[i]); //cambia il nome
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_nSeats : {//analizzo la capienza
-                        if (iter->second.getNSeats() !=
-                            stoi(infoClassroom[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
-                            iter->second.updateNSeats(stoi(infoClassroom[i])); //cambia la capienza dell'aula
+                        case update_nSeats : {//analizzo la capienza
+                            if (iter->second.getNSeats() !=
+                                stoi(infoClassroom[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
+                                iter->second.updateNSeats(stoi(infoClassroom[i])); //cambia la capienza dell'aula
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_nSeatsExam : {
-                        if (iter->second.getNExamSeats() !=
-                            stoi(infoClassroom[i])) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
-                            iter->second.updateNExamSeats(stoi(infoClassroom[i])); //cambia l'email
+                        case update_nSeatsExam : {
+                            if (iter->second.getNExamSeats() !=
+                                stoi(infoClassroom[i])) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
+                                iter->second.updateNExamSeats(stoi(infoClassroom[i])); //cambia l'email
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_drawingTable: {
-                        if (iter->second.getDrawingTable() !=
-                            stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                            iter->second.updateDrawingTable(
-                                    stoi(infoClassroom[i])); //cambia il numero di tavoli da disegno
+                        case update_drawingTable: {
+                            if (iter->second.getDrawingTable() !=
+                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateDrawingTable(
+                                        stoi(infoClassroom[i])); //cambia il numero di tavoli da disegno
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_computer: {
-                        if (iter->second.getComputer() !=
-                            stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                            iter->second.updateComputer(stoi(infoClassroom[i])); //cambia il numero di computer
+                        case update_computer: {
+                            if (iter->second.getComputer() !=
+                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateComputer(stoi(infoClassroom[i])); //cambia il numero di computer
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_projector: {
-                        if (iter->second.getProjector() !=
-                            stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                            iter->second.updateProjector(stoi(infoClassroom[i])); //cambia il numero di proiettori
+                        case update_projector: {
+                            if (iter->second.getProjector() !=
+                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateProjector(stoi(infoClassroom[i])); //cambia il numero di proiettori
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    case update_blackBoard: {
-                        if (iter->second.getBlackBoard() !=
-                            stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                            iter->second.updateBlackBoard(stoi(infoClassroom[i])); //cambia il numero di lavagne
+                        case update_blackBoard: {
+                            if (iter->second.getBlackBoard() !=
+                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateBlackBoard(stoi(infoClassroom[i])); //cambia il numero di lavagne
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
             }
@@ -1099,13 +1124,14 @@ bool University::updateClassroom(const std::string &fin) {
         line_counter++;
     }
     fileIn.close();
-    dbClassRoomWrite();
-    std::cout << "comando -u:a correttamente eseguito" << std::endl;
-    return true;
+    if(doDbWrite)
+         dbClassRoomWrite();
+
+    return _errorStringUniversity;
 }
 
 ///inserisce un nuovo anno accademico ad un corso già esistente
-bool University::insertCourses(const std::string &fin) {
+std::vector<std::string> University::insertCourses(const std::string &fin) {
     std::vector<std::string> specificYearCourse;
     bool doDbWrite = true;
     std::string acYear;
@@ -1222,10 +1248,10 @@ bool University::insertCourses(const std::string &fin) {
         dbCourseWrite();
         dbStudyCourseWrite();
         std::cout << "comando -i:c eseguito correttamente" << std::endl;
-        return true;
+
     }
-    else
-        return false;
+
+        return _errorStringUniversity;
 }
 
 ///riscrive il database degli studenti
@@ -1355,7 +1381,7 @@ void University::readProfsNoAvailability() {
 }
 
 ///setta il periodo delle sessioni
-bool University::setSessionPeriod(std::string &acYear, std::string &winterSession,
+std::vector<std::string> University::setSessionPeriod(std::string &acYear, std::string &winterSession,
                                   std::string &summerSession, std::string &autumnSession) {
     std::string ac = acYear;
     int acStartYear = Parse::getAcStartYear(ac);
@@ -1369,11 +1395,11 @@ bool University::setSessionPeriod(std::string &acYear, std::string &winterSessio
     _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
     dbDateSessionsWrite();
     std::cout << "comando -s current_a correttamente eseguito" << std::endl;
-    return true;
+    return _errorStringUniversity;
 }
 
 ///set indisponibilità professori in base all'anno
-bool University::setProfsNoAvailability(std::string acYear, const std::string &fin) {
+std::vector<std::string> University::setProfsNoAvailability(std::string acYear, const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw DbException("file availabilities non esistente");
@@ -1402,7 +1428,7 @@ bool University::setProfsNoAvailability(std::string acYear, const std::string &f
     dbNoAvailabilityWrite();
     std::cout << "comando -s set_availability correttamente eseguito" << std::endl;
 
-    return true;
+    return _errorStringUniversity;
 }
 
 ///prende tutte le indisponibilità di tutti i prof
@@ -1448,7 +1474,7 @@ void University::dbNoAvailabilityWrite() {
 }
 
 ///organizza gli esami per l'anno accademico
-bool University::setExamDate(std::string acYear, std::string outputNameFile) {
+std::vector<std::string> University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
     int constraintRelaxParameter = 0;
     bool esito = false;
@@ -1467,7 +1493,7 @@ bool University::setExamDate(std::string acYear, std::string outputNameFile) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
     std::cout << "comando -g correttamente eseguito" << std::endl;
-    return esito;
+    return _errorStringUniversity;
 }
 
 ///controlla se i file sono coerenti
@@ -1687,11 +1713,11 @@ void University::readCourseNotActive() {
 }
 
 ///versione dei database con informazioni aggiuntive
-bool University::versioning(int newVersion) {
+std::vector<std::string> University::versioning(int newVersion) {
 
     if (checkVersioningRequest(newVersion) == false)
         ///se è tornato false, perchè newVersion == _version, mi devo fermare
-        return true;
+        return _errorStringUniversity;
 
     ///se tutto ok, eseguiamo cambiamento
     if (newVersion == 2 && _version == 1) {
@@ -1708,7 +1734,7 @@ bool University::versioning(int newVersion) {
         _version = newVersion;
     }
     writeVersion(newVersion);
-    return true;
+    return _errorStringUniversity;
 }
 
 ///rename del database con _old prima dell'estensione .txt
@@ -1742,7 +1768,7 @@ bool University::renameOldDataBase(int version) {
     return false;
 }
 
-bool University::addStudyPlan(std::string fin) {
+std::vector<std::string> University::addStudyPlan(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file inserimento nuovi piani di studio");
@@ -1764,7 +1790,7 @@ bool University::addStudyPlan(std::string fin) {
     }
     fileIn.close();
     dbStudyPlanWrite();
-    return false;
+    return _errorStringUniversity;
 }
 
 void University::dbStudyPlanWrite() {
@@ -1805,7 +1831,7 @@ void University::readStudyPlan() {
     fileIn.close();
 }
 
-void University::updateStudyPlan(std::string fin) {
+std::vector<std::string> University::updateStudyPlan(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file aggiornamento piani di studio");
@@ -1831,7 +1857,7 @@ void University::updateStudyPlan(std::string fin) {
 }
 
 
-bool University::insertStudentsGrades(std::string fin) {
+std::vector<std::string> University::insertStudentsGrades(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw std::invalid_argument("errore apertura file inserimento voti");
@@ -1862,7 +1888,7 @@ bool University::insertStudentsGrades(std::string fin) {
     }
     fileIn.close();
     dbAppealsWrite();
-    return true;
+    return _errorStringUniversity;
 }
 
 void University::registerStudentsToSpecificYearCourses(std::vector<std::string> &courses, Student &stud,
@@ -1967,7 +1993,7 @@ void University::readAllMinDistanceRequest() {
     }
 }
 
-bool University::setMinDistance(std::string acYear, std::string name) {
+std::vector<std::string> University::setMinDistance(std::string acYear, std::string name) {
     int year = Parse::getAcStartYear(acYear);
     std::fstream fin;
     fin.open(name, std::ios::in);
@@ -2002,7 +2028,7 @@ bool University::setMinDistance(std::string acYear, std::string name) {
         }
     }
     minDistanceRequestWrite();
-    return true;
+    return _errorStringUniversity;
 }
 
 void University::minDistanceRequestWrite() {
@@ -2156,7 +2182,7 @@ void University::assignAppealsToClassroom(std::string appeal, int startSlotHour,
     }
 }
 
-bool University::requestChanges(std::string acYear, std::string fin) {
+std::vector<std::string> University::requestChanges(std::string acYear, std::string fin) {
     //<id_corso>;<numero_sessione>;<numero_appello>;<direzione_spostamento>;<num_settimane>
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -2171,7 +2197,7 @@ bool University::requestChanges(std::string acYear, std::string fin) {
         char shift = infoChanges[3][0];
         int numWeeks = stoi(infoChanges[4]);
     }
-    return true;
+    return _errorStringUniversity;
 }
 
 void University::ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse &sCourse) {
@@ -2198,6 +2224,7 @@ int University::whatIsMyStudyCourse(Course& courseToConsider) {
     }
     return -1;
 }
+
 
 
 

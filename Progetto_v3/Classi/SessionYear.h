@@ -73,6 +73,7 @@ private:
     //key: data come stringa "matricola-idCorso"
     //value: gap
     std::map<std::string,int> _gapProfs;
+    std::vector<std::string> _errorStringSessionYear;
 };
 
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);

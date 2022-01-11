@@ -51,6 +51,7 @@ private:
     //value: non ci interessa.. se esiste la tupla -> allora occupata!
     std::map<std::string,int> _disavailableRooms;
     updateClassroom _othersInfoClassroom;
+    std::vector<std::string> _errorStringClassrooms;
 
 };
 std::ostream &operator<<(std::ostream &room, const Classroom &c);

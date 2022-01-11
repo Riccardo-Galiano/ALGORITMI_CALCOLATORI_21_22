@@ -18,16 +18,16 @@ public:
     University();
 
     ///session management
-    bool setProfsNoAvailability(std::string ,const std::string& );
-    bool setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
+    std::vector<std::string> setProfsNoAvailability(std::string ,const std::string& );
+    std::vector<std::string> setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
     std::vector<std::string> allProfsNoAvailabilities();
-    bool setExamDate(std::string,std::string);
-    bool setMinDistance(std::string ,std::string );
-    bool requestChanges(std::string,std::string);
+    std::vector<std::string> setExamDate(std::string,std::string);
+    std::vector<std::string> setMinDistance(std::string ,std::string );
+    std::vector<std::string> requestChanges(std::string,std::string);
     void minDistanceRequestWrite();
 
     ///DB management
-    bool versioning(int);
+    std::vector<std::string> versioning(int);
     bool checkVersioningRequest(int);
     void revertChanges(int);
     void revertChanges2to1();
@@ -36,9 +36,9 @@ public:
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
     bool controlGroupedCourses(std::vector<std::string>&,std::string,int,std::string);
-    bool insertCourses(const std::string &fin);
-    bool insertStudentsGrades(std::string fin);
-    bool addStudyPlan(std::string fin);
+    std::vector<std::string> insertCourses(const std::string &fin);
+    std::vector<std::string> insertStudentsGrades(std::string fin);
+    std::vector<std::string> addStudyPlan(std::string fin);
     void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
@@ -47,6 +47,7 @@ public:
     void assignAppealsToClassroom(std::string,int,std::string,int);
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse&);
     int whatIsMyStudyCourse(Course& course);
+    void allErrorClasses();
 
     ///Input (from DB)
     void readCourseNotActive();
@@ -85,17 +86,17 @@ public:
     const std::string getNewCourseId()const;
 
     ///add
-    bool addStuds(const std::string &fileIn);
-    bool addProfessors(const std::string &fileIn);
-    bool addClassrooms(const std::string &fileIn);
-    bool addStudyCourses(const std::string &fileIn);
-    bool addCourses(const std::string &fileIn);
+    std::vector<std::string> addStuds(const std::string &fileIn);
+    std::vector<std::string> addProfessors(const std::string &fileIn);
+    std::vector<std::string> addClassrooms(const std::string &fileIn);
+    std::vector<std::string> addStudyCourses(const std::string &fileIn);
+    std::vector<std::string> addCourses(const std::string &fileIn);
 
     ///update
-    bool updateStuds(const std::string &fin);
-    bool updateProfessors(const std::string &fin);
-    bool updateClassroom(const std::string &fin);
-    void updateStudyPlan(std::string fin);
+    std::vector<std::string> updateStuds(const std::string &fin);
+    std::vector<std::string> updateProfessors(const std::string &fin);
+    std::vector<std::string> updateClassroom(const std::string &fin);
+    std::vector<std::string> updateStudyPlan(std::string fin);
 
 private:
 
@@ -108,6 +109,7 @@ private:
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     int _version;
+    std::vector<std::string> _errorStringUniversity;
     void fillGroupedCourse (std::vector<std::string>&, std::string&, std::string&, int);
 };
 

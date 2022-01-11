@@ -126,6 +126,7 @@ private:
     //value startSlot
     std::map<int,int> _startSlotPerEachAppeal;
     int _numAppeal;
+    std::vector<std::string> _errorStringSpecificYearCourse;
 };
 
 std::ostream& operator<<(std::ostream& output, const SpecificYearCourse& s);

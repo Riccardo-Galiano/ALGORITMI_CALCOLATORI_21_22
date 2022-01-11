@@ -18,8 +18,6 @@ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int 
         _lab = true;
     } else if (AorL == "A") {
         _lab = false;
-    } else {
-        throw std::invalid_argument("errore aula o lab");
     }
     _othersInfoClassroom._blackBoard = -1;
     _othersInfoClassroom._computer = -1;
@@ -36,8 +34,6 @@ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int 
         _lab = true;
     } else if (AorL == "A") {
         _lab = false;
-    } else {
-        throw std::invalid_argument("errore aula o lab");
     }
     _othersInfoClassroom._blackBoard = blackBoard;
     _othersInfoClassroom._computer = computer;

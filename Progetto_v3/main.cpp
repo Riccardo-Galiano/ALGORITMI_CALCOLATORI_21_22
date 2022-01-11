@@ -6,7 +6,7 @@
 #include <vector>
 #include "Classi/Professor.h"
 #include "Classi/DbException.h"
-
+using namespace std;
 
 enum {
     add_student,
@@ -72,43 +72,44 @@ int returnCode(char *argv[]) {
     return -1;
 }
 
-void startProgram(University &uni, char *argv[]) {
+std::vector<std::string> program(University &uni, char **argv) {
     int code = returnCode(argv);
+    std::vector<std::string> errorString;
     switch (code) {
         case add_student: {
-            uni.addStuds(argv[2]);
+            errorString = uni.addStuds(argv[2]);
             break;
         }
         case add_professor: {
-            uni.addProfessors(argv[2]);
+            errorString = uni.addProfessors(argv[2]);
             break;
         }
         case add_classroom: {
-            uni.addClassrooms(argv[2]);
+            errorString = uni.addClassrooms(argv[2]);
             break;
         }
         case add_course: {
-            uni.addCourses(argv[2]);
+            errorString = uni.addCourses(argv[2]);
             break;
         }
         case add_studyCourse: {
-            uni.addStudyCourses(argv[2]);
+            errorString = uni.addStudyCourses(argv[2]);
             break;
         }
         case update_student: {
-            uni.updateStuds(argv[2]);
+            errorString = uni.updateStuds(argv[2]);
             break;
         }
         case update_professor: {
-            uni.updateProfessors(argv[2]);
+            errorString = uni.updateProfessors(argv[2]);
             break;
         }
         case update_classroom: {
-            uni.updateClassroom(argv[2]);
+            errorString = uni.updateClassroom(argv[2]);
             break;
         }
         case insert_course: {
-            uni.insertCourses(argv[2]);
+            errorString = uni.insertCourses(argv[2]);
             break;
         }
         case set_session_period: {
@@ -116,49 +117,50 @@ void startProgram(University &uni, char *argv[]) {
             std::string one(argv[4]);
             std::string two(argv[5]);
             std::string three(argv[6]);
-            uni.setSessionPeriod(acyear, one, two, three);
+            errorString = uni.setSessionPeriod(acyear, one, two, three);
             break;
         }
         case set_availability: {
-            uni.setProfsNoAvailability(argv[3], argv[4]);
+            errorString = uni.setProfsNoAvailability(argv[3], argv[4]);
             break;
         }
         case set_exam_date: {
             std::string year(argv[2]);
-            uni.setExamDate(argv[2], argv[3]);
+            errorString = uni.setExamDate(argv[2], argv[3]);
             break;
         }
         case versioning:{
-           uni.versioning(atoi(argv[2]));
+            errorString = uni.versioning(atoi(argv[2]));
             break;
         }
         case add_study_plan_student:{
-            uni.addStudyPlan(argv[2]);
+            errorString = uni.addStudyPlan(argv[2]);
             break;
         }
         case update_study_plan_student:{
-            uni.updateStudyPlan(argv[2]);
+            errorString = uni.updateStudyPlan(argv[2]);
             break;
         }
         case insert_students_grades:{
-            uni.insertStudentsGrades(argv[2]);
+            errorString = uni.insertStudentsGrades(argv[2]);
             break;
         }
         case set_min_distance:{
-            uni.setMinDistance(argv[3],argv[4]);
+            errorString = uni.setMinDistance(argv[3],argv[4]);
             break;
         }
         case request_changes:{
-            uni.requestChanges(argv[3],argv[4]);
+            errorString = uni.requestChanges(argv[3],argv[4]);
             break;
         }
         default:
             throw std::invalid_argument("comando non trovato");
     }
+    return errorString;
 };
 
+void errorPrint(std::vector<std::string> errorString,char **argv);
 
-using namespace std;
 
 int main(int argc, char *argv[]) {
     /*
@@ -176,8 +178,24 @@ int main(int argc, char *argv[]) {
     if (argc < 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");
     }
-    startProgram(poliTo, argv);
-
+    std::vector<std::string> possibleError = program(poliTo, argv);
+    errorPrint(possibleError,argv);
 
     return 0;
+}
+
+void errorPrint(std::vector<std::string> errorString,char **argv){
+    std::string comandLetter = argv[1];
+    std::stringstream comand ;
+    comand << comandLetter;
+    if(comandLetter =="-s")
+        comand << " " << argv[2];
+    if(errorString.empty()){
+        cout << "il comando " + comand.str()+" e' stato eseguito" << std::endl;
+    }else {
+        for (int i = 0; i < errorString.size(); i++) {
+            cerr << errorString[i] << std::endl;
+        }
+        cerr << "non e' stato possibile completare il comando " + comand.str() +" per gli errori elencati sopra";
+    }
 }

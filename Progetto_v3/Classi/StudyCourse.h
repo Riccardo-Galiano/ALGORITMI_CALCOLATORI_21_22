@@ -16,7 +16,7 @@ public:
     StudyCourse(const int, const bool &);
 
     ///StudyCourse management
-    bool addSemesterCourses(const int,const  int ,const std::string &,const std::map<int, StudyCourse>&, std::map<std::string, Course>&,int);
+    std::vector<std::string> addSemesterCourses(const int,const  int ,const std::string &,const std::map<int, StudyCourse>&, std::map<std::string, Course>&,int);
     bool addOffCourses(const std::vector<std::string> &);
     bool updateSemestersAndOffCourses( const std::string&,std::string&,std::vector<std::string>&);
     bool assignStudyCourse(std::string);
@@ -31,7 +31,7 @@ public:
     ///control
     bool offCoursesEmpty() const;
     std::string isInWhichSemester(std::string) const;
-    bool sameSemester(std::string,const std::map<int, StudyCourse>&,int);
+    std::vector<std::string> sameSemester(std::string,const std::map<int, StudyCourse>&,int, int posFile);
 
 
 private:
@@ -39,6 +39,7 @@ private:
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di stringhe
     std::list <std::string> _offCourses;
+    std::vector<std::string> _errorStringStudyCourse;
 
 };
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s);
