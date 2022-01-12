@@ -10,7 +10,7 @@
 #include "Date.h"
 #include "ExamDay.h"
 #include "StudyCourse.h"
-#include "SystemLog.h"
+#include "SessionLog.h"
 
 typedef struct {
     std::string season;
@@ -57,7 +57,7 @@ public:
     void generateOutputFiles(std::string&,int,std::map<std::string, Course>&);
 
 private:
-    SystemLog _sysLog;
+    SessionLog _sysLog;
     int _acYear;
     //key: "autumn" , "winter", "summer"
     //value: session struct

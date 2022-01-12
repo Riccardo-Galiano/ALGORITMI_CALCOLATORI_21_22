@@ -86,7 +86,7 @@ public:
     const std::string getNewCourseId()const;
 
     ///add
-    std::vector<std::string> addStuds(const std::string &fileIn);
+    void addStuds(const std::string &fileIn);
     std::vector<std::string> addProfessors(const std::string &fileIn);
     std::vector<std::string> addClassrooms(const std::string &fileIn);
     std::vector<std::string> addStudyCourses(const std::string &fileIn);
@@ -106,6 +106,9 @@ private:
     std::map<int, Classroom> _classroom;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
+    //key: "acYear-IdCourse"
+    //value: corsi grouped
+    std::map<std::string, std::vector<std::string>> _coursesGrouped;
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     int _version;

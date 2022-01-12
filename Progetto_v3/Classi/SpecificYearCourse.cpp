@@ -11,7 +11,8 @@
 
 
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
-                                       std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester,std::vector<int> studyCourse, int line_counter) :
+                                       std::vector<std::string> exam, std::vector<std::string> idGrouped,
+                                       std::string yy_semester, std::vector<int> studyCourse, int line_counter) :
         _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
@@ -32,9 +33,12 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
 bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, int line_counter) {
 
     std::vector<professor> profConOre;
-    for (int i = 0; i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
-        profConOre = getProfsFromString(profsToSplit[i],line_counter);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
-        _professors.insert(std::pair<int, std::vector<professor>>(i,profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
+    for (int i = 0;
+         i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
+        profConOre = getProfsFromString(profsToSplit[i],
+                                        line_counter);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
+        _professors.insert(std::pair<int, std::vector<professor>>(i,
+                                                                  profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
 
     return false;
@@ -75,7 +79,7 @@ int SpecificYearCourse::getParalleleCours() const {
 }
 
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
-std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,int line_counter) {
+std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs, int line_counter) {
     int mainProf; //titolare del corso
     std::vector<std::string> singoliProfDaLeggere;
     std::vector<professor> profToReturn;
@@ -108,12 +112,13 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
                 profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
 
     }
-    int id=-1, hlez=-1, hexe=-1, hlab=-1;
-    bool mainProfFound=false;
+    int id = -1, hlez = -1, hexe = -1, hlab = -1;
+    bool mainProfFound = false;
     for (int i = 0; i < singoliProfDaLeggere.size(); i++) {//inserisco le info per ogni prof
         std::stringstream ss(singoliProfDaLeggere[i]);
-        ss >> c >> id >> c >> hlez >> c >> hexe >> c >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
-        if(id == -1 || hlez == -1 || hexe == -1 || hlab == -1)
+        ss >> c >> id >> c >> hlez >> c >> hexe >> c
+           >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
+        if (id == -1 || hlez == -1 || hexe == -1 || hlab == -1)
             throw std::invalid_argument("ore professore non valide alla riga:" + std::to_string(line_counter));
         professor p{};//struct
         p.prof_id = id;
@@ -122,12 +127,12 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         p.hLab = hlab;
         if (p.prof_id == mainProf) {//se l'id analizzato uguale a quello del titolare letto in precedenza
             p.mainProf = true;
-            mainProfFound=true;
+            mainProfFound = true;
         }
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
-    if(mainProfFound==false){
-        throw std::invalid_argument("manca il professore titolare alla riga: "+ std::to_string(line_counter));
+    if (mainProfFound == false) {
+        throw std::invalid_argument("manca il professore titolare alla riga: " + std::to_string(line_counter));
     }
     return profToReturn;
 }
@@ -167,7 +172,7 @@ std::vector<int> SpecificYearCourse::getAllProfMatr() {
     std::vector<professor> profs;
     for (int i = 0; i < _professors.size(); i++) {
         profs = _professors.at(i);//prende il vettore di prof per l'iesimo corso parallelo
-        for (int j = 0; j < profs.size(); j++){
+        for (int j = 0; j < profs.size(); j++) {
             professors.push_back(profs[j].prof_id);//prende l'id di ogni prof dell'iesimo corso parallelo
         }
     }
@@ -214,15 +219,15 @@ const Exam &SpecificYearCourse::getExam() const {
 
 ///ritorna il semestre di un corso di studio a cui è associato il corso
 int SpecificYearCourse::getSemester() const {
-    if(_yy_semester.empty())
+    if (_yy_semester.empty())
         //non ancora assegnato ad un semestre
         return -1;
-    return stoi(_yy_semester.substr(2,1));
+    return stoi(_yy_semester.substr(2, 1));
 }
 
 ///ritorna l'anno di un corso di studio a cui è associato il corso
 int SpecificYearCourse::getYearOfTheSemester() const {
-    return stoi(_yy_semester.substr(0,1));
+    return stoi(_yy_semester.substr(0, 1));
 }
 
 ///ritorna i corsi di studio a cui un corso è associato
@@ -232,7 +237,7 @@ std::vector<int> SpecificYearCourse::getStudyCourseAssigned() const {
 
 ///ritorna se è dello stesso semestre ed è attivo
 bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const {
-    if(semesterGiven == this->getSemester() && _active)
+    if (semesterGiven == this->getSemester() && _active)
         return true;
     else
         return false;
@@ -240,7 +245,7 @@ bool SpecificYearCourse::canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGi
 
 ///ritorna quanti appelli ho già assegnato
 int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
-    if(_howManyTimesIAmAssignedInASession.count(session)==0)
+    if (_howManyTimesIAmAssignedInASession.count(session) == 0)
         return 0;
     return _howManyTimesIAmAssignedInASession.at(session).size();
 }
@@ -248,34 +253,35 @@ int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
 ///ritorna la data dell'appello precedentemente assegnato per un corso
 Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
     //ritorna 1900-01-01 se non trova la data del primo appello
-    if(amIAssignedAlreadyInThisSession(session) == 0){
-        return Date ();
+    if (amIAssignedAlreadyInThisSession(session) == 0) {
+        return Date();
     }
     return _howManyTimesIAmAssignedInASession.at(session)[0];
 }
 
 /// Segna che è stato assegnato un esame per questo corso ad una certa data
-bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay,int session) {
-    std::vector<Date>vectorOfExamDays;
+bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay, int session) {
+    std::vector<Date> vectorOfExamDays;
     vectorOfExamDays.push_back(examDay);
-    if(_howManyTimesIAmAssignedInASession.count(session)==0){
-        _howManyTimesIAmAssignedInASession.insert(std::pair <int, std::vector<Date>> (session,vectorOfExamDays));
-    }else if(_howManyTimesIAmAssignedInASession.count(session)==1){
+    if (_howManyTimesIAmAssignedInASession.count(session) == 0) {
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(session, vectorOfExamDays));
+    } else if (_howManyTimesIAmAssignedInASession.count(session) == 1) {
         _howManyTimesIAmAssignedInASession.at(session).push_back(examDay);
     }
     return true;
 }
 
 ///aggiunge uno studente
-bool SpecificYearCourse::addGradeToStudent(Student& stud, int _passYear, int mark,std::string appealsDate,std::string idCourse) {
+bool SpecificYearCourse::addGradeToStudent(Student &stud, int _passYear, int mark, std::string appealsDate,
+                                           std::string idCourse) {
     //controllo che lo studente sia associato al corso in quello specifico anno
-   if (_studentsEnrolled.find(stud.getId())==_studentsEnrolled.end()){
-       std::string settedId = Parse::setId('s',6,stud.getId());
-       throw InvalidDbException("lo studente con  matricola " + settedId + " non e' iscritto al corso " + idCourse );
+    if (_studentsEnrolled.find(stud.getId()) == _studentsEnrolled.end()) {
+        std::string settedId = Parse::setId('s', 6, stud.getId());
+        throw InvalidDbException("lo studente con  matricola " + settedId + " non e' iscritto al corso " + idCourse);
     }
-    student& studToUpdate = _studentsEnrolled.at(stud.getId());
+    student &studToUpdate = _studentsEnrolled.at(stud.getId());
     studToUpdate._grade = mark;
-    if(mark >18 && mark<30){
+    if (mark > 18 && mark < 30) {
         studToUpdate._passYear = _passYear;
         totStudentsNotPassed--;
         studToUpdate._passed = true;
@@ -285,13 +291,13 @@ bool SpecificYearCourse::addGradeToStudent(Student& stud, int _passYear, int mar
     return true;
 }
 
-bool SpecificYearCourse::assignYY_SemToAllYear(std::string& acYYoff,std::string& yy_semester) {
+bool SpecificYearCourse::assignYY_SemToAllYear(std::string &acYYoff, std::string &yy_semester) {
     _yy_semester = yy_semester;
     _acYearOff = acYYoff;
     return true;
 }
 
-std::string &SpecificYearCourse::getAcYearOff(){
+std::string &SpecificYearCourse::getAcYearOff() {
     return _acYearOff;
 }
 
@@ -300,7 +306,7 @@ int SpecificYearCourse::getTotStudentsExam() {
 }
 
 bool SpecificYearCourse::addClassroomsToAppeal(int numAppeal, std::vector<int> &rooms) {
-    _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(numAppeal,rooms));
+    _roomsEachAppeal.insert(std::pair<int, std::vector<int>>(numAppeal, rooms));
     return true;
 }
 
@@ -308,13 +314,13 @@ int SpecificYearCourse::getNumNextAppeal() {
     int tot = 0;
     auto start = _howManyTimesIAmAssignedInASession.begin();
     auto end = _howManyTimesIAmAssignedInASession.end();
-    for(auto iter = start; iter != end; iter++){
+    for (auto iter = start; iter != end; iter++) {
         tot += iter->second.size();
     }
     return tot;
 }
 
-bool SpecificYearCourse::addStudent(int acYearRegistration, Student& stud) {
+bool SpecificYearCourse::addStudent(int acYearRegistration, Student &stud) {
     std::string appealsInitialization = "1900-01-01";
     student studToAdd;
     studToAdd._studId = stud.getId();
@@ -342,32 +348,34 @@ const std::map<int, std::vector<Date>> &SpecificYearCourse::getHowManyTimesIAmAs
 
 std::vector<Date> SpecificYearCourse::getAllAppeals() const {
     std::vector<Date> allAppeals;
-    std::map<int,std::vector<Date>> allSessionPerYear = getHowManyTimesIAmAssignedInASession();
-    for(auto iterSession = allSessionPerYear.begin(); iterSession != allSessionPerYear.end();iterSession++) {
-        allAppeals.insert(allAppeals.begin(), iterSession->second.begin(),iterSession->second.end());
+    std::map<int, std::vector<Date>> allSessionPerYear = getHowManyTimesIAmAssignedInASession();
+    for (auto iterSession = allSessionPerYear.begin(); iterSession != allSessionPerYear.end(); iterSession++) {
+        allAppeals.insert(allAppeals.begin(), iterSession->second.begin(), iterSession->second.end());
     }
     return allAppeals;
 }
 
-bool SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam,std::string appealDate) {
-   for(int i  = 0; i<allStudPassedExam.size();i++){
-       int id = Parse::getMatr(allStudPassedExam[i].first);
-       int passYear = stoi(appealDate.substr(0,4));
-       student& stud = _studentsEnrolled.at(id);
-       stud._passed = true;
-       stud._grade = allStudPassedExam[i].second;
-       stud._appealPassed = appealDate;
-       stud._passYear = passYear;
-   }
+bool SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam,
+                                                  std::string appealDate) {
+    for (int i = 0; i < allStudPassedExam.size(); i++) {
+        int id = Parse::getMatr(allStudPassedExam[i].first);
+        int passYear = stoi(appealDate.substr(0, 4));
+        student &stud = _studentsEnrolled.at(id);
+        stud._passed = true;
+        stud._grade = allStudPassedExam[i].second;
+        stud._appealPassed = appealDate;
+        stud._passYear = passYear;
+    }
     return false;
 }
 
 std::string SpecificYearCourse::getAppealsForAllSession() {
     std::stringstream ss;
     int numAppeals = 0;
-    for(auto iterSessionAppeals = _howManyTimesIAmAssignedInASession.begin();iterSessionAppeals != _howManyTimesIAmAssignedInASession.end();iterSessionAppeals++){
+    for (auto iterSessionAppeals = _howManyTimesIAmAssignedInASession.begin();
+         iterSessionAppeals != _howManyTimesIAmAssignedInASession.end(); iterSessionAppeals++) {
         std::vector<Date> appeals = iterSessionAppeals->second;
-        switch (iterSessionAppeals->first){
+        switch (iterSessionAppeals->first) {
             case 1: {
                 ss << "winter[";
                 break;
@@ -387,16 +395,16 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
             ss << "{";
             ss << appeals[i] << "," << getStartHourAppeal(numAppeals) << "," << getRoomsPerAppealsString(numAppeals);
             ss << "}";
-            if(i < appeals.size()-1)
+            if (i < appeals.size() - 1)
                 ss << ",";
             numAppeals++;
         }
-        ss<<"]";
-        if(iterSessionAppeals->first < 3)
-            ss<<"%";
+        ss << "]";
+        if (iterSessionAppeals->first < 3)
+            ss << "%";
     }
 
-    return  ss.str();
+    return ss.str();
 }
 
 bool SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> appealPerSession) {
@@ -421,9 +429,9 @@ bool SpecificYearCourse::notExamsAssigned() {
 
 std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) {
     std::map<int, student> allStudentsPassed;
-    for(auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end();iterStud++){
+    for (auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end(); iterStud++) {
         student currentStud = iterStud->second;
-        if(currentStud._passed == true) {
+        if (currentStud._passed == true) {
             Date appealPassed = currentStud._appealPassed;
             if (appealPassed == dateAppeal) {
                 allStudentsPassed.insert(std::pair<int, student>(currentStud._studId, currentStud));
@@ -432,27 +440,29 @@ std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date da
     }
     return allStudentsPassed;
 }
+
 ///inserisco tutti i corsi raggruppati nello spYY e cancello il suo id
-void SpecificYearCourse::assignGrouped(std::vector<std::string> & idGrouped, std::string & idCourse, std::string & thisCourse) {
-_idGroupedCourses=idGrouped;
-_idGroupedCourses.push_back(idCourse);
-auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(),thisCourse);
-_idGroupedCourses.erase(pos);
+void
+SpecificYearCourse::assignGrouped(std::vector<std::string> &idGrouped, std::string &idCourse, std::string &thisCourse) {
+    _idGroupedCourses = idGrouped;
+    _idGroupedCourses.push_back(idCourse);
+    auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(), thisCourse);
+    _idGroupedCourses.erase(pos);
 }
 
 std::string SpecificYearCourse::getRoomsPerAppealsString(int numAppeals) {
-     std::stringstream ss;
-     std::vector<int> roomsPerAppeals = _roomsEachAppeal.at(numAppeals);
-     for(int i = 0; i<roomsPerAppeals.size(); i++){
-         ss<<roomsPerAppeals[i];
-         if(i < roomsPerAppeals.size()-1)
-             ss<<"|";
-     }
+    std::stringstream ss;
+    std::vector<int> roomsPerAppeals = _roomsEachAppeal.at(numAppeals);
+    for (int i = 0; i < roomsPerAppeals.size(); i++) {
+        ss << roomsPerAppeals[i];
+        if (i < roomsPerAppeals.size() - 1)
+            ss << "|";
+    }
     return ss.str();
 }
 
 bool SpecificYearCourse::addStartSlotToAppeal(int numAppeal, int startExamHour) {
-    _startSlotPerEachAppeal.insert(std::pair<int,int>(numAppeal,startExamHour));
+    _startSlotPerEachAppeal.insert(std::pair<int, int>(numAppeal, startExamHour));
     return true;
 }
 

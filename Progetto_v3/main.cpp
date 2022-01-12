@@ -6,6 +6,8 @@
 #include <vector>
 #include "Classi/Professor.h"
 #include "Classi/DbException.h"
+#include "Classi/SystemLog.h"
+
 using namespace std;
 
 enum {
@@ -29,6 +31,7 @@ enum {
     request_changes
 };
 
+SystemLog sysLog;
 
 int returnCode(char *argv[]) {
     std::string paramInput = argv[1];
@@ -77,7 +80,18 @@ std::vector<std::string> program(University &uni, char **argv) {
     std::vector<std::string> errorString;
     switch (code) {
         case add_student: {
-            errorString = uni.addStuds(argv[2]);
+            std::string strToAddToLog;
+            try {
+                uni.addStuds(argv[2]);
+            }
+            catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non ho potuto ....\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                break;
+            }
+            strToAddToLog.append("Ho eseguito correttamente...\n");
+            sysLog.appendToLog(strToAddToLog,false);
             break;
         }
         case add_professor: {
@@ -159,9 +173,6 @@ std::vector<std::string> program(University &uni, char **argv) {
     return errorString;
 };
 
-void errorPrint(std::vector<std::string> errorString,char **argv);
-
-
 int main(int argc, char *argv[]) {
     /*
     try {
@@ -178,24 +189,10 @@ int main(int argc, char *argv[]) {
     if (argc < 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");
     }
-    std::vector<std::string> possibleError = program(poliTo, argv);
-    errorPrint(possibleError,argv);
-
+    program(poliTo, argv);
+    if(sysLog.errorsOccurred())
+        std::cerr << sysLog.getLog();
+    else
+        std::cout << sysLog.getLog();
     return 0;
-}
-
-void errorPrint(std::vector<std::string> errorString,char **argv){
-    std::string comandLetter = argv[1];
-    std::stringstream comand ;
-    comand << comandLetter;
-    if(comandLetter =="-s")
-        comand << " " << argv[2];
-    if(errorString.empty()){
-        cout << "il comando " + comand.str()+" e' stato eseguito" << std::endl;
-    }else {
-        for (int i = 0; i < errorString.size(); i++) {
-            cerr << errorString[i] << std::endl;
-        }
-        cerr << "non e' stato possibile completare il comando " + comand.str() +" per gli errori elencati sopra";
-    }
 }
