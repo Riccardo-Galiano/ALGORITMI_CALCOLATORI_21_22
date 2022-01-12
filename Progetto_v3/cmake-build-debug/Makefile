@@ -338,6 +338,33 @@ Classi/Professor.cpp.s:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.s
 .PHONY : Classi/Professor.cpp.s
 
+Classi/SessionLog.obj: Classi/SessionLog.cpp.obj
+
+.PHONY : Classi/SessionLog.obj
+
+# target to build an object file
+Classi/SessionLog.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj
+.PHONY : Classi/SessionLog.cpp.obj
+
+Classi/SessionLog.i: Classi/SessionLog.cpp.i
+
+.PHONY : Classi/SessionLog.i
+
+# target to preprocess a source file
+Classi/SessionLog.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i
+.PHONY : Classi/SessionLog.cpp.i
+
+Classi/SessionLog.s: Classi/SessionLog.cpp.s
+
+.PHONY : Classi/SessionLog.s
+
+# target to generate assembly for a file
+Classi/SessionLog.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s
+.PHONY : Classi/SessionLog.cpp.s
+
 Classi/SessionYear.obj: Classi/SessionYear.cpp.obj
 
 .PHONY : Classi/SessionYear.obj
@@ -587,6 +614,9 @@ help:
 	@echo ... Classi/Professor.obj
 	@echo ... Classi/Professor.i
 	@echo ... Classi/Professor.s
+	@echo ... Classi/SessionLog.obj
+	@echo ... Classi/SessionLog.i
+	@echo ... Classi/SessionLog.s
 	@echo ... Classi/SessionYear.obj
 	@echo ... Classi/SessionYear.i
 	@echo ... Classi/SessionYear.s

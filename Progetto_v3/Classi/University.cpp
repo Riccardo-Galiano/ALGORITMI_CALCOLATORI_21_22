@@ -359,7 +359,7 @@ void University::addStuds(const std::string &fileIn) {
 
     std::fstream fIn(fileIn, std::ios::in); //apro il file in lettura
     if (!fIn.is_open()) {
-        throw std::invalid_argument("errore apertura file di inserimento nuovi studenti");
+        throw std::invalid_argument("errore apertura file di inserimento nuovi studenti \n");
     }
     bool doDbWrite = true;
     std::string error;
@@ -384,7 +384,7 @@ void University::addStuds(const std::string &fileIn) {
                                                                        infoStud[5]))); //inserisco il nuovo studente nella mappatura interna
             }
         } else {
-            if (infoStud.size() != 3) {
+            if (infoStud.size() != 3 && infoStud.size() != 2) {
                 error.append("errore formato file studenti alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             } else if (Parse::controlFieldsVectorAreEmpty(infoStud)) {
@@ -406,56 +406,46 @@ void University::addStuds(const std::string &fileIn) {
 }
 
 ///identico alla insertStudents(); si evita di commentare per non sporcare il codice
-std::vector<std::string> University::addProfessors(const std::string &fileIn) {
+void University::addProfessors(const std::string &fileIn) {
     //addprofessor
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
-        throw std::invalid_argument("errore apertura file di inserimento nuovi professori");
+        throw std::invalid_argument("errore apertura file di inserimento nuovi professori \n");
     }
     bool doDbWrite = true;
     std::string line;
     int line_counter = 1;
     std::vector<std::string> infoProf;
+    std::string error;
     while (std::getline(fIn, line)) {
         int matr = getNewProfessorId();
         infoProf = Parse::splittedLine(line, ';');
         if (_version == 2) {
             //controllo che formato file sia corretto: 3 campi
-            if (infoProf.size() != 6) {
-                _errorStringUniversity.push_back(
-                        "errore formato file professori alla riga: " + std::to_string(line_counter));
+            if (infoProf.size() != 6 && infoProf.size() != 5) {
+                error.append("errore formato file professori alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            }
-            if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
-                _errorStringUniversity.push_back(
+            }else if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
+                error.append(
                         "uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " +
-                        std::to_string(line_counter));
+                        std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            }
-            if (doDbWrite) {
+            }else if (infoProf.size() == 6) {
                 _professors.insert(std::pair<int, Professor>(matr,
                                                              Professor(matr, infoProf[0], infoProf[1], infoProf[2],
                                                                        infoProf[3],
                                                                        infoProf[4], infoProf[5])));
-
             }
         } else {
             //controllo che formato file sia corretto: 3 campi
-            if (infoProf.size() != 3) {
-                _errorStringUniversity.push_back(
-                        "errore formato file professori alla riga: " + std::to_string(line_counter));
+            if (infoProf.size() != 3 && infoProf.size() != 2) {
+                error.append("errore formato file professori alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            }
-            if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
-                _errorStringUniversity.push_back(
-                        "uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " +
-                        std::to_string(line_counter));
+            }else if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
+                error.append("uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            }
-            if (doDbWrite)
-                _professors.insert(
-                        std::pair<int, Professor>(matr, Professor(matr, infoProf[0], infoProf[1], infoProf[2])));
-
+            }else if (infoProf.size() == 3)
+                _professors.insert(std::pair<int, Professor>(matr, Professor(matr, infoProf[0], infoProf[1], infoProf[2])));
         }
         line_counter++;
     }
@@ -463,12 +453,13 @@ std::vector<std::string> University::addProfessors(const std::string &fileIn) {
 
     if (doDbWrite)
         dbProfsWrite();
+    else
+        throw std::invalid_argument(error);
 
-    return _errorStringUniversity;
 }
 
 ///inserisci nuove aule
-std::vector<std::string> University::addClassrooms(const std::string &fileIn) {
+void University::addClassrooms(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
         throw std::invalid_argument("errore apertura file di inserimento nuove aule");
@@ -476,6 +467,7 @@ std::vector<std::string> University::addClassrooms(const std::string &fileIn) {
     std::string line;
     bool doDbWrite = true;
     int line_counter = 1;
+    std::string error;
     std::vector<std::string> infoClassroom;
     while (std::getline(fIn, line)) {
         infoClassroom = Parse::splittedLine(line, ';');
@@ -483,13 +475,11 @@ std::vector<std::string> University::addClassrooms(const std::string &fileIn) {
         if (_version == 3) {
             //controllo che il formato del file sia corretto: 7 campi
             if (infoClassroom.size() != 7) {
-                _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
+                error.append("errore formato file aule alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
             if (Parse::controlFieldsVectorAreEmpty(infoClassroom)) {
-                _errorStringUniversity.push_back(
-                        "uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +
-                        std::to_string(line_counter));
+                error.append("uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
             if (doDbWrite)
@@ -505,13 +495,11 @@ std::vector<std::string> University::addClassrooms(const std::string &fileIn) {
         } else {
             //controllo che il formato del file sia corretto: 4 campi
             if (infoClassroom.size() != 4) {
-                _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
+                error.append("errore formato file aule alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
             if (Parse::controlFieldsVectorAreEmpty(infoClassroom)) {
-                _errorStringUniversity.push_back(
-                        "uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +
-                        std::to_string(line_counter));
+                error.append("uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
             if (doDbWrite)
@@ -523,10 +511,10 @@ std::vector<std::string> University::addClassrooms(const std::string &fileIn) {
     }
     fIn.close();
 
-    if (doDbWrite) {
+    if (doDbWrite)
         dbClassRoomWrite();
-    }
-    return _errorStringUniversity;
+    else
+        throw std::invalid_argument(error);
 }
 
 
@@ -848,18 +836,19 @@ enum {
     update_address = 6
 };
 
-std::vector<std::string> University::updateStuds(const std::string &fin) {
+void University::updateStuds(const std::string &fin) {
     int i;
     char c;
     int nMatr = 0;
     bool doDbWrite = true;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file per aggiornamento studenti");
+        throw std::invalid_argument("errore apertura file per aggiornamento studenti \n");
     }
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
     std::vector<std::string> infoStud;
+    std::string error;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
         infoStud = Parse::splittedLine(line, ';');
@@ -869,31 +858,26 @@ std::vector<std::string> University::updateStuds(const std::string &fin) {
 
         if (_version == 2) {
             if (std::count(line.begin(), line.end(), ';') != 6) {
-                _errorStringUniversity.push_back("errore formato file alla riga: " + std::to_string(line_counter));
+                error.append("errore formato file alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
         } else if (std::count(line.begin(), line.end(), ';') != 3) {
-            _errorStringUniversity.push_back("errore formato file alla riga: " + std::to_string(line_counter));
+            error.append("errore formato file alla riga: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
         }
         if (infoStud[0].empty()) {
-            _errorStringUniversity.push_back(
-                    "manca la matricola dello studente alla riga: " + std::to_string(line_counter));
+            error.append("manca la matricola dello studente alla riga: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
         } else if (canBeAnId == false) {
-            _errorStringUniversity.push_back("il primo campo alla riga " + std::to_string(line_counter) +
-                                             " non puo' essere un codice Id di uno studente");
+            error.append("il primo campo alla riga " + std::to_string(line_counter) + " non puo' essere un codice Id di uno studente \n");
             doDbWrite == false;
-        } else if (_students.find(nMatr) ==
-                   _students.end()) { //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            _errorStringUniversity.push_back("Lo studente " + infoStud[0] + " non e' presente nel database. (Riga: " +
-                                             std::to_string(line_counter) + ")");
+        } else if (_students.find(nMatr) == _students.end()) { //find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+            error.append("Lo studente " + infoStud[0] + " non e' presente nel database. (Riga: " + std::to_string(line_counter) + ") \n");
             doDbWrite = false;
         }
         if (doDbWrite) {
             auto iter = _students.find(nMatr);//prendo la posizione della matricola
-            for (i = 0; i <
-                        infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+            for (i = 0; i < infoStud.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
                 if (!(infoStud[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
                     switch (i) {
                         case update_name : {//analizzo il nome
@@ -950,19 +934,18 @@ std::vector<std::string> University::updateStuds(const std::string &fin) {
     if (doDbWrite)
         dbStudsWrite();
 
-    return _errorStringUniversity;
 }
 
 ///aggiorno i professori
-std::vector<std::string> University::updateProfessors(const std::string &fin) {
+void University::updateProfessors(const std::string &fin) {
     int i;
     char c;
     int nMatr = 0;
     bool doDbWrite = true;
-
+    std::string error;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file per aggiornamento professori");
+        throw std::invalid_argument("errore apertura file per aggiornamento professori \n");
     }
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
@@ -981,28 +964,23 @@ std::vector<std::string> University::updateProfessors(const std::string &fin) {
                 doDbWrite = false;
             }
         } else if (std::count(line.begin(), line.end(), ';') != 3) {
-            _errorStringUniversity.push_back(
-                    "errore formato file professori alla riga: " + std::to_string(line_counter));
+            error.append("errore formato file professori alla riga: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
         }
         if (infoProf[0].empty()) {
-            _errorStringUniversity.push_back(
-                    "manca la matricola del professore alla riga: " + std::to_string(line_counter));
+            error.append("manca la matricola del professore alla riga: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
         } else if (canBeAnId == false) {
-            _errorStringUniversity.push_back("il primo campo alla riga " + std::to_string(line_counter) +
-                                             " non puo' essere un codice Id di un professore");
+            error.append("il primo campo alla riga " + std::to_string(line_counter) + " non puo' essere un codice Id di un professore \n");
             doDbWrite == false;
-        } else if (_professors.find(nMatr) ==
-                   _professors.end()) {//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
-            _errorStringUniversity.push_back("Il professore " + infoProf[0] + " non e' presente nel database");
+        } else if (_professors.find(nMatr) == _professors.end()) {//find mi restituisce literatore alla chiave inserita(nMatr). se non lo trova mi ritorna l'iteratore dell'elemento successivo all'ultimo
+            error.append("Il professore " + infoProf[0] + " non e' presente nel database \n");
             doDbWrite = false;
         }
         if (doDbWrite) {
             auto iter = _professors.find(nMatr);//prendo la posizione della matricola
 
-            for (i = 0; i <
-                        infoProf.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
+            for (i = 0; i < infoProf.size(); i++) {  //analizzo i campi della riga del file passato come parametro che andranno aggiornati
                 if (!(infoProf[i].empty())) {//se la stringa raccolta da tokens è vuota l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
                     switch (i) {
                         case update_name : {//analizzo il nome
@@ -1057,8 +1035,8 @@ std::vector<std::string> University::updateProfessors(const std::string &fin) {
     fileIn.close();
     if (doDbWrite)
         dbProfsWrite();
-
-    return _errorStringUniversity;
+    else
+        throw std::invalid_argument(error);
 }
 
 ///aggiornamento aule
@@ -1074,7 +1052,7 @@ enum {
 };
 
 ///aggiorno le Classroom
-std::vector<std::string> University::updateClassroom(const std::string &fin) {
+void University::updateClassroom(const std::string &fin) {
     int i;
     char c;
     int nMatr = 0;
@@ -1082,10 +1060,11 @@ std::vector<std::string> University::updateClassroom(const std::string &fin) {
 
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file per aggiornamento aule");
+        throw std::invalid_argument("errore apertura file per aggiornamento aule \n");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
+    std::string error;
     std::vector<std::string> infoClassroom;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
 
@@ -1095,22 +1074,21 @@ std::vector<std::string> University::updateClassroom(const std::string &fin) {
         ss >> c >> nMatr;
         if (_version == 3) {
             if (std::count(line.begin(), line.end(), ';') != 7) {
-                _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
+                error.append("errore formato file aule alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
         } else if (std::count(line.begin(), line.end(), ';') != 4) {
-            _errorStringUniversity.push_back("errore formato file aule alla riga: " + std::to_string(line_counter));
+            error.append("errore formato file aule alla riga: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
         }
         if (infoClassroom[0].empty()) {
-            _errorStringUniversity.push_back("manca il codice dell' aula alla riga: " + std::to_string(line_counter));
+            error.append("manca il codice dell' aula alla riga: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
         } else if (canBeAnId == false) {
-            _errorStringUniversity.push_back("il primo campo alla riga " + std::to_string(line_counter) +
-                                             " non puo' essere un codice Id di una aula");
+            error.append("il primo campo alla riga " + std::to_string(line_counter) + " non puo' essere un codice Id di una aula \n");
             doDbWrite == false;
         } else if (_classroom.find(nMatr) == _classroom.end()) {//se non trovo il codice
-            _errorStringUniversity.push_back("L'aula" + infoClassroom[0] + "non e' presente nel database");
+            error.append("L'aula" + infoClassroom[0] + "non e' presente nel database \n");
             doDbWrite = false;
         }
         if (doDbWrite) {
@@ -1191,8 +1169,8 @@ std::vector<std::string> University::updateClassroom(const std::string &fin) {
     fileIn.close();
     if (doDbWrite)
         dbClassRoomWrite();
-
-    return _errorStringUniversity;
+    else
+        throw std::invalid_argument(error);
 }
 
 ///inserisce un nuovo anno accademico ad un corso già esistente

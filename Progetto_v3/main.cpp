@@ -86,20 +86,40 @@ std::vector<std::string> program(University &uni, char **argv) {
             }
             catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non ho potuto ....\n");
+                strToAddToLog.append("Non e' stato possibile effetuare il comando -a:s per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 break;
             }
-            strToAddToLog.append("Ho eseguito correttamente...\n");
+            strToAddToLog.append("Il comando -a:s e' stato eseguito correttamente\n");
             sysLog.appendToLog(strToAddToLog,false);
             break;
         }
         case add_professor: {
-            errorString = uni.addProfessors(argv[2]);
-            break;
+            std::string strToAddToLog;
+            try {
+                uni.addProfessors(argv[2]);
+            }catch(std::exception& occurredException){
+                    strToAddToLog = occurredException.what();
+                    strToAddToLog.append("Non e' stato possibile effetuare il comando -a:d per gli errori elencati precedentemente\n");
+                    sysLog.appendToLog(strToAddToLog,true);
+                    break;
+                }
+                strToAddToLog.append("Il comando -a:d e' stato eseguito correttamente\n");
+                sysLog.appendToLog(strToAddToLog,false);
+                break;
         }
         case add_classroom: {
-            errorString = uni.addClassrooms(argv[2]);
+            std::string strToAddToLog;
+            try{
+            uni.addClassrooms(argv[2]);
+            }catch(std::exception& occurredException){
+                 strToAddToLog = occurredException.what();
+                 strToAddToLog.append("Non e' stato possibile effetuare il comando -a:a per gli errori elencati precedentemente\n");
+                 sysLog.appendToLog(strToAddToLog,true);
+             break;
+            }
+            strToAddToLog.append("Il comando -a:a e' stato eseguito correttamente\n");
+            sysLog.appendToLog(strToAddToLog,false);
             break;
         }
         case add_course: {
@@ -111,15 +131,45 @@ std::vector<std::string> program(University &uni, char **argv) {
             break;
         }
         case update_student: {
-            errorString = uni.updateStuds(argv[2]);
+            std:: string strToAddToLog;
+            try{
+            uni.updateStuds(argv[2]);
+            }catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non e' stato possibile effetuare il comando -u:s per gli errori elencati precedentemente\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                break;
+            }
+            strToAddToLog.append("Il comando -u:s e' stato eseguito correttamente\n");
+            sysLog.appendToLog(strToAddToLog,false);
             break;
         }
         case update_professor: {
-            errorString = uni.updateProfessors(argv[2]);
+            std:: string strToAddToLog;
+            try{
+            uni.updateProfessors(argv[2]);
+            }catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non e' stato possibile effetuare il comando -u:d per gli errori elencati precedentemente\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                break;
+            }
+            strToAddToLog.append("Il comando -u:d e' stato eseguito correttamente\n");
+            sysLog.appendToLog(strToAddToLog,false);
             break;
         }
         case update_classroom: {
-            errorString = uni.updateClassroom(argv[2]);
+            std:: string strToAddToLog;
+            try {
+                uni.updateClassroom(argv[2]);
+            }catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non e' stato possibile effetuare il comando -u:a per gli errori elencati precedentemente\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                break;
+            }
+            strToAddToLog.append("Il comando -u:a e' stato eseguito correttamente\n");
+            sysLog.appendToLog(strToAddToLog,false);
             break;
         }
         case insert_course: {

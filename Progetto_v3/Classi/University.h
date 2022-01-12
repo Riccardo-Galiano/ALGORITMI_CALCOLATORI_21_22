@@ -87,15 +87,15 @@ public:
 
     ///add
     void addStuds(const std::string &fileIn);
-    std::vector<std::string> addProfessors(const std::string &fileIn);
-    std::vector<std::string> addClassrooms(const std::string &fileIn);
+    void addProfessors(const std::string &fileIn);
+    void addClassrooms(const std::string &fileIn);
     std::vector<std::string> addStudyCourses(const std::string &fileIn);
     std::vector<std::string> addCourses(const std::string &fileIn);
 
     ///update
-    std::vector<std::string> updateStuds(const std::string &fin);
-    std::vector<std::string> updateProfessors(const std::string &fin);
-    std::vector<std::string> updateClassroom(const std::string &fin);
+    void updateStuds(const std::string &fin);
+    void updateProfessors(const std::string &fin);
+    void updateClassroom(const std::string &fin);
     std::vector<std::string> updateStudyPlan(std::string fin);
 
 private:

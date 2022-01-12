@@ -55,6 +55,16 @@ CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj: ../Classi/Professor.cpp
 CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj: ../Classi/Professor.h
 CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj: ../Classi/UniversityMember.h
 
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Course.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Date.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Exam.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Professor.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.cpp
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SpecificYearCourse.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Student.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/UniversityMember.h
+
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Classroom.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Course.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Date.h
@@ -119,11 +129,11 @@ CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/ExamDay.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/InvalidDbException.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/Parse.hpp
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/Professor.h
+CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/SessionLog.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/SessionYear.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/SpecificYearCourse.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/Student.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/StudyCourse.h
-CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/SystemLog.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/University.cpp
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/University.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/UniversityMember.h
@@ -139,6 +149,7 @@ CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/DbException.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Exam.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/ExamDay.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Professor.h
+CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/SessionLog.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/SessionYear.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/SpecificYearCourse.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Student.h

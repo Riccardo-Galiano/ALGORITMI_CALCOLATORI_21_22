@@ -131,6 +131,12 @@
 		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionLog.cpp">
+			<Option target="Progetto_v3"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionLog.h">
+			<Option target="Progetto_v3"/>
+		</Unit>
 		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
