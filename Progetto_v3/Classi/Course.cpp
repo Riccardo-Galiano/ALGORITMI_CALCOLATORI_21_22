@@ -273,7 +273,7 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
 
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         std::vector<std::string> groupedCourse = iterSpecificYear->second.getIdGroupedCourses();
-        int sem;
+        int sem = 0;
         bool active = iterSpecificYear->second.getisActive();
         for (int i = 0; i < groupedCourse.size();i++){
             ///controllo che i raggruppati siano o tutti spenti o tutti attivi
@@ -287,11 +287,13 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
                 sem = iterSpecificYear->second.getSemester();
                 int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,
                                                                                 groupedCourse[i]);
-                if (semGrouped != sem)
-                    throw std::logic_error("il seguente corso raggruppato " + groupedCourse[i] +
-                                             " non e' dello stesso semestre di: " + getName() +
-                                             " ;corrispondente al codice: " + getId());
-               }
+                if (sem != -1 && semGrouped != -1) {
+                    if (semGrouped != sem)
+                        throw std::logic_error("il seguente corso raggruppato " + groupedCourse[i] +
+                                               " non e' dello stesso semestre di: " + getName() +
+                                               " ;corrispondente al codice: " + getId());
+                }
+            }
         }
     }
     return true;

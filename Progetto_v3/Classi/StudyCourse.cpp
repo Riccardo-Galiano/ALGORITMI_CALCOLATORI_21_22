@@ -152,7 +152,6 @@ std::string StudyCourse::getOffCoursesString() const {
 ///controlla se un corso presente in altri corsi di studio è posto sempre allo stesso semestre
 std::vector<std::string> StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> & studyCourse,int semester,int posFile) {
     int sem = 0;
-
     for(auto iterStudyCourse = studyCourse.begin();iterStudyCourse != studyCourse.end();iterStudyCourse++){
        std::string result = iterStudyCourse->second.isInWhichSemester(idCourse);
        if(result != "") {
@@ -184,7 +183,7 @@ bool StudyCourse::assignStudyCourse(std::string course) {
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
     std::string settedId = Parse::setId('C',3,s.getId());
-    studC << "C"<<settedId<<";";
+    studC << settedId << ";";
     if(s.getIsBachelor())
         studC << "BS;";
     else

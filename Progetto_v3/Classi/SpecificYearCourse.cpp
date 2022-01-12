@@ -214,6 +214,9 @@ const Exam &SpecificYearCourse::getExam() const {
 
 ///ritorna il semestre di un corso di studio a cui è associato il corso
 int SpecificYearCourse::getSemester() const {
+    if(_yy_semester.empty())
+        //non ancora assegnato ad un semestre
+        return -1;
     return stoi(_yy_semester.substr(2,1));
 }
 

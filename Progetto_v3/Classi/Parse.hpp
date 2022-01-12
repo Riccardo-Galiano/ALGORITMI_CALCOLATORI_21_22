@@ -111,6 +111,20 @@ public:
         }
         return false;
     }
+    static bool controlItCanBeAnId(std::string Id, int numMatr){
+        std::stringstream ss(Id);
+        char c;
+        std::string matrWithoutLetter;
+        ss >> c >> matrWithoutLetter;
+        if(matrWithoutLetter.size() != numMatr){
+            return false;
+        }
+        for(int i = 0; i<numMatr; i++){
+            if(!isdigit(matrWithoutLetter[i]))
+                return false;
+        }
+        return true;
+    }
 };
 
 

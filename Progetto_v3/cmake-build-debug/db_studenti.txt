@@ -1,8 +1,8 @@
 s000001;Illary;Di;illary.di@sympatico.ca
 s000002;Miriam;Benkhada;miriam.benkhada@centurytel.net
 s000003;Rachela;Idahosa;rachela.idahosa@libero.it
-s000004;Roberto;Cadoni;roberto.cadoni@orange.fr
-s000005;Rebeca;Feltrin;rebeca.feltrin@yahoo.fr
+s000004;Francesco;Cadoni;roberto.cadoni@orange.fr
+s000005;Rebeca;Feltrin;rebeca.feltrin@gmail.fr
 s000006;Merj;Khramchenko;merj.khramchenko@live.it
 s000007;Renato;Avramo;renato.avramo@aliceadsl.fr
 s000008;Marie;Mostafa;marie.mostafa@t-online.de
@@ -10,7 +10,7 @@ s000009;Hra;Sereno;hra.sereno@yahoo.es
 s000010;Emiddio;Savescu;emiddio.savescu@yahoo.com
 s000011;Salvatrice;Zolla;salvatrice.zolla@live.ca
 s000012;Walter;Lupieri;walter.lupieri@yahoo.es
-s000013;Edelina;Gyurka;edelina.gyurka@free.fr
+s000013;Tosoni;Aristo Donato;aristodonato.tosoni@virgilio.it
 s000014;Marco;Ouzeggane;marco.ouzeggane@wanadoo.fr
 s000015;Tina;Marsano;tina.marsano@club-internet.fr
 s000016;Maikon;Jarju;maikon.jarju@earthlink.net
@@ -37,7 +37,7 @@ s000036;Gratiela;Babbo;gratiela.babbo@club-internet.fr
 s000037;Xhovan;Laveggio;xhovan.laveggio@rambler.ru
 s000038;Simon;Cartello;simon.cartello@yahoo.fr
 s000039;Cristina;Mantese;cristina.mantese@yahoo.es
-s000040;Uldino;Almammadov;uldino.almammadov@alice.it
+s000040;Francesco;Almammadov;roberto.cadoni@orange.fr
 s000041;Michelina;Celano;michelina.celano@me.com
 s000042;Elio;Chira;elio.chira@free.fr
 s000043;Fulvia;Fiorino;fulvia.fiorino@hetnet.nl

@@ -1,8 +1,8 @@
 d000001;Arienti;Di;illary.di@sympatico.ca
 d000002;Miriam;Benkhada;gianbattista.bertanzibianco@gmail.com
 d000003;Rachela;Idahosa;rachela.idahosa@libero.it
-d000004;Roberto;Cadoni;roberto.cadoni@orange.fr
-d000005;Rebeca;Feltrin;rebeca.feltrin@yahoo.fr
+d000004;Francesco;Cadoni;roberto.cadoni@orange.fr
+d000005;Rebeca;Feltrin;rebeca.feltrin@gmail.fr
 d000006;Merj;Khramchenko;merj.khramchenko@live.it
 d000007;Renato;Avramo;renato.avramo@aliceadsl.fr
 d000008;Marie;Mostafa;marie.mostafa@t-online.de
@@ -10,7 +10,7 @@ d000009;Hra;Sereno;hra.sereno@yahoo.es
 d000010;Emiddio;Savescu;emiddio.savescu@yahoo.com
 d000011;Salvatrice;Zolla;salvatrice.zolla@live.ca
 d000012;Walter;Lupieri;walter.lupieri@yahoo.es
-d000013;Edelina;Gyurka;edelina.gyurka@free.fr
+d000013;Tosoni;Gyurka;aristodonato.tosoni@virgilio.it
 d000014;Marco;Ouzeggane;marco.ouzeggane@wanadoo.fr
 d000015;Tina;Marsano;tina.marsano@club-internet.fr
 d000016;Maikon;Jarju;maikon.jarju@earthlink.net
