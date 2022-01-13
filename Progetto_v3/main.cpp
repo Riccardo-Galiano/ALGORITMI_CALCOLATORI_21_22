@@ -86,7 +86,7 @@ std::vector<std::string> program(University &uni, char **argv) {
             }
             catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non e' stato possibile effetuare il comando -a:s per gli errori elencati precedentemente\n");
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -a:s per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 break;
             }
@@ -100,7 +100,7 @@ std::vector<std::string> program(University &uni, char **argv) {
                 uni.addProfessors(argv[2]);
             }catch(std::exception& occurredException){
                     strToAddToLog = occurredException.what();
-                    strToAddToLog.append("Non e' stato possibile effetuare il comando -a:d per gli errori elencati precedentemente\n");
+                    strToAddToLog.append("Non e' stato possibile effettuare il comando -a:d per gli errori elencati precedentemente\n");
                     sysLog.appendToLog(strToAddToLog,true);
                     break;
                 }
@@ -114,7 +114,7 @@ std::vector<std::string> program(University &uni, char **argv) {
             uni.addClassrooms(argv[2]);
             }catch(std::exception& occurredException){
                  strToAddToLog = occurredException.what();
-                 strToAddToLog.append("Non e' stato possibile effetuare il comando -a:a per gli errori elencati precedentemente\n");
+                 strToAddToLog.append("Non e' stato possibile effettuare il comando -a:a per gli errori elencati precedentemente\n");
                  sysLog.appendToLog(strToAddToLog,true);
              break;
             }
@@ -136,7 +136,7 @@ std::vector<std::string> program(University &uni, char **argv) {
             uni.updateStuds(argv[2]);
             }catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non e' stato possibile effetuare il comando -u:s per gli errori elencati precedentemente\n");
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -u:s per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 break;
             }
@@ -150,7 +150,7 @@ std::vector<std::string> program(University &uni, char **argv) {
             uni.updateProfessors(argv[2]);
             }catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non e' stato possibile effetuare il comando -u:d per gli errori elencati precedentemente\n");
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -u:d per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 break;
             }
@@ -164,7 +164,7 @@ std::vector<std::string> program(University &uni, char **argv) {
                 uni.updateClassroom(argv[2]);
             }catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non e' stato possibile effetuare il comando -u:a per gli errori elencati precedentemente\n");
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -u:a per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 break;
             }
@@ -224,17 +224,6 @@ std::vector<std::string> program(University &uni, char **argv) {
 };
 
 int main(int argc, char *argv[]) {
-    /*
-    try {
-        std::map<int, Student> students = readMembers<Student>(argv[1]);
-        std::map<int, Professor> professors = readMembers<Professor>(argv[2]);
-        return 2;
-    } catch (logic_error &) {
-        cerr << "not valid input!!";
-
-        return -1;
-    }
-*/
     University poliTo;
     if (argc < 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");

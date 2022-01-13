@@ -371,10 +371,11 @@ void University::addStuds(const std::string &fileIn) {
         int matr = getNewStudentId(); //calcolo la matricola del nuovo studente
         //controllo che formato file sia corretto: 3 campi
         if (_version == 2) {
-            if (infoStud.size() != 6 && infoStud.size() != 5) {
+            if (infoStud.size() != 6) {
                 error.append("errore formato file studenti alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            } else if (Parse::controlFieldsVectorAreEmpty(infoStud)) {
+            }
+            if (Parse::controlFieldsVectorAreEmpty(infoStud)) {
                 error.append("uno dei campi di informazione per l'aggiunta degli studenti e' vuoto alla riga: " +
                              std::to_string(line_counter) + "\n");
                 doDbWrite = false;
@@ -384,11 +385,12 @@ void University::addStuds(const std::string &fileIn) {
                                                                        infoStud[5]))); //inserisco il nuovo studente nella mappatura interna
             }
         } else {
-            if (infoStud.size() != 3 && infoStud.size() != 2) {
+            if (infoStud.size() != 3) {
                 error.append("errore formato file studenti alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            } else if (Parse::controlFieldsVectorAreEmpty(infoStud)) {
-                error.append("uno dei campi di informazione per l'aggiunta degli studenti e' vuoto alla riga: " +
+            }
+            if (Parse::controlFieldsVectorAreEmpty(infoStud)) {
+                error.append("uno o piu campi di informazione per l'aggiunta degli studenti e' vuoto alla riga: " +
                              std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             } else if (infoStud.size() == 3) {
@@ -422,27 +424,24 @@ void University::addProfessors(const std::string &fileIn) {
         infoProf = Parse::splittedLine(line, ';');
         if (_version == 2) {
             //controllo che formato file sia corretto: 3 campi
-            if (infoProf.size() != 6 && infoProf.size() != 5) {
+            if (infoProf.size() != 6) {
                 error.append("errore formato file professori alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            }else if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
-                error.append(
-                        "uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " +
-                        std::to_string(line_counter) + "\n");
+            }
+            if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
+                error.append("uno o piu' campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }else if (infoProf.size() == 6) {
-                _professors.insert(std::pair<int, Professor>(matr,
-                                                             Professor(matr, infoProf[0], infoProf[1], infoProf[2],
-                                                                       infoProf[3],
-                                                                       infoProf[4], infoProf[5])));
+                _professors.insert(std::pair<int, Professor>(matr,Professor(matr, infoProf[0], infoProf[1], infoProf[2],infoProf[3],infoProf[4], infoProf[5])));
             }
         } else {
             //controllo che formato file sia corretto: 3 campi
-            if (infoProf.size() != 3 && infoProf.size() != 2) {
+            if (infoProf.size() != 3) {
                 error.append("errore formato file professori alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            }else if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
-                error.append("uno dei campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
+            }
+            if (Parse::controlFieldsVectorAreEmpty(infoProf)) {
+                error.append("uno o piu' campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }else if (infoProf.size() == 3)
                 _professors.insert(std::pair<int, Professor>(matr, Professor(matr, infoProf[0], infoProf[1], infoProf[2])));
@@ -479,7 +478,7 @@ void University::addClassrooms(const std::string &fileIn) {
                 doDbWrite = false;
             }
             if (Parse::controlFieldsVectorAreEmpty(infoClassroom)) {
-                error.append("uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
+                error.append("uno o piu' campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
             if (doDbWrite)
@@ -499,7 +498,7 @@ void University::addClassrooms(const std::string &fileIn) {
                 doDbWrite = false;
             }
             if (Parse::controlFieldsVectorAreEmpty(infoClassroom)) {
-                error.append("uno dei campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
+                error.append("uno o piu' campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
             if (doDbWrite)
