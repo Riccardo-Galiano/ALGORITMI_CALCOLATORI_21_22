@@ -22,14 +22,33 @@ enum {
 ///costruttore
 SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::string &summerSession,
                          std::string &autumnSession, std::string &output_file_name) : _sysLog(output_file_name) {
+    std::string error;
+    bool isOk = true;
     _acYear = Parse::getAcStartYear(acYear);
     _sessionNames.emplace_back("winter");
     _sessionNames.emplace_back("summer");
     _sessionNames.emplace_back("autumn");
     ///aggiungo le date della sessione in base all'anno e alla sessione
-    this->addSession(acYear, winterSession, _sessionNames[0]);
-    this->addSession(acYear, summerSession, _sessionNames[1]);
-    this->addSession(acYear, autumnSession, _sessionNames[2]);
+    try {
+        this->addSession(acYear, winterSession, _sessionNames[0]);
+    }catch (std::exception &err){
+        error.append(err.what());
+        isOk = false;
+    }
+    try {
+        this->addSession(acYear, summerSession, _sessionNames[1]);
+    }catch (std::exception &err){
+        error.append(err.what());
+        isOk = false;
+    }
+    try {
+        this->addSession(acYear, autumnSession, _sessionNames[2]);
+    }catch (std::exception &err){
+        error.append(err.what());
+        isOk = false;
+    }
+    if(isOk == false)
+        throw std::invalid_argument(error);
 }
 
 ///aggiunge il periodo delle sessioni
@@ -40,19 +59,17 @@ bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std
     if (name == _sessionNames[2]) {//autunnale
         ///controllo se il periodo di settimane per la sessione autunnale sia esatto
         if (!dates[0].checkGapGiven(4, dates[1]))
-            throw std::invalid_argument("durata sessione autunnale diversa da 4 settimane");
-    } else if (!dates[0].checkGapGiven(6,
-                                       dates[1])) {//controllo se il periodo di settimane per le sessione invernale/estiva sia esatto
+            throw std::invalid_argument("la durata della sessione autunnale e' diversa da 4 settimane \n");
+    } else if (!dates[0].checkGapGiven(6,dates[1])) {//controllo se il periodo di settimane per le sessione invernale/estiva sia esatto
         if (name == _sessionNames[1])
-            throw std::invalid_argument("durata sessione estiva diversa da 6 settimane");
+            throw std::invalid_argument("la durata della sessione estiva e' diversa da 6 settimane \n");
         else if (name == _sessionNames[0])
-            throw std::invalid_argument("durata sessione invernale diversa da 6 settimana");
+            throw std::invalid_argument("la durata della sessione invernale e' diversa da 6 settimane \n");
     }
 
     session s{name, dates[0], dates[1]};//salvo le info della sessione nome, data di inizio e data di fine
 
-    _yearSessions.insert(
-            std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
+    _yearSessions.insert(std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
     this->setCaldendar(dates);
 
     return true;

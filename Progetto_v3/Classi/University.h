@@ -19,16 +19,18 @@ public:
     University();
 
     ///session management
-    std::vector<std::string> setProfsNoAvailability(std::string ,const std::string& );
-    std::vector<std::string> setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
+    void setProfsNoAvailability(std::string ,const std::string& );
+    void setSessionPeriod( std::string &, std::string &, std::string &,std::string &);
     std::vector<std::string> allProfsNoAvailabilities();
-    std::vector<std::string> setExamDate(std::string,std::string);
-    std::vector<std::string> setMinDistance(std::string ,std::string );
-    std::vector<std::string> requestChanges(std::string,std::string);
+    void setExamDate(std::string,std::string);
+    void setMinDistance(std::string ,std::string );
+    void requestChanges(std::string,std::string);
     void minDistanceRequestWrite();
+    void controlCoerenceSessionDate(std::string winterSession,std::string  summerSession,std::string autumnSession,int acYear);
+    void controlOfASingleSessionPeriod(std::string ,std::string, int);
 
     ///DB management
-    std::vector<std::string> versioning(int);
+    void versioning(std::string);
     bool checkVersioningRequest(int);
     void revertChanges(int);
     void revertChanges2to1();
@@ -42,7 +44,7 @@ public:
     bool controlAGAINGroupedCoursesDifferentCds_Reciprocy();
     std::vector<std::string> insertCourses(const std::string &fin);
     std::vector<std::string> insertStudentsGrades(std::string fin);
-    std::vector<std::string> addStudyPlan(std::string fin);
+    void addStudyPlan(std::string fin);
     void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
@@ -80,7 +82,6 @@ public:
     void dbNoAvailabilityWrite();
     void dbAppealsWrite();
     void writeVersion(int);
-
 
     ///get new ID
     const int getNewStudentId() const ;

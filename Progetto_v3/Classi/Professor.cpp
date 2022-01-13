@@ -27,16 +27,19 @@ address) {
 bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     std::vector<std::string> dates;
     dates = Parse::splittedLine(input, '|');//inizio periodo | fine periodo
-    Date d1 = Date(dates[0]); //creo un oggetto Date passando la stringa dell'intera data(vedere costructor in Date)
-    Date d2 = Date(dates[1]);
-    std::vector<std::pair<Date, Date>> vect;//vettore di tuple in cui mettere data di inizio e fine del periodo di indisponibilità
-    if(_noAvailab.count(acYear)==0) {//se non c'è ancora l'anno accademico a cui sto facendo riferimento
-        vect.push_back(std::pair<Date, Date>(d1, d2));
-        _noAvailab.insert(std::pair<int,std::vector<std::pair<Date,Date>>>(acYear,vect));//metto in una mappa per anno accademico il vettore di tuple
-    }
-    else{
-        _noAvailab.at(acYear).push_back(std::pair<Date, Date>(d1, d2));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
-    }
+    Date startPeriodDate = Date(dates[0]); //creo un oggetto Date passando la stringa dell'intera data(vedere costructor in Date)
+    Date endPeriodDate = Date(dates[1]);
+    if(startPeriodDate < endPeriodDate) {
+        std::vector<std::pair<Date, Date>> vect;//vettore di tuple in cui mettere data di inizio e fine del periodo di indisponibilità
+        if (_noAvailab.count(acYear) == 0) {//se non c'è ancora l'anno accademico a cui sto facendo riferimento
+            vect.push_back(std::pair<Date, Date>(startPeriodDate, endPeriodDate));
+            _noAvailab.insert(std::pair<int, std::vector<std::pair<Date, Date>>>(acYear, vect));//metto in una mappa per anno accademico il vettore di tuple
+        } else {
+            _noAvailab.at(acYear).push_back(std::pair<Date, Date>(startPeriodDate,endPeriodDate));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
+        }
+    } else
+        throw std::logic_error("la data finale e' inferiore a quella iniziale ");
+
     return true;
 }
 

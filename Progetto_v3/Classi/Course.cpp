@@ -206,17 +206,28 @@ bool Course::fillAcYearsEmpty() {
 ///controllo che esistano i professori e che le ore in totale per lezioni, lab ed esercitazioni combacino con quelle del corso
 bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year) {
         SpecificYearCourse sp = _courseOfTheYear.at(year);
+        std::string error;
+        bool isOk = true;
         hours hoursCourse = _hours;
         std::map<int, std::vector<professor>> profsOfParallelCourses = sp.getProfsOfParallelCourses();
         for (int i = 0; i < profsOfParallelCourses.size(); i++) {
             std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);
             hours hourProfs = controlProfsOfSingleCourse(profsOfSingleCourse, professors);
-            if(hoursCourse._lec != hourProfs._lec)
-                throw InvalidDbException("le ore delle lezioni non sono coerenti con le ore del corso: " + getId());
-            else if (hoursCourse._lab != hourProfs._lab)
-                throw  InvalidDbException("le ore dei laboratori non sono coerenti con le ore del corso: " + getId());
-            else if (hoursCourse._ex != hourProfs._ex)
-                throw  InvalidDbException("le ore delle esercitazioni non sono coerenti con le ore del corso:" + getId());
+            if(hoursCourse._lec != hourProfs._lec) {
+                error.append("le ore delle lezioni non sono coerenti con le ore del corso: " + getId() + "\n");
+                isOk = false;
+            }
+            else if (hoursCourse._lab != hourProfs._lab) {
+                error.append("le ore dei laboratori non sono coerenti con le ore del corso: " + getId() + "\n");
+                isOk = false;
+            }
+            else if (hoursCourse._ex != hourProfs._ex) {
+                error.append("le ore delle esercitazioni non sono coerenti con le ore del corso:" + getId() + "\n");
+                isOk = false;
+            }
+        }
+        if(isOk == false){
+            throw std::invalid_argument(error);
         }
     return true;
 }
@@ -251,12 +262,11 @@ std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
 ///controlla se è stato già spento
 void Course::notActive() {
      bool firstTime = false;
-    for(auto iterSpecific = _courseOfTheYear.begin(); iterSpecific != _courseOfTheYear.end();iterSpecific++){
+     for(auto iterSpecific = _courseOfTheYear.begin(); iterSpecific != _courseOfTheYear.end();iterSpecific++){
          if(iterSpecific->second.getisActive() == false)///controllo se il corso è non attivo
              firstTime = true;
          else if(firstTime)///se è attivo ma negli anni precedenti era già disattivato
              throw std::logic_error("Il corso con codice:" + getId() + "e' gia' stato spento! non puo' essere riattivato! Controllare l'anno:" + std::to_string(iterSpecific->first));
-
     }
 }
 
@@ -270,7 +280,8 @@ int Course::getSemesterAtYear(int acStartYear,std::string name) {
 }
 
 bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
-
+    bool isOk = true;
+    std::string error;
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         std::vector<std::string> groupedCourse = iterSpecificYear->second.getIdGroupedCourses();
         int sem = 0;
@@ -280,21 +291,29 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
             SpecificYearCourse sp = courses.at(groupedCourse[i]).getThisYearCourse(iterSpecificYear->first);
             bool activeGrouped = sp.getisActive();
             ///se i due corsi non si trovano nello stato di attività non posso raggrupparli
-            if(active != activeGrouped)
-                throw  std::logic_error("il seguente corso raggruppato " + groupedCourse[i] +" non e' nello stesso stato di attivita' del corso: " + getName() +" ;corrispondente al codice: " + getId());
+            if(active != activeGrouped) {
+                error.append("il seguente corso raggruppato " + groupedCourse[i] +
+                             " non e' nello stesso stato di attivita' del corso: " + getName() +
+                             " ;corrispondente al codice: " + getId() + "\n");
+                isOk = false;
+            }
             ///se sono entrambi attivi mi chiedo se sono dello stesso semestre
             if(active != false && activeGrouped != false) {
                 sem = iterSpecificYear->second.getSemester();
-                int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,
-                                                                                groupedCourse[i]);
+                int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,groupedCourse[i]);
                 if (sem != -1 && semGrouped != -1) {
-                    if (semGrouped != sem)
-                        throw std::logic_error("il seguente corso raggruppato " + groupedCourse[i] +
-                                               " non e' dello stesso semestre di: " + getName() +
-                                               " ;corrispondente al codice: " + getId());
+                    if (semGrouped != sem) {
+                        error.append("il seguente corso raggruppato " + groupedCourse[i] +
+                                     " non e' dello stesso semestre di: " + getName() + " ;corrispondente al codice: " +
+                                     getId() + "\n");
+                        isOk = false;
+                    }
                 }
             }
         }
+    }
+    if(isOk == false){
+        throw std::logic_error(error);
     }
     return true;
 }
@@ -308,8 +327,10 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
 }
 
 bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
-    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end())
-        throw InvalidDbException("il seguente corso: "+ getId() + "non esiste per questo studente");
+    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
+        std::string settedId = Parse::setId('s',6,stud.getId());
+        throw InvalidDbException("il seguente corso: " + getId() + "non esiste per lo studente con matricola: " + settedId + "\n");
+    }
     return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
 }
 

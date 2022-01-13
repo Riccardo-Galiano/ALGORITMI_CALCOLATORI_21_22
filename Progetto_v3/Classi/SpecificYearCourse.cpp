@@ -35,10 +35,8 @@ bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> pr
     std::vector<professor> profConOre;
     for (int i = 0;
          i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
-        profConOre = getProfsFromString(profsToSplit[i],
-                                        line_counter);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
-        _professors.insert(std::pair<int, std::vector<professor>>(i,
-                                                                  profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
+        profConOre = getProfsFromString(profsToSplit[i],line_counter);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
+        _professors.insert(std::pair<int, std::vector<professor>>(i,profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
 
     return false;
@@ -132,7 +130,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
     if (mainProfFound == false) {
-        throw std::invalid_argument("manca il professore titolare alla riga: " + std::to_string(line_counter));
+         throw std::invalid_argument("manca il professore titolare alla riga: " + std::to_string(line_counter));
     }
     return profToReturn;
 }
