@@ -11,6 +11,7 @@
 #include "StudyCourse.h"
 #include "Course.h"
 #include "SessionYear.h"
+#include "SystemLog.h"
 
 class University {
 public:
@@ -35,7 +36,10 @@ public:
     bool renameOldDataBase(int);
     bool controlDatabase(int);
     bool dataBaseIsEmpty(int);
-    bool controlGroupedCourses(std::vector<std::string>&,std::string,int,std::string);
+    bool controlGroupedCoursesDifferentCds_Reciprocy(std::vector<std::string> &idGrouped,
+                                                     std::string nameCourse, int line_counter,
+                                                     std::string idCourse);
+    bool controlAGAINGroupedCoursesDifferentCds_Reciprocy();
     std::vector<std::string> insertCourses(const std::string &fin);
     std::vector<std::string> insertStudentsGrades(std::string fin);
     std::vector<std::string> addStudyPlan(std::string fin);
@@ -99,8 +103,7 @@ public:
     std::vector<std::string> updateStudyPlan(std::string fin);
 
 private:
-
-    friend SpecificYearCourse;
+    SystemLog _universityLog;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
     std::map<int, Classroom> _classroom;

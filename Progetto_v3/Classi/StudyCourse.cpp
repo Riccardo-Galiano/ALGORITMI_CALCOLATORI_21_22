@@ -136,8 +136,6 @@ std::string StudyCourse::getSemestersString() const {
 std::string StudyCourse::getOffCoursesString() const {
     std::stringstream output;
     int countCourses = 0;
-
-
     output <<"[";
     for( auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end() ; iterOffCourses++){//per ogni corso spento
         output<< *iterOffCourses;//dereferenzio l'iteratore: prendo il value puntato dall'iteratore

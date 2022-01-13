@@ -251,8 +251,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 }
 
 ///genera i file di output per le sessioni
-void
-SessionYear::generateOutputFiles(std::string &outputFileName, int session, std::map<std::string, Course> &courses) {
+void SessionYear::generateOutputFiles(std::string &outputFileName, int session, std::map<std::string, Course> &courses) {
     std::stringstream ssFout;
     std::string key = _sessionNames[session - 1];
     std::vector<std::string> token = Parse::splittedLine(outputFileName, '.');

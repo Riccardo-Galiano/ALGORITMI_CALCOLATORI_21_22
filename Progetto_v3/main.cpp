@@ -223,7 +223,7 @@ std::vector<std::string> program(University &uni, char **argv) {
     return errorString;
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
     University poliTo;
     if (argc < 3) {
         throw std::invalid_argument("errore numero parametri linea di comando");

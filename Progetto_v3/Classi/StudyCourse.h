@@ -33,14 +33,12 @@ public:
     std::string isInWhichSemester(std::string) const;
     std::vector<std::string> sameSemester(std::string,const std::map<int, StudyCourse>&,int, int posFile);
 
-
 private:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
     std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di stringhe
     std::list <std::string> _offCourses;
     std::vector<std::string> _errorStringStudyCourse;
-
 };
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s);
 

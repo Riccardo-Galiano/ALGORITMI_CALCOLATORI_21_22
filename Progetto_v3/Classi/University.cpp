@@ -593,8 +593,9 @@ std::vector<std::string> University::addStudyCourses(const std::string &fin) {
         }
         line_counter++;
     }
-    ///controllo non ci siano buchi, se c'è mi ritorna eccezione
-    //thereIsAHoleInTheCoursesCodes();
+    ///controllo che i corsi raggruppati non siano negli stessi cds
+    if(!controlAGAINGroupedCoursesDifferentCds_Reciprocy())
+        doDbwrite = false;
     fileIn.close();
     if (doDbwrite)
         dbStudyCourseWrite();
@@ -621,20 +622,19 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
     std::vector<std::string> idGrouped;
     std::vector<std::string> splittedExamData;
     bool doDBwrite = true;
-
+    std::string error;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         specificYearCourse = Parse::splittedLine(line, ';');
         //controllo che il formato file sia corretto: 10 campi
         if (specificYearCourse.size() != 10) {
-            _errorStringUniversity.push_back(
-                    "formato file corsi non valido alla riga: " + std::to_string(line_counter));
+            error.append("formato file corsi non valido alla riga: " + std::to_string(line_counter) + "\n");
             doDBwrite = false;
         }
         //controllo che tutti campi siano specificati
         for (int i = 0; i < specificYearCourse.size(); i++) {
             if (specificYearCourse[i].empty()) {
-                _errorStringUniversity.push_back(
-                        "uno o più campi sono vuoti alla riga: " + std::to_string(line_counter));
+                error.append(
+                        "uno o più campi sono vuoti alla riga: " + std::to_string(line_counter) + "\n");
             }
         }
         //controllo che l'esame non sia già presente in base dati
@@ -642,8 +642,8 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
         for (auto iterCourses = _courses.begin(); iterCourses != _courses.end(); iterCourses++) {
             if (iterCourses->second.getName() == specificYearCourse[1] &&
                 iterCourses->second.getCfu() == stoi(specificYearCourse[2])) {
-                _errorStringUniversity.push_back(
-                        "c'è un corso già presente in base dati alla riga: " + std::to_string(line_counter));
+                error.append(
+                        "c'è un corso già presente in base dati alla riga: " + std::to_string(line_counter)+"\n");
                 doDBwrite = false;
             }
         }
@@ -681,10 +681,15 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
                     studyCourse.push_back(iterStudyCourse->first);
                     yy_semester = result;
                     if (!idGrouped.empty()) {
-                        if (controlGroupedCourses(idGrouped, specificYearCourse[1], line_counter, newIdCourse) == false)
+                        try {
+                            controlGroupedCoursesDifferentCds_Reciprocy(idGrouped, specificYearCourse[1], line_counter,
+                                                                        newIdCourse);
+                        }
+                        catch (std::exception &err) {
+                            error.append(err.what());
                             doDbWrite = false;
+                        }
                     }
-                    ///controllo i corsi raggruppati (genera eccezione se errore)
                 }
             }
             ///update: questa parte commentata perchè course può venire prima di studyCourse
@@ -702,7 +707,7 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
                         fillGroupedCourse(idGrouped, newIdCourse, acYear, line_counter);
                     }
                     ///controllo i corsi raggruppati (genera eccezione se errore)
-                    controlGroupedCourses(i, idGrouped, specificYearCourse[1], line_counter, newIdCourse);
+                    controlGroupedCoursesDifferentCds_Reciprocy(i, idGrouped, specificYearCourse[1], line_counter, newIdCourse);
                 }
             }
             if (yy_semester.empty())
@@ -710,10 +715,15 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
                         "un corso deve essere associato ad almeno un corso di studio! Codice del corso non utilizzato:" +
                         newIdCourse);
             */
-
-            _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
-                                                            splittedExamData, idGrouped, yy_semester, studyCourse,
-                                                            line_counter);
+            try {
+                _courses.at(newIdCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses, profCorsoPar,
+                                                                splittedExamData, idGrouped, yy_semester, studyCourse,
+                                                                line_counter);
+            }
+            catch (std::exception &err) {
+                error.append(err.what());
+                doDbWrite = false;
+            }
             ///qui: fill dei corsi raggruppati dell'anno accademico
             if (!idGrouped.empty()) {
                 fillGroupedCourse(idGrouped, newIdCourse, acYear, line_counter);
@@ -727,8 +737,13 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
                 }
             }
             ///controllo che i professori di questo corso esistano già in _professors
-            _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors,
-                                                                             Parse::getAcStartYear(acYear));
+            try {
+                _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(_professors,
+                                                                                 Parse::getAcStartYear(acYear));
+            }catch (std::exception &err){
+                error.append(err.what());
+                doDbWrite = false;
+            }
         }
         line_counter++;
     }
@@ -744,6 +759,9 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
     if (doDbWrite) {
         fileIn.close();
         dbCourseWrite();
+    }
+    else{
+        throw std::invalid_argument(error);
     }
     return _errorStringUniversity;
 }
@@ -1244,8 +1262,9 @@ std::vector<std::string> University::insertCourses(const std::string &fin) {
                 fillGroupedCourse(idGrouped, specificYearCourse[0], acYear, line_counter);
 
                 ///controllo i corsi raggruppati (genera eccezione se errore)
-                if (controlGroupedCourses(idGrouped, _courses.at(specificYearCourse[0]).getName(), line_counter,
-                                          specificYearCourse[0]) == false)
+                if (controlGroupedCoursesDifferentCds_Reciprocy(idGrouped, _courses.at(specificYearCourse[0]).getName(),
+                                                                line_counter,
+                                                                specificYearCourse[0]) == false)
                     doDbWrite = false;
             }
         }
@@ -1590,33 +1609,43 @@ bool University::dataBaseIsEmpty(int startAcYear) {
 }
 
 /// controllo che idGrouped NON siano corsi dello stesso CdS
-bool University::controlGroupedCourses(std::vector<std::string> &idGrouped,
-                                       std::string nameCourse, int line_counter,
-                                       std::string idCourse) {
+bool University::controlGroupedCoursesDifferentCds_Reciprocy(std::vector<std::string> &idGrouped,
+                                                             std::string nameCourse, int line_counter,
+                                                             std::string idCourseToAddToIdGrouped){
     bool everIsOk = true;
+    std::string error;
+    std::vector<std::string> coursesToConsider(idGrouped);
+    coursesToConsider.push_back(idCourseToAddToIdGrouped);
     ///devo controllare che i corsi raggruppati non siano dello stesso cds, reciprocamente --> 2 for
-    for (int i = 0; i < idGrouped.size(); i++) {
-        int idStudyCourseOfThisCourse = whatIsMyStudyCourse(_courses.at(idGrouped[i]));
+    for (int i = 0; i < coursesToConsider.size(); i++){
+        int idStudyCourseOfThisCourse = whatIsMyStudyCourse(_courses.at(coursesToConsider[i]));
         if (idStudyCourseOfThisCourse != -1) {
+            ///se c'è cDs, prendo tutti i corsi del cds e tutti gli coursesToConsider != questi ultimi
             std::vector<std::string> allCoursesOfCdSOfI = _studyCourse.at(
                     idStudyCourseOfThisCourse).getAllCoursesOfStudyCourse();
-            for (int j = 0; j < idGrouped.size(); j++) {
+            for (int j = 0; j < coursesToConsider.size(); j++) {
                 bool same = false;
-                if (idGrouped[i] == idGrouped[j]) {
+                if (coursesToConsider[i] == coursesToConsider[j]) {
+                    ///devo saltare quando considero lui stesso
                     same = true;
                 } else {
-                    auto found = std::find(allCoursesOfCdSOfI.begin(), allCoursesOfCdSOfI.end(), idGrouped[j]);
+                    ///cerco coursesToConsider[j] all'interno di allCoursesOfCdSOfI
+                    auto found = std::find(allCoursesOfCdSOfI.begin(), allCoursesOfCdSOfI.end(), coursesToConsider[j]);
                     if (found != allCoursesOfCdSOfI.end()) {
-                        ///i e j sono stesso cDs!!!!
+                        ///se c'è dentro == stesso cds
                         everIsOk = false;
                         std::string settedId = Parse::setId('C', 3, idStudyCourseOfThisCourse);
-                        std::cerr << "stesso corso di studio tra: " + nameCourse + "(corrispondente al corso:" +
-                                     idCourse + ") e " + idGrouped[j] + " alla riga: " + std::to_string(line_counter) +
-                                     ". Corso di studio non coerente: " + settedId;
+                        //error.append("stesso corso di studio tra: " + nameCourse + "(corrispondente al corso:" +
+                        //             idCourse + ") e " + idGrouped[j] + " alla riga: " + std::to_string(line_counter) +
+                        //             ". Corso di studio non coerente: " + settedId + "\n");
                     }
                 }
             }
         }
+        ///se non c'è cds devo controllare sta cosa quando inserisco i cds
+    }
+    if(everIsOk == false){
+        throw std::invalid_argument(error);
     }
     return everIsOk;
 }
@@ -2282,6 +2311,14 @@ int University::whatIsMyStudyCourse(Course &courseToConsider) {
             return iter->first;
     }
     return -1;
+}
+
+bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
+    for(auto iter = _coursesGrouped.begin(); iter!=_coursesGrouped.end(); iter++){
+        if(!controlGroupedCoursesDifferentCds_Reciprocy(iter->second,"",0,iter->first))
+            return false;
+    }
+    return true;
 }
 
 
