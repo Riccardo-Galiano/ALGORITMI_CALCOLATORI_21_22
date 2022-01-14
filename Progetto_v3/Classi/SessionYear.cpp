@@ -78,7 +78,7 @@ bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std
 ///creo il calendario con i giorni delle sessioni, in cui ogni giorno sarà un examDay
 bool SessionYear::setCaldendar(std::vector<Date> dates) {
     ///per ogni giorno della sessione setto la mappa YearCalendar con key la data sottoforma di stringa e un oggetto examDay come value
-    for (Date d = dates[0]; !d.isEqual(dates[1]++); d = d++) {
+    for (Date d = dates[0]; !(d==(dates[1]++)); d = d++) {
         ExamDay examDay(d);
         _yearCalendar.insert(std::pair<std::string, ExamDay>(d.toString(), examDay));
     }
@@ -165,7 +165,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     ///else -> nulla, _allExamAppealsToDo già caricato
     ///cicliamo su ogni data della sessione per organizzare le date degli appelli
     for (Date currentExamDay(startDate.getYear(), startDate.getMonth(), startDate.getDay());
-         continueLoop && currentExamDay.isEqual(endDate++) == false; currentExamDay = currentExamDay++) {
+         continueLoop && !(currentExamDay == (endDate++)); currentExamDay = currentExamDay++) {
         //se non è domenica
         if (!(currentExamDay.getWeekDay() == "Sunday")) {
             ///ciclo su tutti gli appelli da assegnare
@@ -208,8 +208,8 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         SpecificYearCourse sp = courseToConsider.getThisYearCourse(_acYear);
                         int endHourSlot=-1;
                         Date lastDateAssignation = sp.lastDateAssignationInGivenSession( this->getSemester(sessName));//data primo appello
-                        if (sixHours && lastDateAssignation.isEqual(currentExamDay)) {
-                            if (lastDateAssignation.isEqual(Date())) {
+                        if (sixHours && lastDateAssignation==currentExamDay) {
+                            if (lastDateAssignation==Date()) {
                                 endHourSlot = -1;
                             } else {
                                 endHourSlot = _yearCalendar.at(lastDateAssignation.toString()).getEndHourOfThisCourseExam(courseToConsider);
