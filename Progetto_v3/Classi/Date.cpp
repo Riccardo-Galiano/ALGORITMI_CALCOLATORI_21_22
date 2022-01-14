@@ -4,25 +4,14 @@
 #include <iomanip>
 #include "Date.h"
 #include "cmath"
-
 using namespace std;
 
-const std::vector<unsigned int> Date::_days{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+const std::vector<unsigned int> Date::_days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 //costruttore
 Date::Date(int year, int month, int day) {
-    //default parameter: year=1900, month =1, day=1
-    setDate(year, month, day);
-    _weekday = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-}
-
-Date::Date(const std::string &date) {
-    std::stringstream ss;
-    int yy, mm, dd;
-    char c;
-    ss << date;
-    ss >> yy >> c >> mm >> c >> dd;
-    setDate(yy, mm, dd);
+   setDate(year, month, day);
+    _weekday = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 }
 
 // set year, month, day
@@ -30,56 +19,88 @@ void Date::setDate(int yy, int mm, int dd) {
 
     if (yy >= 1900 && yy <= 2100) {
         _year = yy;
-    } else {
-        throw invalid_argument{"Anno deve essere >= 1900 e <= 2100"};
+    }
+    else {
+        throw invalid_argument{"Year must be >= 1900 and <= 2100"};
     }
 
     if (mm >= 1 && mm <= 12) {
-        _month = mm;
-    } else {
-        throw invalid_argument{"Mese deve essere 1-12"};
-    }
+      _month = mm;
+   }
+   else {
+      throw invalid_argument{"Month must be 1-12"};
+   }
 
-    // test se anno bisestile
-    if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) ||
-        (dd >= 1 && dd <= _days[_month])) {
-        _day = dd;
-    } else {
-        throw invalid_argument{
-                "Giorno non compatibile con mese e anno"};
-    }
+   // test se anno bisestile
+   if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) ||
+      (dd >= 1 && dd <= _days[_month])) {
+      _day = dd;
+   }
+   else {
+      throw invalid_argument{
+         "Day is out of range for current month and year"};
+   }
 }
 
-// test anno bisestile
+// overloaded prefix increment operator                 
+Date& Date::operator++() {
+   helpIncrement(); // increment date                   
+   return *this; // reference return to create an lvalue
+}
+
+// overloaded postfix increment operator; note that the  
+// dummy integer parameter does not have a parameter name
+Date Date::operator++(int) {
+   Date temp(_year,_month,_day); // hold current state of object
+   temp.helpIncrement();
+   // return unincremented, saved, temporary object      
+   return temp; // value return; not a reference return  
+}
+
+// add specified number of _days to date
+Date& Date::operator+=(unsigned int additionalDays) {
+   for (unsigned int i = 0; i < additionalDays; ++i) {
+      helpIncrement();
+   }
+
+   return *this; // enables cascading                      
+}
+
+// if the year is a leap year, return true; otherwise, return false
 bool Date::leapYear(int testYear) {
-    return (testYear % 400 == 0 || (testYear % 100 != 0 && testYear % 4 == 0));
+   return (testYear % 400 == 0 ||  (testYear % 100 != 0 && testYear % 4 == 0));
 }
 
-// controlla se il giorno è l'ultimo del mese
+// determine whether the day is the last day of the month
 bool Date::endOfMonth(int testDay) const {
-    if (_month == 2 && leapYear(_year)) {
-        return testDay == 29; // last day of Feb. in leap year
-    } else {
-        return testDay == _days[_month];
-    }
+   if (_month == 2 && leapYear(_year)) {
+      return testDay == 29; // last day of Feb. in leap year
+   }
+   else {
+      return testDay == _days[_month];
+   }
 }
 
-// incrementa di un giorno la data
+// function to help increment the date
 void Date::helpIncrement() {
-    if (!endOfMonth(_day)) {
-        ++_day;
-    } else {
-        if (_month < 12) {
-            ++_month;
-            _day = 1;
-        } else {
-            ++_year;
-            _month = 1;
-            _day = 1;
-        }
-    }
+   // day is not end of month
+   if (!endOfMonth(_day)) {
+      ++_day; // increment day
+   }
+   else {
+      if (_month < 12) { // day is end of month and month < 12
+         ++_month; // increment month
+         _day = 1; // first day of new month
+      }
+      else { // last day of year
+         ++_year; // increment year
+         _month = 1; // first month of new year
+         _day = 1; // first day of new month
+      }
+   }
 }
 
+// overloaded output operator
 unsigned int Date::getMonth() const {
     return _month;
 }
@@ -88,13 +109,58 @@ unsigned int Date::getDay() const {
     return _day;
 }
 
-unsigned int Date::getYear() const {
-    return _year;
+/*
+ostream& operator<<(ostream& output, const Date& d) {
+   static string monthName[13]{"", "January", "February",
+      "March", "April", "May", "June", "July", "August",
+      "September", "October", "November", "December"};
+   output << monthName[d._month] << ' ' << d._day << ", " << d._year;
+   return output; // enables cascading
+}
+*/
+
+ostream& operator<<(ostream& output, const Date& d){
+
+    output << setfill('0') << d._year << "-" << setw(2) << d._month << "-" << setw(2) << d._day;
+    return output;
 }
 
-/// ritorna il giorno della settimana
+// overloaded input operator
+istream& operator>>(istream& input, Date& d){
+    unsigned int month;
+    unsigned int day;
+    unsigned int year;
+    input >> year >> month >> day;
+    d.setDate(year, month, day);
+    return input;
+}
+
+bool Date::operator>(const Date & date) const{
+    if(_year>date._year){
+        return true;
+    }else if(_year==date._year&&_month>date._month){
+        return true;
+    }else if (_year==date._year&&_month==date._month&&_day>date._day){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool Date::operator<(const Date & date) const {
+    if(_year<date._year){
+        return true;
+    }else if(_year==date._year&&_month<date._month){
+        return true;
+    }else if (_year==date._year&&_month==date._month&&_day<date._day){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 std::string Date::getWeekDay() {
-    Date d(_year, _month, _day);
+    Date d(_year,_month,_day);
     int mon;
     if (d.getMonth() > 2)
         mon = d.getMonth(); //for march to december month code is same as month
@@ -110,131 +176,13 @@ std::string Date::getWeekDay() {
 }
 
 ///controlla se le sessioni si svolgono nelle settimane richieste
-bool Date::checkGapGiven(int weeks, Date d) {
+bool Date::checkGapGiven(int weeks, Date d){
     int numDays = weeks * 7; //a quanti giorni corrisponde il numero di settimane da considerare
-    // Date compare = this->add(numDays);//aggiungo alla data iniziale il numero di giorni corrispondente a quelle settimane
-    // return d.isEqual(compare);
-    Date comp = d;
-    d += numDays;
-    return d == comp;
-
+    Date compare = this->add(numDays);//aggiungo alla data iniziale il numero di giorni  corrispondente a quelle settimane
+    return d.isEqual(compare);
 }
 
-///ritorna la data sottoforma di stringa AAAA-MM-GG
-std::string Date::toString() {
-    std::stringstream ss;
-    ss << Date(_year, _month, _day);
-    return ss.str();
-}
-
-///gap tra due date in giorni (start session e date dove quest'ultima è la data da controllare)
-int Date::whatIsTheGap(Date &date) {
-    bool areNotEqual = true;
-    Date currentDate(_year, _month, _day);//data di inizio della sessione
-    int gap = 0;
-    while (areNotEqual) {
-        if (currentDate == date) {//se uguali ho raggiunto la data finale del gap che volevo conoscere
-            areNotEqual = false;
-        } else {//se non uguali controllo il giorno successivo e aggiorno il gap
-            ++currentDate;
-            gap++;
-        }
-    }
-    return gap;
-}
-
-// overloaded ++Data
-Date &Date::operator++() {
-    helpIncrement();
-    return *this;
-}
-
-// overloaded Data++
-Date Date::operator++(int) {
-    Date temp(_year, _month, _day); // salva la data da ritornare
-    temp.helpIncrement();
-    // ritorna la data salvata non incrementata
-    return temp; //valore (non ref) xk temp muore finita la chiamata dell'operatore
-}
-
-// Data += days
-//!potrebbe servire per request_changes
-//! funziona solo in avanti!
-Date &Date::operator+=(unsigned int additionalDays) {
-    for (unsigned int i = 0; i < additionalDays; i++) {
-        helpIncrement();
-    }
-    return *this;
-}
-
-// overloaded output operator
-ostream &operator<<(ostream &output, const Date &d) {
-    //output: AAAA-MM-GG
-    output << setfill('0') << d._year << "-" << setw(2) << d._month << "-" << setw(2) << d._day;
-    return output;
-}
-
-// overloaded input operator
-istream &operator>>(istream &input, Date &d) {
-    unsigned int year;
-    unsigned int month;
-    unsigned int day;
-    // input: AAAA-MM-GG
-    input >> year >> month >> day;
-    d.setDate(year, month, day);
-    return input;
-}
-
-bool Date::operator>(const Date &date) const {
-    if (_year > date._year) {
-        return true;
-    } else if (_year == date._year && _month > date._month) {
-        return true;
-    } else if (_year == date._year && _month == date._month && _day > date._day) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool Date::operator<(const Date &date) const {
-    if (_year < date._year) {
-        return true;
-    } else if (_year == date._year && _month < date._month) {
-        return true;
-    } else if (_year == date._year && _month == date._month && _day < date._day) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool Date::operator<=(const Date &d) const {
-    if (*this < d || *this == d) {
-        return true;
-    } else
-        return false;
-}
-
-bool Date::operator>=(const Date &d) const {
-    if (*this < d) {
-        return false;
-    } else
-        return true;
-}
-
-bool Date::operator==(const Date &compare) const {
-    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
-}
-
-
-/* funzione uguale all'operatore ==
-bool Date::isEqual(const Date compare) {
-    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
-}
-*/
-
-/*funzione uguale all'operatore +=
+///restituisce la data corrispondente ad un periodo(in giorni) dalla data iniziale
 Date Date::add(int daysToAdd) {
     Date toReturn(_year,_month,_day);
     for(int i=0; i<daysToAdd; i++){
@@ -242,4 +190,72 @@ Date Date::add(int daysToAdd) {
     }
     return toReturn;
 }
-*/
+
+Date::Date(const std::string &date) {
+    std::stringstream ss;
+    int yy, mm, dd;
+    char c;
+    ss << date;
+    ss >> yy >> c >> mm >> c >> dd;
+    setDate(yy,mm,dd);
+}
+
+unsigned int Date::getYear() const {
+    return _year;
+}
+
+///ritorna la data sottofirma di stringa
+std::string Date::toString() {
+    std::stringstream ss;
+    ss << Date(_year,_month,_day);
+    return ss.str();
+}
+
+bool Date::isEqual(const Date compare) {
+    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
+}
+
+Date Date::incrementOf(int daysIncrement) {
+    Date d = (*this);
+    for(int i = 0; i < daysIncrement ; i++)
+        d++;
+
+    return d;
+}
+
+///gap tra due date (start session e date dove quest'ultima è la data da controllare)
+int Date::whatIsTheGap(Date& date) {
+    bool areNotEqual = true;
+    Date currentDate(_year,_month,_day);//data di inizio della sessione
+    int gap = 0;
+    while(areNotEqual){
+        if(currentDate.isEqual(date)){//se uguali ho raggiunto la data finale del gap che volevo conoscere
+            areNotEqual = false;
+        }
+        else{//se non uguali controllo il giorno successivo e aggiorno il gap
+            ++currentDate;
+            gap++;
+        }
+    }
+    return gap;
+}
+
+bool Date::operator<=(const Date & d) const {
+    if(*this < d || *this == d){
+        return true;
+    }
+    else
+        return false;
+}
+
+bool Date::operator>=(const Date & d) const {
+    if(*this < d){
+        return false;
+    }
+    else
+        return true;
+}
+
+bool Date::operator==(const Date& compare) const {
+    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
+}

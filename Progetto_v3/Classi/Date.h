@@ -11,50 +11,42 @@
 
 class Date {
     friend std::ostream &operator<<(std::ostream &, const Date &);
-
     friend std::istream &operator>>(std::istream &, Date &);
 
 public:
     //Date() = default;
-    Date(const std::string &);
+    Date(const std::string&);
 
-    explicit Date(int y = 1900, int m = 1, int d = 1);
 
+    explicit Date(int y = 1900, int m = 1, int d = 1); // default constructor
     void setDate(int, int, int); // set year, month, day
-
     Date &operator++(); // prefix increment operator
     Date operator++(int); // postfix increment operator
+    Date incrementOf(int);
     Date &operator+=(unsigned int);
 
     bool operator>(const Date &) const;
-
     bool operator<(const Date &) const;
-
     bool operator<=(const Date &) const;
-
     bool operator>=(const Date &) const;
-
     bool operator==(const Date &) const;
 
     static bool leapYear(int); // anno bisestile?
     bool endOfMonth(int) const; // fine del mese?
+    Date add(int);
 
     std::string getWeekDay();
-
     bool checkGapGiven(int weeks, Date d);
 
     unsigned int getYear() const;
-
     std::string toString();
 
+    bool isEqual(const Date);
     unsigned int getMonth() const;
-
     unsigned int getDay() const;
 
-    int whatIsTheGap(Date &date);
+    int whatIsTheGap(Date& date);
 
-    //bool isEqual(const Date);
-    //Date add(int);
 private:
     unsigned int _day{};
     unsigned int _month{};
