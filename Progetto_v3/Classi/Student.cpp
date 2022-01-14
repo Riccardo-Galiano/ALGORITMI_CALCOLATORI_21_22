@@ -19,10 +19,6 @@ Student::Student(int matr, std::string name, std::string surname, std::string em
 
 bool Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan) {
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
-    if(_studyPlan.empty() == false){
-        std::string settedId = Parse::setId('s',6,getId());
-        throw std::invalid_argument("Il piano di Studio per lo studente con matricola "+ settedId + " e' stato gia' definito \n");
-    }
     _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
     return true;
 }

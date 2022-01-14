@@ -45,7 +45,7 @@ public:
     std::vector<std::string> insertCourses(const std::string &fin);
     std::vector<std::string> insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
-    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, std::string acYearRegistration, int line_counter);
+    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
     void assignInfoAppealPerSession(std::string,std::string,std::string, std::vector<std::string> infoPerSession);
