@@ -478,20 +478,27 @@ void University::addClassrooms(const std::string &fileIn) {
                 doDbWrite = false;
             }
             if (Parse::controlFieldsVectorAreEmpty(infoClassroom)) {
-                error.append("uno o piu' campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
+                error.append("uno o piu' campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " +
+                             std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
-            if (doDbWrite)
-                _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                          std::stoi(infoClassroom[2]),
-                                                                          std::stoi(infoClassroom[3]),
-                                                                          std::stoi(infoClassroom[4]),
-                                                                          std::stoi(infoClassroom[5]),
-                                                                          std::stoi(infoClassroom[6]),
-                                                                          std::stoi(infoClassroom[7]))));
+            if (doDbWrite) {
+                try {
+                    _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
+                                                                              std::stoi(infoClassroom[2]),
+                                                                              std::stoi(infoClassroom[3]),
+                                                                              std::stoi(infoClassroom[4]),
+                                                                              std::stoi(infoClassroom[5]),
+                                                                              std::stoi(infoClassroom[6]),
+                                                                              std::stoi(infoClassroom[7]))));
 
-
-        } else {
+                } catch (std::exception &err) {
+                    std::string generalError = err.what();
+                    error.append(generalError + " alla riga: " + std::to_string(line_counter));
+                    doDbWrite = false;
+                }
+            }
+        }else {
             //controllo che il formato del file sia corretto: 4 campi
             if (infoClassroom.size() != 4) {
                 error.append("errore formato file aule alla riga: " + std::to_string(line_counter) + "\n");
@@ -501,10 +508,17 @@ void University::addClassrooms(const std::string &fileIn) {
                 error.append("uno o piu' campi di informazione per l'aggiunta delle aule e' vuoto alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
-            if (doDbWrite)
-                _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                          std::stoi(infoClassroom[2]),
-                                                                          std::stoi(infoClassroom[3]))));
+            if (doDbWrite) {
+                try {
+                    _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
+                                                                              std::stoi(infoClassroom[2]),
+                                                                              std::stoi(infoClassroom[3]))));
+                } catch (std::exception &err) {
+                    std::string generalError = err.what();
+                    error.append(generalError + " alla riga: " + std::to_string(line_counter));
+                    doDbWrite = false;
+                }
+            }
         }
         line_counter++;
     }
@@ -1536,7 +1550,7 @@ void University::controlOfASingleSessionPeriod(std::string name , std::string se
 void University::setProfsNoAvailability(std::string acYear, const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("file indisponibilita' dei professori non esistente");
+        throw std::invalid_argument("file indisponibilita' dei professori non esistente \n");
     }
     std::string line;
     std::vector<std::string> profAvailability;
@@ -1544,31 +1558,40 @@ void University::setProfsNoAvailability(std::string acYear, const std::string &f
     bool doDbWrite = true;
     std::string error;
     year = Parse::getAcStartYear(acYear);
-
+    int line_counter = 1;
 
     while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta
         profAvailability = Parse::splittedLine(line, ';');
+        bool canBeAnId = Parse::controlItCanBeAnId(profAvailability[0], 6);
+
         nMatr = Parse::getMatr(profAvailability[0]);//prendo la matricola
         std::string idProf = Parse::setId('d',6,nMatr);
         auto iterProf = _professors.find(nMatr);//punto al prof con matricola nMatr
-        if(iterProf == _professors.end()){
-            error.append("la matricola " + idProf + " non e' presente nel database");
+        if(profAvailability[0].empty()){
+            error.append("Non e' stata dichiarata la matricola del professore alla riga: " + std::to_string(line_counter) + "\n");
+            doDbWrite = false;
+        }else if(canBeAnId == false){
+            error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter)+ " non puo' essere un Id \n");
+            doDbWrite = false;
+        }else if(iterProf == _professors.end()){
+            error.append("la matricola " + idProf + "alla riga" + std::to_string(line_counter) + " non e' presente nel database \n");
             doDbWrite = false;
         }else {
             //dovrò aggiornare l'indisponibilità di un prof per uno specifico anno accademico quindi cancello le
             //vecchie indisponibilità di uno specifico prof per uno specifico anno
 
-            iterProf->second.noAvailabilityClear(year);//facciamo il controllo se vuoto????
+            iterProf->second.noAvailabilityClear(year);
             for (int i = 1; i < profAvailability.size(); i++) {//per ogni campo della riga letta
                 try {
                     _professors.at(nMatr).setNoAvaibilities(year,profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
                 }catch(std::exception& err) {
                     std::string generalError = err.what();
-                    error.append(generalError + " in almeno uno dei periodi di indisponibilita' del professore con matricola: " + idProf);
+                    error.append("in almeno uno dei periodi di indisponibilita' del prof con matricola: " + idProf + " alla riga: " + std::to_string(line_counter) + "\n");
                     doDbWrite = false;
                 }
             }
         }
+        line_counter++;
     }
     fileIn.close();
     if(doDbWrite)
@@ -1921,29 +1944,66 @@ bool University::renameOldDataBase(int version) {
 void University::addStudyPlan(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file inserimento nuovi piani di studio");
+        throw std::invalid_argument("errore apertura file inserimento nuovi piani di studio \n");
     }
     std::string line;
     std::string error;
     bool doDbWrite = true;
+    int line_counter = 1;
     while (std::getline(fileIn, line)) {
-        std::string matr = line.substr(0, 7);
-        std::string acYearRegistration = line.substr(8, 9);
-        std::size_t pos = line.find('}');
-        std::string allCourses = line.substr(19, pos - 19);
-        std::stringstream ss(matr);
         char c;
         int id;
-        ss >> c >> id;
-        Student &stud = _students.at(id);
-        std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
-        stud.addStudyPlanPerStudent(acYearRegistration, courses);
-        try {
-            registerStudentsToSpecificYearCourses(courses, stud, stoi(acYearRegistration));
-        }catch(std::invalid_argument& err) {
-            error.append(err.what());
+        bool isOk = true;
+        std::vector<int> posSemiColon = Parse::posSemiColon(line);
+        ///controlli sul primo campo di informazioni, matricola
+        std::string matr = line.substr(0, posSemiColon[0]);
+        bool canBeAnId = Parse::controlItCanBeAnId(matr,6);
+        if(matr.empty()){
+            error.append("Non e' stata dichiarata la matricola dello studente al rigo: " + std::to_string(line_counter) + "\n");
             doDbWrite = false;
+            isOk = false;
+        } else if(canBeAnId == false){
+            error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter) + " non puo' essere una matricola di uno studente \n");
+            doDbWrite = false;
+            isOk = false;
+        } else
+        {
+            std::stringstream ss(matr);
+            ss >> c >> id;
         }
+        ///controllo sul secondo campo di informazioni, anno accademico
+        std::string acYearRegistration = line.substr(posSemiColon[0]+1, posSemiColon[1]-posSemiColon[0] - 1);
+        bool canBeAnAcYear = Parse::controlItCanBeAnAcYear(acYearRegistration);
+        if(acYearRegistration.empty()){//se il campo è vuoto
+            error.append("Non e' stato dichiarato l'anno accademico al rigo: " + std::to_string(line_counter) + "\n");
+            doDbWrite = false;
+            isOk = false;
+        } else if(canBeAnAcYear == false && isOk){ //se non è vuoto controllo che possa essere un anno accademico
+            error.append("Anno accademico non valido al rigo: " + std::to_string(line_counter) + "\n");
+            doDbWrite = false;
+            isOk = false;
+        }
+        if(isOk) {
+            std::size_t pos = line.find('}');
+            std::string allCourses = line.substr(posSemiColon[1] + 2, pos - (posSemiColon[1]+2));
+            Student &stud = _students.at(id);
+            std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
+            /// mi assicuro che lo studente non abbia già un piano di studio(posso cambiarlo solo con la update)
+            try {
+                stud.addStudyPlanPerStudent(acYearRegistration, courses);
+            }catch (std::invalid_argument &err) {
+                std::string generalError = err.what();
+                error.append(generalError + ". Controllare riga: " + std::to_string(line_counter) + "\n");
+                doDbWrite = false;
+            }
+            try {
+                registerStudentsToSpecificYearCourses(courses, stud, acYearRegistration, line_counter);
+            } catch (std::invalid_argument &err) {
+                error.append(err.what());
+                doDbWrite = false;
+            }
+        }
+        line_counter++;
 
     }
     fileIn.close();
@@ -1972,9 +2032,10 @@ void University::dbStudyPlanWrite() {
 void University::readStudyPlan() {
     std::ifstream fileIn("db_piano_studi.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_piano_studi.txt non esistente");
+        throw DbException("file db_piano_studi.txt non esistente \n");
     }
     std::string line;
+    int line_counter = 1;
     while (std::getline(fileIn, line)) {
         std::string matr = line.substr(0, 7);
         std::string acYearRegistration = line.substr(8, 9);
@@ -1987,7 +2048,8 @@ void University::readStudyPlan() {
         Student &stud = _students.at(id);
         std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
         _students.at(id).addStudyPlanPerStudent(acYearRegistration, courses);
-        registerStudentsToSpecificYearCourses(courses, stud, stoi(acYearRegistration));
+        registerStudentsToSpecificYearCourses(courses, stud, acYearRegistration, line_counter);
+        line_counter++;
     }
     fileIn.close();
 }
@@ -1998,6 +2060,7 @@ std::vector<std::string> University::updateStudyPlan(std::string fin) {
         throw std::invalid_argument("errore apertura file aggiornamento piani di studio");
     }
     std::string line;
+    int line_counter = 1;
     while (std::getline(fileIn, line)) {
         std::string matr = line.substr(0, 7);
         std::string acYearRegistration = line.substr(8, 9);
@@ -2011,7 +2074,8 @@ std::vector<std::string> University::updateStudyPlan(std::string fin) {
         Student &stud = _students.at(id);
         stud.clearStudyPlan();
         stud.addStudyPlanPerStudent(acYearRegistration, courses);
-        registerStudentsToSpecificYearCourses(courses, stud, stoi(acYearRegistration));
+        registerStudentsToSpecificYearCourses(courses, stud,acYearRegistration,line_counter);
+        line_counter++;
     }
     fileIn.close();
     dbStudyPlanWrite();
@@ -2053,25 +2117,62 @@ std::vector<std::string> University::insertStudentsGrades(std::string fin) {
     return _errorStringUniversity;
 }
 
-void University::registerStudentsToSpecificYearCourses(std::vector<std::string> &courses, Student &stud,
-                                                       int acYearRegistration) {
+void University::registerStudentsToSpecificYearCourses(std::vector<std::string> &courses, Student &stud,std::string acYearRegistration, int line_counter) {
+    int acStartYear = Parse::getAcStartYear(acYearRegistration);
+    bool thereIsNotAnError = true;
     std::string error;
-    bool isOk = true;
+
+    try {
+        controlUnicity(courses, line_counter);
+    }catch (std::logic_error &err) {
+        error.append(err.what());
+        thereIsNotAnError = false;
+    }
     for (int i = 0; i < courses.size(); i++) {
         if (_courses.find(courses[i]) == _courses.end()) {
-            throw std::invalid_argument("questo corso non esiste:" + courses[i] + "\n");
-        }
-        try {
-            _courses.at(courses[i]).registerStudentsToSpecificYear(acYearRegistration, stud);
-        }catch(InvalidDbException& err) {
-            error.append(err.what());
-            isOk = false;
+            error.append("Alla riga " + std::to_string(line_counter) + " il corso con codice: " + courses[i] + " non esiste\n");
+            thereIsNotAnError = false;
+        }else{
+            try {
+                _courses.at(courses[i]).registerStudentsToSpecificYear(acStartYear, stud);
+            } catch (InvalidDbException &err) {
+                std::string generalError = err.what();
+                error.append(generalError + ". Controllare alla riga: " + std::to_string(line_counter) + "\n");
+                thereIsNotAnError = false;
+            }
         }
     }
-    if(isOk == false){
+    if (thereIsNotAnError == false) {
         throw std::invalid_argument(error);
     }
 }
+void University::controlUnicity(std::vector<std::string>& controlUnicityCourses, int line_counter) {
+      std::string error;
+      bool isOk = true;
+      bool pop = true;
+      for(int i = 0; i<controlUnicityCourses.size(); i++) {
+          if(pop) {
+              pop = false;
+              i = 0;
+          }
+          int numCourse = count(controlUnicityCourses.begin(), controlUnicityCourses.end(), controlUnicityCourses[i]);
+          ///se presente più volte
+          if (numCourse != 1){
+              error.append("Il corso con codice: " + controlUnicityCourses[i] + " e' presente piu' volte alla riga: " + std::to_string(line_counter)+ "\n");
+              isOk = false;
+              ///se questo appello è presente piu' volte non lo dobbiamo più considerare nel controllo!!
+              ///per il numero di volte che è stato trovato lo vado a togliere, lo lascio una sola volta
+              for(int j = 0; j<numCourse; j++){
+                  auto pos = find(controlUnicityCourses.begin(), controlUnicityCourses.end(), controlUnicityCourses[i]);
+                  controlUnicityCourses.erase(pos);
+              }
+              pop = true;
+          }
+      }
+      if(isOk == false)
+          throw std::logic_error(error);
+}
+
 
 void University::dbAppealsWrite() {
     std::fstream fout;
@@ -2440,6 +2541,7 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
     }
     return true;
 }
+
 
 
 

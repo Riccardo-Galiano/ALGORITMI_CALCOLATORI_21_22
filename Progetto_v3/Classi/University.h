@@ -28,6 +28,7 @@ public:
     void minDistanceRequestWrite();
     void controlCoerenceSessionDate(std::string winterSession,std::string  summerSession,std::string autumnSession,int acYear);
     void controlOfASingleSessionPeriod(std::string ,std::string, int);
+    void controlUnicity(std::vector<std::string>& controlUnicityCourses,int line_counter);
 
     ///DB management
     void versioning(std::string);
@@ -45,7 +46,7 @@ public:
     std::vector<std::string> insertCourses(const std::string &fin);
     std::vector<std::string> insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
-    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, int acYearRegistration);
+    void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, std::string acYearRegistration, int line_counter);
     void thereIsAHoleInTheCoursesCodes();
     void checkDistance(std::string&, std::string&);
     void assignInfoAppealPerSession(std::string,std::string,std::string, std::vector<std::string> infoPerSession);

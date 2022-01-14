@@ -327,10 +327,12 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
 }
 
 bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
-    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
+    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) { //devo anche controllare che non sia inferiore all'ultimo(DA FARE)
+        std::string acYear = std::to_string(acYearRegistration) + "-" + std::to_string(acYearRegistration+1);
         std::string settedId = Parse::setId('s',6,stud.getId());
-        throw InvalidDbException("il seguente corso: " + getId() + "non esiste per lo studente con matricola: " + settedId + "\n");
+        throw InvalidDbException("il seguente corso: " + getId() + " non era attivo quando si e' iscritto lo studente con matricola: " + settedId + "(anno accademico:"+ acYear + ")");
     }
+    //se è maggiore dell'ultimo devo considerare l'ultimo(DA FARE)
     return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
 }
 
@@ -373,6 +375,7 @@ bool Course::assignStudToAppealPerYear(std::string acYear, std::string appealDat
     std::vector<std::pair<std::string, int>> allStudPassedExam = splittAllStudPassedExamString(allStudsPassedExamString);
     int startAcYear = Parse::getAcStartYear(acYear);
     _courseOfTheYear.at(startAcYear).assignAllStudsPassedExam(allStudPassedExam,appealDate);
+    return true;
 }
 
 std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(std::string allStudsPassedExamString) {

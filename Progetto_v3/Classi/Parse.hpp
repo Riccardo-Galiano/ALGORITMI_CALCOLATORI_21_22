@@ -71,12 +71,26 @@ public:
         }
         return output;
     }
+    static std::vector<int> posSemiColon(std::string &input) {
+        std::vector<int> output;
+        std::size_t found = input.find_first_of(';');
+        while (found !=
+               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            output.push_back(found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            found = input.find_first_of(';', found + 1);//continuo a controllare la stringa
+        }
+        return output;
+    }
     static std::vector<std::string> SplittedGroupedID(std::string &input){
         input = input.substr(1,input.size() - 2);// tolgo le { } che racchiudono gli id
         return splittedLine(input, ',');//scissione degli id dei corsi raggruppati
     };
     static int getAcStartYear(std::string& input){
-        return stoi(input.substr(0,4));
+        bool canBeAnInt = Parse::controlItCanBeAnInt(input.substr(0, 4));
+        if (canBeAnInt)
+            return stoi(input.substr(0, 4));
+        else
+            throw std::invalid_argument(" la stringa in input non puo' essere un anno \n");
     }
     static std::vector<Date> getDates(std::string& input){
         std::vector<std::string> dates = splittedLine(input,'_');
@@ -125,6 +139,29 @@ public:
         }
         return true;
     }
+    static bool controlItCanBeAnInt(std::string stringToInt) {
+        int length = stringToInt.length();
+        for (int i = 0; i < length; i++) {
+            if (!isdigit(stringToInt[i]))
+                return false;
+        }
+        return true;
+    }
+    static bool controlItCanBeAnAcYear(std::string input) {
+        //AAAA-AAAA
+        if (input.size() != 9)
+            return false;
+        std::string acStartYear = input.substr(0, 4);
+        if (Parse::controlItCanBeAnInt(acStartYear) == false)
+            return false;
+        std::string acEndYear = input.substr(5, 4);
+        if (Parse::controlItCanBeAnInt(acEndYear) == false)
+            return false;
+        if (std::stoi(acEndYear) != std::stoi(acStartYear) + 1)
+            return false;
+        return true;
+    }
+
 };
 
 
