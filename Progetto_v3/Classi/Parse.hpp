@@ -27,13 +27,16 @@ public:
         }
         return toReturn;
     }
+
     ///restituisce un vettore di stringhe con i prof di ciascun corso in parallelo
     static std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses) {
         std::vector<std::string> profCorsiPar;
         std::vector<int> posFinCorsiPar;
         int numCoursesParsed = 0;
-        std::vector<int> posCBrackets = posCurlyBrackets(input);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
-        for (int i = 0; i < posCBrackets.size() - 1; i++) {//fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
+        std::vector<int> posCBrackets = posCurlyBrackets(
+                input);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
+        for (int i = 0; i < posCBrackets.size() -
+                            1; i++) {//fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
             if (input[posCBrackets[i] + 1] ==
                 ']') {//la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
                 posFinCorsiPar.push_back(
@@ -45,7 +48,8 @@ public:
 
         ///divido le info dei vari corsi in parallelo
         for (int i = 0; i < numCoursesParsed; i++) {
-            profCorsiPar.push_back(input.substr(1 + lastPosFin, posFinCorsiPar[i] - lastPosFin - 1));//inserisco nel vettore di stringhe le info del corso in parallelo
+            profCorsiPar.push_back(input.substr(1 + lastPosFin, posFinCorsiPar[i] - lastPosFin -
+                                                                1));//inserisco nel vettore di stringhe le info del corso in parallelo
             lastPosFin = posFinCorsiPar[i] + 2; //salva la pos della terza graffa: }]}, { <--
         }
 
@@ -53,57 +57,85 @@ public:
             throw std::invalid_argument("docenti non congruenti con il numero di corsi paralleli");
         return profCorsiPar;
     };
+
     static std::vector<int> posCurlyBrackets(std::string &input) {
         std::vector<int> output;
         std::size_t found = input.find_first_of("{}");
-        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            output.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        while (found !=
+               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            output.push_back(
+                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
             found = input.find_first_of("{}", found + 1);//continuo a controllare la stringa
         }
         return output;
     }
+
     static std::vector<int> posSquareBrackets(std::string &input) {
         std::vector<int> output;
         std::size_t found = input.find_first_of("[]");
-        while (found != std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-            output.push_back( found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+        while (found !=
+               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            output.push_back(
+                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
             found = input.find_first_of("[]", found + 1);//continuo a controllare la stringa
         }
         return output;
     }
-    static std::vector<std::string> SplittedGroupedID(std::string &input){
-        input = input.substr(1,input.size() - 2);// tolgo le { } che racchiudono gli id
+
+    static std::vector<int> posSemiColon(std::string &input) {
+        std::vector<int> output;
+        std::size_t found = input.find_first_of(';');
+        while (found !=
+               std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
+            output.push_back(
+                    found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
+            found = input.find_first_of(';', found + 1);//continuo a controllare la stringa
+        }
+        return output;
+    }
+
+    static std::vector<std::string> SplittedGroupedID(std::string &input) {
+        input = input.substr(1, input.size() - 2);// tolgo le { } che racchiudono gli id
         return splittedLine(input, ',');//scissione degli id dei corsi raggruppati
     };
-    static int getAcStartYear(std::string& input){
-        return stoi(input.substr(0,4));
+
+    static int getAcStartYear(std::string &input) {
+        bool canBeAnInt = Parse::controlItCanBeAnInt(input.substr(0, 4));
+        if (canBeAnInt)
+            return stoi(input.substr(0, 4));
+        else
+            throw std::invalid_argument(" la stringa in input non puo' essere un anno \n");
     }
-    static std::vector<Date> getDates(std::string& input){
-        std::vector<std::string> dates = splittedLine(input,'_');
+
+    static std::vector<Date> getDates(std::string &input) {
+        std::vector<std::string> dates = splittedLine(input, '_');
         std::stringstream ss;
         int yy, mm, dd;
         char c;
         std::vector<Date> realDates;
-        for(int i=0; i<2; i++){
+        for (int i = 0; i < 2; i++) {
             ss << dates[i];
             ss >> yy >> c >> mm >> c >> dd;
-            realDates.push_back(Date(yy,mm,dd));
+            realDates.push_back(Date(yy, mm, dd));
             ss.clear();
         }
         return realDates;
     }
-    static int getMatr(std::string& input){
+
+    static int getMatr(std::string &input) {
         int nMatr;
         char c;
         std::stringstream ss(input);
         ss >> c >> nMatr;
         return nMatr;
     }
-    static std::string setId(char letterId, int numTot, int cod){
+
+    static std::string setId(char letterId, int numTot, int cod) {
         std::stringstream ss;
-        ss << letterId << std::setfill('0') <<std::setw(numTot)<<cod;
+        ss << letterId << std::setfill('0') << std::setw(numTot) << cod;
         return ss.str();
     }
+
     static bool controlFieldsVectorAreEmpty(std::vector<std::string> infoVector) {
         for (int i = 0; i < infoVector.size(); i++) {
             if (infoVector[i].empty())
@@ -111,20 +143,47 @@ public:
         }
         return false;
     }
-    static bool controlItCanBeAnId(std::string Id, int numMatr){
+
+    static bool controlItCanBeAnId(std::string Id, int numMatr) {
         std::stringstream ss(Id);
         char c;
         std::string matrWithoutLetter;
         ss >> c >> matrWithoutLetter;
-        if(matrWithoutLetter.size() != numMatr){
+        if (matrWithoutLetter.size() != numMatr) {
             return false;
         }
-        for(int i = 0; i<numMatr; i++){
-            if(!isdigit(matrWithoutLetter[i]))
+        for (int i = 0; i < numMatr; i++) {
+            if (!isdigit(matrWithoutLetter[i]))
                 return false;
         }
         return true;
     }
+
+    static bool controlItCanBeAnInt(std::string stringToInt) {
+        int length = stringToInt.length();
+        for (int i = 0; i < length; i++) {
+            if (!isdigit(stringToInt[i]))
+                return false;
+        }
+        return true;
+    }
+
+    static bool controlItCanBeAnAcYear(std::string input) {
+        //AAAA-AAAA
+        if (input.size() != 9)
+            return false;
+        std::string acStartYear = input.substr(0, 4);
+        if (Parse::controlItCanBeAnInt(acStartYear) == false)
+            return false;
+        std::string acEndYear = input.substr(5, 4);
+        if (Parse::controlItCanBeAnInt(acEndYear) == false)
+            return false;
+        if (std::stoi(acEndYear) != std::stoi(acStartYear) + 1)
+            return false;
+        return true;
+    }
+
+
 };
 
 

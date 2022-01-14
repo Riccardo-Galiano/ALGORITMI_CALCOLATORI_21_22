@@ -110,15 +110,8 @@ CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj: ../Classi/StudyCourse.cpp
 CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj: ../Classi/StudyCourse.h
 CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj: ../Classi/UniversityMember.h
 
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/Course.h
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/Date.h
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/Exam.h
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/Professor.h
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/SpecificYearCourse.h
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/Student.h
 CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/SystemLog.cpp
 CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/SystemLog.h
-CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/UniversityMember.h
 
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/Classroom.h
 CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj: ../Classi/Course.h
