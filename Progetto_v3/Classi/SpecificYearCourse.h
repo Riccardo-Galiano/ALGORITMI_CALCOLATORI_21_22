@@ -41,7 +41,9 @@ public:
     bool addStudent(int acYearRegistration, Student &stud);
     bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
     int amIAssignedAlreadyInThisSession(int);
-    Date lastDateAssignationInGivenSession(int);
+    Date& lastDateAssignationInGivenSession(int);
+    Date& dateAssignationInGivenSession(int numSession, int numAppeal);
+
     bool assignExamInThisSpecificYearCourse(Date,int);
     bool assignYY_SemToAllYear(std::string&,std::string&);
     bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);

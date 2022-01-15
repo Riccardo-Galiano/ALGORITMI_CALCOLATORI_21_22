@@ -37,6 +37,7 @@ public:
     static void popAppealFromVector(std::vector<std::string>&,std::string);
     std::vector<std::string> getProfsOfGapProfsString();
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
+    void removeThisAppealInfo(int numSession, int numAppeal,Date& date,int& startSlot, std::vector<int>& classrooms);
 
     ///getter
     int getAcYear() const;

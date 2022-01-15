@@ -135,7 +135,7 @@ void University::readVersion() {
     }
     std::string version;
     std::getline(file, version);
-    _version = stoi(version);
+    _version = Parse::checkedStoi(version);
     file.close();
 }
 
@@ -187,17 +187,17 @@ void University::readClassroom() {
             throw std::logic_error("due codici uguali");
         else if (_version == 2) {
             _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
-                                                                        std::stoi(InteraClasse[3]),
-                                                                        std::stoi(InteraClasse[4]),
-                                                                        std::stoi(InteraClasse[5]),
-                                                                        std::stoi(InteraClasse[6]),
-                                                                        std::stoi(InteraClasse[7]),
-                                                                        std::stoi(InteraClasse[8]))));
+                                                                        Parse::checkedStoi(InteraClasse[3]),
+                                                                        Parse::checkedStoi(InteraClasse[4]),
+                                                                        Parse::checkedStoi(InteraClasse[5]),
+                                                                        Parse::checkedStoi(InteraClasse[6]),
+                                                                        Parse::checkedStoi(InteraClasse[7]),
+                                                                        Parse::checkedStoi(InteraClasse[8]))));
 
         } else
             _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
-                                                                        std::stoi(InteraClasse[3]),
-                                                                        std::stoi(InteraClasse[4]))));
+                                                                        Parse::checkedStoi(InteraClasse[3]),
+                                                                        Parse::checkedStoi(InteraClasse[4]))));
 
     }
     fileIn.close();
@@ -231,9 +231,9 @@ void University::readCourse() {
             lastReadCourse = interoCorso[1];//codice identificativo del corso appena letto
             //inserisco il corso con le relative info nella map _courses
             _courses.insert(std::pair<std::string, Course>(lastReadCourse,
-                                                           Course(interoCorso[1], interoCorso[2], stoi(interoCorso[3]),
-                                                                  stoi(interoCorso[4]), stoi(interoCorso[5]),
-                                                                  stoi(interoCorso[6]))));
+                                                           Course(interoCorso[1], interoCorso[2], Parse::checkedStoi(interoCorso[3]),
+                                                                  Parse::checkedStoi(interoCorso[4]), Parse::checkedStoi(interoCorso[5]),
+                                                                  Parse::checkedStoi(interoCorso[6]))));
 
         } else if (interoCorso[0] ==
                    "a") {//se la riga letta inizia con "a" devo inserire le info di un anno accademico per un corso generale letto
@@ -244,7 +244,7 @@ void University::readCourse() {
             else
                 isActive = false;
             ///numero di corsi in parallelo
-            num_parallel_courses = stoi(specificYearCourse[3]);
+            num_parallel_courses = Parse::checkedStoi(specificYearCourse[3]);
             ///estraggo gli id di tutti i prof di tutti i corsi in parallelo
             profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() - 2);
             ///divido i vari corsi in parallelo
@@ -485,12 +485,12 @@ void University::addClassrooms(const std::string &fileIn) {
             if (doDbWrite) {
                 try {
                     _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                              std::stoi(infoClassroom[2]),
-                                                                              std::stoi(infoClassroom[3]),
-                                                                              std::stoi(infoClassroom[4]),
-                                                                              std::stoi(infoClassroom[5]),
-                                                                              std::stoi(infoClassroom[6]),
-                                                                              std::stoi(infoClassroom[7]))));
+                                                                              Parse::checkedStoi(infoClassroom[2]),
+                                                                              Parse::checkedStoi(infoClassroom[3]),
+                                                                              Parse::checkedStoi(infoClassroom[4]),
+                                                                              Parse::checkedStoi(infoClassroom[5]),
+                                                                              Parse::checkedStoi(infoClassroom[6]),
+                                                                              Parse::checkedStoi(infoClassroom[7]))));
 
                 } catch (std::exception &err) {
                     std::string generalError = err.what();
@@ -511,8 +511,8 @@ void University::addClassrooms(const std::string &fileIn) {
             if (doDbWrite) {
                 try {
                     _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                              std::stoi(infoClassroom[2]),
-                                                                              std::stoi(infoClassroom[3]))));
+                                                                              Parse::checkedStoi(infoClassroom[2]),
+                                                                              Parse::checkedStoi(infoClassroom[3]))));
                 } catch (std::exception &err) {
                     std::string generalError = err.what();
                     error.append(generalError + " alla riga: " + std::to_string(line_counter));
@@ -654,7 +654,7 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
         //cerco nel DB un esame con stesso titolo e cfu
         for (auto iterCourses = _courses.begin(); iterCourses != _courses.end(); iterCourses++) {
             if (iterCourses->second.getName() == specificYearCourse[1] &&
-                iterCourses->second.getCfu() == stoi(specificYearCourse[2])) {
+                iterCourses->second.getCfu() == Parse::checkedStoi(specificYearCourse[2])) {
                 error.append("c'è un corso già presente in base dati alla riga: " + std::to_string(line_counter)+"\n");
                 doDBwrite = false;
             }
@@ -662,13 +662,13 @@ std::vector<std::string> University::addCourses(const std::string &fin) {
         if (doDBwrite) {
             std::string newIdCourse = getNewCourseId();
             _courses.insert(std::pair<std::string, Course>(newIdCourse, Course(newIdCourse, specificYearCourse[1],
-                                                                               stoi(specificYearCourse[2]),
-                                                                               stoi(specificYearCourse[3]),
-                                                                               stoi(specificYearCourse[4]),
-                                                                               stoi(specificYearCourse[5]))));
+                                                                               Parse::checkedStoi(specificYearCourse[2]),
+                                                                               Parse::checkedStoi(specificYearCourse[3]),
+                                                                               Parse::checkedStoi(specificYearCourse[4]),
+                                                                               Parse::checkedStoi(specificYearCourse[5]))));
 
             acYear = specificYearCourse[0]; //anno accademico
-            num_parallel_courses = stoi(specificYearCourse[6]);//numero di corsi in parallelo
+            num_parallel_courses = Parse::checkedStoi(specificYearCourse[6]);//numero di corsi in parallelo
             profSenzaQuadre = specificYearCourse[7].substr(1, specificYearCourse[7].size() -
                                                               2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
             std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
@@ -1155,44 +1155,44 @@ void University::updateClassroom(const std::string &fin) {
                         }
                         case update_nSeats : {//analizzo la capienza
                             if (iter->second.getNSeats() !=
-                                stoi(infoClassroom[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
-                                iter->second.updateNSeats(stoi(infoClassroom[i])); //cambia la capienza dell'aula
+                                Parse::checkedStoi(infoClassroom[i])) {  //se la capienza dell'aula letta da file è diversa dalla capienza dell'aula del database
+                                iter->second.updateNSeats(Parse::checkedStoi(infoClassroom[i])); //cambia la capienza dell'aula
                             }
                             break;
                         }
                         case update_nSeatsExam : {
                             if (iter->second.getNExamSeats() !=
-                                stoi(infoClassroom[i])) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
-                                iter->second.updateNExamSeats(stoi(infoClassroom[i])); //cambia l'email
+                                Parse::checkedStoi(infoClassroom[i])) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
+                                iter->second.updateNExamSeats(Parse::checkedStoi(infoClassroom[i])); //cambia l'email
                             }
                             break;
                         }
                         case update_drawingTable: {
                             if (iter->second.getDrawingTable() !=
-                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                Parse::checkedStoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
                                 iter->second.updateDrawingTable(
-                                        stoi(infoClassroom[i])); //cambia il numero di tavoli da disegno
+                                        Parse::checkedStoi(infoClassroom[i])); //cambia il numero di tavoli da disegno
                             }
                             break;
                         }
                         case update_computer: {
                             if (iter->second.getComputer() !=
-                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                                iter->second.updateComputer(stoi(infoClassroom[i])); //cambia il numero di computer
+                                Parse::checkedStoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateComputer(Parse::checkedStoi(infoClassroom[i])); //cambia il numero di computer
                             }
                             break;
                         }
                         case update_projector: {
                             if (iter->second.getProjector() !=
-                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                                iter->second.updateProjector(stoi(infoClassroom[i])); //cambia il numero di proiettori
+                                Parse::checkedStoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateProjector(Parse::checkedStoi(infoClassroom[i])); //cambia il numero di proiettori
                             }
                             break;
                         }
                         case update_blackBoard: {
                             if (iter->second.getBlackBoard() !=
-                                stoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
-                                iter->second.updateBlackBoard(stoi(infoClassroom[i])); //cambia il numero di lavagne
+                                Parse::checkedStoi(infoClassroom[i])) {//se il numero di tavoli da disegno è diverso da quello che c'è nel database
+                                iter->second.updateBlackBoard(Parse::checkedStoi(infoClassroom[i])); //cambia il numero di lavagne
                             }
                             break;
                         }
@@ -1257,7 +1257,7 @@ std::vector<std::string> University::insertCourses(const std::string &fin) {
         acYear = specificYearCourse[1]; //anno accademico
 
         ///come per la readCourse, aggiorno la mappa _courses
-        num_parallel_courses = stoi(specificYearCourse[3]);//numero di corsi in parallelo
+        num_parallel_courses = Parse::checkedStoi(specificYearCourse[3]);//numero di corsi in parallelo
         profSenzaQuadre = specificYearCourse[4].substr(1, specificYearCourse[4].size() -
                                                           2);//estraggo gli id di tutti i prof di tutti i corsi in parallelo
         std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre,
@@ -1523,7 +1523,7 @@ void University::controlOfASingleSessionPeriod(std::string name , std::string se
       Date endSessionDate(sessionPeriod.substr(11,10));
       std::string error;
       bool isOk = true;
-      if(acStartYear != stoi(sessionPeriod.substr(0,4))-1){
+      if(acStartYear != Parse::checkedStoi(sessionPeriod.substr(0,4))-1){
           if(name == "winter"){
               error.append("la sessione invernale e' impostata per un anno diverso dall'anno chiesto via comando \n");
           } else if (name == "summer")
@@ -1887,7 +1887,7 @@ void University::readCourseNotActive() {
 
 ///versione dei database con informazioni aggiuntive
 void University::versioning(std::string newVersion) {
-    int newVer = stoi(newVersion);
+    int newVer = Parse::checkedStoi(newVersion);
     if (checkVersioningRequest(newVer) == false)
         ///se è tornato false, perchè newVersion == _version, mi devo fermare
 
@@ -2143,12 +2143,14 @@ std::vector<std::string> University::insertStudentsGrades(std::string fin) {
     Course &corso = _courses.at(idCorso);
     //controllo che la data esista
     corso.controlAppeal(appealDate);
-    int appealYear = stoi(appealDate.substr(0, 4));
+    std::string year(appealDate.substr(0, 4));
+    int appealYear = Parse::checkedStoi(year);
     std::string line;
     while (std::getline(fileIn, line)) {
         std::string idmatr = line.substr(0, 7);
         int matr = Parse::getMatr(idmatr);
-        int mark = stoi(line.substr(8, 9));
+        std::string markStr(line.substr(8, 9));
+        int mark = Parse::checkedStoi(markStr);
         //controllo che lo studente esista nel database
         if (_students.find(matr) == _students.end())
             throw InvalidDbException("lo studente " + idmatr + "non esiste nel database");
@@ -2306,7 +2308,7 @@ void University::readAllMinDistanceRequest() {
         int acStartYear = Parse::getAcStartYear(infoRequest[0]);
         std::string matrString = infoRequest[1];
         std::string idCorso = infoRequest[2];
-        int distance = stoi(infoRequest[3]);
+        int distance = Parse::checkedStoi(infoRequest[3]);
         std::string matr_idC(matrString + "_" + idCorso);
         _acYearSessions.at(acStartYear).addProfGap(matr_idC, distance);
     }
@@ -2329,7 +2331,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
         int matr = Parse::getMatr(infoRequest[0]);
         std::string matrString = infoRequest[0];
         std::string idCorso = infoRequest[1];
-        int distance = stoi(infoRequest[2]);
+        int distance = Parse::checkedStoi(infoRequest[2]);
         if (distance >= 14) {
             //controllo che il corso esista
             if (_courses.find(idCorso) == _courses.end()) {
@@ -2506,13 +2508,13 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
         ///prendo le date degli appelli per quella sessione
         appealDate.emplace_back(infoOfSingleAppeal[0]);
         ///segno l'esame nei professori del corso(appello,ora di inizio,numero di slot)
-        assignAppealsToProf(idCorso, infoOfSingleAppeal[0], stoi(infoOfSingleAppeal[1]), numSlot,
+        assignAppealsToProf(idCorso, infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), numSlot,
                             allProfsPerYearCourse);
         ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
-        assignAppealsToClassroom(infoOfSingleAppeal[0], stoi(infoOfSingleAppeal[1]), infoOfSingleAppeal[2], numSlot);
+        assignAppealsToClassroom(infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), infoOfSingleAppeal[2], numSlot);
         ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
         Course &course = _courses.at(idCorso);
-        _acYearSessions.at(startAcYear).assignAppealsToCalendar(infoOfSingleAppeal[0], stoi(infoOfSingleAppeal[1]),
+        _acYearSessions.at(startAcYear).assignAppealsToCalendar(infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]),
                                                                 course, numSlot);
     }
     ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
@@ -2532,7 +2534,7 @@ void University::assignAppealsToClassroom(std::string appeal, int startSlotHour,
     std::vector<std::string> allClassrooms = Parse::splittedLine(classrooms, '|');
     Date appealDate(appeal);
     for (int i = 0; i < allClassrooms.size(); i++) {
-        _classroom.at(stoi(allClassrooms[i])).setDisavailability(appealDate, startSlotHour, numSlot);
+        _classroom.at(Parse::checkedStoi(allClassrooms[i])).setDisavailability(appealDate, startSlotHour, numSlot);
     }
 }
 
@@ -2543,16 +2545,28 @@ void University::requestChanges(std::string acYear, std::string fin) {
         throw DbException("Errore apertura del file per le richieste del cambio data esami");
     }
     std::string line;
+    int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
+    if(!std::getline(fileIn, line))
+        throw std::invalid_argument("Errore: file per le richieste del cambio data esami è vuoto");
     std::string error;
-    while (std::getline(fileIn, line)) {
+    bool appealsAreAlreadyLoaded = false;
+    ///tutti gli appelli delle sessioni (tutti anni accademici indistintamente) sono già caricati in memoria
+    while (std::getline(fileIn, line)){
         std::vector<std::string> infoChanges = Parse::splittedLine(line, ';');
         std::string idCourse = infoChanges[0];
-        int numSession = stoi(infoChanges[1]);
-        int numAppeal = stoi(infoChanges[2]);
-        char shift = infoChanges[3][0];
-        int numWeeks = stoi(infoChanges[4]);
+        int numSession = Parse::checkedStoi(infoChanges[1]);
+        int numAppeal = Parse::checkedStoi(infoChanges[2]);
+        char directionOfSfift = infoChanges[3][0];
+        int numWeeks = Parse::checkedStoi(infoChanges[4]);
+        ///2) cancello informazioni dell'appello selezionato in questa riga e salvo info in oggetto temporaneo
+        ///3) cerco di soddisfare cambiamento
+        ///4) se riesco, aggiungo appello è successfulChanges++
+        ///5) se non riesco, devo ripristinare info appello da oggetto temporaneo + warning
+        Date oldDate;
+        int startSlot;
+        std::vector<int> classrooms;
+        removeThisAppealInfo(Parse::checkedStoi(acYear),idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
     }
-
 }
 
 void University::ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse &sCourse) {
@@ -2586,6 +2600,18 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
             return false;
     }
     return true;
+}
+
+void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::vector<int>& classrooms) {
+    SessionYear thisSession = _acYearSessions.at(acYear);
+    SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
+    date = sp.dateAssignationInGivenSession(numSession,numAppeal);
+    ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
+    ///SpecificYearCourse da idCorso
+    ///professori relativi da SpecificYearCourse trovato
+    ///Classroom selezionate da SpecificYearCourse trovato
+    ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
+    thisSession.removeThisAppealInfo(numSession, numAppeal,date,startSlot,classrooms);
 }
 
 

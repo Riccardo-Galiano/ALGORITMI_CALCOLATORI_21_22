@@ -546,6 +546,11 @@ void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour,
     _yearCalendar.at(appeal).assignExamToExamDay(startSlotHour, course, numSlots);
 }
 
+void SessionYear::removeThisAppealInfo(int numSession, int numAppeal, Date &date, int &startSlot,
+                                       std::vector<int> &classrooms) {
+
+}
+
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";" << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg
     return sessions;

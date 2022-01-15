@@ -161,7 +161,14 @@ public:
             return false;
         return true;
     }
-
+    static int checkedStoi(std::string& input){
+        for(int i=0; i<input.size(); i++){
+            char currentChar = input[i];
+            if(currentChar < 48 || currentChar > 57)
+                throw std::invalid_argument("errore conversione stringa -> intero");
+        }
+        return stoi(input);
+    }
 };
 
 

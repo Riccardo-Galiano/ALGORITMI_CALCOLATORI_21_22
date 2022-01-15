@@ -7,7 +7,8 @@
 
 void SystemLog::appendToLog(std::string &toAppend, bool isError) {
     _log.append(toAppend);
-    _notOK = isError;
+    if(!_notOK && isError)
+        _notOK = isError;
 }
 
 std::string SystemLog::getLog() {

@@ -249,7 +249,7 @@ int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
 }
 
 ///ritorna la data dell'appello precedentemente assegnato per un corso
-Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
+Date& SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
     //ritorna 1900-01-01 se non trova la data del primo appello
     if (amIAssignedAlreadyInThisSession(session) == 0) {
         return Date();
@@ -470,6 +470,10 @@ int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
 
 void SpecificYearCourse::setYySemester(const std::string &yySemester) {
     _yy_semester = yySemester;
+}
+
+Date &SpecificYearCourse::dateAssignationInGivenSession(int) {
+    return <#initializer#>;
 }
 
 
