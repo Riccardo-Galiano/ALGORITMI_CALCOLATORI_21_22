@@ -1523,7 +1523,8 @@ void University::controlOfASingleSessionPeriod(std::string name , std::string se
       Date endSessionDate(sessionPeriod.substr(11,10));
       std::string error;
       bool isOk = true;
-      if(acStartYear != Parse::checkedStoi(sessionPeriod.substr(0,4))-1){
+      std::string yearSessionPeriod = sessionPeriod.substr(0,4);
+      if(acStartYear != Parse::checkedStoi(yearSessionPeriod)-1){
           if(name == "winter"){
               error.append("la sessione invernale e' impostata per un anno diverso dall'anno chiesto via comando \n");
           } else if (name == "summer")
@@ -1951,7 +1952,6 @@ void University::addStudyPlan(std::string fin) {
     bool doDbWrite = true;
     int line_counter = 1;
     while (std::getline(fileIn, line)) {
-        char c;
         int id = 0;
         bool isOk = true;
         std::vector<int> posSemiColon = Parse::posSemiColon(line);
@@ -1966,10 +1966,8 @@ void University::addStudyPlan(std::string fin) {
             error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter) + " non puo' essere una matricola di uno studente \n");
             doDbWrite = false;
             isOk = false;
-        } else
-        {
-            std::stringstream ss(matr);
-            ss >> c >> id;
+        } else{
+            id = Parse::getMatr(matr);
         }
         ///controllo sul secondo campo di informazioni, anno accademico
         std::string acYearRegistration = line.substr(posSemiColon[0]+1, posSemiColon[1]-posSemiColon[0] - 1);
@@ -2018,8 +2016,7 @@ void University::dbStudyPlanWrite() {
     std::fstream fout;
     fout.open("db_piano_studi.txt", std::fstream::out | std::fstream::trunc);
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
-        Student stud = _students.at(
-                iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        Student stud = _students.at(iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
         if (stud.studyPlanIsEmpty() == false) {
             std::string otherInfo = stud.getOtherInfoString();
             fout << "s" << std::setfill('0') << std::setw(6) << stud.getId() << ";" << stud.getYearRegistration() << "-"
@@ -2065,7 +2062,6 @@ void University::updateStudyPlan(const std::string& fin) {
     std::string error;
     bool doDbWrite = true;
     while (std::getline(fileIn, line)) {
-        char c;
         int id = 0;
         bool isOk = true;
         std::vector<int> posSemiColon = Parse::posSemiColon(line);
@@ -2080,10 +2076,8 @@ void University::updateStudyPlan(const std::string& fin) {
             error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter) + " non puo' essere una matricola di uno studente \n");
             doDbWrite = false;
             isOk = false;
-        } else
-        {
-            std::stringstream ss(matr);
-            ss >> c >> id;
+        } else{
+            id = Parse::getMatr(matr);
         }
         ///controllo sul secondo campo di informazioni, anno accademico
         std::string acYearRegistration = line.substr(posSemiColon[0]+1, posSemiColon[1]-posSemiColon[0] - 1);
@@ -2128,40 +2122,101 @@ void University::updateStudyPlan(const std::string& fin) {
     }
 }
 
-std::vector<std::string> University::insertStudentsGrades(std::string fin) {
+void University::insertStudentsGrades(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file inserimento voti");
+        throw std::invalid_argument("errore apertura file inserimento voti. \n");
     }
     ///folder/<id_corso>_<data_appello>(_[*]).csv
     std::string base_filename = fin.substr(fin.find_last_of("/\\") + 1);
     std::string idCorso = base_filename.substr(0, 7);
     std::string appealDate = base_filename.substr(8, 10);
+    std::string error;
+    int doDbWrite = true;
     //controllo che il corso esista
-    if (_courses.find(idCorso) == _courses.end())
-        throw std::invalid_argument("il seguente corso non esiste" + idCorso + "impossibile assegnare i voti");
+    if (_courses.find(idCorso) == _courses.end()) {
+        throw std::invalid_argument("il seguente corso non esiste" + idCorso + "impossibile assegnare i voti \n");
+    }
     Course &corso = _courses.at(idCorso);
     //controllo che la data esista
     corso.controlAppeal(appealDate);
     std::string year(appealDate.substr(0, 4));
-    int appealYear = Parse::checkedStoi(year);
-    std::string line;
-    while (std::getline(fileIn, line)) {
-        std::string idmatr = line.substr(0, 7);
-        int matr = Parse::getMatr(idmatr);
-        std::string markStr(line.substr(8, 9));
-        int mark = Parse::checkedStoi(markStr);
-        //controllo che lo studente esista nel database
-        if (_students.find(matr) == _students.end())
-            throw InvalidDbException("lo studente " + idmatr + "non esiste nel database");
-        Student &stud = _students.at(matr); //preso l'istanza dello studente di cui si parla
-        int acYear = stud.getYearRegistration();
-        _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark, appealDate);
+    int appealYear;
 
+    try {
+        appealYear = Parse::checkedStoi(year);
+    }catch (std::invalid_argument& err){
+        std::string generalError = err.what();
+        throw std::invalid_argument(generalError  + " Controllare l'appello nel nome del file. \n");
+    }
+    std::string line;
+    int line_counter = 1;
+    while (std::getline(fileIn, line)) {
+        std::string idStud = line.substr(0, 7);
+        int id;
+        bool matrIsOk = true;
+        bool markIsOk = true;
+        ///se il primo campo è vuoto ho dimenticato ha scrivere la matricola nel file
+        if(idStud.empty()){
+            error.append("Non e' stata dichiarata la matricola dello studente al rigo: " + std::to_string(line_counter) + "\n");
+            doDbWrite = false;
+            matrIsOk = false;
+        } else{/// se il primo campo non è vuoto devo capire se è una matricola o no
+            try {
+                Parse::controlItCanBeAnId(idStud, 6);
+            }catch (std::invalid_argument& err){
+                error.append(" Il primo campo alla riga: "+ std::to_string(line_counter) + " non puo' essere l'id di uno studente \n");
+                doDbWrite = false;
+                matrIsOk = false;
+            }
+            if(matrIsOk)///se sono arrivato qui ed è true vuol dire che il primo campo puo' essere una matricola(tutti int e formato esatto per gli studenti)
+                id = Parse::getMatr(idStud);
+        }
+        std::string markString(line.substr(8, 9));
+        int mark;
+        if(markString.empty()){
+            error.append("Non e' stata dichiarato il voto dello studente al rigo: " + std::to_string(line_counter) + "\n");
+            doDbWrite = false;
+            markIsOk = false;
+        } else{/// se il primo campo non è vuoto devo capire se è un voto o no
+            try {
+                mark = Parse::checkedStoi(markString);
+                if(mark < 0 || mark > 32){
+                     error.append("Il voto alla riga: "+ std::to_string(line_counter) + " non e' compreso in un intervallo tra 0 e 32 \n");
+                     markIsOk = false;
+                }
+            }catch (std::invalid_argument& err){
+                error.append(" Il secondo campo alla riga: "+ std::to_string(line_counter) + " non puo' essere il voto di un esame\n");
+                doDbWrite = false;
+                markIsOk = false;
+            }
+        }
+        //controllo che lo studente esista nel database
+        if(matrIsOk && markIsOk) {
+            if (_students.find(id) == _students.end()) {
+                error.append("lo studente alla riga " + std::to_string(line_counter) + " con matricola " + idStud + " non esiste nel database\n");
+                doDbWrite = false;
+            }else {
+                Student &stud = _students.at(id); //preso l'istanza dello studente di cui si parla
+                //prendiamo l'anno di iscrizione dello studente
+                //(perchè le info sull'esame fatto dallo studente sono salvate nello specifico anno di ogni corso a cui è iscritto il cui specifico anno è proprio l'anno di iscrizione dello studente)
+                int acYear = stud.getYearRegistration();
+                try {
+                    _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark, appealDate);
+                }catch (std::invalid_argument& err){
+                    std::string generalError = err.what();
+                    error.append("Lo studente alla riga " + std::to_string(line_counter) + " con matricola " + idStud + generalError);
+                    doDbWrite = false;
+                }
+            }
+        }
+     line_counter++;
     }
     fileIn.close();
-    dbAppealsWrite();
-    return _errorStringUniversity;
+    if(doDbWrite)
+        dbAppealsWrite();
+    else
+        throw std::invalid_argument(error);
 }
 
 void University::registerStudentsToSpecificYearCourses(std::vector<std::string> &courses, Student &stud,std::string acYearRegistration, int line_counter) {
@@ -2605,7 +2660,7 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
 void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::vector<int>& classrooms) {
     SessionYear thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
-    date = sp.dateAssignationInGivenSession(numSession,numAppeal);
+    // TOLTO SOLO PERCHE' DAVA PROBLEMI, DA FINIRE date = sp.dateAssignationInGivenSession(numSession,numAppeal);
     ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
     ///SpecificYearCourse da idCorso
     ///professori relativi da SpecificYearCourse trovato

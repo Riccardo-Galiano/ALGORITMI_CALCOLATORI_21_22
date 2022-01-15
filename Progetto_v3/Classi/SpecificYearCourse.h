@@ -42,7 +42,8 @@ public:
     bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
     int amIAssignedAlreadyInThisSession(int);
     Date& lastDateAssignationInGivenSession(int);
-    Date& dateAssignationInGivenSession(int numSession, int numAppeal);
+    // TOLTO SOLO PERCHE' DAVA PROBLEMI, DA FINIRE
+    //Date& dateAssignationInGivenSession(int numSession, int numAppeal);
 
     bool assignExamInThisSpecificYearCourse(Date,int);
     bool assignYY_SemToAllYear(std::string&,std::string&);

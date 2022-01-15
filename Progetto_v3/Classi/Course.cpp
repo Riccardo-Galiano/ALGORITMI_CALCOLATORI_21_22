@@ -84,7 +84,7 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 
 ///modifica uno studente in un anno specifico con il suo voto
 bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
-    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark,appealsDate,getId());
+    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark,appealsDate,getId());///CONTROLLO SULL'ANNO DA FARE
     return true;
 }
 
@@ -411,7 +411,7 @@ bool Course::assignAppealToSpecificYear(std::string acYear, std::string session,
 bool Course::controlAppeal(std::string appealDate) {
     Date appeal(appealDate);
     int startAc = Parse::getAcStartYear(appealDate)-1;
-    if(_courseOfTheYear.find(startAc) == _courseOfTheYear.end())
+    if(_courseOfTheYear.find(startAc) == _courseOfTheYear.end())///SISTEMARE VA MESSO SOLO SE L'ANNO è PRECEDENTE A QUELLO DI INIZIO ATTIVITA' DEL CORSO
         throw std::invalid_argument("non esistono info per questo anno accademico" + std::to_string(startAc) + "_" + std::to_string(startAc+1) + ". Impossibile assegnare voti");
     std::vector<Date> allAppealsPerYear = _courseOfTheYear.at(startAc).getAllAppeals();
     if(std::find(allAppealsPerYear.begin(),allAppealsPerYear.end(),appeal)==allAppealsPerYear.end())

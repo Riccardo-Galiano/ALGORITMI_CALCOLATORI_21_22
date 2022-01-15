@@ -86,11 +86,14 @@ public:
         return splittedLine(input, ',');//scissione degli id dei corsi raggruppati
     };
     static int getAcStartYear(std::string& input){
-        bool canBeAnInt = Parse::controlItCanBeAnInt(input.substr(0, 4));
-        if (canBeAnInt)
-            return stoi(input.substr(0, 4));
-        else
-            throw std::invalid_argument(" la stringa in input non puo' essere un anno \n");
+        std::string acStartYear = input.substr(0, 4);
+        int acStart = 0;
+        try {
+            return checkedStoi(acStartYear);
+        }catch (std::invalid_argument& err){
+            std::string generalError = err.what();
+            throw std::invalid_argument( generalError + " La stringa in input non puo' essere un anno \n");
+        }
     }
     static std::vector<Date> getDates(std::string& input){
         std::vector<std::string> dates = splittedLine(input,'_');
@@ -125,20 +128,23 @@ public:
         }
         return false;
     }
-    static bool controlItCanBeAnId(std::string Id, int numMatr){
+    static bool controlItCanBeAnId(std::string Id, int numMatr) {
         std::stringstream ss(Id);
         char c;
         std::string matrWithoutLetter;
         ss >> c >> matrWithoutLetter;
-        if(matrWithoutLetter.size() != numMatr){
+        if (matrWithoutLetter.size() != numMatr) {
             return false;
         }
-        for(int i = 0; i<numMatr; i++){
-            if(!isdigit(matrWithoutLetter[i]))
-                return false;
+        try {
+            checkedStoi(matrWithoutLetter);
+        } catch (std::invalid_argument &err) {
+            return false;
         }
         return true;
     }
+
+    /*
     static bool controlItCanBeAnInt(std::string stringToInt) {
         int length = stringToInt.length();
         for (int i = 0; i < length; i++) {
@@ -146,26 +152,32 @@ public:
                 return false;
         }
         return true;
-    }
+    }*/
     static bool controlItCanBeAnAcYear(std::string input) {
         //AAAA-AAAA
         if (input.size() != 9)
             return false;
         std::string acStartYear = input.substr(0, 4);
-        if (Parse::controlItCanBeAnInt(acStartYear) == false)
-            return false;
         std::string acEndYear = input.substr(5, 4);
-        if (Parse::controlItCanBeAnInt(acEndYear) == false)
+        int acStart;
+        int acEnd;
+        try {
+            acStart = checkedStoi(acStartYear);
+        }catch (std::invalid_argument& err){
             return false;
-        if (std::stoi(acEndYear) != std::stoi(acStartYear) + 1)
+        }
+        try {
+            acEnd = checkedStoi(acEndYear);
+        }catch (std::invalid_argument& err){
             return false;
-        return true;
+        }
+        return acStart + 1 == acEnd;
     }
     static int checkedStoi(std::string& input){
         for(int i=0; i<input.size(); i++){
             char currentChar = input[i];
             if(currentChar < 48 || currentChar > 57)
-                throw std::invalid_argument("errore conversione stringa -> intero");
+                throw std::invalid_argument("errore conversione stringa -> intero.");
         }
         return stoi(input);
     }

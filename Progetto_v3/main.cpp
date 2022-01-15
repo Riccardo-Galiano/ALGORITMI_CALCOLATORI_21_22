@@ -291,7 +291,20 @@ std::vector<std::string> program(University &uni, char **argv) {
             break;
         }
         case insert_students_grades:{
-            errorString = uni.insertStudentsGrades(argv[2]);
+            std:: string strToAddToLog;
+            bool isOk = true;
+            try {
+                uni.insertStudentsGrades(argv[2]);
+            }catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -u:p per gli errori elencati precedentemente\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                isOk = false;
+            }
+            if(isOk) {
+                strToAddToLog.append("Il comando -u:p e' stato eseguito correttamente\n");
+                sysLog.appendToLog(strToAddToLog, false);
+            }
             break;
         }
         case set_min_distance:{
@@ -301,12 +314,12 @@ std::vector<std::string> program(University &uni, char **argv) {
                 uni.setMinDistance(argv[3],argv[4]);
             }catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non e' stato possibile effettuare il comando -s set_min_distance per gli errori elencati precedentemente\n");
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -i:v set_min_distance per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 isOk = false;
             }
             if(isOk) {
-                strToAddToLog.append("Il comando -s set_min_distance e' stato eseguito correttamente\n");
+                strToAddToLog.append("Il comando -i:v e' stato eseguito correttamente\n");
                 sysLog.appendToLog(strToAddToLog, false);
             }
 

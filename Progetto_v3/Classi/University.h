@@ -45,7 +45,7 @@ public:
                                                      std::string idCourse);
     bool controlAGAINGroupedCoursesDifferentCds_Reciprocy();
     std::vector<std::string> insertCourses(const std::string &fin);
-    std::vector<std::string> insertStudentsGrades(std::string fin);
+    void insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
     void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, std::string acYearRegistration, int line_counter);
     void thereIsAHoleInTheCoursesCodes();

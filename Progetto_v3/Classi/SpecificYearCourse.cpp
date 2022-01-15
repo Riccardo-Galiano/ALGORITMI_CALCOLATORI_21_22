@@ -252,7 +252,8 @@ int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
 Date& SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
     //ritorna 1900-01-01 se non trova la data del primo appello
     if (amIAssignedAlreadyInThisSession(session) == 0) {
-        return Date();
+        Date dateDefault = Date();
+        return dateDefault;// CAMBIATO SOLO PERCHE' DAVA PROBLEMI, DA CAMBIARE
     }
     return _howManyTimesIAmAssignedInASession.at(session)[0];
 }
@@ -274,8 +275,7 @@ bool SpecificYearCourse::addGradeToStudent(Student &stud, int _passYear, int mar
                                            std::string idCourse) {
     //controllo che lo studente sia associato al corso in quello specifico anno
     if (_studentsEnrolled.find(stud.getId()) == _studentsEnrolled.end()) {
-        std::string settedId = Parse::setId('s', 6, stud.getId());
-        throw InvalidDbException("lo studente con  matricola " + settedId + " non e' iscritto al corso " + idCourse);
+        throw InvalidDbException(" non e' iscritto al corso " + idCourse + "\n");
     }
     student &studToUpdate = _studentsEnrolled.at(stud.getId());
     studToUpdate._grade = mark;
@@ -285,7 +285,6 @@ bool SpecificYearCourse::addGradeToStudent(Student &stud, int _passYear, int mar
         studToUpdate._passed = true;
         studToUpdate._appealPassed = appealsDate;
     }
-
     return true;
 }
 
@@ -471,10 +470,11 @@ int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
 void SpecificYearCourse::setYySemester(const std::string &yySemester) {
     _yy_semester = yySemester;
 }
-
+/*
 Date &SpecificYearCourse::dateAssignationInGivenSession(int) {
     return <#initializer#>;
 }
+*/
 
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
