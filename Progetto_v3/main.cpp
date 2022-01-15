@@ -274,7 +274,20 @@ std::vector<std::string> program(University &uni, char **argv) {
             break;
         }
         case update_study_plan_student:{
-            errorString = uni.updateStudyPlan(argv[2]);
+            std:: string strToAddToLog;
+            bool isOk = true;
+            try {
+                uni.updateStudyPlan(argv[2]);
+            }catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -u:p per gli errori elencati precedentemente\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                isOk = false;
+            }
+            if(isOk) {
+                strToAddToLog.append("Il comando -u:p e' stato eseguito correttamente\n");
+                sysLog.appendToLog(strToAddToLog, false);
+            }
             break;
         }
         case insert_students_grades:{

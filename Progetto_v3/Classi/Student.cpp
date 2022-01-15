@@ -18,6 +18,8 @@ Student::Student(int matr, std::string name, std::string surname, std::string em
 
 
 bool Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan) {
+    ///questa funzione è usata per la add e per la update quindi io aggiungo l'anno di
+
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
     if(_studyPlan.empty() == false){
         std::string settedId = Parse::setId('s',6,getId());

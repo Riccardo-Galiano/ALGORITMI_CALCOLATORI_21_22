@@ -102,7 +102,7 @@ public:
     void updateStuds(const std::string &fin);
     void updateProfessors(const std::string &fin);
     void updateClassroom(const std::string &fin);
-    std::vector<std::string> updateStudyPlan(std::string fin);
+    void updateStudyPlan(const std::string& fin);
 
 private:
     SystemLog _universityLog;
