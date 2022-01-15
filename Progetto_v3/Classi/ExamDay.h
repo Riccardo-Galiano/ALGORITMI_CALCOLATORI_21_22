@@ -26,7 +26,7 @@ public:
     bool setSlot();
     std::vector<std::string> getSlotsToString();
     bool allSLotsAreEmpty();
-    bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour,int numSlotsRequired);
+    bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour,int numSlotsRequired,std::string labOrClass);
     bool checkProfsAvaibility(SpecificYearCourse& specificCourse, std::map<int, Professor>& allUniversityProfs, int relaxPar, int slotHour);
     void eraseTempGroupedCourseClassrooms();
     std::string classroomString(std::vector<int>);

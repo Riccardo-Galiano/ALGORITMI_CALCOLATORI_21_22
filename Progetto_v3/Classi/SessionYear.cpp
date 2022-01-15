@@ -217,8 +217,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         }
                         ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
                         /// controllo disponibilità aule e vincolo 6 ore stesso esame stesso giorno
-                        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,
-                                                                                           currentExamDay, profs,
+                        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,currentExamDay, profs,
                                                                                            allUniversityClassrooms,
                                                                                            relaxPar,
                                                                                            getSemester(sessName),
@@ -403,8 +402,7 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
     std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
     std::string idCorso = course.getId();
     ///controllo sulla data della sessione
-    bool iCanBeAssigneToFirstTwoWeekOfExamSession = sp.canIBeAssigneToFirstTwoWeekOfExamSession(
-            this->getSemester(sessName));//se stesso semestre della sessione ed è attivo
+    bool iCanBeAssigneToFirstTwoWeekOfExamSession = sp.canIBeAssigneToFirstTwoWeekOfExamSession(this->getSemester(sessName));//se stesso semestre della sessione ed è attivo
     if (iCanBeAssigneToFirstTwoWeekOfExamSession == false) {
         //se non stesso semestre della sessione o spento non posso assegnarlo alle prime due settimane della sessione ma devo iniziare dalla terza in poi
         //quindi controllo se il giorno analizzato è delle prime due settimane(primi 14 giorni); in quel caso la data non va bene

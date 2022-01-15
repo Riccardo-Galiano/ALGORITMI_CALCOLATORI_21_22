@@ -79,6 +79,7 @@ public:
     std::string getAppealsForAllSession();
     std::string getRoomsPerAppealsString(int numAppeals);
     int getStartHourAppeal(int numAppeals);
+    std::string getPlaceExam();
 
     ///setter
     bool setYear();

@@ -13,7 +13,7 @@
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
                                        std::vector<std::string> exam, std::vector<std::string> idGrouped,
                                        std::string yy_semester, std::vector<int> studyCourse, int line_counter) :
-        _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
+    _exam(stoi(exam[0]), stoi(exam[1]), stoi(exam[2]), exam[3], exam[4]) {
     std::stringstream acYY(sY_eY);//manipolo la stringa dell'anno accademico
     char c;
     acYY >> _startYear >> c >> _endYear;//anno iniziale - anno finale
@@ -470,6 +470,11 @@ int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
 void SpecificYearCourse::setYySemester(const std::string &yySemester) {
     _yy_semester = yySemester;
 }
+
+std::string SpecificYearCourse::getPlaceExam() {
+    return _exam.getPlace();
+}
+
 /*
 Date &SpecificYearCourse::dateAssignationInGivenSession(int) {
     return <#initializer#>;

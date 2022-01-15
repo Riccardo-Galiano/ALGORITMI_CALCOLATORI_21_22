@@ -16,8 +16,8 @@ typedef struct {
 class Classroom {
 public:
 
-    Classroom(int , std::string, std::string, int, int);
-    Classroom(int , std::string, std::string, int, int,int,int,int,int);
+    Classroom(int id, std::string AorL, std::string name, int seats, int examSeats);
+    Classroom(int id, std::string AorL, std::string name, int seats, int examSeats,int blackBoard,int computer,int drawingTable,int projector);
 
     const int getId() const;
     const std::string getName() const;
@@ -25,21 +25,21 @@ public:
     const int getNSeats() const;
     const int getNExamSeats() const;
 
-    void updateName(const std::string&);
-    void updateType(const bool&);
-    void updateNSeats(const int&);
-    void updateNExamSeats(const int&);
-    bool checkAvailability(Date&,int);
-    void setDisavailability(Date&,int,int);
+    void updateName(const std::string& name);
+    void updateType(const bool& LorA);
+    void updateNSeats(const int& NSeats);
+    void updateNExamSeats(const int& NExamSeats);
+    bool checkAvailability(Date& date,int slotHour);
+    void setDisavailability(Date& date,int slotsStartHour,int numSlot);
     std::string getOthersInfo();
     int getDrawingTable();
     int getComputer();
     int getProjector();
     int getBlackBoard();
-    void updateDrawingTable(int);
-    void updateComputer(int);
-    void updateProjector(int);
-    void updateBlackBoard(int);
+    void updateDrawingTable(int computer);
+    void updateComputer(int drawingTable);
+    void updateProjector(int projector);
+    void updateBlackBoard(int blackBoard);
 private:
 
     int _id; //codice identificativo
