@@ -41,7 +41,7 @@ public:
     bool controlDatabase(int startAcYear);
     bool dataBaseIsEmpty(int startAcYear);
     bool controlGroupedCoursesDifferentCds_Reciprocy(std::vector<std::string> &idGrouped,
-                                                     std::string nameCourse, int line_counter,
+                                                     std::string specificCourse, int line_counter,
                                                      std::string idCourse);
     bool controlAGAINGroupedCoursesDifferentCds_Reciprocy();
     std::vector<std::string> insertCourses(const std::string &fin);
@@ -54,7 +54,7 @@ public:
     void assignAppealsToProf(std::string idCorso,std::string appeal, int startHour, int numSlots,std::vector<int> allProfsPerYearCourse);
     void assignAppealsToClassroom(std::string appeal,int startSlotHour,std::string classrooms,int numSlot);
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
-    int whatIsMyStudyCourse(Course& course);
+    int whatIsMyStudyCourse(Course& course, int acStartYear);
     void allErrorClasses();
 
     ///Input (from DB)

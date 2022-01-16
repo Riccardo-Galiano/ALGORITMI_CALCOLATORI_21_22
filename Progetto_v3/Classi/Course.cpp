@@ -328,14 +328,18 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
 bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
     ///prendo l'ultimo anno e riempio la struttura fino all'anno che mi serve per l'iscrizione perchè l'ultimo aggiornamento può essere vecchio
     int lastYear = this->getLastSpecificYearCourse().getStartYear();
+
+    std::string acYear = std::to_string(acYearRegistration) + "-" + std::to_string(acYearRegistration+1);
+    std::string settedId = Parse::setId('s',6,stud.getId());
     if(acYearRegistration > lastYear) {
         fillAcYearsUntilStartAcYear(acYearRegistration, lastYear);
     }
     //se non lo trova è perchè il corso non era ancora attivo in quell'anno
     if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
-        std::string acYear = std::to_string(acYearRegistration) + "-" + std::to_string(acYearRegistration+1);
-        std::string settedId = Parse::setId('s',6,stud.getId());
-        throw InvalidDbException("il seguente corso: " + getId() + " non era attivo quando si e' iscritto lo studente con matricola: " + settedId + "(anno accademico:"+ acYear + ")");
+        throw InvalidDbException("il seguente corso: " + getId() + " non era attivo quando si e' iscritto lo studente con matricola: " + settedId + " nel "+ acYear);
+    } else if (_courseOfTheYear.at(acYearRegistration).getisActive() == false){
+        std::string firstAcYearOff = this->getFirstAcYearOff();
+        throw InvalidDbException("il seguente corso: " + getId() + " e' stato spento nel " + firstAcYearOff + ". Lo studente con matricola: " + settedId + " non puo' essere iscritto nel "+ acYear);
     }
     return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
 }
@@ -444,9 +448,9 @@ int Course::getFirstYearOfActivity() {
 }
 void Course::fillAcYearsUntilStartAcYear(int startAcYear, int lastYear) {
 
-    for(int i = lastYear; i <= startAcYear; i++){
+    for(int i = lastYear; i < startAcYear; i++){
         SpecificYearCourse nextSpecificYearCourse = _courseOfTheYear.at(lastYear);
-        int newStartYear = lastYear++;
+        int newStartYear = ++lastYear;
         nextSpecificYearCourse.setNewYear(newStartYear);
         _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(newStartYear,nextSpecificYearCourse));
     }
@@ -456,6 +460,18 @@ void Course::updateYYSemesterInAllSpecYearCourse(std::string& yy_semester) {
     for(auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
         iter->second.setYySemester(yy_semester);
     }
+}
+
+std::string Course::getFirstAcYearOff() {
+    for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
+        int startYear = iterSpecificYear->second.getStartYear();
+        int endYear = iterSpecificYear->second.getEndYear();
+        std::string acYear = std::to_string(startYear) + "-" + std::to_string(endYear);
+        if(iterSpecificYear->second.getisActive() == false){
+            return acYear;
+        }
+    }
+    return  "";
 }
 
 

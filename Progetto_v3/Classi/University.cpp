@@ -308,8 +308,7 @@ void University::readStudyCourse() {
         std::vector<int> posSem = Parse::posCurlyBrackets(InteroCorsoDiStudi[2]);
         std::vector<std::string> semestri;//semestri va dentro il while perchè dovrà essere creato ogni volta che si ha un nuovo Corso di Studi
 
-        for (i = 0; i < posSem.size() - 1; i = i +
-                                               2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+        for (i = 0; i < posSem.size() - 1; i = i + 2) {//metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
             int posStart = posSem[i] + 1, len = posSem[i + 1] - posSem[i] - 1;
             semestri.push_back(InteroCorsoDiStudi[2].substr(posStart,
                                                             len));//salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
@@ -319,8 +318,7 @@ void University::readStudyCourse() {
         ///è possibile leggere i corsi spenti solo se questi, leggendo da database, sono presenti
         ///e quindi solo se il vettore InteroCorsoDiStudi presenta un quarto campo
         if (InteroCorsoDiStudi.size() == 4) {
-            corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() -
-                                                                     2);    //salvo la stringa senza le quadre
+            corsiSpentiSenzaQuadre = InteroCorsoDiStudi[3].substr(1, InteroCorsoDiStudi[3].size() - 2);    //salvo la stringa senza le quadre
             corsiSpenti = Parse::splittedLine(corsiSpentiSenzaQuadre, ',');//splitto i corsi spenti senza le quadre
         }
         ///creo un oggetto StudyCourse
@@ -1654,8 +1652,8 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
         int lastYear = iterCourse->second.getLastSpecificYearCourse().getStartYear();
         iterCourse->second.fillAcYearsUntilStartAcYear(startAcYear,lastYear);
     }
-    if (controlDatabase(startAcYear) == false)
-        throw DbException("");
+    ///faccio dei controlli di coerenza dei dataBase
+    controlDatabase(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
@@ -1668,8 +1666,6 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     if (!esito) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
     }
-    std::cout << "comando -g correttamente eseguito" << std::endl;
-
 }
 
 ///controlla se i file sono coerenti
@@ -1677,12 +1673,13 @@ bool University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
     dataBaseIsEmpty(startAcYear);
     bool checkIsOK = true;
+    std::string error;
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         ///controllo che ogni corso in _courses esista in uno StudyCourse
         Course course = iterCourse->second;
-        if (whatIsMyStudyCourse(course) == -1) {
+        if (whatIsMyStudyCourse(course,startAcYear) == -1) {
+            error.append( "Il corso " + iterCourse->first + " non esiste in alcun corso di studio. Inserire nuovi corsi di studio che lo contengano.\n");
             checkIsOK = false;
-            std::cerr << "studio corso non esiste, da mod\n";
         }
     }
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
@@ -1692,11 +1689,16 @@ bool University::controlDatabase(int startAcYear) {
         for (int i = 0; i < allCoursesOfThis.size(); i++) {
             int occ = _courses.count(allCoursesOfThis[i]);
             if (occ == 0) {
+                std::string settedId = Parse::setId('C',3,iter->first);
+                error.append("Il corso "+ allCoursesOfThis[i]+ " presente nel corso di studio " + settedId +" non e' ancora stato attivato. Inserirlo tra i corsi \n");
                 checkIsOK = false;
-                std::cerr << "studio corso x ha quesyo corso che non esiste\n";
             }
         }
     }
+
+    if(checkIsOK == false)
+        throw std::invalid_argument(error);
+
     return checkIsOK;
 }
 
@@ -1713,7 +1715,7 @@ bool University::dataBaseIsEmpty(int startAcYear) {
         isOk = false;
     }
     if (_courses.empty()) {
-        throw InvalidDbException("Il database dei corsi e' vuoto \n");
+        error.append("Il database dei corsi e' vuoto \n");
         isOk = false;
     }
     if (_studyCourse.empty()) {
@@ -1735,8 +1737,7 @@ bool University::dataBaseIsEmpty(int startAcYear) {
         if (firstYear < startAcYear) {
             int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
             if (studentsEnrolled == 0) {
-                error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: "+ std::to_string(startAcYear) + "-" +
-                                                                  std::to_string(startAcYear + 1) + "\n");
+                error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: "+ std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1) + "\n");
                 isOk = false;
             }
         }
@@ -1757,7 +1758,8 @@ bool University::controlGroupedCoursesDifferentCds_Reciprocy(std::vector<std::st
     coursesToConsider.push_back(idCourseToAddToIdGrouped);
     ///devo controllare che i corsi raggruppati non siano dello stesso cds, reciprocamente --> 2 for
     for (int i = 0; i < coursesToConsider.size(); i++){
-        int idStudyCourseOfThisCourse = whatIsMyStudyCourse(_courses.at(coursesToConsider[i]));
+        int firstYear = _courses.at(coursesToConsider[i]).getFirstYearOfActivity();
+        int idStudyCourseOfThisCourse = whatIsMyStudyCourse(_courses.at(coursesToConsider[i]),firstYear);
         if (idStudyCourseOfThisCourse != -1) {
             ///se c'è cDs, prendo tutti i corsi del cds e tutti gli coursesToConsider != questi ultimi
             std::vector<std::string> allCoursesOfCdSOfI = _studyCourse.at(idStudyCourseOfThisCourse).getAllCoursesOfStudyCourse();
@@ -1907,7 +1909,6 @@ void University::readCourseNotActive() {
         ///salvo l'intera riga del file
         _tempInfoNotActiveCoursesToWriteInTheDB.push_back(line);
         std::vector<std::string> token = Parse::splittedLine(line, ';');
-
         ///per il corso letto nella riga vado ad assegnare il semestre a cui era associato il corso
         if (_courses.find(token[0]) != _courses.end())
             _courses.at(token[0]).assignYY_Sem(token[1], token[2]);
@@ -2023,6 +2024,7 @@ void University::addStudyPlan(std::string fin) {
                 error.append(generalError + ". Controllare riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
             }
+            ///registro lo studente per la prima volta nell'anno specifico dei corsi del suo piano di studio
             try {
                 registerStudentsToSpecificYearCourses(courses, stud, acYearRegistration, line_counter);
             } catch (std::invalid_argument &err) {
@@ -2036,6 +2038,7 @@ void University::addStudyPlan(std::string fin) {
     fileIn.close();
     if(doDbWrite) {
         dbStudyPlanWrite();
+        dbCourseWrite();
     }else{
         throw std::invalid_argument(error);
     }
@@ -2667,13 +2670,13 @@ void University::ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse &sCourse)
     }
 }
 
-int University::whatIsMyStudyCourse(Course &courseToConsider) {
-    std::string yy_semester;
+int University::whatIsMyStudyCourse(Course &courseToConsider, int acStartYear) {
+    int sem = 0;
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
-        StudyCourse sCourse = iter->second;
-        yy_semester = sCourse.isInWhichSemester(courseToConsider.getId());
-        if (!yy_semester.empty())
-            return iter->first;
+        std::vector<std::string> allCoursesOfStudyCourse = iter->second.getAllCoursesOfStudyCourse();
+        auto iterCourse = find(allCoursesOfStudyCourse.begin(), allCoursesOfStudyCourse.end(), courseToConsider.getId());
+        if(iterCourse != allCoursesOfStudyCourse.end())
+            return sem = courseToConsider.getSemesterAtYear(acStartYear,courseToConsider.getId());
     }
     return -1;
 }

@@ -58,6 +58,7 @@ public:
     void updateYYSemesterInAllSpecYearCourse(std::string& yy_semester);
     int getFirstYearOfActivity();
     void fillAcYearsUntilStartAcYear(int startAcYear, int lastYear);
+    std::string getFirstAcYearOff();
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso
