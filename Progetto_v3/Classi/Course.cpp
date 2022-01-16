@@ -180,8 +180,7 @@ bool Course::courseOfTheYearIsEmpty() {
 
 ///riempi i buchi tra anni accademici di un corso
 bool Course::fillAcYearsEmpty() {
-    for (auto iterCourseOfTheYear = _courseOfTheYear.begin();
-         iterCourseOfTheYear != _courseOfTheYear.end(); iterCourseOfTheYear++) {//per ogni anno accademico
+    for (auto iterCourseOfTheYear = _courseOfTheYear.begin();iterCourseOfTheYear != _courseOfTheYear.end(); iterCourseOfTheYear++) {//per ogni anno accademico
         auto token = iterCourseOfTheYear;//iteratore all'elemento corrente
         auto iterSuccessiveCourse = ++token;//iteratore al successivo elemento in memoria
 
@@ -190,7 +189,7 @@ bool Course::fillAcYearsEmpty() {
             int lastYear = iterCourseOfTheYear->first;//ultimo anno prima del gap
             for (int i = 0; i < range; i++) {//per il numero di anni accademici da aggiungere
                 //riscrivo l'anno precedente
-                lastYear++;//il nuovo _courseOfTheYear avrà l'anno subuto successivo all'ultimo anno accademico prima del gap
+                lastYear++;//il nuovo _courseOfTheYear avrà l'anno subito successivo all'ultimo anno accademico prima del gap
                 //prendo l'ultimo SpecificYearCourse prima del gap
                 SpecificYearCourse sC = iterCourseOfTheYear->second;
                 sC.setYear();//setta l'anno (aggiungerà 1 all'anno di inizio e all'anno di fine)
@@ -327,12 +326,17 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
 }
 
 bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
-    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) { //devo anche controllare che non sia inferiore all'ultimo(DA FARE)
+    ///prendo l'ultimo anno e riempio la struttura fino all'anno che mi serve per l'iscrizione perchè l'ultimo aggiornamento può essere vecchio
+    int lastYear = this->getLastSpecificYearCourse().getStartYear();
+    if(acYearRegistration > lastYear) {
+        fillAcYearsUntilStartAcYear(acYearRegistration, lastYear);
+    }
+    //se non lo trova è perchè il corso non era ancora attivo in quell'anno
+    if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
         std::string acYear = std::to_string(acYearRegistration) + "-" + std::to_string(acYearRegistration+1);
         std::string settedId = Parse::setId('s',6,stud.getId());
         throw InvalidDbException("il seguente corso: " + getId() + " non era attivo quando si e' iscritto lo studente con matricola: " + settedId + "(anno accademico:"+ acYear + ")");
     }
-    //se è maggiore dell'ultimo devo considerare l'ultimo(DA FARE)
     return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
 }
 
@@ -434,7 +438,20 @@ std::vector<int> Course::getProfsPerYear(std::string acYear) {
     int startAc = Parse::getAcStartYear(acYear);
     return  _courseOfTheYear.at(startAc).getAllProfMatr();
 }
+int Course::getFirstYearOfActivity() {
+    auto iterSpecificYearCourse = _courseOfTheYear.begin();
+    return iterSpecificYearCourse->first;
+}
+void Course::fillAcYearsUntilStartAcYear(int startAcYear, int lastYear) {
 
+    for(int i = lastYear; i <= startAcYear; i++){
+        SpecificYearCourse nextSpecificYearCourse = _courseOfTheYear.at(lastYear);
+        int newStartYear = lastYear++;
+        nextSpecificYearCourse.setNewYear(newStartYear);
+        _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(newStartYear,nextSpecificYearCourse));
+    }
+
+}
 void Course::updateYYSemesterInAllSpecYearCourse(std::string& yy_semester) {
     for(auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
         iter->second.setYySemester(yy_semester);

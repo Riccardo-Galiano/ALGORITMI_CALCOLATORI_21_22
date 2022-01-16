@@ -294,6 +294,15 @@ bool SpecificYearCourse::assignYY_SemToAllYear(std::string &acYYoff, std::string
     return true;
 }
 
+void SpecificYearCourse::setNewYear(int newStartYear) {
+    _startYear = newStartYear;
+    _endYear = newStartYear++;
+    _howManyTimesIAmAssignedInASession.erase(_howManyTimesIAmAssignedInASession.begin(),_howManyTimesIAmAssignedInASession.end());
+    _roomsEachAppeal.erase(_roomsEachAppeal.begin(),_roomsEachAppeal.end());
+    _startSlotPerEachAppeal.erase(_startSlotPerEachAppeal.begin(),_startSlotPerEachAppeal.end());
+    _numAppeal = 0;
+}
+
 std::string &SpecificYearCourse::getAcYearOff() {
     return _acYearOff;
 }

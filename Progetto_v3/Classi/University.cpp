@@ -1649,6 +1649,11 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     int startAcYear = Parse::getAcStartYear(acYear);
     int constraintRelaxParameter = 0;
     bool esito = false;
+    //riempio i corsi fino alla sessione voluta (può essere che un corso non venga aggiornata ma ciò non significa che non possa avere quel corso in quell'anno)
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++){
+        int lastYear = iterCourse->second.getLastSpecificYearCourse().getStartYear();
+        iterCourse->second.fillAcYearsUntilStartAcYear(startAcYear,lastYear);
+    }
     if (controlDatabase(startAcYear) == false)
         throw DbException("");
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
@@ -1697,24 +1702,48 @@ bool University::controlDatabase(int startAcYear) {
 
 ///i database sono vuoti?
 bool University::dataBaseIsEmpty(int startAcYear) {
-    if (_professors.empty())
-        throw InvalidDbException("Il database dei professori e' vuoto");
-    else if (_students.empty())
-        throw InvalidDbException("Il database degli studenti e' vuoto");
-    else if (_courses.empty())
-        throw InvalidDbException("Il database dei corsi e' vuoto");
-    else if (_studyCourse.empty())
-        throw InvalidDbException("Il database dei corsi di studio e' vuoto");
-    else if (_acYearSessions.find(startAcYear) == _acYearSessions.end())
-        throw InvalidDbException("non ci sono informazioni sulle sessioni per questo anno");
-    else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty())
-        throw InvalidDbException("Il database dei corsi di studio e' vuoto");
+    std::string error;
+    bool isOk = true;
+    if (_professors.empty()) {
+        error.append("Il database dei professori e' vuoto \n");
+        isOk = false;
+    }
+    if (_students.empty()) {
+        error.append("Il database degli studenti e' vuoto \n");
+        isOk = false;
+    }
+    if (_courses.empty()) {
+        throw InvalidDbException("Il database dei corsi e' vuoto \n");
+        isOk = false;
+    }
+    if (_studyCourse.empty()) {
+        error.append("Il database dei corsi di studio e' vuoto \n");
+        isOk = false;
+    }
+    if (_acYearSessions.find(startAcYear) == _acYearSessions.end()) {
+        error.append("non ci sono informazioni sulle sessioni per questo anno: " + std::to_string(startAcYear) + "-" +std::to_string(startAcYear +1) + "\n");
+        isOk = false;
+    }else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty()) {
+        error.append("I periodi delle sessioni non sono stati definiti per l'anno: " + std::to_string(startAcYear) + "-" +
+                std::to_string(startAcYear + 1) + "\n");
+                isOk = false;
+    }
     ///controllo che gli studenti siano iscritti nei corsi di questo anno accademico
     for (auto iter = _courses.begin(); iter != _courses.end(); iter++) {
-        int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
-        if (studentsEnrolled == 0)
-            throw InvalidDbException("Il corso " + iter->second.getId() + " non ha studenti iscritti");
+        int firstYear = iter->second.getFirstYearOfActivity();
+        ///se il corso è stato attivato prima della sessione rischiesta lo considero, altrimenti no
+        if (firstYear < startAcYear) {
+            int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
+            if (studentsEnrolled == 0) {
+                error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: "+ std::to_string(startAcYear) + "-" +
+                                                                  std::to_string(startAcYear + 1) + "\n");
+                isOk = false;
+            }
+        }
     }
+    if(isOk == false)
+        throw std::invalid_argument(error);
+
     return false;
 }
 
