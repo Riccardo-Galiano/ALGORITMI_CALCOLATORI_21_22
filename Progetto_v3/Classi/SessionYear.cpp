@@ -207,12 +207,15 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         std::vector<int> roomsFounded;
                         SpecificYearCourse sp = courseToConsider.getThisYearCourse(_acYear);
                         int endHourSlot=-1;
-                        Date lastDateAssignation = sp.lastDateAssignationInGivenSession( this->getSemester(sessName));//data primo appello
-                        if (sixHours && lastDateAssignation.isEqual(currentExamDay)) {
-                            if (lastDateAssignation.isEqual(Date())) {
-                                endHourSlot = -1;
-                            } else {
-                                endHourSlot = _yearCalendar.at(lastDateAssignation.toString()).getEndHourOfThisCourseExam(courseToConsider);
+                        int numAppealsAssigned = sp.amIAssignedAlreadyInThisSession(this->getSemester(sessName));
+                        if (numAppealsAssigned == 1) {//sarà un secondo appello
+                            Date lastDateAssignation = sp.lastDateAssignationInGivenSession(this->getSemester(sessName));//data primo appello
+                            if (sixHours && lastDateAssignation.isEqual(currentExamDay)) {
+                                if (lastDateAssignation.isEqual(Date())) {
+                                    endHourSlot = -1;
+                                } else {
+                                    endHourSlot = _yearCalendar.at(lastDateAssignation.toString()).getEndHourOfThisCourseExam(courseToConsider);
+                                }
                             }
                         }
                         ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
@@ -401,18 +404,22 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
     SpecificYearCourse sp = course.getThisYearCourse(getAcYear());//corso per un anno specifico
     std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
     std::string idCorso = course.getId();
+    session thisSession = _yearSessions.at(sessName);//prendo il periodo della sessione
+    Date startDate = thisSession.startDate;//inizio della sessione
+
     ///controllo sulla data della sessione
     bool iCanBeAssigneToFirstTwoWeekOfExamSession = sp.canIBeAssigneToFirstTwoWeekOfExamSession(this->getSemester(sessName));//se stesso semestre della sessione ed è attivo
     if (iCanBeAssigneToFirstTwoWeekOfExamSession == false) {
         //se non stesso semestre della sessione o spento non posso assegnarlo alle prime due settimane della sessione ma devo iniziare dalla terza in poi
         //quindi controllo se il giorno analizzato è delle prime due settimane(primi 14 giorni); in quel caso la data non va bene
-        session thisSession = _yearSessions.at(sessName);//prendo il periodo della sessione
-        Date startDate = thisSession.startDate;//inizio della sessione
         /// prime due settimane ok?
         if (startDate.whatIsTheGap(newDate) < 14) {
             return false;
         }
+    }else if (startDate.whatIsTheGap(newDate) > 14) {//se i canBeAssigneToFirstTwoWeekOfExamSession è true vuol dire che è un esame da piazzare nei primi 14 giorni della sessione
+        return false;
     }
+
     //stesso semestre della sessione ed attivo o siamo oltre i 14 giorni(quindi esame semestre diverso, spento, entrambi o secondo appello di uno dello stesso semestre della sessione ed attivo)
     ///continuo con il controllo se secondo appello
     int howManyTimesIAmAssignedAlreadyInThisSession = sp.amIAssignedAlreadyInThisSession(this->getSemester(sessName));
@@ -430,7 +437,7 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
             std::string keyToSearchProfsGap = ss.str();
             if (_gapProfs.count(keyToSearchProfsGap) != 0) {
                 int requiredGap = _gapProfs.at(keyToSearchProfsGap);
-                if (gapAppeals < requiredGap)
+                if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) //dall'ultimo appello sono passati i giorni richiesti dal prof?
                     return false;
             }
         }
@@ -463,14 +470,20 @@ int SessionYear::isPossibleToAssignThisExam(Course course, Date currentExamDay, 
         // se = 0 non devo controllare
         int pos = dayOne.whatIsTheGap(currentExamDay);
         auto iterCalendar = _yearCalendar.find(currentExamDay.toString());
+
         //se sono ad un giorno successivo al terzo giorno della sessione devo controllare solo i due giorni precedenti
         if (pos > 2)
             pos = 2;
         //per tre volte
-        for (; pos > 0; pos--) {
-            ExamDay dayBefore = iterCalendar->second;//al primo ciclo prendo l'examday precedente alla data in cui voglio inserire l'esame. Al secondo ciclo prendo l'examDay di due giorni prima
+        for (; pos >= 0; pos--) {
+            ExamDay dayBefore = iterCalendar->second;//al primo ciclo prendo l'examday corrente, al secondo ciclo l'examDay precedente alla data in cui voglio inserire l'esame. Al secondo ciclo prendo l'examDay di due giorni prima
             bool same = dayBefore.sameStudyCourseAndYear(course, _acYear);
-            iterCalendar--;
+            //iteratore al primo giorno della sessione
+            auto iterCalendarFirstDaySession = _yearCalendar.find(dayOne.toString());
+            //continuo a decrementare l'iteratore fino a che non sia uguale al primo giorno della sessione
+            if(iterCalendar != iterCalendarFirstDaySession) {
+                iterCalendar--;
+            }
             if (same)
                 return -1;
             //se sameStudyAndYear ha trovato un esame già assegnato

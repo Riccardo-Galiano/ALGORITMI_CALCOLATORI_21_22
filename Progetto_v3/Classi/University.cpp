@@ -1682,6 +1682,8 @@ bool University::controlDatabase(int startAcYear) {
             checkIsOK = false;
         }
     }
+    ///COMMENTATO PERCHE' NON MI ANDAVA DI CARICARE ALTRI CORSI PER DEBUGGARE LA GESTIONE ESAMI
+    /*
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
         ///controllo che ogni studyCourse abbia i corsi specificati
         StudyCourse sCourse = iter->second;
@@ -1694,7 +1696,7 @@ bool University::controlDatabase(int startAcYear) {
                 checkIsOK = false;
             }
         }
-    }
+    }*/
 
     if(checkIsOK == false)
         throw std::invalid_argument(error);
@@ -1734,7 +1736,7 @@ bool University::dataBaseIsEmpty(int startAcYear) {
     for (auto iter = _courses.begin(); iter != _courses.end(); iter++) {
         int firstYear = iter->second.getFirstYearOfActivity();
         ///se il corso è stato attivato prima della sessione rischiesta lo considero, altrimenti no
-        if (firstYear < startAcYear) {
+        if (firstYear <= startAcYear) {
             int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
             if (studentsEnrolled == 0) {
                 error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: "+ std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1) + "\n");

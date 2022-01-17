@@ -84,7 +84,11 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 
 ///modifica uno studente in un anno specifico con il suo voto
 bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
-    _courseOfTheYear.at(acYear).addGradeToStudent(stud, enrolYear, mark,appealsDate,getId());///CONTROLLO SULL'ANNO DA FARE
+    SpecificYearCourse sp = getLastSpecificYearCourse();
+    int lastYear = sp.getStartYear();
+    for(int year = acYear; year <= lastYear ; year++) {
+        _courseOfTheYear.at(year).addGradeToStudent(stud, acYear, mark, appealsDate,getId());///CONTROLLO SULL'ANNO DA FARE
+    }
     return true;
 }
 
@@ -327,7 +331,8 @@ bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
 
 bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
     ///prendo l'ultimo anno e riempio la struttura fino all'anno che mi serve per l'iscrizione perchè l'ultimo aggiornamento può essere vecchio
-    int lastYear = this->getLastSpecificYearCourse().getStartYear();
+    SpecificYearCourse sp = getLastSpecificYearCourse();
+    int lastYear = sp.getStartYear();
 
     std::string acYear = std::to_string(acYearRegistration) + "-" + std::to_string(acYearRegistration+1);
     std::string settedId = Parse::setId('s',6,stud.getId());
@@ -341,7 +346,14 @@ bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
         std::string firstAcYearOff = this->getFirstAcYearOff();
         throw InvalidDbException("il seguente corso: " + getId() + " e' stato spento nel " + firstAcYearOff + ". Lo studente con matricola: " + settedId + " non puo' essere iscritto nel "+ acYear);
     }
-    return _courseOfTheYear.at(acYearRegistration).addStudent(acYearRegistration,stud);
+    ///salviamo i suoi dati di iscrizione nell'anno di iscrizione
+    /// ma dobbiamo ricordarci di aggiornare gli iscritti anche per gli anni successivi al suo
+    for(int year = acYearRegistration; year <= lastYear ; year++) {
+        _courseOfTheYear.at(year).addStudent(acYearRegistration, stud);
+    }
+    return  true;
+
+
 }
 
 std::vector<std::string> Course::getAcYearStudExam() {

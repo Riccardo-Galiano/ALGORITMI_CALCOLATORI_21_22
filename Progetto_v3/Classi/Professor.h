@@ -28,7 +28,7 @@ public:
 
     ///control
     void noAvailabilityClear(int);
-    bool amIavailable(std::string, int);
+    bool amIavailable(std::string, int, int relaxPar);
 
 private:
     //key: inizio anno accademico

@@ -245,7 +245,7 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
 
 bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<int, Professor> &allUniversityProfs,
                                    int relaxPar, int slotHour) {
-    if (relaxPar < 3) {
+
         std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
         ///ci servono gli oggetti Professore per usare funzione amIavailable: tutti i professori DEVONO ESSERE DISPONBILI
         std::string dateAsString = _date.toString();//data sottoforma di stringa
@@ -253,11 +253,11 @@ bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<
             ///controllo se i prof del corso sono liberi.
             // Considerato il fatto che corsi paralleli hanno l'esame lo stesso giorno alla
             // stessa ora devo controllare che tutti i prof di tutti i corsi in parallelo siano disponibili
-            if (allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, slotHour) == false) {
+            if (allUniversityProfs.at(profsMatr[i]).amIavailable(dateAsString, slotHour, relaxPar) == false) {
                 return false;
             }
         }
-    }
+
     ///se tutti i prof sono disponibili in questo slot, ho trovato un nuovo slot potenzialmente valido per l'esame
     return true;
 }

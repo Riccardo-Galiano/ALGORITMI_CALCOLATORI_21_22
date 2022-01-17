@@ -85,26 +85,23 @@ bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
 }
 
 ///ritorna se lo slot a quell'ora per una certa data è libero(aggiungere i controlli per i periodi di indisponibilità per ogni prof)
-bool Professor::amIavailable(std::string date, int hh) {
+bool Professor::amIavailable(std::string date, int hh, int relaxPar) {
     int year = Parse::getAcStartYear(date);
     Date d(date);
     /// controllo indisponibilità docenti compatibile con data esame
-    if(_noAvailab.find(year - 1) != _noAvailab.end()) {//per quell'anno abbiamo delle indisponibilità del prof? se si controllo i periodi
+    if(_noAvailab.find(year - 1) != _noAvailab.end() && relaxPar < 3) {//per quell'anno abbiamo delle indisponibilità del prof? se si controllo i periodi
         for (auto iterNoAvailab = _noAvailab.at(year - 1).begin(); iterNoAvailab !=_noAvailab.at(year - 1).end(); iterNoAvailab++ ){
             //controllo tutti i periodi di indisponibilità del prof
             Date lower = iterNoAvailab->first;
             Date upper = iterNoAvailab->second;
 
-            if (d > lower && d < upper){
+            if (d >= lower && d <= upper){
                  //se la data appartiene ad un intervallo di indisponibilità allora
                  // non posso mettere quell'esame quel giorno
                  return false;
              }
 
         }
-    }
-    else{
-        //throw std::invalid_argument("nessuna indisponibilità segnata in questo anno");
     }
     ///controllo in quel giorno che non si sovrappongano fasce esame
     if (_examsToDo.count(date) == 0) {//il docente non ha esami in quel giorno
