@@ -292,6 +292,18 @@ int ExamDay::getEndHourOfThisCourseExam(const Course &course) {
     return lastSlotFounded+2;
 }
 
+void ExamDay::removeThisAppealInfo(int startSlot,std::string& idCourse){
+    ///ciclare per numslots!!!!!!!!!!
+    std::vector<Course> newCourses;
+    std::vector<Course>& old = _slots.at(startSlot);
+    for(int i=0;i<old.size(); i++){
+        if(old[i].getId()!=idCourse)
+            newCourses.push_back(old[i]);
+    }
+    _slots.erase(startSlot);
+    _slots.insert(std::pair<int,std::vector<Course>>(startSlot,newCourses));
+}
+
 
 
 

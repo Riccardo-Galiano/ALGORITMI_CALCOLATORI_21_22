@@ -183,21 +183,21 @@ void University::readClassroom() {
         InteraClasse = Parse::splittedLine(line, ';');
         nCod = Parse::getMatr(InteraClasse[0]);
 
-        if (_classroom.count(nCod))
+        if (_classrooms.count(nCod))
             throw std::logic_error("due codici uguali");
         else if (_version == 2) {
-            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
-                                                                        Parse::checkedStoi(InteraClasse[3]),
-                                                                        Parse::checkedStoi(InteraClasse[4]),
-                                                                        Parse::checkedStoi(InteraClasse[5]),
-                                                                        Parse::checkedStoi(InteraClasse[6]),
-                                                                        Parse::checkedStoi(InteraClasse[7]),
-                                                                        Parse::checkedStoi(InteraClasse[8]))));
+            _classrooms.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
+                                                                         Parse::checkedStoi(InteraClasse[3]),
+                                                                         Parse::checkedStoi(InteraClasse[4]),
+                                                                         Parse::checkedStoi(InteraClasse[5]),
+                                                                         Parse::checkedStoi(InteraClasse[6]),
+                                                                         Parse::checkedStoi(InteraClasse[7]),
+                                                                         Parse::checkedStoi(InteraClasse[8]))));
 
         } else
-            _classroom.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
-                                                                        Parse::checkedStoi(InteraClasse[3]),
-                                                                        Parse::checkedStoi(InteraClasse[4]))));
+            _classrooms.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
+                                                                         Parse::checkedStoi(InteraClasse[3]),
+                                                                         Parse::checkedStoi(InteraClasse[4]))));
 
     }
     fileIn.close();
@@ -482,13 +482,13 @@ void University::addClassrooms(const std::string &fileIn) {
             }
             if (doDbWrite) {
                 try {
-                    _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                              Parse::checkedStoi(infoClassroom[2]),
-                                                                              Parse::checkedStoi(infoClassroom[3]),
-                                                                              Parse::checkedStoi(infoClassroom[4]),
-                                                                              Parse::checkedStoi(infoClassroom[5]),
-                                                                              Parse::checkedStoi(infoClassroom[6]),
-                                                                              Parse::checkedStoi(infoClassroom[7]))));
+                    _classrooms.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
+                                                                               Parse::checkedStoi(infoClassroom[2]),
+                                                                               Parse::checkedStoi(infoClassroom[3]),
+                                                                               Parse::checkedStoi(infoClassroom[4]),
+                                                                               Parse::checkedStoi(infoClassroom[5]),
+                                                                               Parse::checkedStoi(infoClassroom[6]),
+                                                                               Parse::checkedStoi(infoClassroom[7]))));
 
                 } catch (std::exception &err) {
                     std::string generalError = err.what();
@@ -508,9 +508,9 @@ void University::addClassrooms(const std::string &fileIn) {
             }
             if (doDbWrite) {
                 try {
-                    _classroom.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                              Parse::checkedStoi(infoClassroom[2]),
-                                                                              Parse::checkedStoi(infoClassroom[3]))));
+                    _classrooms.insert(std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
+                                                                               Parse::checkedStoi(infoClassroom[2]),
+                                                                               Parse::checkedStoi(infoClassroom[3]))));
                 } catch (std::exception &err) {
                     std::string generalError = err.what();
                     error.append(generalError + " alla riga: " + std::to_string(line_counter));
@@ -809,9 +809,9 @@ const int University::getNewProfessorId() const {
 
 ///prende il nuovo codice da associare alla nuova aula
 const int University::getNewClassroomId() const {
-    if (_classroom.empty())
+    if (_classrooms.empty())
         return 1;
-    auto last = _classroom.rbegin();  //
+    auto last = _classrooms.rbegin();  //
     int toReturn = last->second.getId() +
                    1; //leggo l'Id dell'ultima aula della mappa e aggiungo 1. Nuovo id per la prossima aula
     return toReturn;
@@ -1121,12 +1121,12 @@ void University::updateClassroom(const std::string &fin) {
         } else if (canBeAnId == false) {
             error.append("il primo campo alla riga " + std::to_string(line_counter) + " non puo' essere un codice Id di una aula \n");
             doDbWrite == false;
-        } else if (_classroom.find(nMatr) == _classroom.end()) {//se non trovo il codice
+        } else if (_classrooms.find(nMatr) == _classrooms.end()) {//se non trovo il codice
             error.append("L'aula" + infoClassroom[0] + "non e' presente nel database \n");
             doDbWrite = false;
         }
         if (doDbWrite) {
-            auto iter = _classroom.find(nMatr);//prendo la posizione della matricola
+            auto iter = _classrooms.find(nMatr);//prendo la posizione della matricola
             for (i = 1;
                  i < infoClassroom.size(); i++) {//cerco i campi della riga del file passato che andranno aggiornati
                 if (!(infoClassroom[i].empty())) {//se la stringa raccolta da tokens è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
@@ -1374,8 +1374,8 @@ void University::dbClassRoomWrite() {
     std::fstream fout;
     fout.open("db_aule.txt", std::fstream::out | std::fstream::trunc);
 
-    for (auto iterClassRoom = _classroom.begin(); iterClassRoom != _classroom.end(); iterClassRoom++) {
-        Classroom room = _classroom.at(iterClassRoom->first);
+    for (auto iterClassRoom = _classrooms.begin(); iterClassRoom != _classrooms.end(); iterClassRoom++) {
+        Classroom room = _classrooms.at(iterClassRoom->first);
         if (_version == 3) {
             std::string otherInfo = room.getOthersInfo();
             fout << room << ";" << otherInfo << std::endl;
@@ -1658,7 +1658,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
         esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,
-                                                                       _classroom,
+                                                                       _classrooms,
                                                                        constraintRelaxParameter);
         constraintRelaxParameter++;
     }
@@ -2623,7 +2623,7 @@ void University::assignAppealsToClassroom(std::string appeal, int startSlotHour,
     std::vector<std::string> allClassrooms = Parse::splittedLine(classrooms, '|');
     Date appealDate(appeal);
     for (int i = 0; i < allClassrooms.size(); i++) {
-        _classroom.at(Parse::checkedStoi(allClassrooms[i])).setDisavailability(appealDate, startSlotHour, numSlot);
+        _classrooms.at(Parse::checkedStoi(allClassrooms[i])).setDisavailability(appealDate, startSlotHour, numSlot);
     }
 }
 
@@ -2633,6 +2633,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     if (!fileIn.is_open()) {
         throw DbException("Errore apertura del file per le richieste del cambio data esami");
     }
+    SessionYear& thisSession = _acYearSessions.at(Parse::checkedStoi((acYear)));
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
     if(!std::getline(fileIn, line))
@@ -2647,14 +2648,32 @@ void University::requestChanges(std::string acYear, std::string fin) {
         int numAppeal = Parse::checkedStoi(infoChanges[2]);
         char directionOfSfift = infoChanges[3][0];
         int numWeeks = Parse::checkedStoi(infoChanges[4]);
-        ///2) cancello informazioni dell'appello selezionato in questa riga e salvo info in oggetto temporaneo
+        ///2) cancello informazioni dell'appello selezionato in questa riga e le salvi
         ///3) cerco di soddisfare cambiamento
-        ///4) se riesco, aggiungo appello è successfulChanges++
-        ///5) se non riesco, devo ripristinare info appello da oggetto temporaneo + warning
+        ///4) se riesco, aggiungo appello alla sessione di questo anno accademico è successfulChanges++
+        ///5) se non riesco, devo ripristinare info appello + emit warning
         Date oldDate;
         int startSlot;
         std::vector<int> classrooms;
+        //2 -> rimozione + salvataggio
         removeThisAppealInfo(Parse::checkedStoi(acYear),idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
+        //3
+        Course& courseToConsider = _courses.at(idCourse);
+        Date tryDate;
+        if(directionOfSfift == 'd'){
+            tryDate = oldDate.subtract(numWeeks * 7);
+        }
+        else{
+            tryDate = oldDate.add(numWeeks * 7);
+        }
+        try {
+            thisSession.tryToSetThisExamInThisSession(_professors, _classrooms, _courses, courseToConsider, numSession, numAppeal,
+                                                      tryDate);
+        }
+        catch(std::exception& err){
+            //5
+            ///warning
+        }
     }
 }
 
@@ -2694,13 +2713,27 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
 void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::vector<int>& classrooms) {
     SessionYear thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
-    // TOLTO SOLO PERCHE' DAVA PROBLEMI, DA FINIRE date = sp.dateAssignationInGivenSession(numSession,numAppeal);
+    ///salvo le informazioni per poterle riusare dopo
+    date = sp.dateAssignationInGivenSession(numSession,numAppeal);
+    startSlot = sp.startSlotAssignationInGivenSession(numSession,numAppeal);
+    classrooms = sp.classroomsAssignedInGivenSession(numSession,numAppeal);
+    ///RIMOZIONE
     ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
-    ///SpecificYearCourse da idCorso
+    sp.removeInfoThisAppeal(numSession,numAppeal);
     ///professori relativi da SpecificYearCourse trovato
+    std::vector<int> profs = sp.getAllProfMatr();
+    for(int i=0; i<profs.size();i++){
+        Professor& prof = _professors.at(profs[i]);
+        prof.eraseThisAppeal(date,startSlot);
+    }
     ///Classroom selezionate da SpecificYearCourse trovato
+    std::vector<int> rooms = sp.getRoomsAppealInSession(numSession,numAppeal);
+    for(int i=0; i<rooms.size();i++){
+        Classroom& room = _classrooms.at(rooms[i]);
+        room.eraseThisAppeal(date,startSlot);
+    }
     ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
-    thisSession.removeThisAppealInfo(numSession, numAppeal,date,startSlot,classrooms);
+    thisSession.removeThisAppealInfo(numSession, numAppeal,date,startSlot,idCourse);
 }
 
 

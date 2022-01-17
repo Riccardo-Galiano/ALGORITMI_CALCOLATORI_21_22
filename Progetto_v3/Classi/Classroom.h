@@ -40,6 +40,9 @@ public:
     void updateComputer(int drawingTable);
     void updateProjector(int projector);
     void updateBlackBoard(int blackBoard);
+
+    ///remove
+    void eraseThisAppeal(Date& date,int startSlot);
 private:
 
     int _id; //codice identificativo

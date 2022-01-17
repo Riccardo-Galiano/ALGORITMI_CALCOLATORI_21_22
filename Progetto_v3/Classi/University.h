@@ -109,7 +109,7 @@ private:
     SystemLog _universityLog;
     std::map<int, Professor> _professors;
     std::map<int, Student> _students;
-    std::map<int, Classroom> _classroom;
+    std::map<int, Classroom> _classrooms;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
     //key: "acYear-IdCourse"

@@ -249,7 +249,7 @@ int SpecificYearCourse::amIAssignedAlreadyInThisSession(int session) {
 }
 
 ///ritorna la data dell'appello precedentemente assegnato per un corso
-Date& SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
+Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
     //ritorna 1900-01-01 se non trova la data del primo appello
     if (amIAssignedAlreadyInThisSession(session) == 0) {
         Date dateDefault = Date();
@@ -484,11 +484,58 @@ std::string SpecificYearCourse::getPlaceExam() {
     return _exam.getPlace();
 }
 
-/*
-Date &SpecificYearCourse::dateAssignationInGivenSession(int) {
-    return <#initializer#>;
+Date &SpecificYearCourse::dateAssignationInGivenSession(int numSession, int numAppeal) {
+    return _howManyTimesIAmAssignedInASession.at(numSession)[numAppeal-1];
 }
-*/
+
+int SpecificYearCourse::startSlotAssignationInGivenSession(int numSession, int numAppeal) {
+    return _startSlotPerEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal));
+}
+
+std::vector<int> SpecificYearCourse::classroomsAssignedInGivenSession(int numSession, int numAppeal) {
+    return _roomsEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal));
+}
+
+int SpecificYearCourse::getNumAppealFromNumSessNumAppealInSession(int numSession, int numAppeal){
+    int nappeal;
+    if(numSession==3)
+        nappeal = 3;
+    else if(numSession==1)
+        nappeal = numAppeal-1;
+    else if(numSession == 2){
+        int sofar = _howManyTimesIAmAssignedInASession.count(numSession-1); //1 oppure 2
+        if(sofar == 1){
+            nappeal = numAppeal;
+        }
+        else
+            nappeal = 2;
+    }
+    return nappeal;
+}
+
+void SpecificYearCourse::removeInfoThisAppeal(int numSession, int numAppeal) {
+    ///pop da vettore date
+    if(numAppeal == 2)
+        _howManyTimesIAmAssignedInASession.at(numSession).pop_back();
+    else {
+        std::vector<Date>& dateInThisSession = _howManyTimesIAmAssignedInASession.at(numSession);
+        std::vector<Date> newDateInThisSession;
+        if(dateInThisSession.size() == 1)
+            _howManyTimesIAmAssignedInASession.erase(numSession);
+        else {
+            newDateInThisSession.push_back(dateInThisSession[1]);
+        }
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int,std::vector<Date>>(numSession,newDateInThisSession));
+    }
+    ///pop da slots
+    _startSlotPerEachAppeal.erase(getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal));
+    ///pop da rooms
+    _roomsEachAppeal.erase(getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal));
+}
+
+std::vector<int> SpecificYearCourse::getRoomsAppealInSession(int numSession, int numAppeal) {
+    return _roomsEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal));
+}
 
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

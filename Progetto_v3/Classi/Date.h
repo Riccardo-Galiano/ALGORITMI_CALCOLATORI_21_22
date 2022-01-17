@@ -34,6 +34,7 @@ public:
     static bool leapYear(int); // anno bisestile?
     bool endOfMonth(int) const; // fine del mese?
     Date add(int);
+    Date subtract(int); //LUCA E' PER TE
 
     std::string getWeekDay();
     bool checkGapGiven(int weeks, Date d);

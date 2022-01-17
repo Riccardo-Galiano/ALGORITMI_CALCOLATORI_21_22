@@ -147,6 +147,11 @@ void Classroom::updateBlackBoard(int blackBoard) {
    _othersInfoClassroom._blackBoard = blackBoard;
 }
 
+void Classroom::eraseThisAppeal(Date &date, int startSlot) {
+    ///ciclare per numslots!!!!!!!!!!
+    _disavailableRooms.erase(date.toString() + "-" + std::to_string(startSlot));
+}
+
 
 std::ostream &operator<<(std::ostream &room, const Classroom &c) {
     std::string settedId = Parse::setId('A', 3, c.getId());

@@ -41,16 +41,19 @@ public:
     bool addStudent(int acYearRegistration, Student &stud);
     bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
     int amIAssignedAlreadyInThisSession(int);
-    Date& lastDateAssignationInGivenSession(int);
-    // TOLTO SOLO PERCHE' DAVA PROBLEMI, DA FINIRE
-    //Date& dateAssignationInGivenSession(int numSession, int numAppeal);
-
+    Date lastDateAssignationInGivenSession(int);
+    Date& dateAssignationInGivenSession(int numSession, int numAppeal);
+    int startSlotAssignationInGivenSession(int numSession, int numAppeal);
+    std::vector<int> classroomsAssignedInGivenSession(int numSession, int numAppeal);
     bool assignExamInThisSpecificYearCourse(Date,int);
     bool assignYY_SemToAllYear(std::string&,std::string&);
     bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
     bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
     bool assignAppeals(std::string,std::vector<Date>);
     bool addStartSlotToAppeal(int numAppeal, int startExamHour);
+
+    ///remove
+    void removeInfoThisAppeal(int numSession, int numAppeal);
 
     ///getter
     int getStartYear() const;
@@ -73,6 +76,7 @@ public:
     int getTotStudentsExam();
     std::vector<Date> getAllAppeals() const;
     std::vector<int> getRoomsAppeal();
+    std::vector<int> getRoomsAppealInSession(int numSession, int numAppeal);
     int getNumNextAppeal();
     const std::map<int, std::vector<Date>> &getHowManyTimesIAmAssignedInASession() const;
     std::map<int, student> getStudentsPassedInThisAppeal(Date dateAppeal);
@@ -93,7 +97,7 @@ public:
     bool notExamsAssigned();
 
 private:
-
+    int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
     std::string _yy_semester;
 public:
     void setYySemester(const std::string &yySemester);
@@ -127,7 +131,7 @@ private:
     //key: num appello: 0, 1, 2, 3. (4 nell'intero anno)
     //value: vettore di aule per quel'appello
     std::map<int, std::vector<int>> _roomsEachAppeal;
-    //key: num appello
+    //key: num appello 0,1,2,3??? se non è cosi errore!!!
     //value startSlot
     std::map<int,int> _startSlotPerEachAppeal;
     int _numAppeal;

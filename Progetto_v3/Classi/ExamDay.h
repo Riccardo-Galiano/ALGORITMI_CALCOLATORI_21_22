@@ -34,6 +34,8 @@ public:
     bool firstSlotCourses(Course,std::vector<Course>&);
     int getEndHourOfThisCourseExam(const Course&);
 
+    ///remove
+    void removeThisAppealInfo(int startSlot,std::string& idCourse);
 private:
 
     //key: orario inizio slot. value:corsi associati (paralleli compresi)
