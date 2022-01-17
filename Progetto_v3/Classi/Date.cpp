@@ -215,13 +215,6 @@ bool Date::isEqual(const Date compare) {
     return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
 }
 
-Date Date::incrementOf(int daysIncrement) {
-    Date d = (*this);
-    for(int i = 0; i < daysIncrement ; i++)
-        d++;
-
-    return d;
-}
 
 ///gap tra due date (start session e date dove quest'ultima è la data da controllare)
 int Date::whatIsTheGap(Date& date) {
@@ -258,4 +251,44 @@ bool Date::operator>=(const Date & d) const {
 
 bool Date::operator==(const Date& compare) const {
     return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
+}
+
+Date Date::subtract(int daysToSubtract) {
+    Date toReturn(_year,_month,_day);
+    for(int i=0; i<daysToSubtract; i++){
+        toReturn.helpDecrement();
+    }
+    return toReturn;
+}
+//postfix Date--
+Date Date::operator--(int) {
+    Date temp(_year,_month,_day);
+    temp.helpDecrement();
+    return temp;
+}
+
+void Date::helpDecrement() {
+    // non è il primo giorno del mese
+    if (_day>1) {
+        --_day; //decremento il giorno
+    }
+    else { // se il giorno è il primo del mese
+        if (_month > 1) { // ma il mese non è il primo dell'anno
+            --_month; // decremento il mese
+            if(_month==2 && leapYear(_year)){
+                _day = 29;
+            }
+            _day = _days[_month]; // giorno = ultimo giorno del mese
+        }
+        else { // se giorno=1 e mese=1 devo decrementare l'anno
+            --_year;
+            _month = 12; //mese = 12 (dicembre)
+            _day = 31; // giorno = 31 (ultimo giorno del mese)
+        }
+    }
+}
+//prefix --Date
+Date &Date::operator--() {
+    helpDecrement();
+    return *this;
 }

@@ -2667,8 +2667,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
             tryDate = oldDate.add(numWeeks * 7);
         }
         try {
-            thisSession.tryToSetThisExamInThisSession(_professors, _classrooms, _courses, courseToConsider, numSession, numAppeal,
-                                                      tryDate);
+            thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
         }
         catch(std::exception& err){
             //5

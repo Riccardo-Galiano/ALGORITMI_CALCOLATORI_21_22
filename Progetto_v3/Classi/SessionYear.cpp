@@ -582,6 +582,7 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
 
     ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
     bool dateIsOk = true;
+    bool againOk = true;
     if (numSession != 3) {
         for (int i = 0; i < coursesToConsiderInThisLoop.size() && dateIsOk; i++) {
             Course& courseToConsider = coursesToConsiderInThisLoop[i];
@@ -622,7 +623,7 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
         ///pulisco il vettore di aule temporaneo per i raggruppati
         _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
         ///controlliamo che non ci siano -1 nel vettore
-        bool againOk = checkHours(startHourPerCourse);
+        againOk = checkHours(startHourPerCourse);
         if (againOk) {
             ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
             for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
@@ -635,8 +636,11 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
                 //_sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear,_gapProfs, getSemester(sessName));
             }
         }
-
-
+    }
+    if(dateIsOk&&againOk){
+        return true;
+    }else{
+        return false;
     }
 }
 

@@ -22,6 +22,8 @@ public:
     void setDate(int, int, int); // set year, month, day
     Date &operator++(); // prefix increment operator
     Date operator++(int); // postfix increment operator
+    Date &operator--(); // prefix decrement operator
+    Date operator--(int); // postfix decrement operator
     Date incrementOf(int);
     Date &operator+=(unsigned int);
 
@@ -55,6 +57,7 @@ private:
     std::vector<std::string> _weekday;
     static const std::vector<unsigned int> _days; // num giorni per mese
     void helpIncrement();
+    void helpDecrement();
 };
 
 #endif
