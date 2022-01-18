@@ -48,10 +48,10 @@ public:
     std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>& courses, std::string idCourseSelected);
 
     ///control
-    int isPossibleToAssignThisExam(Course course,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&, int endHour);
+    int isPossibleToAssignThisExam(Course course,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot);
     bool sessionsPeriodIsEmpty();
     bool dateIsOK(Date& newDate,const Course& course, std::string& sessName, int gapAppeals);
-    int checkIfProfsAvailableAndGapSameSemesterCourses(Course& course,Date& currentExamDay,std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms, int relaxPar,int session,std::vector<int>& roomsFounded, int endHourSlot);
+    int checkIfProfsAvailableAndGapSameSemesterCourses(Course& course,Date& currentExamDay,std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms, int relaxPar,int session,std::vector<int>& roomsFounded, int endHourSlot,bool firstCourseOfThisLoop,int startControlExamHourSlot);
     static bool checkHours(std::vector<int>& input);
 
     ///output

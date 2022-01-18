@@ -19,23 +19,28 @@ ExamDay::ExamDay(Date date) {
 ///se trova un buco disponibile ritorna l'ora di inizio, altrimenti ritorna -1
 int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor> &allUniversityProfs,
                                                std::map<int, Classroom> &allUniversityClassrooms, int numSlotsRequired,
-                                               int relaxPar, std::vector<int>& idRoomsFounded, int endHourSlot) {
+                                               int relaxPar, std::vector<int>& idRoomsFounded, int endHourSlot,bool firstCourseOfThisLoop, int startControlExamHourSlot) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day (-1)
     std::string labOrClass = specificCourse.getPlaceExam();
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
     //!!! esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
-
+    ///esami raggruppati vanno messi alla stessa ora
+    /// (se ho già controllato il primo corso e ho trovato i prof disponibili e le aule disponibili devo far si che anche per i corsi raggruppati ci siano aule e i prof disponibili in quelle ore
     int startHourSlot = -1;
     int numSlotsFoundedSoFar = 0;
     int foundedStartHourSlot = -1;  //rimarrà -1 se non riesco a trovare nulla, altrimenti l'orario di inizio
     int numStuds = specificCourse.getTotStudentsExam(); //tot posti DA TROVARE
+    int numLoop = (20/2)-(startControlExamHourSlot/2);
     bool classroomIsOk = false;
     bool thereAreEnoughClassrooms;
     ///ricerca slot->aule->profs
     bool toContinue = true;
-    for (int i = 0; i < 6 && foundedStartHourSlot == -1; i++) {
+    for (int i = 0; i < numLoop && foundedStartHourSlot == -1; i++) {
         toContinue=true;
-        int slotHour = 8 + 2 * i;
+        int slotHour = startControlExamHourSlot + 2 * i;
+        ///se endHourSlot è diverso da -1 vuol dire che il corso che stiamo cercando di assegnare ha un primo appello e che
+        ///il vincolo del gap tra appelli è rilassato fino a 6 ore di gap tra gli appelli; quindi inutile cercare in slot che
+        ///non rispettino il gap delle 6 ore
         if (endHourSlot != -1) {
             if (endHourSlot - slotHour < 6) {
                 toContinue = false;
@@ -59,7 +64,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
                     numSlotsFoundedSoFar = 0;
                 }
                 if (numSlotsFoundedSoFar == 1)
-                    startHourSlot = 8 + 2 * i; //se dovessi trovare il numero di slot necessari partirei da lì
+                    startHourSlot = slotHour; //se dovessi trovare il numero di slot necessari partirei da lì
                 if (numSlotsFoundedSoFar == numSlotsRequired) {
                     ///se il numero di slot trovati coincide con il numero di slot necessari
                     foundedStartHourSlot = startHourSlot;//ho lo slot di inizio
@@ -221,8 +226,7 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
         ///controllo se la classRoom considerata è dello stesso tipo di labExam (aula o lab? dove faccio l'esame?)
         bool labClassroom = room.getLab();
             ///tra corsi raggruppati non può essere assegnata la stessa POSSSIBILE aula(possibile perchè non è ancora sicuro, ci sono altri controlli da fare prima dell'assegnazione)
-            if (labExam == labClassroom && std::find(_tempGroupedCourseClassrooms.begin(), _tempGroupedCourseClassrooms.end(), i) ==
-                _tempGroupedCourseClassrooms.end()) {
+            if (labExam == labClassroom && std::find(_tempGroupedCourseClassrooms.begin(), _tempGroupedCourseClassrooms.end(), i) == _tempGroupedCourseClassrooms.end()) {
                 ///controllo che per numSlotsRequired consecutivi l'aula sia disponibile
                 for (int j = 0; j < numSLotsRequired && roomIsOk; j++) {
                     int slot = slotHour + 2 * j;

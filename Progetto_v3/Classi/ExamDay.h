@@ -21,7 +21,7 @@ public:
     bool assignExamToExamDay(int, Course&, int);
     int isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor>& allUniversityProfs,
                                           std::map<int, Classroom>& allUniversityClassrooms, int numSlotsRequired,
-                                          int relaxPar, std::vector<int>& idRoomsFounded, int endHour); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
+                                          int relaxPar, std::vector<int>& idRoomsFounded, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
     bool sameStudyCourseAndYear(Course,int);
     bool setSlot();
     std::vector<std::string> getSlotsToString();
