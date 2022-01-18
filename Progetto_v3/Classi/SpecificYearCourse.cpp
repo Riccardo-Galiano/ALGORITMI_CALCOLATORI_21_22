@@ -413,7 +413,21 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
     return ss.str();
 }
 
-bool SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> appealPerSession) {
+bool SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> appealPerSession,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal) {
+
+
+    for(int i = 0; i<startSlotPerAppeal.size(); i++) {
+        _numAppeal++;
+        _startSlotPerEachAppeal.insert(std::pair<int, int>(_numAppeal, startSlotPerAppeal[i]));
+        std::vector<std::string> allClassroomsPerAppeal = Parse::splittedLine(classroomsPerAppeal[i], '|');
+        std::vector<int> allClassroomsPerAppealInt;
+        //trasformo il vettore di aule string in un vettore di aule interi
+        for(int j = 0; j<allClassroomsPerAppeal.size(); j++){
+            int room = Parse::checkedStoi(allClassroomsPerAppeal[j]);
+            allClassroomsPerAppealInt.push_back(room);
+        }
+        _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(_numAppeal,allClassroomsPerAppealInt));
+    }
     if (session == "winter")
         _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, appealPerSession));
     else if (session == "summer")
@@ -489,7 +503,7 @@ Date &SpecificYearCourse::dateAssignationInGivenSession(int numSession, int numA
 }
 
 int SpecificYearCourse::startSlotAssignationInGivenSession(int numSession, int numAppeal) {
-    return _startSlotPerEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal));
+    return _startSlotPerEachAppeal.at(numAppeal);
 }
 
 std::vector<int> SpecificYearCourse::classroomsAssignedInGivenSession(int numSession, int numAppeal) {

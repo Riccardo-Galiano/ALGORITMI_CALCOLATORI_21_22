@@ -50,7 +50,7 @@ public:
     bool assignStudToAppealPerYear(std::string acYear,std::string appealDate,std::string allStudsPassedExamString);
     std::vector<std::pair<std::string, int>> splittAllStudPassedExamString(std::string allStudsPassedExamString);
     std::vector<std::string>getAcYearAppeals();
-    bool assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession);
+    bool assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSessionstd,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal);
     bool controlAppeal(std::string appealDate);
     bool profHaveThisCourse(int matr, int acStartYear);
     int getExamSlotPerYear(std::string acYear);
@@ -59,6 +59,7 @@ public:
     int getFirstYearOfActivity();
     void fillAcYearsUntilStartAcYear(int startAcYear, int lastYear);
     std::string getFirstAcYearOff();
+    std::vector<std::string>getIdGroupedCourseFromYear(int acYear);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

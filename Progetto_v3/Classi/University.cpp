@@ -2589,13 +2589,18 @@ void University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std
 void University::assignInfoAppealPerSession(std::string acYear, std::string idCorso, std::string session,
                                             std::vector<std::string> appealInfo) {
     std::vector<Date> appealDate;
+    std::vector<int> startSlotPerAppeal;
+    std::vector<std::string> classroomsPerAppeal;
     int numSlot = _courses.at(idCorso).getExamSlotPerYear(acYear);
     int startAcYear = Parse::getAcStartYear(acYear);
     std::vector<int> allProfsPerYearCourse = _courses.at(idCorso).getProfsPerYear(acYear);
+
     for (int i = 0; i < appealInfo.size(); i++) {
         std::vector<std::string> infoOfSingleAppeal = Parse::splittedLine(appealInfo[i], ',');
         ///prendo le date degli appelli per quella sessione
         appealDate.emplace_back(infoOfSingleAppeal[0]);
+        startSlotPerAppeal.emplace_back(Parse::checkedStoi(infoOfSingleAppeal[1]));
+        classroomsPerAppeal.emplace_back(infoOfSingleAppeal[2]);
         ///segno l'esame nei professori del corso(appello,ora di inizio,numero di slot)
         assignAppealsToProf(idCorso, infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), numSlot,
                             allProfsPerYearCourse);
@@ -2607,7 +2612,7 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
                                                                 course, numSlot);
     }
     ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
-    _courses.at(idCorso).assignAppealToSpecificYear(acYear, session, appealDate);
+    _courses.at(idCorso).assignAppealToSpecificYear(acYear, session, appealDate,startSlotPerAppeal,classroomsPerAppeal);
 }
 
 void University::assignAppealsToProf(std::string idCorso, std::string appeal, int startHour, int numSlots,
@@ -2631,13 +2636,18 @@ void University::requestChanges(std::string acYear, std::string fin) {
     //<id_corso>;<numero_sessione>;<numero_appello>;<direzione_spostamento>;<num_settimane>
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw DbException("Errore apertura del file per le richieste del cambio data esami");
+        throw DbException("Errore apertura del file per le richieste del cambio data esami \n");
     }
-    SessionYear& thisSession = _acYearSessions.at(Parse::checkedStoi((acYear)));
+    std::string ac = acYear.substr(0,4);
+    int acStart = Parse::checkedStoi(ac);
+    SessionYear& thisSession = _acYearSessions.at(acStart);
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
-    if(!std::getline(fileIn, line))
+
+    /*
+     * if(!std::getline(fileIn, line))
         throw std::invalid_argument("Errore: file per le richieste del cambio data esami è vuoto");
+    */
     std::string error;
     bool appealsAreAlreadyLoaded = false;
     ///tutti gli appelli delle sessioni (tutti anni accademici indistintamente) sono già caricati in memoria
@@ -2648,15 +2658,15 @@ void University::requestChanges(std::string acYear, std::string fin) {
         int numAppeal = Parse::checkedStoi(infoChanges[2]);
         char directionOfSfift = infoChanges[3][0];
         int numWeeks = Parse::checkedStoi(infoChanges[4]);
-        ///2) cancello informazioni dell'appello selezionato in questa riga e le salvi
-        ///3) cerco di soddisfare cambiamento
+        ///2) cancello le informazioni dell'appello selezionato in questa riga e le salvo
+        ///3) cerco di soddisfare il cambiamento
         ///4) se riesco, aggiungo appello alla sessione di questo anno accademico è successfulChanges++
         ///5) se non riesco, devo ripristinare info appello + emit warning
         Date oldDate;
         int startSlot;
-        std::vector<int> classrooms;
+        std::map<std::string,std::vector<int>> classrooms;
         //2 -> rimozione + salvataggio
-        removeThisAppealInfo(Parse::checkedStoi(acYear),idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
+        removeThisAppealInfo(acStart,idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
         //3
         Course& courseToConsider = _courses.at(idCourse);
         Date tryDate;
@@ -2667,8 +2677,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
             tryDate = oldDate.add(numWeeks * 7);
         }
         try {
-            //COMMENTATA PER DEBUGGARE LA PARTE DI PRIMA
-// thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
+        // thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
         }
         catch(std::exception& err){
             //5
@@ -2710,13 +2719,20 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
     return true;
 }
 
-void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::vector<int>& classrooms) {
+void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::map<std::string,std::vector<int>>& classrooms) {
     SessionYear thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
     ///salvo le informazioni per poterle riusare dopo
+    //salvo la data(sarà la data per tutti i corsi raggruppati)
     date = sp.dateAssignationInGivenSession(numSession,numAppeal);
+    //savo lo slot iniziale(sarà lo slot iniziale per tutti i corsi raggruppati)
     startSlot = sp.startSlotAssignationInGivenSession(numSession,numAppeal);
-    classrooms = sp.classroomsAssignedInGivenSession(numSession,numAppeal);
+    //devo prendere le aule per ogni corso raggruppato
+    std::vector<std::string> idGroupedCourse = _courses.at(idCourse).getIdGroupedCourseFromYear(acYear);
+    for(int i = 0; i<idGroupedCourse.size(); i++){
+        std::vector<int> classroomPerCourse = sp.classroomsAssignedInGivenSession(numSession,numAppeal);
+        classrooms.insert(std::pair<std::string,std::vector<int>>(idGroupedCourse[i],classroomPerCourse));
+    }
     ///RIMOZIONE
     ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
     sp.removeInfoThisAppeal(numSession,numAppeal);

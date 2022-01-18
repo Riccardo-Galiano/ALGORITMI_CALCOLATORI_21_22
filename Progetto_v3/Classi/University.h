@@ -29,7 +29,7 @@ public:
     void controlCoerenceSessionDate(std::string winterSession,std::string  summerSession,std::string autumnSession,int acYear);
     void controlOfASingleSessionPeriod(std::string name,std::string sessionPeriod, int acStartYear);
     void controlUnicity(std::vector<std::string>& controlUnicityCourses,int line_counter);
-    void removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::vector<int>& classrooms);
+    void removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::map<std::string,std::vector<int>>& classrooms);
 
     ///DB management
     void versioning(std::string newVersion);

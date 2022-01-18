@@ -422,9 +422,9 @@ std::vector<std::string> Course::getAcYearAppeals() {
     return allAppealsPerCourses;
 }
 
-bool Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession) {
+bool Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal) {
     int acStartYear = Parse::getAcStartYear(acYear);
-    _courseOfTheYear.at(acStartYear).assignAppeals(session,appealsPerSession);
+    _courseOfTheYear.at(acStartYear).assignAppeals(session,appealsPerSession,startSlotPerAppeal,classroomsPerAppeal);
     return true;
 }
 
@@ -484,6 +484,10 @@ std::string Course::getFirstAcYearOff() {
         }
     }
     return  "";
+}
+
+std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) {
+    return _courseOfTheYear.at(acYear).getIdGroupedCourses();
 }
 
 

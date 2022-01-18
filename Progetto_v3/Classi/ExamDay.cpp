@@ -100,19 +100,14 @@ bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Cou
 
 ///un corso da assegnare è dello stesso corso di studio e dello stesso anno di uno degli esami già assegnati per una certa data?
 bool ExamDay::sameStudyCourseAndYear(Course course, int year) {
-
-    SpecificYearCourse specificYearCourseToAssign = course.getThisYearCourse(
-            year);//prendo l'anno specifico del corso da assegnare
-    for (auto iterExamDay = _slots.begin(); iterExamDay !=
-                                            _slots.end(); iterExamDay++) {//su uno degli examDay dei giorni precedenti da controllare ciclo su tutti gli slot
+    //prendo l'anno specifico del corso da assegnare
+    SpecificYearCourse specificYearCourseToAssign = course.getThisYearCourse( year);
+    for (auto iterExamDay = _slots.begin(); iterExamDay !=  _slots.end(); iterExamDay++) {//su uno degli examDay dei giorni precedenti da controllare ciclo su tutti gli slot
         std::vector<Course> examDayVect = iterExamDay->second; //estraggo per ogni slot il vettore di corsi
         for (int i = 0; i < examDayVect.size(); i++) {//ciclo sul vettore di corsi/esami da fare in quello slot
-            SpecificYearCourse specificYearCourseAssigned = examDayVect[i].getThisYearCourse(
-                    year);//prendo per quel corso/esame dello slot l'intero corso per un anno accademico specifico
-            if (specificYearCourseAssigned.getStudyCourseAssigned() ==
-                specificYearCourseToAssign.getStudyCourseAssigned()) {//controllo se l'esame da ssegnare e quello già assegnato sono dello stesso corso di studio
-                if (specificYearCourseAssigned.getYearOfTheSemester() ==
-                    specificYearCourseToAssign.getYearOfTheSemester())//controllo se l'esame da assegnare e quello già assegnato sono dello stesso anno
+            SpecificYearCourse specificYearCourseAssigned = examDayVect[i].getThisYearCourse(year);//prendo per quel corso/esame dello slot l'intero corso per un anno accademico specifico
+            if (specificYearCourseAssigned.getStudyCourseAssigned() == specificYearCourseToAssign.getStudyCourseAssigned()) {//controllo se l'esame da assegnare e quello già assegnato sono dello stesso corso di studio
+                if (specificYearCourseAssigned.getYearOfTheSemester() == specificYearCourseToAssign.getYearOfTheSemester())//controllo se l'esame da assegnare e quello già assegnato sono dello stesso anno
                     return true;//se stesso corso di studio e stesso anno ritorno true
             }
         }
