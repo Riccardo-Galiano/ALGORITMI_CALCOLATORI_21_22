@@ -2658,6 +2658,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
         int numAppeal = Parse::checkedStoi(infoChanges[2]);
         char directionOfSfift = infoChanges[3][0];
         int numWeeks = Parse::checkedStoi(infoChanges[4]);
+
         ///2) cancello le informazioni dell'appello selezionato in questa riga e le salvo
         ///3) cerco di soddisfare il cambiamento
         ///4) se riesco, aggiungo appello alla sessione di questo anno accademico è successfulChanges++
@@ -2720,7 +2721,7 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
 }
 
 void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::map<std::string,std::vector<int>>& classrooms) {
-    SessionYear thisSession = _acYearSessions.at(acYear);
+    SessionYear& thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
     ///salvo le informazioni per poterle riusare dopo
     //salvo la data(sarà la data per tutti i corsi raggruppati)
@@ -2735,21 +2736,28 @@ void University::removeThisAppealInfo(int acYear, std::string idCourse, int numS
     }
     ///RIMOZIONE
     ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
-    sp.removeInfoThisAppeal(numSession,numAppeal);
-    ///professori relativi da SpecificYearCourse trovato
-    std::vector<int> profs = sp.getAllProfMatr();
-    for(int i=0; i<profs.size();i++){
-        Professor& prof = _professors.at(profs[i]);
-        prof.eraseThisAppeal(date,startSlot);
+    ///rimuovo dal corso indicato nel file
+    ///per fare un unico ciclo aggiungo l'idCourse letto nel file ai suoi raggruppati e ciclo su tutti i corsi da togliere, letto da file e i suoi raggruppati
+    idGroupedCourse.push_back(idCourse);
+    for(int i = 0; i<idGroupedCourse.size(); i++){
+        SpecificYearCourse& spGrouped = _courses.at(idGroupedCourse[i]).getThisYearCourseReference(acYear);
+        spGrouped.removeInfoThisAppeal(numSession,numAppeal);
+        ///professori relativi da SpecificYearCourse trovato
+        std::vector<int> profs = sp.getAllProfMatr();
+        for(int j=0; j<profs.size();j++){
+            Professor& prof = _professors.at(profs[j]);
+            prof.eraseThisAppeal(date,startSlot);
+        }
+        ///Classroom selezionate da SpecificYearCourse trovato
+        std::vector<int> rooms = sp.getRoomsAppealInSession(numSession,numAppeal);
+        for(int j=0; j<rooms.size();j++){
+            Classroom& room = _classrooms.at(rooms[j]);
+            room.eraseThisAppeal(date,startSlot);
+        }
+        ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
+        thisSession.removeThisAppealInfo(numSession, numAppeal,date,startSlot,idCourse);
     }
-    ///Classroom selezionate da SpecificYearCourse trovato
-    std::vector<int> rooms = sp.getRoomsAppealInSession(numSession,numAppeal);
-    for(int i=0; i<rooms.size();i++){
-        Classroom& room = _classrooms.at(rooms[i]);
-        room.eraseThisAppeal(date,startSlot);
-    }
-    ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
-    thisSession.removeThisAppealInfo(numSession, numAppeal,date,startSlot,idCourse);
+
 }
 
 
