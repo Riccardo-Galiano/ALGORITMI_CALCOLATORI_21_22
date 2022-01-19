@@ -1139,7 +1139,7 @@ void University::updateClassroom(const std::string &fin) {
                             else//altrimenti sarà un'aula
                                 lab = false;
 
-                            if (iter->second.getLab() != lab) {//se è cambiata da aula a lab o viceversa
+                            if (iter->second.isThisLab() != lab) {//se è cambiata da aula a lab o viceversa
                                 iter->second.updateType(lab); //cambia il tipo: lab o aula
                             }
                             break;
@@ -2648,7 +2648,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     SessionYear& thisSession = _acYearSessions.at(acStart);
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
-    bool isPossible = true;
+    bool allChangesArePossible = true;
     /*
      * if(!std::getline(fileIn, line))
         throw std::invalid_argument("Errore: file per le richieste del cambio data esami è vuoto");
@@ -2664,8 +2664,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
         char directionOfSfift = infoChanges[3][0];
         int numWeeks = Parse::checkedStoi(infoChanges[4]);
 
-
-        ///2) cancello le informazioni dell'appello selezionato in questa riga e le salvo
+        ///2) cancello le informazioni dell'appello selezionato in questa riga + raggruppati e le salvo
         ///3) cerco di soddisfare il cambiamento
         ///4) se riesco, aggiungo appello alla sessione di questo anno accademico è successfulChanges++
         ///5) se non riesco, devo ripristinare info appello + emit warning
@@ -2673,7 +2672,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
         int startSlot;
         std::map<std::string,std::vector<int>> classrooms;
         //2 -> rimozione + salvataggio
-        removeThisAppealInfo(acStart,idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
+        removeThisAppealAndGroupedInfo(acStart, idCourse, numSession, numAppeal, oldDate, startSlot, classrooms);
         //3
         Course& courseToConsider = _courses.at(idCourse);
         Date tryDate;
@@ -2685,6 +2684,8 @@ void University::requestChanges(std::string acYear, std::string fin) {
         }
         try {
             thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
+            //4
+            successfulChanges++;
         }
         catch(std::exception& err){
             //5
@@ -2693,10 +2694,10 @@ void University::requestChanges(std::string acYear, std::string fin) {
             reassignThisAppealInfo(acStart,idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
             //segnalo l'errore da lanciare successivamente con il throw
             error.append(err.what());
-            isPossible = false;
+            allChangesArePossible = false;
         }
     }
-    if(isPossible) {
+    if(allChangesArePossible) {
         //ristampo la sessione
     }
 }
@@ -2734,7 +2735,7 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
     return true;
 }
 
-void University::removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::map<std::string,std::vector<int>>& classrooms) {
+void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date& date, int& startSlot, std::map<std::string,std::vector<int>>& classrooms) {
     SessionYear& thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
     ///salvo le informazioni per poterle riusare dopo

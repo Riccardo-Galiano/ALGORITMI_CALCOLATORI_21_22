@@ -21,7 +21,7 @@ public:
 
     const int getId() const;
     const std::string getName() const;
-    const bool getLab() const;
+    const bool isThisLab() const;
     const int getNSeats() const;
     const int getNExamSeats() const;
 

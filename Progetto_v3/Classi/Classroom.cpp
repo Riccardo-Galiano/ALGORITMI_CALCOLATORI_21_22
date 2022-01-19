@@ -57,7 +57,7 @@ const std::string Classroom::getName() const {
 }
 
 ///prende il tipo: lab o aula
-const bool Classroom::getLab() const {
+const bool Classroom::isThisLab() const {
     return _lab;
 }
 
@@ -162,7 +162,7 @@ void Classroom::eraseThisAppealFromClassrooms(Date &date, int startSlot, int num
 std::ostream &operator<<(std::ostream &room, const Classroom &c) {
     std::string settedId = Parse::setId('A', 3, c.getId());
     room << settedId << ";";
-    if (c.getLab())
+    if (c.isThisLab())
         room << "L;";
     else
         room << "A;";

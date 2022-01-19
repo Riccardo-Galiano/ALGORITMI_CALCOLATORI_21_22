@@ -4,7 +4,7 @@
 
 #include "Exam.h"
 
-Exam::Exam(int time, int enterTime, int leaveTime, const std::string &mode, std::string place) : _time(time), _enterTime(enterTime), _leaveTime(leaveTime), _mode(mode), _place(place) {}
+Exam::Exam(int time, int enterTime, int leaveTime, const std::string &mode, std::string place) : _time(time), _enterTime(enterTime), _leaveTime(leaveTime), _mode(mode), _place(place[0]) {}
 
 int Exam::getTime() const {
     return _time;
@@ -22,7 +22,7 @@ const std::string &Exam::getMode() const {
     return _mode;
 }
 
-const std::string &Exam::getPlace() const {
+char Exam::getPlace() const {
     return _place;
 }
 ///quanti slot servono per un esame

@@ -26,7 +26,8 @@ public:
     bool setSlot();
     std::vector<std::string> getSlotsToString();
     bool allSLotsAreEmpty();
-    bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour,int numSlotsRequired,std::string labOrClass);
+    bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour, int numSLotsRequired,
+                                             char labOrClass, int maxNumRooms);
     bool checkProfsAvaibility(SpecificYearCourse& specificCourse, std::map<int, Professor>& allUniversityProfs, int relaxPar, int slotHour);
     void eraseTempGroupedCourseClassrooms();
     std::string classroomString(std::vector<int>);
@@ -42,6 +43,7 @@ private:
     //slots dalle 8 alle 20; uno slot dura due ore --> 8, 10, 12, 14, 16, 18
     std::map<int,std::vector<Course>> _slots;
     Date _date;
+    //variabile di appoggio
     std::vector<int> _tempGroupedCourseClassrooms;
 
 };

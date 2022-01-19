@@ -16,7 +16,7 @@ public:
     int getEnterTime() const;
     int getLeaveTime() const;
     const std::string &getMode() const;
-    const std::string &getPlace() const;
+    char getPlace() const;
     int howManySlots();
 
 private:
@@ -24,7 +24,7 @@ private:
     int _enterTime; //tempo per entrare
     int _leaveTime; //tempo per uscire
     std::string _mode; //modalità
-    std::string _place; //luogo
+    char _place; //luogo
 
 };
 

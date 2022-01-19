@@ -21,7 +21,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
                                                std::map<int, Classroom> &allUniversityClassrooms, int numSlotsRequired,
                                                int relaxPar, std::vector<int>& idRoomsFounded, int endHourSlot,bool firstCourseOfThisLoop, int startControlExamHourSlot) {
     SpecificYearCourse specificCourse = course.getThisYearCourse( _date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day (-1)
-    std::string labOrClass = specificCourse.getPlaceExam();
+    char labOrClass = specificCourse.getPlaceExam();
     ///cerchiamo un numSlotsRequired vuoti (ovviamente consecutivi)
     //!!! esami non raggruppati dovrebbero poter essere messi nello stesso slot in base alla disponibilità di aule!!!!!!!!
     ///esami raggruppati vanno messi alla stessa ora
@@ -49,10 +49,12 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
         if (toContinue) {
             ///cerchiamo delle aule con la giusta capienza
             //se ho già effettuato la search dovrò rieffettuarla solo se per gli stessi slot i prof non sono disponibili
-            if (!classroomIsOk)
+            if (!classroomIsOk) {
+                int maxNumClassrooms = specificCourse.getNumParallelCourses();
                 thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
                                                                                idRoomsFounded, slotHour,
-                                                                               numSlotsRequired,labOrClass);
+                                                                               numSlotsRequired, labOrClass, maxNumClassrooms);
+            }
 
             ///controlliamo se abbiamo trovato ABBASTANZA posti
             if (thereAreEnoughClassrooms) {
@@ -80,7 +82,6 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
         ///non trovato un buco abbastanza grande
         return -1;
         _tempGroupedCourseClassrooms.insert(_tempGroupedCourseClassrooms.begin(),idRoomsFounded.begin(),idRoomsFounded.end());
-
     return foundedStartHourSlot;
 }
 
@@ -144,7 +145,6 @@ std::vector<std::string> ExamDay::getSlotsToString() {
         int hFinish = hStart + 2;
         //set hh_slot
         genericSlot << std::setfill('0') << std::setw(2) << hStart << ":00-" << hFinish << ":00;";
-
         //set coursesSlot
         std::vector<Course> coursesOfThisSlot = iterSlots->second;
         std::string formattedCoursesPerSlot = getFormattedCoursesPerSlot(coursesOfThisSlot, CoursesPrintedSoFar);
@@ -167,16 +167,38 @@ ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfThisSlot, std:
 
         if (firstTime) {
             std::string classrooms =  classroomString(rooms);
-            int numVersion = sp.getParalleleCours();
+            int numVersion = sp.getNumParallelCourses();
             if (numVersion != 1) {
-                for (int j = 0; j < numVersion; j++) {
-                    singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")"<<classrooms;
-                    if (j < numVersion - 1)
-                        singleSlotSS << ";";
+                ///distinguo 2 casi
+                ///A] ci sono tante aule quante versioni
+                ///B] aule < num versioni
+                if(numVersion == rooms.size()){
+                    //A
+                    for (int j = 1; j <= numVersion; j++) {
+                        char placeExam = sp.getPlaceExam();
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")"<< placeExam << rooms[j];
+                        if (j < numVersion)
+                            singleSlotSS << ";";
+                    }
                 }
-
+                else{
+                    //B ... metto sempre la stessa aula alla fine
+                    for (int j = 1; j <= numVersion; j++) {
+                        int room;
+                        if(j>=rooms.size()){
+                            room = rooms[rooms.size()-1];
+                        }
+                        else{
+                            room = rooms[j];
+                        }
+                        char placeExam = sp.getPlaceExam();
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" <<  placeExam << room;
+                        if (j < numVersion)
+                            singleSlotSS << ";";
+                    }
+                }
             } else {
-                singleSlotSS << coursesOfThisSlot[i].getId() << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")"<<classrooms;
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" << classrooms;
             }
             if (i < coursesOfThisSlot.size() - 1)
                 singleSlotSS << ";";
@@ -206,39 +228,57 @@ bool ExamDay::allSLotsAreEmpty() {
     return true;
 }
 
-bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allUniversityClassrooms,int numSeatsToSeach, std::vector<int> &idRoomsFounded, int slotHour, int numSLotsRequired, std::string labOrClass) {
-    int totSeatsFoundedSoFar = 0;
-    bool roomIsOk = true;
-    bool labExam;
+bool comparatorFunction (Classroom i,Classroom j) { return (i.getNExamSeats() < j.getNExamSeats()); }
 
-    if(labOrClass == "A")
-        labExam = false;
+bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allUniversityClassrooms, int numSeatsToSeach, std::vector<int> &idRoomsFounded, int slotHour, int numSLotsRequired, char labOrClass, int maxNumRooms) {
+    bool roomIsOk = true;
+    bool examInLab;
+    std::vector<Classroom> potentialRooms;
+    if(labOrClass == 'A')
+        examInLab = false;
     else
-        labExam = true;
+        examInLab = true;
     ///per tutte le aule controllo se è libera per il numero di slot richiesti e quanti posti ci siano
-    for (int i = 1; i < allUniversityClassrooms.size(); i++) {
+    for (int i = 1; i < allUniversityClassrooms.size(); i++){
         Classroom &room = allUniversityClassrooms.at(i);
-        ///controllo se la classRoom considerata è dello stesso tipo di labExam (aula o lab? dove faccio l'esame?)
-        bool labClassroom = room.getLab();
+        ///controllo se la classRoom considerata è dello stesso tipo di examInLab (aula o lab? dove faccio l'esame?)
+        bool isLab = room.isThisLab();
+        bool thisRoomIsNotUsedByAGroupedCourse = std::find(_tempGroupedCourseClassrooms.begin(), _tempGroupedCourseClassrooms.end(), i) == _tempGroupedCourseClassrooms.end();
             ///tra corsi raggruppati non può essere assegnata la stessa POSSSIBILE aula(possibile perchè non è ancora sicuro, ci sono altri controlli da fare prima dell'assegnazione)
-            if (labExam == labClassroom && std::find(_tempGroupedCourseClassrooms.begin(), _tempGroupedCourseClassrooms.end(), i) == _tempGroupedCourseClassrooms.end()) {
+            if (examInLab == isLab && thisRoomIsNotUsedByAGroupedCourse) {
                 ///controllo che per numSlotsRequired consecutivi l'aula sia disponibile
                 for (int j = 0; j < numSLotsRequired && roomIsOk; j++) {
                     int slot = slotHour + 2 * j;
-                    if (room.checkAvailability(_date, slot) == false) {
-                        roomIsOk == false;
+                    if (!room.checkAvailability(_date, slot)) {
+                        roomIsOk = false;
                     }
                 }
-                ///se per il numSlotsRquired l'aula è disponibile segno che quell'aula va bene ma devo capire se come posti disponibili ci siamo
+                ///se per il numSlotsRquired l'aula è disponibile allora la aggiungo al vettore di aule disponibili
                 if (roomIsOk) {
-                    totSeatsFoundedSoFar += room.getNExamSeats();
-                    idRoomsFounded.push_back(i);
-                    if (numSeatsToSeach <= totSeatsFoundedSoFar)
-                        return true;
+                    potentialRooms.push_back(allUniversityClassrooms.at(i));
                 }
             }
+    }
+    ///prendo dalle aule trovate potentialRooms un numero di aule <= maxNumRooms && numSeatsToSeach <= totSeats in queste aule
+    //ordino le aule in senso crescente di #posti
+    std::sort (potentialRooms.begin(), potentialRooms.end(), comparatorFunction);
+    //cerco di massimizzare numero aule (finestra più grande possibile) -> ciclo all'indietro
+    for(int numTotRoomsToSearch = maxNumRooms; numTotRoomsToSearch >= 1; numTotRoomsToSearch--){
+        //cerco per finestra (sliding window)
+        for(int index = numTotRoomsToSearch - 1; index < potentialRooms.size(); index++){
+            int totSeats = 0;
+            std::vector<int> tempRooms;
+            for(int j = index + 1 - numTotRoomsToSearch; j <= index ; j++){
+                totSeats += potentialRooms[j].getNExamSeats();
+                tempRooms.push_back(potentialRooms[j].getId());
+            }
+            if(totSeats >= numSeatsToSeach){
+                ///ho trovato ottimo = prima occorrenza
+                idRoomsFounded = tempRooms;
+                return true;
+            }
         }
-
+    }
     return false;
 }
 

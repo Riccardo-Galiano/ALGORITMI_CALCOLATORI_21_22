@@ -72,7 +72,7 @@ bool SpecificYearCourse::getisActive() const {
 }
 
 /// ritorna il numero di corsi in parallelo
-int SpecificYearCourse::getParalleleCours() const {
+int SpecificYearCourse::getNumParallelCourses() const {
     return _parallelCourses;
 }
 
@@ -494,7 +494,7 @@ void SpecificYearCourse::setYySemester(const std::string &yySemester) {
     _yy_semester = yySemester;
 }
 
-std::string SpecificYearCourse::getPlaceExam() {
+char SpecificYearCourse::getPlaceExam() {
     return _exam.getPlace();
 }
 
@@ -572,7 +572,7 @@ std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
         output << "attivo";
     else
         output << "non_attivo";
-    output << ";" << s.getParalleleCours() << ";";
+    output << ";" << s.getNumParallelCourses() << ";";
     output << s.getProfParString() << ";";
     output << s.getExamString() << ";";
     output << s.getGroupedCoursesIdString();

@@ -490,11 +490,6 @@ std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) {
     return _courseOfTheYear.at(acYear).getIdGroupedCourses();
 }
 
-void Course::reassignAppealToSpecificYear(int acYear, int numSession, Date date, int startSlot, std::vector<int>classroomsPerCourse) {
-
-}
-
-
 std::ostream &operator<<(std::ostream &course, Course &c) {
     course << "c;" << c.getId() << ";" << c.getName() << ";" << c.getCfu() << ";" << c.getHours()._lec << ";"
            << c.getHours()._ex << ";" << c.getHours()._lab << std::endl;

@@ -59,7 +59,7 @@ public:
     int getStartYear() const;
     int getEndYear() const;
     bool getisActive() const;
-    int getParalleleCours() const;
+    int getNumParallelCourses() const;
     const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
     const std::string getProfParString() const;
     std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
@@ -83,7 +83,7 @@ public:
     std::string getAppealsForAllSession();
     std::string getRoomsPerAppealsString(int numAppeals);
     int getStartHourAppeal(int numAppeals);
-    std::string getPlaceExam();
+    char getPlaceExam();
 
     ///setter
     bool setYear();

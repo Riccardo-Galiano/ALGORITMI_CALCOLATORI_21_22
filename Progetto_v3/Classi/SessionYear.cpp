@@ -306,11 +306,9 @@ void SessionYear::generateOutputFiles(std::string &outputFileName, int session, 
         ssFout << "_s2.txt";
     else if (key == "autumn")
         ssFout << "_s3.txt";
-
     std::fstream outputSession;
     outputSession.open(ssFout.str(), std::fstream::out | std::fstream::trunc);
-
-    if (!outputSession.is_open()) {
+    if (!outputSession.is_open()){
         throw std::exception();
     }
     Date dayOne = _yearSessions.at(key).startDate;
@@ -606,16 +604,16 @@ void SessionYear::removeThisAppealInfoFromCalendar(int numSession, int numAppeal
 
 }
 
-
 bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& courses, std::map<int, Professor>& profs,std::map<int, Classroom>& allUniversityClassrooms, Course& course, int numSession, int numAppeal, Date& tryDate) {
     ///prendiamo l'intervallo di date della sessione richiesta
     session thisSession = _yearSessions.at(_sessionNames[numSession - 1]);
     Date startDate = thisSession.startDate;
     Date endDate = thisSession.endDate;
-    int relaxPar = 0;
+    int relaxPar = 0; //per compatibilità
     int endHourSlot = -1;
-    int gapAppeals = 14;
+    int gapAppeals = 14; //per compatibilità
     bool requestChanges = true;
+
     ///check che lo shift sia possibile
     if (tryDate < startDate || tryDate > endDate)
         throw std::invalid_argument("La data non appartiene alla sessione");
@@ -649,6 +647,7 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
     ///prendo gli oggetti corso dei corsi raggruppati iù quello selezionato
     for (int i = 0; i < coursesGrouped.size(); i++) {
         coursesToConsiderInThisLoop.push_back(courses.at(coursesGrouped[i]));
+        //per andrea: non manca codCurrentAppeal nel vettore?
     }
 
     ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
@@ -657,8 +656,7 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
             Course &courseToConsider = coursesToConsiderInThisLoop[i];
             //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
             //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-            if (dateIsOK(tryDate, courseToConsider, _sessionNames[numSession - 1], gapAppeals, requestChanges) ==
-                false) {
+            if (dateIsOK(tryDate, courseToConsider, _sessionNames[numSession - 1], gapAppeals, requestChanges) == false) {
                 //se non va bene per uno non va bene per tutti
                 //genera un'eccezione
                 //se un primo appello deve essere nei primi 14 giorni e lontano altri 14 dal secondo appello
