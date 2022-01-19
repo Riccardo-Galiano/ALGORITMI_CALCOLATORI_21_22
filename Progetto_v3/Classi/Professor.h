@@ -31,7 +31,7 @@ public:
     bool amIavailable(std::string, int, int relaxPar);
 
     ///remove
-    void eraseThisAppeal(Date& dateAppeal, int startSlot);
+    void eraseThisAppealFromProfs(Date& dateAppeal, int startSlot, int numSlots);
 private:
     //key: inizio anno accademico
     //value: coppia di date; inizio e fine periodo di indisponibilità

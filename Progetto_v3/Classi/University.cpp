@@ -2605,7 +2605,13 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
         assignAppealsToProf(idCorso, infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), numSlot,
                             allProfsPerYearCourse);
         ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
-        assignAppealsToClassroom(infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), infoOfSingleAppeal[2], numSlot);
+        std::vector<std::string> allClassroomsString = Parse::splittedLine(infoOfSingleAppeal[2], '|');
+        std::vector<int> allClassrooms;
+        //converto il vettore di stringhe in un vettore di interi
+        for(int j = 0; j<allClassrooms.size();j++){
+            allClassrooms.push_back(Parse::checkedStoi(allClassroomsString[i]));
+        }
+        assignAppealsToClassroom(infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), allClassrooms, numSlot);
         ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
         Course &course = _courses.at(idCorso);
         _acYearSessions.at(startAcYear).assignAppealsToCalendar(infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]),
@@ -2624,11 +2630,10 @@ void University::assignAppealsToProf(std::string idCorso, std::string appeal, in
     }
 }
 
-void University::assignAppealsToClassroom(std::string appeal, int startSlotHour, std::string classrooms, int numSlot) {
-    std::vector<std::string> allClassrooms = Parse::splittedLine(classrooms, '|');
+void University::assignAppealsToClassroom(std::string appeal, int startSlotHour, std::vector<int> classrooms, int numSlot) {
     Date appealDate(appeal);
-    for (int i = 0; i < allClassrooms.size(); i++) {
-        _classrooms.at(Parse::checkedStoi(allClassrooms[i])).setDisavailability(appealDate, startSlotHour, numSlot);
+    for (int i = 0; i < classrooms.size(); i++) {
+        _classrooms.at(classrooms[i]).setDisavailability(appealDate, startSlotHour, numSlot);
     }
 }
 
@@ -2643,7 +2648,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     SessionYear& thisSession = _acYearSessions.at(acStart);
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
-
+    bool isPossible = true;
     /*
      * if(!std::getline(fileIn, line))
         throw std::invalid_argument("Errore: file per le richieste del cambio data esami è vuoto");
@@ -2658,6 +2663,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
         int numAppeal = Parse::checkedStoi(infoChanges[2]);
         char directionOfSfift = infoChanges[3][0];
         int numWeeks = Parse::checkedStoi(infoChanges[4]);
+
 
         ///2) cancello le informazioni dell'appello selezionato in questa riga e le salvo
         ///3) cerco di soddisfare il cambiamento
@@ -2678,12 +2684,20 @@ void University::requestChanges(std::string acYear, std::string fin) {
             tryDate = oldDate.add(numWeeks * 7);
         }
         try {
-        // thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
+            thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
         }
         catch(std::exception& err){
             //5
             ///warning
+            ///ripristino le info iniziali
+            reassignThisAppealInfo(acStart,idCourse,numSession,numAppeal,oldDate,startSlot,classrooms);
+            //segnalo l'errore da lanciare successivamente con il throw
+            error.append(err.what());
+            isPossible = false;
         }
+    }
+    if(isPossible) {
+        //ristampo la sessione
     }
 }
 
@@ -2730,35 +2744,72 @@ void University::removeThisAppealInfo(int acYear, std::string idCourse, int numS
     startSlot = sp.startSlotAssignationInGivenSession(numSession,numAppeal);
     //devo prendere le aule per ogni corso raggruppato
     std::vector<std::string> idGroupedCourse = _courses.at(idCourse).getIdGroupedCourseFromYear(acYear);
+    idGroupedCourse.push_back(idCourse);
     for(int i = 0; i<idGroupedCourse.size(); i++){
-        std::vector<int> classroomPerCourse = sp.classroomsAssignedInGivenSession(numSession,numAppeal);
+        SpecificYearCourse& spGrouped = _courses.at(idGroupedCourse[i]).getThisYearCourseReference(acYear);
+        std::vector<int> classroomPerCourse = spGrouped.classroomsAssignedInGivenSession(numSession,numAppeal);
         classrooms.insert(std::pair<std::string,std::vector<int>>(idGroupedCourse[i],classroomPerCourse));
     }
     ///RIMOZIONE
     ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
     ///rimuovo dal corso indicato nel file
     ///per fare un unico ciclo aggiungo l'idCourse letto nel file ai suoi raggruppati e ciclo su tutti i corsi da togliere, letto da file e i suoi raggruppati
-    idGroupedCourse.push_back(idCourse);
+
     for(int i = 0; i<idGroupedCourse.size(); i++){
         SpecificYearCourse& spGrouped = _courses.at(idGroupedCourse[i]).getThisYearCourseReference(acYear);
-        spGrouped.removeInfoThisAppeal(numSession,numAppeal);
+        Exam examInfo = spGrouped.getExam();
+        int numSlots = examInfo.howManySlots();
+
+        spGrouped.removeInfoThisAppealFromSpecificYear(numSession, numAppeal);
         ///professori relativi da SpecificYearCourse trovato
-        std::vector<int> profs = sp.getAllProfMatr();
+        std::vector<int> profs = spGrouped.getAllProfMatr();
         for(int j=0; j<profs.size();j++){
             Professor& prof = _professors.at(profs[j]);
-            prof.eraseThisAppeal(date,startSlot);
+            prof.eraseThisAppealFromProfs(date, startSlot, numSlots);
         }
         ///Classroom selezionate da SpecificYearCourse trovato
-        std::vector<int> rooms = sp.getRoomsAppealInSession(numSession,numAppeal);
+        std::vector<int> rooms = classrooms.at(idGroupedCourse[i]);
         for(int j=0; j<rooms.size();j++){
             Classroom& room = _classrooms.at(rooms[j]);
-            room.eraseThisAppeal(date,startSlot);
+            room.eraseThisAppealFromClassrooms(date, startSlot, numSlots);
         }
         ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
-        thisSession.removeThisAppealInfo(numSession, numAppeal,date,startSlot,idCourse);
+        thisSession.removeThisAppealInfoFromCalendar(numSession, numAppeal, date, startSlot, idCourse);
     }
 
 }
+
+void University::reassignThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date date, int startSlot, std::map<std::string, std::vector<int>> classrooms) {
+    SessionYear& thisSession = _acYearSessions.at(acYear);
+    SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
+    std::vector<std::string> idGroupedCoursePerThisLoop = sp.getIdGroupedCourses();
+    ///corsi a cui riassegnare le info
+    idGroupedCoursePerThisLoop.push_back(idCourse);
+    ///numero di slot
+    int numSlot = _courses.at(idCourse).getExamSlotPerYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1));
+    for(int i = 0 ; i<idGroupedCoursePerThisLoop.size(); i++) {
+        //prendo i prof a cui assegnare la data e segno per tutti i prof
+        std::vector<int> allProfsPerYearCourse = _courses.at(idCourse).getProfsPerYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1));
+        assignAppealsToProf(idCourse, date.toString(), startSlot, numSlot, allProfsPerYearCourse);
+
+        ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
+        std::vector<int> classroomsPerCourse = classrooms.at(idGroupedCoursePerThisLoop[i]);
+        assignAppealsToClassroom(date.toString(), startSlot,classroomsPerCourse, numSlot);
+
+        ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
+
+        /*
+        _courses.at(idCourse).assignAppealToSpecificYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1), session, date, startSlot,
+                                                         classroomsPerCourse);
+        */
+        ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
+        Course &course = _courses.at(idCourse);
+        _acYearSessions.at(acYear).assignAppealsToCalendar(date.toString(),startSlot,course, numSlot);
+    }
+}
+
+
+
 
 
 

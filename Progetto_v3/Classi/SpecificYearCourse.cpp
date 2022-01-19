@@ -253,7 +253,7 @@ Date SpecificYearCourse::lastDateAssignationInGivenSession(int session) {
     //ritorna 1900-01-01 se non trova la data del primo appello
     if (amIAssignedAlreadyInThisSession(session) == 0) {
         Date dateDefault = Date();
-        return dateDefault;// CAMBIATO SOLO PERCHE' DAVA PROBLEMI, DA CAMBIARE
+        return dateDefault;
     }
     return _howManyTimesIAmAssignedInASession.at(session)[0];
 }
@@ -537,7 +537,7 @@ int SpecificYearCourse::getNumAppealFromNumSessNumAppealInSession(int numSession
     return numAppealYear;
 }
 
-void SpecificYearCourse::removeInfoThisAppeal(int numSession, int numAppeal) {
+void SpecificYearCourse::removeInfoThisAppealFromSpecificYear(int numSession, int numAppeal) {
     ///pop da vettore date
     if(numAppeal == 2)
         ///se secondo appello tolgo l'ultimo del vettore date

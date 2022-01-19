@@ -447,7 +447,7 @@ bool Course::profHaveThisCourse(int matr, int acStartYear) {
 int Course::getExamSlotPerYear(std::string acYear) {
     int startAc = Parse::getAcStartYear(acYear);
     Exam examInfo = _courseOfTheYear.at(startAc).getExam();
-    return examInfo.howManySlots();;
+    return examInfo.howManySlots();
 }
 
 std::vector<int> Course::getProfsPerYear(std::string acYear) {
@@ -488,6 +488,10 @@ std::string Course::getFirstAcYearOff() {
 
 std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) {
     return _courseOfTheYear.at(acYear).getIdGroupedCourses();
+}
+
+void Course::reassignAppealToSpecificYear(int acYear, int numSession, Date date, int startSlot, std::vector<int>classroomsPerCourse) {
+
 }
 
 

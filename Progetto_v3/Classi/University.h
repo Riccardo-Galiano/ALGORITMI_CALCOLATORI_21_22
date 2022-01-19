@@ -30,6 +30,7 @@ public:
     void controlOfASingleSessionPeriod(std::string name,std::string sessionPeriod, int acStartYear);
     void controlUnicity(std::vector<std::string>& controlUnicityCourses,int line_counter);
     void removeThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date& date,int& startSlot, std::map<std::string,std::vector<int>>& classrooms);
+    void reassignThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date date,int startSlot, std::map<std::string,std::vector<int>> classrooms);
 
     ///DB management
     void versioning(std::string newVersion);
@@ -52,7 +53,7 @@ public:
     void checkDistance(std::string& minor, std::string& major);
     void assignInfoAppealPerSession(std::string acYear,std::string idCorso,std::string session, std::vector<std::string> appealInfo);
     void assignAppealsToProf(std::string idCorso,std::string appeal, int startHour, int numSlots,std::vector<int> allProfsPerYearCourse);
-    void assignAppealsToClassroom(std::string appeal,int startSlotHour,std::string classrooms,int numSlot);
+    void assignAppealsToClassroom(std::string appeal,int startSlotHour,std::vector<int>classrooms,int numSlot);
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
     int whatIsMyStudyCourse(Course& course, int acStartYear);
     void allErrorClasses();

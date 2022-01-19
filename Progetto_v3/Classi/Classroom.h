@@ -42,7 +42,7 @@ public:
     void updateBlackBoard(int blackBoard);
 
     ///remove
-    void eraseThisAppeal(Date& date,int startSlot);
+    void eraseThisAppealFromClassrooms(Date& date, int startSlot, int numSlots);
 private:
 
     int _id; //codice identificativo

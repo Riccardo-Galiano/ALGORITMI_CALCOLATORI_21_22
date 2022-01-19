@@ -160,6 +160,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     Date endDate = thisSession.endDate;
     bool continueLoop = true;
     bool pop = false;
+    bool requestChanges = false;
     ///raggruppiamo tutti gli esami specifici di quest'anno
     if (relaxPar == 0)
         _allExamAppealsToDo = getAllExamAppealsToDo(sessName,courses); //contiene le stringhe dei codici esame per OGNI appello
@@ -192,7 +193,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                         Course courseToConsider = coursesToConsiderInThisLoop[i];
                         //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
                         //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-                        if (dateIsOK(currentExamDay, courseToConsider, sessName, gapAppeals) == false) {
+                        if (dateIsOK(currentExamDay, courseToConsider, sessName, gapAppeals,requestChanges) == false) {
                             //se non va bene per uno non va bene per tutti
                             dateIsOk = false;
                         }
@@ -424,7 +425,7 @@ SessionYear::getGroupedCourses(const std::map<std::string, Course> &courses, std
 }
 
 ///valuta se la data è accettabile per quell'esame
-bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName, int gapAppeals) {
+bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName, int gapAppeals, bool requestChanges) {
     SpecificYearCourse sp = course.getThisYearCourse(getAcYear());//corso per un anno specifico
     std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
     std::string idCorso = course.getId();
@@ -439,12 +440,19 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
         //quindi controllo se il giorno analizzato è delle prime due settimane(primi 14 giorni); in quel caso la data non va bene
         /// prime due settimane ok?
         if (startDate.whatIsTheGap(newDate) < 14) {
-            return false;
+            if(requestChanges)
+                throw std::invalid_argument("Esame non puo' essere inserito nei primi 14 giorni della sessione\n");
+            else
+                return false;
         }
     }else if (howManyTimesIAmAssignedAlreadyInThisSession == 0) {//se i canBeAssigneToFirstTwoWeekOfExamSession mi devo chiedere se è un primo appello
         ///se primo appello devo dimostrare che la data appartenga ai primi 14 giorni
-        if(startDate.whatIsTheGap(newDate) > 14)
-            return false;
+        if(startDate.whatIsTheGap(newDate) > 14) {
+            if (requestChanges)
+                throw std::invalid_argument("Esame non puo' essere inserito dopo i primi 14 giorni della sessione\n");
+            else
+                return false;
+        }
     }
 
     //stesso semestre della sessione ed attivo o siamo oltre i 14 giorni(quindi esame semestre diverso, spento, entrambi o secondo appello di uno dello stesso semestre della sessione ed attivo)
@@ -454,17 +462,26 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
         /// se relaxPar>=2 ho il loop a monte che mi chiama la generateSession con un gap progressivamente più piccolo
         Date lastDateAssignation = sp.lastDateAssignationInGivenSession( this->getSemester(sessName));//data primo appello
         if (lastDateAssignation.whatIsTheGap(newDate) < gapAppeals) {//dal primo appello sono passati 14 giorni?
-            return false;
+            if(requestChanges)
+                throw std::invalid_argument("Gap di 14 giorni tra due appelli di uno stesso corso in una sessione non rispettato\n");
+            else
+                return false;
         }
         ///cotrollo aggiuntivo se il gap deve essere più largo (profsGap)
-        for (int matr: allProfsMatrThisCourse) {
+        for (int i = 0; i < allProfsMatrThisCourse.size(); i++) {
             std::stringstream ss;
-            ss << matr << "_" << idCorso;
+            ss << allProfsMatrThisCourse[i] << "_" << idCorso;
             std::string keyToSearchProfsGap = ss.str();
             if (_gapProfs.count(keyToSearchProfsGap) != 0) {
                 int requiredGap = _gapProfs.at(keyToSearchProfsGap);
-                if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) //dall'ultimo appello sono passati i giorni richiesti dal prof?
-                    return false;
+                if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
+                    if (requestChanges) {
+                        std::string settedId = Parse::setId('d',6,allProfsMatrThisCourse[i]);
+                        throw std::invalid_argument("Gap ulteriore del professore con matricola "+ settedId +" tra due appelli di una sessione non rispettato\n");
+                    }
+                    else
+                        return false;
+                }
             }
         }
     }
@@ -583,102 +600,148 @@ void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour,
     _yearCalendar.at(appeal).assignExamToExamDay(startSlotHour, course, numSlots);
 }
 
-void SessionYear::removeThisAppealInfo(int numSession, int numAppeal, Date &date, int &startSlot,
-                                       std::string& idCourse) {
+void SessionYear::removeThisAppealInfoFromCalendar(int numSession, int numAppeal, Date &date, int &startSlot,
+                                                   std::string& idCourse) {
     _yearCalendar.at(date.toString()).removeThisAppealInfo(startSlot,idCourse);
 
 }
 
-/*
+
 bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& courses, std::map<int, Professor>& profs,std::map<int, Classroom>& allUniversityClassrooms, Course& course, int numSession, int numAppeal, Date& tryDate) {
-    ///prendiamo l'intervallo di date della sessione richiesta per fare controllo
-    session thisSession = _yearSessions.at(_sessionNames[numSession-1]);
+    ///prendiamo l'intervallo di date della sessione richiesta
+    session thisSession = _yearSessions.at(_sessionNames[numSession - 1]);
     Date startDate = thisSession.startDate;
     Date endDate = thisSession.endDate;
+    int relaxPar = 0;
+    int endHourSlot = -1;
+    int gapAppeals = 14;
+    bool requestChanges = true;
     ///check che lo shift sia possibile
-    if(tryDate < startDate || tryDate > endDate)
-        throw std::invalid_argument("data non possibile");
+    if (tryDate < startDate || tryDate > endDate)
+        throw std::invalid_argument("La data non appartiene alla sessione");
+
+    ///controllo che il primo appello rimanga il primo appello e che il secondo rimanga il secondo
+    SpecificYearCourse specific = course.getThisYearCourse(_acYear);
+    int numAppealsAssigned = specific.amIAssignedAlreadyInThisSession(this->getSemester(_sessionNames[numSession - 1]));
+    //se abbiamo più appelli per quella sessione
+    if (numAppealsAssigned != 1) {
+        //se primo appello
+        if (numAppeal == 1) {
+            Date dateSecondAppeal = specific.dateAssignationInGivenSession(numSession, numAppeal + 1);
+            //data scelta deve essere minore della data del secondo appello
+            if (tryDate > dateSecondAppeal)
+                throw std::logic_error(
+                        "Data scelta per l'assegnazione del primo appello e' maggiore della data del secondo");
+        } else {
+            //data scelta deve essere maggiore della data del primo appello
+            Date dateFirstAppeal = specific.dateAssignationInGivenSession(numSession, numAppeal - 1);
+            //data scelta deve essere minore della data del secondo appello
+            if (tryDate < dateFirstAppeal)
+                throw std::logic_error(
+                        "Data scelta per l'assegnazione del secondo appello e' maggiore della data del primo");
+        }
+    }
 
     ///esami raggruppati da considerare in questo giro
     std::string codCurrentAppeal = course.getId();
     std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
     std::vector<Course> coursesToConsiderInThisLoop;
+    ///prendo gli oggetti corso dei corsi raggruppati iù quello selezionato
     for (int i = 0; i < coursesGrouped.size(); i++) {
         coursesToConsiderInThisLoop.push_back(courses.at(coursesGrouped[i]));
     }
 
     ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
-    bool dateIsOk = true;
-    bool againOk = true;
     if (numSession != 3) {
-        for (int i = 0; i < coursesToConsiderInThisLoop.size() && dateIsOk; i++) {
-            Course& courseToConsider = coursesToConsiderInThisLoop[i];
+        for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
+            Course &courseToConsider = coursesToConsiderInThisLoop[i];
             //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
             //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-            if (dateIsOK(tryDate, courseToConsider, _sessionNames[numSession-1], 14) == false) {
+            if (dateIsOK(tryDate, courseToConsider, _sessionNames[numSession - 1], gapAppeals, requestChanges) ==
+                false) {
                 //se non va bene per uno non va bene per tutti
-                dateIsOk = false;
+                //genera un'eccezione
+                //se un primo appello deve essere nei primi 14 giorni e lontano altri 14 dal secondo appello
+                //se un secondo appello deve essere nei giorni successivi ai primi 14 giorni e a 14 dal primo appello
+                //se non attivo deve essere nei giorni successivi ai primi 14 giorni
+                //il gap ulteriore tra due appelli di uno o più prof
+                throw std::logic_error("la data non rispetta i vincoli");
             }
         }
     }
+    //se i primi vincoli rispettati controllo che vengano rispettati:
+    //il range dei due giorni per corsi di uno stesso corso di studio e allo stesso anno
+    //la disponibilità dei prof e la disponibilità delle aule
+    int startHourPerGroupedCourses = -1;
+    std::map<std::string, std::vector<int>> roomsFoundedPerCourse;
+    bool continueLoopPerHourStart = true;
+    bool firstCourseOfThisLoop = true;
+    int startControlExamHourSlot = 8;
+
+    //ciclo su tutti i corsi raggruppati a quello richiesto nel file ed esso stesso
+    for (int i = 0; i < coursesToConsiderInThisLoop.size() && continueLoopPerHourStart; i++) {
+        Course courseToConsider = coursesToConsiderInThisLoop[i];
+        std::vector<int> roomsFounded;
+        SpecificYearCourse sp = courseToConsider.getThisYearCourse(_acYear);
+        ///se primo corso del loop indico che è il primo e faccio iniziare il controllo
+        if (i == 0)
+            firstCourseOfThisLoop = true;
+        ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
+        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider, tryDate, profs,
+                                                                           allUniversityClassrooms,
+                                                                           relaxPar,
+                                                                           getSemester(_sessionNames[numSession - 1]),
+                                                                           roomsFounded, endHourSlot,
+                                                                           firstCourseOfThisLoop,
+                                                                           startControlExamHourSlot);
+        if (startExamHour == -1 && firstCourseOfThisLoop)
+            //per il primo corso non ho trovato alcuno slot in quel giorno, quindi esco dal loop
+            continueLoopPerHourStart = false;
+        else if (startExamHour == -1) {
+            //se non è il primo corso ma non trovo gli slot assegnati al primo faccio ripartire il ciclo ma ad uno slot successivo rispetto a quello assegnato al primo corso
+            i = 0;
+            roomsFoundedPerCourse.erase(roomsFoundedPerCourse.begin(), roomsFoundedPerCourse.end());
+            if (startControlExamHourSlot <= 18) {
+                startControlExamHourSlot = startControlExamHourSlot + 2;
+                _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
+            } else {
+                continueLoopPerHourStart = false;
+            }
+        } else {
+            //se trovo gli slot assegnati segno come primo slot di controllo l'ora trovata per il corso
+            startControlExamHourSlot = startExamHour;
+            if (i == coursesToConsiderInThisLoop.size() - 1)
+                //se anche l'ultimo raggruppato ha trovato disponibilità per gli stessi slot degli altri
+                startHourPerGroupedCourses = startExamHour;
+        }
+        firstCourseOfThisLoop = false;
+        roomsFoundedPerCourse.insert(std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
+    }
+    ///pulisco il vettore di aule temporaneo per i raggruppati
+    _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
+    bool dateIsOk = startHourPerGroupedCourses != -1;
     if (dateIsOk) {
-        ///se i primi requisiti sono rispettati, dobbiamo controllare se i prof sono disponibili e se nei due giorni precedenti non ci siano corsi dello stesso corso di studio e semestre
-        std::vector<int> startHourPerCourse;
-        std::map<std::string, std::vector<int>> roomsFoundedPerCourse;
-        ///ciclo sull'appello del codCOurse in posizione indexExam di _allExamAppealsToDo e i suoi raggruppati se il primo controllo sulle date è andato bene
+        ///allora posso assegnare i corsi
         for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
-            Course courseToConsider = coursesToConsiderInThisLoop[i];
-            std::vector<int> roomsFounded;
-            SpecificYearCourse sp = courseToConsider.getThisYearCourse(_acYear);
-            int endHourSlot=-1;
-            ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
-            /// controllo disponibilità aule e vincolo 6 ore stesso esame stesso giorno
-            int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider,tryDate, profs,
-                                                                               allUniversityClassrooms,
-                                                                               0,
-                                                                               numSession,
-                                                                               roomsFounded, endHourSlot,startControlExamHourSlot);
-            startHourPerCourse.push_back(startExamHour);
-            if (roomsFoundedPerCourse.count(courseToConsider.getId()) == 0)
-                roomsFoundedPerCourse.insert(
-                        std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
-            else
-                roomsFoundedPerCourse.at(courseToConsider.getId()).insert(roomsFounded.begin(),
-                                                                          roomsFounded.begin(),
-                                                                          roomsFounded.end());
-        }
-        ///pulisco il vettore di aule temporaneo per i raggruppati
-        _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
-        ///controlliamo che non ci siano -1 nel vettore
-        againOk = checkHours(startHourPerCourse);
-        if (againOk) {
-            ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
-            for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
-                std::string idCourse = coursesToConsiderInThisLoop[i].getId();
-                Course &courseToConsider = courses.at(idCourse);
-                std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
-                assignTheExamToThisExamDay(startHourPerCourse[i], tryDate, profs,
-                                           allUniversityClassrooms, courseToConsider, _sessionNames[numSession-1],
-                                           _allExamAppealsToDo, rooms);
-                //_sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear,_gapProfs, getSemester(sessName));
-            }
+            std::string idCourse = coursesToConsiderInThisLoop[i].getId();
+            Course &courseToConsider = courses.at(idCourse);
+            std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
+            assignTheExamToThisExamDay(startHourPerGroupedCourses, tryDate, profs,
+                                       allUniversityClassrooms, courseToConsider, _sessionNames[numSession - 1],
+                                       _allExamAppealsToDo, rooms);
+            _sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear, _gapProfs,
+                                     getSemester(_sessionNames[numSession - 1]));
         }
     }
-    if(dateIsOk&&againOk){
+
+    if(dateIsOk == false) {
+        throw std::invalid_argument("Non e' possibile cambiare la data dell'appello \n");
+    } else
         return true;
-    }else{
-        return false;
-    }
 }
-*/
+
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";" << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg
     return sessions;
 }
-
-
-
-
-
-
 

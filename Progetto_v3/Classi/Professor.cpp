@@ -114,9 +114,13 @@ bool Professor::amIavailable(std::string date, int hh, int relaxPar) {
 
 }
 
-void Professor::eraseThisAppeal(Date& date,int startSlot) {
+void Professor::eraseThisAppealFromProfs(Date& dateAppeal, int startSlot, int numSlots) {
     ///ciclare per numslots!!!!!!!!!!
-    _examsToDo.at(date.toString()).erase(startSlot);
+    for(int i = 0; i<numSlots; i++){
+        int slot = startSlot + 2*i;
+        _examsToDo.at(dateAppeal.toString()).erase(slot);
+    }
+
 }
 
 

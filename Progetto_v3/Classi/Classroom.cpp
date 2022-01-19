@@ -147,9 +147,15 @@ void Classroom::updateBlackBoard(int blackBoard) {
    _othersInfoClassroom._blackBoard = blackBoard;
 }
 
-void Classroom::eraseThisAppeal(Date &date, int startSlot) {
+void Classroom::eraseThisAppealFromClassrooms(Date &date, int startSlot, int numSlots) {
     ///ciclare per numslots!!!!!!!!!!
-    _disavailableRooms.erase(date.toString() + "-" + std::to_string(startSlot));
+    for(int i = 0; i<numSlots; i++){
+        int slot = startSlot + 2*i;
+        if (slot == 8)
+            _disavailableRooms.erase(date.toString() + ";0" + std::to_string(slot));
+        else
+            _disavailableRooms.erase(date.toString() + ";" + std::to_string(slot));
+    }
 }
 
 

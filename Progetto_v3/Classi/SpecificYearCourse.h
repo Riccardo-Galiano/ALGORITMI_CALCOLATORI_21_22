@@ -53,7 +53,7 @@ public:
     bool addStartSlotToAppeal(int numAppeal, int startExamHour);
 
     ///remove
-    void removeInfoThisAppeal(int numSession, int numAppeal);
+    void removeInfoThisAppealFromSpecificYear(int numSession, int numAppeal);
 
     ///getter
     int getStartYear() const;

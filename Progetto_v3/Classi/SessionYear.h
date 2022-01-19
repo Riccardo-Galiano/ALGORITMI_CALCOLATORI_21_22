@@ -37,7 +37,7 @@ public:
     static void popAppealFromVector(std::vector<std::string>& allExamAppealsToDo,std::string codExam);
     std::vector<std::string> getProfsOfGapProfsString();
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
-    void removeThisAppealInfo(int numSession, int numAppeal,Date& date,int& startSlot, std::string& idCourse);
+    void removeThisAppealInfoFromCalendar(int numSession, int numAppeal, Date& date, int& startSlot, std::string& idCourse);
     bool tryToSetThisExamInThisSession(std::map<std::string, Course>& courses, std::map<int, Professor>& professors,std::map<int, Classroom>& classrooms, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
 
     ///getter
@@ -50,7 +50,7 @@ public:
     ///control
     int isPossibleToAssignThisExam(Course course,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot);
     bool sessionsPeriodIsEmpty();
-    bool dateIsOK(Date& newDate,const Course& course, std::string& sessName, int gapAppeals);
+    bool dateIsOK(Date& newDate,const Course& course, std::string& sessName, int gapAppeals, bool requestChanges);
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course& course,Date& currentExamDay,std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms, int relaxPar,int session,std::vector<int>& roomsFounded, int endHourSlot,bool firstCourseOfThisLoop,int startControlExamHourSlot);
     static bool checkHours(std::vector<int>& input);
 
