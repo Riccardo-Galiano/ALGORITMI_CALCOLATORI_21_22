@@ -50,6 +50,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
             ///cerchiamo delle aule con la giusta capienza
             //se ho già effettuato la search dovrò rieffettuarla solo se per gli stessi slot i prof non sono disponibili
             if (!classroomIsOk) {
+                ///num aule max = num corsi par
                 int maxNumClassrooms = specificCourse.getNumParallelCourses();
                 thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
                                                                                idRoomsFounded, slotHour,
@@ -155,8 +156,7 @@ std::vector<std::string> ExamDay::getSlotsToString() {
 }
 
 ///ritorna sottoforma di stringa i corsi con esame assegnato ad un determinato slot
-std::string
-ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfThisSlot, std::vector<Course> &CoursesPrintedSoFar) {
+std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfThisSlot, std::vector<Course> &CoursesPrintedSoFar) {
     std::stringstream singleSlotSS;
     for (int i = 0; i < coursesOfThisSlot.size(); i++) {
         SpecificYearCourse sp = coursesOfThisSlot[i].getThisYearCourse(_date.getYear() - 1);
@@ -166,7 +166,8 @@ ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfThisSlot, std:
         bool firstTime = firstSlotCourses(coursesOfThisSlot[i], CoursesPrintedSoFar);
 
         if (firstTime) {
-            std::string classrooms =  classroomString(rooms);
+            //non mi serve più
+            //std::string classrooms =  classroomString(rooms);
             int numVersion = sp.getNumParallelCourses();
             if (numVersion != 1) {
                 ///distinguo 2 casi
@@ -176,7 +177,7 @@ ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfThisSlot, std:
                     //A
                     for (int j = 1; j <= numVersion; j++) {
                         char placeExam = sp.getPlaceExam();
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")"<< placeExam << rooms[j];
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")"<< "A" << rooms[j-1];
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
@@ -185,20 +186,20 @@ ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfThisSlot, std:
                     //B ... metto sempre la stessa aula alla fine
                     for (int j = 1; j <= numVersion; j++) {
                         int room;
-                        if(j>=rooms.size()){
+                        if(j>rooms.size()){
                             room = rooms[rooms.size()-1];
                         }
                         else{
-                            room = rooms[j];
+                            room = rooms[j-1];
                         }
                         char placeExam = sp.getPlaceExam();
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" <<  placeExam << room;
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" <<  "A" << room;
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
                 }
             } else {
-                singleSlotSS << coursesOfThisSlot[i].getId() << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" << classrooms;
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" << "A" << rooms[0];
             }
             if (i < coursesOfThisSlot.size() - 1)
                 singleSlotSS << ";";
@@ -304,7 +305,7 @@ bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<
 void ExamDay::eraseTempGroupedCourseClassrooms() {
     _tempGroupedCourseClassrooms.erase(_tempGroupedCourseClassrooms.begin(),_tempGroupedCourseClassrooms.end());
 }
-
+///NON SERVE
 std::string ExamDay::classroomString(std::vector<int> rooms) {
     std::stringstream classroomsString;
     classroomsString <<"{";

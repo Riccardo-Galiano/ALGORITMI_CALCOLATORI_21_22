@@ -532,6 +532,7 @@ int SessionYear::isPossibleToAssignThisExam(Course course, Date currentExamDay, 
         }
     }
     ///controlliamo se ci sono slot liberi ed eventualmente se i prof in quegli slot sono liberi
+    ///controllo disponibilità di aule
     ExamDay &examCurrentDay = _yearCalendar.at(currentExamDay.toString());
     int start = examCurrentDay.isPossibleToAssignThisExamToProfs(course, profs, classrooms, numSlot, relaxPar,
                                                                  roomsFounded, endHourSlot,firstCourseOfThisLoop,startControlExamHourSlot);
