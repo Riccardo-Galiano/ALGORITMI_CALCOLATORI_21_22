@@ -103,7 +103,6 @@ SpecificYearCourse &Course::getLastSpecificYearCourse() {
         if (actualYear > lastYear)
             lastYear = actualYear;//prendo l'ultimo anno
 
-
     }
 /*
  potrei scrivere al posto del for
@@ -278,7 +277,7 @@ int Course::getSemesterAtYear(int acStartYear,std::string name) {
     if(_courseOfTheYear.find(acStartYear) != _courseOfTheYear.end())
           sem =_courseOfTheYear.at(acStartYear).getSemester();
     else
-        throw InvalidDbException("non esistono info per il corso: " + name);
+        throw InvalidDbException("non esistono info per il corso: " + name + "\n");
     return sem;
 }
 

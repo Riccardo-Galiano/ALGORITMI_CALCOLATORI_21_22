@@ -173,15 +173,14 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
 
             int numVersion = sp.getNumParallelCourses();
             if (numVersion != 1) {
-                settedIdRooms = Parse::setId('A',3,rooms[0]);
-                ///distinguo 2 casi
+                ///Se ci sono più versioni distinguo 2 casi
                 ///A] ci sono tante aule quante versioni
                 ///B] aule < num versioni
                 if(numVersion == rooms.size()){
                     //A
                     for (int j = 1; j <= numVersion; j++) {
-                        char placeExam = sp.getPlaceExam();
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" <<settedIdStudyCourse << ")"<< "A" << rooms[j-1];
+                        settedIdRooms = Parse::setId('A',3,rooms[j-1]);
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" <<settedIdStudyCourse << ")|"<< settedIdRooms;
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
@@ -196,16 +195,16 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
                         else{
                             room = rooms[j-1];
                         }
-                        char placeExam = sp.getPlaceExam();
                         std::string settedIdRoom = Parse::setId('A',3,room);
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << settedIdStudyCourse << ")" <<  settedIdStudyCourse;
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << settedIdStudyCourse << ")|" <<  settedIdStudyCourse;
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
                 }
             } else {
+                ///se c'è solo una versione
                 settedIdRooms = Parse::setId('A',3,rooms[0]);
-                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << settedIdStudyCourse << ")" << settedIdRooms;
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << settedIdStudyCourse << ")|" << settedIdRooms;
             }
             if (i < coursesOfThisSlot.size() - 1)
                 singleSlotSS << ";";
@@ -338,16 +337,19 @@ int ExamDay::getEndHourOfThisCourseExam(const Course &course) {
     return lastSlotFounded+2;
 }
 
-void ExamDay::removeThisAppealInfo(int startSlot,std::string& idCourse){
-    ///ciclare per numslots!!!!!!!!!!
-    std::vector<Course> newCourses;
-    std::vector<Course>& old = _slots.at(startSlot);
-    for(int i=0;i<old.size(); i++){
-        if(old[i].getId()!=idCourse)
-            newCourses.push_back(old[i]);
+void ExamDay::removeThisAppealInfo(int startSlot,int numSlots,std::string& idCourse){
+
+    for(int i = 0; i < numSlots; i++){
+        int slot = startSlot + 2*i;
+        std::vector<Course> newCourses;
+        std::vector<Course>& old = _slots.at(slot);
+        for(int j=0;j<old.size(); j++){
+            if(old[j].getId()!=idCourse)
+                newCourses.push_back(old[j]);
+        }
+        _slots.erase(slot);
+        _slots.insert(std::pair<int,std::vector<Course>>(slot,newCourses));
     }
-    _slots.erase(startSlot);
-    _slots.insert(std::pair<int,std::vector<Course>>(startSlot,newCourses));
 }
 
 

@@ -36,7 +36,7 @@ public:
     int getEndHourOfThisCourseExam(const Course&);
 
     ///remove
-    void removeThisAppealInfo(int startSlot,std::string& idCourse);
+    void removeThisAppealInfo(int startSlot,int numSlots,std::string& idCourse);
 private:
 
     //key: orario inizio slot. value:corsi associati (paralleli compresi)

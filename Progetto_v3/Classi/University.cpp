@@ -1676,7 +1676,7 @@ void University::generateOutputFileName() {
     if (!outputFile.is_open()){
         throw std::exception();
     }
-    for(auto iterSession = _acYearSessions.begin(); iterSession != _acYearSessions.begin(); iterSession++){
+    for(auto iterSession = _acYearSessions.begin(); iterSession != _acYearSessions.end(); iterSession++){
         int acStart = iterSession->first;
         if(_acYearSessions.at(acStart).fileNameIsEmpty() == false){
             std::vector<std::string> sessionAndFileName = iterSession->second.getSessionAndFileName();
@@ -1685,6 +1685,7 @@ void University::generateOutputFileName() {
             }
         }
     }
+    outputFile.close();
 }
 
 void University::readOutputFileName(){
@@ -1760,7 +1761,7 @@ bool University::dataBaseIsEmpty(int startAcYear) {
         isOk = false;
     }
     if (_acYearSessions.find(startAcYear) == _acYearSessions.end()) {
-        error.append("non ci sono informazioni sulle sessioni per questo anno: " + std::to_string(startAcYear) + "-" +std::to_string(startAcYear +1) + "\n");
+        error.append("Non ci sono informazioni sulle sessioni per questo anno: " + std::to_string(startAcYear) + "-" +std::to_string(startAcYear +1) + "\n");
         isOk = false;
     }else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty()) {
         error.append("I periodi delle sessioni non sono stati definiti per l'anno: " + std::to_string(startAcYear) + "-" +
@@ -2643,8 +2644,8 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
         std::vector<std::string> allClassroomsString = Parse::splittedLine(infoOfSingleAppeal[2], '|');
         std::vector<int> allClassrooms;
         //converto il vettore di stringhe in un vettore di interi
-        for(int j = 0; j<allClassrooms.size();j++){
-            allClassrooms.push_back(Parse::checkedStoi(allClassroomsString[i]));
+        for(int j = 0; j<allClassroomsString.size();j++){
+            allClassrooms.push_back(Parse::checkedStoi(allClassroomsString[j]));
         }
         assignAppealsToClassroom(infoOfSingleAppeal[0], Parse::checkedStoi(infoOfSingleAppeal[1]), allClassrooms, numSlot);
         ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
@@ -2818,7 +2819,7 @@ void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse
             room.eraseThisAppealFromClassrooms(date, startSlot, numSlots);
         }
         ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
-        thisSession.removeThisAppealInfoFromCalendar(numSession, numAppeal, date, startSlot, idCourse);
+        thisSession.removeThisAppealInfoFromCalendar(numSlots, date, startSlot, idGroupedCourse[i]);
     }
 
 }

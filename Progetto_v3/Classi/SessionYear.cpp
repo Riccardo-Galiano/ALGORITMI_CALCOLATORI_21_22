@@ -308,19 +308,20 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
         std::vector<std::string> token = Parse::splittedLine(outputFileName, '.');
         ssFout << token[0];
         if (key == "winter") {
-            ssFout << "_s1.txt";
+            ssFout << "_s1";
             numSession = 1;
         }
         else if (key == "summer") {
-            ssFout << "_s2.txt";
+            ssFout << "_s2";
             numSession = 2;
         }
         else if (key == "autumn") {
-            ssFout << "_s3.txt";
+            ssFout << "_s3";
             numSession = 3;
         }
+        _fileNamePerAcSession.insert(std::pair<int,std::string>(numSession,ssFout.str()));
+        ssFout << ".txt";
         realFileName = ssFout.str();
-        _fileNamePerAcSession.insert(std::pair<int,std::string>(numSession,realFileName));
     } else {
         realFileName = outputFileName;
     }
@@ -617,9 +618,9 @@ void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour,
     _yearCalendar.at(appeal).assignExamToExamDay(startSlotHour, course, numSlots);
 }
 
-void SessionYear::removeThisAppealInfoFromCalendar(int numSession, int numAppeal, Date &date, int &startSlot,
+void SessionYear::removeThisAppealInfoFromCalendar(int numSlots, Date &date, int &startSlot,
                                                    std::string& idCourse) {
-    _yearCalendar.at(date.toString()).removeThisAppealInfo(startSlot,idCourse);
+    _yearCalendar.at(date.toString()).removeThisAppealInfo(startSlot,numSlots,idCourse);
 
 }
 
@@ -635,27 +636,24 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
 
     ///check che lo shift sia possibile
     if (tryDate < startDate || tryDate > endDate)
-        throw std::invalid_argument("La data non appartiene alla sessione");
+        throw std::invalid_argument("La data non appartiene alla sessione\n");
 
     ///controllo che il primo appello rimanga il primo appello e che il secondo rimanga il secondo
     SpecificYearCourse specific = course.getThisYearCourse(_acYear);
     int numAppealsAssigned = specific.amIAssignedAlreadyInThisSession(this->getSemester(_sessionNames[numSession - 1]));
     //se abbiamo più appelli per quella sessione
-    if (numAppealsAssigned != 1) {
+    //(diverso da zero perchè l'appello da riassegnare l'abbiamo tolto) quindi o rimarrà l'altro appello o non ci saranno appelli)
+    if (numAppealsAssigned != 0) {
         //se primo appello
+        Date dateOtherAppeal = specific.dateAssignationInGivenSession(numSession, numAppeal);
         if (numAppeal == 1) {
-            Date dateSecondAppeal = specific.dateAssignationInGivenSession(numSession, numAppeal + 1);
             //data scelta deve essere minore della data del secondo appello
-            if (tryDate > dateSecondAppeal)
-                throw std::logic_error(
-                        "Data scelta per l'assegnazione del primo appello e' maggiore della data del secondo");
+            if (tryDate > dateOtherAppeal)
+                throw std::logic_error("Data scelta per l'assegnazione del primo appello e' maggiore della data del secondo");
         } else {
-            //data scelta deve essere maggiore della data del primo appello
-            Date dateFirstAppeal = specific.dateAssignationInGivenSession(numSession, numAppeal - 1);
             //data scelta deve essere minore della data del secondo appello
-            if (tryDate < dateFirstAppeal)
-                throw std::logic_error(
-                        "Data scelta per l'assegnazione del secondo appello e' maggiore della data del primo");
+            if (tryDate < dateOtherAppeal)
+                throw std::logic_error("Data scelta per l'assegnazione del secondo appello e' maggiore della data del primo");
         }
     }
 
