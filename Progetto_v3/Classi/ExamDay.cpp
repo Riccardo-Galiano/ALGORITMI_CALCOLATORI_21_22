@@ -6,6 +6,7 @@
 #include "ExamDay.h"
 #include "StudyCourse.h"
 #include "Classroom.h"
+#include "Parse.hpp"
 #include <algorithm>
 #include <iomanip>
 #include <unordered_set>
@@ -160,16 +161,19 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
     std::stringstream singleSlotSS;
     for (int i = 0; i < coursesOfThisSlot.size(); i++) {
         SpecificYearCourse sp = coursesOfThisSlot[i].getThisYearCourse(_date.getYear() - 1);
-
         std::vector<int> rooms = sp.getRoomsAppeal();
         ///se questo corso è iniziato a uno slot precedente, dobbiamo scrivere una stringa vuota
         bool firstTime = firstSlotCourses(coursesOfThisSlot[i], CoursesPrintedSoFar);
+        std::string settedIdStudyCourse = Parse::setId('C',3,sp.getStudyCourseAssigned()[0]);
+        std::string settedIdRooms;
 
         if (firstTime) {
             //non mi serve più
             //std::string classrooms =  classroomString(rooms);
+
             int numVersion = sp.getNumParallelCourses();
             if (numVersion != 1) {
+                settedIdRooms = Parse::setId('A',3,rooms[0]);
                 ///distinguo 2 casi
                 ///A] ci sono tante aule quante versioni
                 ///B] aule < num versioni
@@ -177,7 +181,7 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
                     //A
                     for (int j = 1; j <= numVersion; j++) {
                         char placeExam = sp.getPlaceExam();
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")"<< "A" << rooms[j-1];
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" <<settedIdStudyCourse << ")"<< "A" << rooms[j-1];
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
@@ -193,13 +197,15 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
                             room = rooms[j-1];
                         }
                         char placeExam = sp.getPlaceExam();
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" <<  "A" << room;
+                        std::string settedIdRoom = Parse::setId('A',3,room);
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << settedIdStudyCourse << ")" <<  settedIdStudyCourse;
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
                 }
             } else {
-                singleSlotSS << coursesOfThisSlot[i].getId() << "(C" << std::setfill('0') << std::setw(3) << sp.getStudyCourseAssigned()[0] << ")" << "A" << rooms[0];
+                settedIdRooms = Parse::setId('A',3,rooms[0]);
+                singleSlotSS << coursesOfThisSlot[i].getId() << "(" << settedIdStudyCourse << ")" << settedIdRooms;
             }
             if (i < coursesOfThisSlot.size() - 1)
                 singleSlotSS << ";";

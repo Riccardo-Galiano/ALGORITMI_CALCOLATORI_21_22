@@ -113,9 +113,11 @@ bool SessionYear::generateNewYearSession(std::string &fout, std::map<std::string
                                          gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours);
         ///se le tre sessioni sono state generate passo all'output su file
         if (winter && summer && autumn) {
-            generateOutputFiles(fout, 1, courses);
-            generateOutputFiles(fout, 2, courses);
-            generateOutputFiles(fout, 3, courses);
+            bool requestChanges = false;
+            generateOutputFilesSession(fout, 1, courses, requestChanges);
+            generateOutputFilesSession(fout, 2, courses, requestChanges);
+            generateOutputFilesSession(fout, 3, courses, requestChanges);
+
             ///stampa warnigs
             _sysLog.writeWarnings();
             allExamAppealsWrite(courses);
@@ -133,6 +135,7 @@ bool SessionYear::generateNewYearSession(std::string &fout, std::map<std::string
     }
     return result;
 }
+
 
 void SessionYear::allExamAppealsWrite(std::map<std::string, Course> &courses) {
     std::fstream fout;
@@ -295,19 +298,34 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 }
 
 ///genera i file di output per le sessioni
-void SessionYear::generateOutputFiles(std::string &outputFileName, int session, std::map<std::string, Course> &courses) {
+void SessionYear::generateOutputFilesSession(std::string &outputFileName, int session, const std::map<std::string, Course> &courses, bool requestChanges) {
     std::stringstream ssFout;
     std::string key = _sessionNames[session - 1];
-    std::vector<std::string> token = Parse::splittedLine(outputFileName, '.');
-    ssFout << token[0];
-    if (key == "winter")
-        ssFout << "_s1.txt";
-    else if (key == "summer")
-        ssFout << "_s2.txt";
-    else if (key == "autumn")
-        ssFout << "_s3.txt";
+
+    std::string realFileName;
+    int numSession;
+    if(requestChanges == false) {
+        std::vector<std::string> token = Parse::splittedLine(outputFileName, '.');
+        ssFout << token[0];
+        if (key == "winter") {
+            ssFout << "_s1.txt";
+            numSession = 1;
+        }
+        else if (key == "summer") {
+            ssFout << "_s2.txt";
+            numSession = 2;
+        }
+        else if (key == "autumn") {
+            ssFout << "_s3.txt";
+            numSession = 3;
+        }
+        realFileName = ssFout.str();
+        _fileNamePerAcSession.insert(std::pair<int,std::string>(numSession,realFileName));
+    } else {
+        realFileName = outputFileName;
+    }
     std::fstream outputSession;
-    outputSession.open(ssFout.str(), std::fstream::out | std::fstream::trunc);
+    outputSession.open(realFileName, std::fstream::out | std::fstream::trunc);
     if (!outputSession.is_open()){
         throw std::exception();
     }
@@ -738,6 +756,29 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course>& c
     } else
         return true;
 }
+
+bool SessionYear::fileNameIsEmpty() {
+    return _fileNamePerAcSession.empty();
+}
+
+std::vector<std::string> SessionYear::getSessionAndFileName() {
+    std::vector<std::string> fileNamePerSession;
+    for(auto iterFileName = _fileNamePerAcSession.begin(); iterFileName != _fileNamePerAcSession.end(); iterFileName++){
+        std::stringstream ss;
+        ss << iterFileName->first <<";" <<iterFileName->second;
+        fileNamePerSession.push_back(ss.str());
+    }
+    return fileNamePerSession;
+}
+
+std::string SessionYear::getFileName(int numSession) {
+    return _fileNamePerAcSession.at(numSession);
+}
+
+void SessionYear::setFileNamePerSession(int numSession, std::string fileName) {
+    _fileNamePerAcSession.insert(std::pair<int,std::string>(numSession,fileName));
+}
+
 
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";" << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg

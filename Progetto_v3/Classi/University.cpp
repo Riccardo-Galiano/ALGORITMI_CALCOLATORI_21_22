@@ -1665,9 +1665,44 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
     if (!esito) {
         std::cerr << "non è stato possibile generare le date d'esame nonostante i vincoli rilassati" << std::endl;
+    }else{
+        generateOutputFileName();
     }
 }
 
+void University::generateOutputFileName() {
+    std::fstream outputFile;
+    outputFile.open("allFileNamePerSessionYear.txt", std::fstream::out | std::fstream::trunc);
+    if (!outputFile.is_open()){
+        throw std::exception();
+    }
+    for(auto iterSession = _acYearSessions.begin(); iterSession != _acYearSessions.begin(); iterSession++){
+        int acStart = iterSession->first;
+        if(_acYearSessions.at(acStart).fileNameIsEmpty() == false){
+            std::vector<std::string> sessionAndFileName = iterSession->second.getSessionAndFileName();
+            for(int i = 0; i<sessionAndFileName.size();i++) {
+                outputFile << std::to_string(acStart) + "-" + sessionAndFileName[i] + "\n";
+            }
+        }
+    }
+}
+
+void University::readOutputFileName(){
+    std::ifstream fileIn("allFileNamePerSessionYear.txt");
+    if (!fileIn.is_open()) {
+        throw DbException("file allFileNamePerSessionYear.txt non esistente");
+    }
+    std::string line;
+    while (std::getline(fileIn, line)) {
+        std::vector<std::string> infoName = Parse::splittedLine(line,';');
+        std::string acStartString = infoName[0].substr(0,4);
+        std::string numSessionString = infoName[0].substr(5,1);
+        int acStart = Parse::checkedStoi(acStartString);
+        int numSession = Parse::checkedStoi(numSessionString);
+        std::string fileName = infoName[1];
+        _acYearSessions.at(acStart).setFileNamePerSession(numSession,fileName);
+    }
+}
 ///controlla se i file sono coerenti
 bool University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
@@ -2649,6 +2684,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
     bool allChangesArePossible = true;
+    int numSession;
     /*
      * if(!std::getline(fileIn, line))
         throw std::invalid_argument("Errore: file per le richieste del cambio data esami è vuoto");
@@ -2659,7 +2695,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     while (std::getline(fileIn, line)){
         std::vector<std::string> infoChanges = Parse::splittedLine(line, ';');
         std::string idCourse = infoChanges[0];
-        int numSession = Parse::checkedStoi(infoChanges[1]);
+        numSession = Parse::checkedStoi(infoChanges[1]);
         int numAppeal = Parse::checkedStoi(infoChanges[2]);
         char directionOfSfift = infoChanges[3][0];
         int numWeeks = Parse::checkedStoi(infoChanges[4]);
@@ -2698,7 +2734,14 @@ void University::requestChanges(std::string acYear, std::string fin) {
         }
     }
     if(allChangesArePossible) {
+        //leggo e riempio la struttura con i nomi dei file stampati per le sessioni
+        readOutputFileName();
         //ristampo la sessione
+        bool requestChanges = true;
+        //prendo il nome del file per quell'anno e per quella sessione
+        std::string fileName = _acYearSessions.at(acStart).getFileName(numSession);
+        //rigenero i file di output
+        _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
     }
 }
 
@@ -2798,7 +2841,7 @@ void University::reassignThisAppealInfo(int acYear, std::string idCourse, int nu
         assignAppealsToClassroom(date.toString(), startSlot,classroomsPerCourse, numSlot);
 
         ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
-
+        _courses.at(idCourse).reassignAppealToSpecificYear(acYear,numAppeal,numSession,date,startSlot,classroomsPerCourse);
         /*
         _courses.at(idCourse).assignAppealToSpecificYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1), session, date, startSlot,
                                                          classroomsPerCourse);

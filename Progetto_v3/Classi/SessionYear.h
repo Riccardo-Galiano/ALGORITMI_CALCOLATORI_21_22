@@ -46,6 +46,8 @@ public:
     std::vector<std::string> getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course>& courses);
     int getSemester(std::string sessName);
     std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>& courses, std::string idCourseSelected);
+    std::string getFileName(int numSession);
+    void setFileNamePerSession(int numSession,std::string fileName);
 
     ///control
     int isPossibleToAssignThisExam(Course course,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot);
@@ -56,8 +58,9 @@ public:
 
     ///output
     void allExamAppealsWrite(std::map<std::string, Course>& courses);
-    void generateOutputFiles(std::string& outputFileName,int session,std::map<std::string, Course>& courses);
-
+    void generateOutputFilesSession(std::string& outputFileName, int session, const std::map<std::string, Course>& courses, bool requestChanges);
+    bool fileNameIsEmpty();
+    std::vector<std::string>getSessionAndFileName();
 private:
     SessionLog _sysLog;
     int _acYear;
@@ -76,6 +79,9 @@ private:
     //value: gap
     std::map<std::string,int> _gapProfs;
     std::vector<std::string> _errorStringSessionYear;
+    //key: session : 1
+    //value: nome del file : exam_2021_s1.txt
+    std::map<int,std::string> _fileNamePerAcSession;
 };
 
 std::ostream &operator<<(std::ostream &stud, const SessionYear &s);

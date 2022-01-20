@@ -565,6 +565,28 @@ std::vector<int> SpecificYearCourse::getRoomsAppealInSession(int numSession, int
     return _roomsEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal));
 }
 
+void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date, int startSlot, std::vector<int> classroomsPerCourse) {
+
+    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
+
+    _startSlotPerEachAppeal.insert(std::pair<int, int>(numAppealPerYear, startSlot));
+    _roomsEachAppeal.insert(std::pair<int, std::vector<int>>(numAppealPerYear, classroomsPerCourse));
+    std::vector<Date> vectDate;
+    vectDate.push_back(date);
+    ///se non esiste la chiave
+    if (_howManyTimesIAmAssignedInASession.find(numSession) == _howManyTimesIAmAssignedInASession.end()) {
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(numSession, vectDate));
+    } else if (numAppeal == 2) {
+        //se esiste ed è un secondo appello da inserire lo metto alla fine
+        _howManyTimesIAmAssignedInASession.at(numSession).push_back(date);
+    } else {
+        //se esiste ed è un primo appello da inserire lo metto all'inizio
+        std::vector<Date> &vectD = _howManyTimesIAmAssignedInASession.at(numSession);
+        vectD.insert(vectD.begin(), date);
+    }
+}
+
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

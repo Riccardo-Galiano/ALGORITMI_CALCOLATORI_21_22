@@ -40,6 +40,7 @@ CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/Date.h
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/Exam.h
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/ExamDay.cpp
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/ExamDay.h
+CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/Parse.hpp
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/Professor.h
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/SpecificYearCourse.h
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/Student.h
