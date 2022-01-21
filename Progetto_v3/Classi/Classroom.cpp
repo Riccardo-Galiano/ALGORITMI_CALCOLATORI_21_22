@@ -148,7 +148,6 @@ void Classroom::updateBlackBoard(int blackBoard) {
 }
 
 void Classroom::eraseThisAppealFromClassrooms(Date &date, int startSlot, int numSlots) {
-    ///ciclare per numslots!!!!!!!!!!
     for(int i = 0; i<numSlots; i++){
         int slot = startSlot + 2*i;
         if (slot == 8)

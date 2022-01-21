@@ -80,6 +80,8 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/SessionYear.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/SpecificYearCourse.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/Student.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/StudyCourse.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/SystemLog.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/University.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/UniversityMember.h
 
 CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj: ../Classi/Date.h

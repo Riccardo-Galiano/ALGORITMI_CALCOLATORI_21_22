@@ -34,7 +34,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     int numLoop = (20/2)-(startControlExamHourSlot/2);
     bool classroomIsOk = false;
     bool thereAreEnoughClassrooms;
-    bool generateWarnings = false;
+
     ///ricerca slot->aule->profs
     bool toContinue = true;
     for (int i = 0; i < numLoop && foundedStartHourSlot == -1; i++) {
@@ -54,17 +54,12 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
             if (!classroomIsOk) {
                 ///num aule max = num corsi par
                 int maxNumClassrooms = specificCourse.getNumParallelCourses();
-                try {
-                    thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
+
+                thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
                                                                                    idRoomsFounded, slotHour,
                                                                                    numSlotsRequired, labOrClass,
                                                                                    maxNumClassrooms);
-                }
-                catch(NonCiSarannoMaiAuleExcep& err){
-                    //a me non interessa più trovare le aule, mi va bene che ci siano i prof ma alla fine warning
-                    thereAreEnoughClassrooms = true;
-                    generateWarnings = true;
-                }
+
             }
 
             ///controlliamo se abbiamo trovato ABBASTANZA posti
@@ -94,9 +89,6 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
         return -1;
 
     _tempGroupedCourseClassrooms.insert(_tempGroupedCourseClassrooms.begin(),idRoomsFounded.begin(),idRoomsFounded.end());
-    if(generateWarnings){
-        throw NonCiSarannoMaiAuleExcep("non ci saranno mai aule, quindi generiamo warning e foundedStartHourSlot=" + std::to_string(foundedStartHourSlot));
-    }
     return foundedStartHourSlot;
 }
 
@@ -278,27 +270,31 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
                 }
             }
     }
+
     ///prendo dalle aule trovate potentialRooms un numero di aule <= maxNumRooms && numSeatsToSeach <= totSeats in queste aule
     bool iFoundSomething = pickSomeOfTheseClassrooms(potentialRooms,idRoomsFounded,numSeatsToSeach,maxNumRooms);
+    //se le trovo esco con true
     if(iFoundSomething)
         return true;
     else {
-        ///check se non esisteranno mai queste aule -> warning!
+        ///check se non esisteranno mai queste aule -> error!
         std::vector<Classroom> allRooms;
         std::vector<int> inutile;
-        bool lePotreitrovare;
-        bool nonLeTroveroMai;
-        for (int i = 1; i < allUniversityClassrooms.size(); i++) {
-            allRooms.push_back(allUniversityClassrooms[i]);
+        bool lePotreitrovare;// è un problema di disponibilità aule per quel giorno o è un problema che esisterebbe anche se tutte le aule in db fossero libere?
+        //prendo tutte le aule del db
+        for (auto iterClass = allUniversityClassrooms.begin(); iterClass != allUniversityClassrooms.end(); iterClass++) {
+             allRooms.push_back(iterClass->second);
         }
+
         if(pickSomeOfTheseClassrooms(allRooms,inutile,numSeatsToSeach,maxNumRooms)){
-            lePotreitrovare= true;
+            lePotreitrovare = true;
         }
         else
-            nonLeTroveroMai = true;
-        if(nonLeTroveroMai){
-            throw NonCiSarannoMaiAuleExcep("");
-        }
+            lePotreitrovare = false;
+        if(lePotreitrovare == false){
+            throw std::invalid_argument("aule introvabili");
+        } else
+            return false;
     }
 }
 
