@@ -18,6 +18,16 @@ public:
 
     University();
 
+    ///getter
+    std::map<int, Professor> getProfessors() const;
+    std::map<int, Classroom> getClassrooms() const;
+    std::map<std::string, Course> getCourses() const;
+
+    ///setter
+    void setProfessors(const std::map<int, Professor> &professors);
+    void setClassrooms(const std::map<int, Classroom> &classrooms);
+    void setCourses(const std::map<std::string, Course> &courses);
+
     ///session management
     void setProfsNoAvailability(std::string acYear,const std::string& fin);
     void setSessionPeriod( std::string & acYear, std::string & winterSession, std::string &summerSession,std::string &autumnSession);

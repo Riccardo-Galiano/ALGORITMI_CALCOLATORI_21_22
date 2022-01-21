@@ -34,7 +34,8 @@ public:
     std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);
     bool firstSlotCourses(Course,std::vector<Course>&);
     int getEndHourOfThisCourseExam(const Course&);
-
+    bool pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, std::vector<int> &idRoomsFounded,
+                                   int numSeatsToSeach, int maxNumRooms);
     ///remove
     void removeThisAppealInfo(int startSlot,int numSlots,std::string& idCourse);
 private:

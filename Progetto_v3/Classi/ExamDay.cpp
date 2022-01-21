@@ -34,6 +34,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     int numLoop = (20/2)-(startControlExamHourSlot/2);
     bool classroomIsOk = false;
     bool thereAreEnoughClassrooms;
+    bool generateWarnings = false;
     ///ricerca slot->aule->profs
     bool toContinue = true;
     for (int i = 0; i < numLoop && foundedStartHourSlot == -1; i++) {
@@ -53,9 +54,17 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
             if (!classroomIsOk) {
                 ///num aule max = num corsi par
                 int maxNumClassrooms = specificCourse.getNumParallelCourses();
-                thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
-                                                                               idRoomsFounded, slotHour,
-                                                                               numSlotsRequired, labOrClass, maxNumClassrooms);
+                try {
+                    thereAreEnoughClassrooms = searchAvailableClassroomsInThisSlot(allUniversityClassrooms, numStuds,
+                                                                                   idRoomsFounded, slotHour,
+                                                                                   numSlotsRequired, labOrClass,
+                                                                                   maxNumClassrooms);
+                }
+                catch(NonCiSarannoMaiAuleExcep& err){
+                    //a me non interessa più trovare le aule, mi va bene che ci siano i prof ma alla fine warning
+                    thereAreEnoughClassrooms = true;
+                    generateWarnings = true;
+                }
             }
 
             ///controlliamo se abbiamo trovato ABBASTANZA posti
@@ -83,7 +92,11 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     if (foundedStartHourSlot == -1)
         ///non ho trovato un buco abbastanza grande
         return -1;
-        _tempGroupedCourseClassrooms.insert(_tempGroupedCourseClassrooms.begin(),idRoomsFounded.begin(),idRoomsFounded.end());
+
+    _tempGroupedCourseClassrooms.insert(_tempGroupedCourseClassrooms.begin(),idRoomsFounded.begin(),idRoomsFounded.end());
+    if(generateWarnings){
+        throw NonCiSarannoMaiAuleExcep("non ci saranno mai aule, quindi generiamo warning e foundedStartHourSlot=" + std::to_string(foundedStartHourSlot));
+    }
     return foundedStartHourSlot;
 }
 
@@ -266,26 +279,27 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
             }
     }
     ///prendo dalle aule trovate potentialRooms un numero di aule <= maxNumRooms && numSeatsToSeach <= totSeats in queste aule
-    //ordino le aule in senso crescente di #posti
-    std::sort (potentialRooms.begin(), potentialRooms.end(), comparatorFunction);
-    //cerco di massimizzare numero aule (finestra più grande possibile) -> ciclo all'indietro
-    for(int numTotRoomsToSearch = maxNumRooms; numTotRoomsToSearch >= 1; numTotRoomsToSearch--){
-        //cerco per finestra (sliding window)
-        for(int index = numTotRoomsToSearch - 1; index < potentialRooms.size(); index++){
-            int totSeats = 0;
-            std::vector<int> tempRooms;
-            for(int j = index + 1 - numTotRoomsToSearch; j <= index ; j++){
-                totSeats += potentialRooms[j].getNExamSeats();
-                tempRooms.push_back(potentialRooms[j].getId());
-            }
-            if(totSeats >= numSeatsToSeach){
-                ///ho trovato ottimo = prima occorrenza
-                idRoomsFounded = tempRooms;
-                return true;
-            }
+    bool iFoundSomething = pickSomeOfTheseClassrooms(potentialRooms,idRoomsFounded,numSeatsToSeach,maxNumRooms);
+    if(iFoundSomething)
+        return true;
+    else {
+        ///check se non esisteranno mai queste aule -> warning!
+        std::vector<Classroom> allRooms;
+        std::vector<int> inutile;
+        bool lePotreitrovare;
+        bool nonLeTroveroMai;
+        for (int i = 1; i < allUniversityClassrooms.size(); i++) {
+            allRooms.push_back(allUniversityClassrooms[i]);
+        }
+        if(pickSomeOfTheseClassrooms(allRooms,inutile,numSeatsToSeach,maxNumRooms)){
+            lePotreitrovare= true;
+        }
+        else
+            nonLeTroveroMai = true;
+        if(nonLeTroveroMai){
+            throw NonCiSarannoMaiAuleExcep("");
         }
     }
-    return false;
 }
 
 bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<int, Professor> &allUniversityProfs,
@@ -350,6 +364,30 @@ void ExamDay::removeThisAppealInfo(int startSlot,int numSlots,std::string& idCou
         _slots.erase(slot);
         _slots.insert(std::pair<int,std::vector<Course>>(slot,newCourses));
     }
+}
+
+bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, std::vector<int> &idRoomsFounded,
+                                        int numSeatsToSeach, int maxNumRooms) {
+    //ordino le aule in senso crescente di #posti
+    std::sort (potentialRooms.begin(), potentialRooms.end(), comparatorFunction);
+    //cerco di massimizzare numero aule (finestra più grande possibile) -> ciclo all'indietro
+    for(int numTotRoomsToSearch = maxNumRooms; numTotRoomsToSearch >= 1; numTotRoomsToSearch--){
+        //cerco per finestra (sliding window)
+        for(int index = numTotRoomsToSearch - 1; index < potentialRooms.size(); index++){
+            int totSeats = 0;
+            std::vector<int> tempRooms;
+            for(int j = index + 1 - numTotRoomsToSearch; j <= index ; j++){
+                totSeats += potentialRooms[j].getNExamSeats();
+                tempRooms.push_back(potentialRooms[j].getId());
+            }
+            if(totSeats >= numSeatsToSeach){
+                ///ho trovato ottimo = prima occorrenza
+                idRoomsFounded = tempRooms;
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 

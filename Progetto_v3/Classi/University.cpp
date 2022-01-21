@@ -1657,9 +1657,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
-        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, _courses, _professors,
-                                                                       _classrooms,
-                                                                       constraintRelaxParameter);
+        esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, 0,*this);
         constraintRelaxParameter++;
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
@@ -2845,6 +2843,30 @@ void University::reassignThisAppealInfo(int acYear, std::string idCourse, int nu
         Course &course = _courses.at(idGroupedCoursePerThisLoop[i]);
         _acYearSessions.at(acYear).assignAppealsToCalendar(date.toString(),startSlot,course, numSlot);
     }
+}
+
+std::map<int, Professor> University::getProfessors() const {
+    return _professors;
+}
+
+std::map<int, Classroom> University::getClassrooms() const {
+    return _classrooms;
+}
+
+std::map<std::string, Course> University::getCourses() const {
+    return _courses;
+}
+
+void University::setProfessors(const std::map<int, Professor> &professors) {
+    _professors = professors;
+}
+
+void University::setClassrooms(const std::map<int, Classroom> &classrooms) {
+    _classrooms = classrooms;
+}
+
+void University::setCourses(const std::map<std::string, Course> &courses) {
+    _courses = courses;
 }
 
 

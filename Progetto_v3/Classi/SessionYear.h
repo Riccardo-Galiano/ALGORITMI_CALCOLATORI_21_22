@@ -5,12 +5,13 @@
 #ifndef PROGETTO_V3_SESSIONYEAR_H
 #define PROGETTO_V3_SESSIONYEAR_H
 
-
 #include <map>
 #include "Date.h"
 #include "ExamDay.h"
 #include "StudyCourse.h"
 #include "SessionLog.h"
+
+class University; //forward reference usata per risolvere circular dependency
 
 typedef struct {
     std::string season;
@@ -28,7 +29,7 @@ public:
     bool addSession(std::string& acYear, std::string& sessionDates,  std::string& name);
     bool setCaldendar(std::vector<Date> dates);
     //ritorna true se è stato possibile generare tutta la sessione, false altrimenti
-    bool generateNewYearSession(std::string& fout ,std::map<std::string, Course>& courses,std::map<int, Professor>& professors, std::map<int, Classroom>& allUniversityClassrooms, int relaxPar);
+    bool generateNewYearSession(std::string &fout, int relaxPar, University &myUniversity);
     bool addProfGap(std::string& matr_idC, int gap);
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
