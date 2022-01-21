@@ -2686,10 +2686,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
     bool allChangesArePossible = true;
     int numSession;
-    /*
-     * if(!std::getline(fileIn, line))
-        throw std::invalid_argument("Errore: file per le richieste del cambio data esami è vuoto");
-    */
+
     std::string error;
     bool appealsAreAlreadyLoaded = false;
     ///tutti gli appelli delle sessioni (tutti anni accademici indistintamente) sono già caricati in memoria
@@ -2743,7 +2740,8 @@ void University::requestChanges(std::string acYear, std::string fin) {
         std::string fileName = _acYearSessions.at(acStart).getFileName(numSession);
         //rigenero i file di output
         _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
-    }
+    } else
+        throw std::invalid_argument(error);
 }
 
 void University::ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse &sCourse) {
@@ -2780,7 +2778,6 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
 }
 
 void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date& date, int& startSlot, std::map<std::string,std::vector<int>>& classrooms) {
-    SessionYear& thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
     ///salvo le informazioni per poterle riusare dopo
     //salvo la data(sarà la data per tutti i corsi raggruppati)
@@ -2819,7 +2816,7 @@ void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse
             room.eraseThisAppealFromClassrooms(date, startSlot, numSlots);
         }
         ///slots occupati in ExamDay in SessionYear (dalla data di quell'appello in SpecificYearCourse)
-        thisSession.removeThisAppealInfoFromCalendar(numSlots, date, startSlot, idGroupedCourse[i]);
+        _acYearSessions.at(acYear).removeThisAppealInfoFromCalendar(numSlots, date, startSlot, idGroupedCourse[i]);
     }
 
 }
@@ -2834,21 +2831,18 @@ void University::reassignThisAppealInfo(int acYear, std::string idCourse, int nu
     int numSlot = _courses.at(idCourse).getExamSlotPerYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1));
     for(int i = 0 ; i<idGroupedCoursePerThisLoop.size(); i++) {
         //prendo i prof a cui assegnare la data e segno per tutti i prof
-        std::vector<int> allProfsPerYearCourse = _courses.at(idCourse).getProfsPerYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1));
-        assignAppealsToProf(idCourse, date.toString(), startSlot, numSlot, allProfsPerYearCourse);
+        std::vector<int> allProfsPerYearCourse = _courses.at(idGroupedCoursePerThisLoop[i]).getProfsPerYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1));
+        assignAppealsToProf(idGroupedCoursePerThisLoop[i], date.toString(), startSlot, numSlot, allProfsPerYearCourse);
 
         ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
         std::vector<int> classroomsPerCourse = classrooms.at(idGroupedCoursePerThisLoop[i]);
         assignAppealsToClassroom(date.toString(), startSlot,classroomsPerCourse, numSlot);
 
         ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
-        _courses.at(idCourse).reassignAppealToSpecificYear(acYear,numAppeal,numSession,date,startSlot,classroomsPerCourse);
-        /*
-        _courses.at(idCourse).assignAppealToSpecificYear(std::to_string(acYear) + "-" + std::to_string(acYear + 1), session, date, startSlot,
-                                                         classroomsPerCourse);
-        */
+        _courses.at(idGroupedCoursePerThisLoop[i]).reassignAppealToSpecificYear(acYear,numAppeal,numSession,date,startSlot,classroomsPerCourse);
+
         ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
-        Course &course = _courses.at(idCourse);
+        Course &course = _courses.at(idGroupedCoursePerThisLoop[i]);
         _acYearSessions.at(acYear).assignAppealsToCalendar(date.toString(),startSlot,course, numSlot);
     }
 }
