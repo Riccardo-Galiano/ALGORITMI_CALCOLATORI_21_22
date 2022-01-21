@@ -34,7 +34,10 @@ public:
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
     bool generateThisSession(std::string sessName, std::map<std::string, Course>& courses,std::map<int, Professor>& profs, std::map<int, Classroom>& allUniversityClassrooms, int relaxPar, int gapAppeals, bool sixHours);
-    void assignTheExamToThisExamDay(int startExamHour,Date&,std::map<int, Professor>& currentExamDay, std::map<int, Classroom>& allUniversityClassrooms, Course& course, std::string sessName, std::vector<std::string>& allExamAppealsToDo, std::vector<int> idRooms,bool requestChanges);
+    void assignTheExamToThisExamDay(int startExamHour, Date &currentExamDay, std::map<int, Professor> &profs,
+                                    std::map<int, Classroom> &allUniversityClassrooms, Course &course,
+                                    std::string sessName, std::vector<std::string> &allExamAppealsToDo,
+                                    std::vector<int> idRooms, bool requestChanges, int numAppealYear);
     static void popAppealFromVector(std::vector<std::string>& allExamAppealsToDo,std::string codExam);
     std::vector<std::string> getProfsOfGapProfsString();
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);

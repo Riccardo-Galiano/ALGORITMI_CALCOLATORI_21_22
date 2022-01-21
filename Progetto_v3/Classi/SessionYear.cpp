@@ -301,10 +301,13 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
                                 std::string idCourse = coursesToConsiderInThisLoop[i].getId();
                                 Course &courseToConsider = courses.at(idCourse);
+                                SpecificYearCourse sp = courseToConsider.getThisYearCourse(getAcYear());
+                                int numAppealYear = sp.getNumNextAppeal();
                                 std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
+
                                 assignTheExamToThisExamDay(startHourPerGroupedCourses, currentExamDay, profs,
                                                            allUniversityClassrooms, courseToConsider, sessName,
-                                                           _allExamAppealsToDo, rooms, requestChanges);
+                                                           _allExamAppealsToDo, rooms, requestChanges,numAppealYear );
 
                                 _sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear,
                                                          _gapProfs, getSemester(sessName));
@@ -662,15 +665,15 @@ int SessionYear::isPossibleToAssignThisExam(Course course, Date currentExamDay, 
 void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date &currentExamDay, std::map<int, Professor> &profs,
                                              std::map<int, Classroom> &allUniversityClassrooms, Course &course,
                                              std::string sessName, std::vector<std::string> &allExamAppealsToDo,
-                                             std::vector<int> idRooms, bool requestChanges) {
+                                             std::vector<int> idRooms, bool requestChanges, int numAppealYear) {
     Exam examToAssign = course.getExamSpecificYear(getAcYear());//tempi, aule o lab, modalità
     int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
     SpecificYearCourse &specificYY = course.getThisYearCourseReference(getAcYear());//corso per un anno specifico
-    int numAppeal = specificYY.getNumNextAppeal();
+
     ///aggiorno strutture dati degli esami dell'anno specifico
     specificYY.assignExamInThisSpecificYearCourse(currentExamDay, getSemester(sessName));
-    specificYY.addClassroomsToAppeal(numAppeal, idRooms);
-    specificYY.addStartSlotToAppeal(numAppeal, startExamHour);
+    specificYY.addClassroomsToAppeal(numAppealYear, idRooms);
+    specificYY.addStartSlotToAppeal(numAppealYear, startExamHour);
     ///aggiungo l'esame a quelli che i prof devono fare
     _yearCalendar.at(currentExamDay.toString()).assignExamToProf(profs, course, startExamHour, numSlots);
     ///aggiungo l'esame al calendario della sessione
@@ -847,10 +850,12 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course> &c
         for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
             std::string idCourse = coursesToConsiderInThisLoop[i].getId();
             Course &courseToConsider = courses.at(idCourse);
+            SpecificYearCourse sp = courseToConsider.getThisYearCourse(getAcYear());
+            int numAppealYear = sp.getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal);
             std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
             assignTheExamToThisExamDay(startHourPerGroupedCourses, tryDate, profs, allUniversityClassrooms,
                                        courseToConsider, _sessionNames[numSession - 1], _allExamAppealsToDo, rooms,
-                                       requestChanges);
+                                       requestChanges, numAppealYear);
         }
     } else
         throw std::logic_error(

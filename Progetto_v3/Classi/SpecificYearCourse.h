@@ -85,6 +85,7 @@ public:
     std::string getRoomsPerAppealsString(int numAppeals);
     int getStartHourAppeal(int numAppeals);
     char getPlaceExam();
+    int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
 
     ///setter
     bool setYear();
@@ -96,14 +97,11 @@ public:
     ///control
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
     bool notExamsAssigned();
-
-private:
-    int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
-    std::string _yy_semester;
-public:
     void setYySemester(const std::string &yySemester);
 
 private:
+
+    std::string _yy_semester;
     //unico per tutti i corsi!!!
     std::string _acYearOff;
     //anno accademico in cui il corso è stato spento

@@ -2634,6 +2634,7 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
     int startAcYear = Parse::getAcStartYear(acYear);
     std::vector<int> allProfsPerYearCourse = _courses.at(idCorso).getProfsPerYear(acYear);
 
+
     for (int i = 0; i < appealInfo.size(); i++) {
         std::vector<std::string> infoOfSingleAppeal = Parse::splittedLine(appealInfo[i], ',');
         ///prendo le date degli appelli per quella sessione
@@ -2658,6 +2659,7 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
     }
     ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
     _courses.at(idCorso).assignAppealToSpecificYear(acYear, session, appealDate,startSlotPerAppeal,classroomsPerAppeal);
+
 }
 
 void University::assignAppealsToProf(std::string idCorso, std::string appeal, int startHour, int numSlots,
