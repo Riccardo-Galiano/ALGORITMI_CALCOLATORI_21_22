@@ -167,11 +167,23 @@ public:
         }
         return acStart + 1 == acEnd;
     }
+
+    static Date controlItCanBeADate(std::string input) {
+        //AAAA-MM-GG
+        std::vector<std::string> date = Parse::splittedLine(input,'-');
+        if(date.size() != 3)
+            throw std::invalid_argument("Formato data errato");
+        int year = Parse::checkedStoi(date[0]," di un anno");
+        int month = Parse::checkedStoi(date[1]," di un mese");
+        int day = Parse::checkedStoi(date[2]," di un giorno");
+        return Date(input);
+
+    }
     static int checkedStoi(std::string& input,std::string specificError){
         for(int i=0; i<input.size(); i++){
             char currentChar = input[i];
             if(currentChar < 48 || currentChar > 57)
-                throw std::invalid_argument("Errore conversione della stringa in intero positivo" + specificError);
+                throw std::invalid_argument("Errore conversione " + specificError + " da stringa ad intero positivo");
         }
           return stoi(input);
     }

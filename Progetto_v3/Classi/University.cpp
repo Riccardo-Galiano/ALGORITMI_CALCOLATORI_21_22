@@ -112,10 +112,8 @@ void University::readStudents() {
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
         InteroStudente = Parse::splittedLine(line, ';');
         nMatr = Parse::getMatr(InteroStudente[0]);
-        ///controllo se la matricola è già esistente; in quel caso lancio un'eccezione, altrimenti inserisco lo studente con tutti i suoi dati
-        if (_students.count(nMatr))
-            throw std::logic_error("matricola già presente");
-        else if (_version == 1) {
+
+        if (_version == 1) {
             _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
                                                                     InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
         } else {
@@ -135,7 +133,7 @@ void University::readVersion() {
     }
     std::string version;
     std::getline(file, version);
-    _version = Parse::checkedStoi(version,"Errore numero versione");
+    _version = std::stoi(version);
     file.close();
 }
 
@@ -152,10 +150,8 @@ void University::readProfessor() {
     while (std::getline(fileIn, line)) {
         InteroProfessore = Parse::splittedLine(line, ';');
         nMatr = Parse::getMatr(InteroProfessore[0]);
-        if (_professors.count(nMatr))
-            throw std::logic_error("due matricole uguali");
 
-        else if (_version == 2) {
+        if (_version == 2) {
             _professors.insert(std::pair<int, Professor>(nMatr,
                                                          Professor(nMatr, InteroProfessore[1], InteroProfessore[2],
                                                                    InteroProfessore[3], InteroProfessore[4],
@@ -183,21 +179,19 @@ void University::readClassroom() {
         InteraClasse = Parse::splittedLine(line, ';');
         nCod = Parse::getMatr(InteraClasse[0]);
 
-        if (_classrooms.count(nCod))
-            throw std::logic_error("due codici uguali");
-        else if (_version == 2) {
+        if (_version == 2) {
             _classrooms.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
-                                                                         Parse::checkedStoi(InteraClasse[3],"Errore posti aula"),
-                                                                         Parse::checkedStoi(InteraClasse[4],"Errore posti esami aula"),
-                                                                         Parse::checkedStoi(InteraClasse[5],"Errore numero lavagne"),
-                                                                         Parse::checkedStoi(InteraClasse[6],"Errore numero computer"),
-                                                                         Parse::checkedStoi(InteraClasse[7],"Errore numero di tavoli da disegno"),
-                                                                         Parse::checkedStoi(InteraClasse[8],"errore numero di proiettori"))));
+                                                                         std::stoi(InteraClasse[3]),
+                                                                         std::stoi(InteraClasse[4]),
+                                                                         std::stoi(InteraClasse[5]),
+                                                                         std::stoi(InteraClasse[6]),
+                                                                         std::stoi(InteraClasse[7]),
+                                                                         std::stoi(InteraClasse[8]))));
 
         } else
             _classrooms.insert(std::pair<int, Classroom>(nCod, Classroom(nCod, InteraClasse[1], InteraClasse[2],
-                                                                         Parse::checkedStoi(InteraClasse[3],"Errore numero di posti in aula"),
-                                                                         Parse::checkedStoi(InteraClasse[4],"Errore numero di posti per l'esame "))));
+                                                                         std::stoi(InteraClasse[3]),
+                                                                         std::stoi(InteraClasse[4]))));
 
     }
     fileIn.close();
@@ -501,18 +495,17 @@ void University::addClassrooms(const std::string &fileIn) {
                     try {
                         _classrooms.insert(
                                 std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
-                                                                        Parse::checkedStoi(infoClassroom[2],
-                                                                                           "per la capienza massima dell'aula "),
+                                                                        Parse::checkedStoi(infoClassroom[2]," della capienza massima dell'aula "),
                                                                         Parse::checkedStoi(infoClassroom[3],
-                                                                                           "per la capienza per un esame dell'aula "),
+                                                                                           " della capienza per un esame dell'aula "),
                                                                         Parse::checkedStoi(infoClassroom[4],
-                                                                                           "per il numero di tavoli da disegno "),
+                                                                                           " del numero di tavoli da disegno "),
                                                                         Parse::checkedStoi(infoClassroom[5],
-                                                                                           "per il numero di computer "),
+                                                                                           " del numero di computer "),
                                                                         Parse::checkedStoi(infoClassroom[6],
-                                                                                           "per il numero di proiettori "),
+                                                                                           " del numero di proiettori "),
                                                                         Parse::checkedStoi(infoClassroom[7],
-                                                                                           "per il numero di lavagne "))));
+                                                                                           " del numero di lavagne "))));
 
                     } catch (std::exception &err) {
                         std::string generalError = err.what();
@@ -535,9 +528,9 @@ void University::addClassrooms(const std::string &fileIn) {
                         _classrooms.insert(
                                 std::pair<int, Classroom>(id, Classroom(id, infoClassroom[0], infoClassroom[1],
                                                                         Parse::checkedStoi(infoClassroom[2],
-                                                                                           " per la capienza massima dell'aula "),
+                                                                                           " della capienza massima dell'aula "),
                                                                         Parse::checkedStoi(infoClassroom[3],
-                                                                                           " per la capienza esame dell'aula "))));
+                                                                                           " della capienza esame dell'aula "))));
                     } catch (std::exception &err) {
                         std::string generalError = err.what();
                         error.append(generalError + " alla riga: " + std::to_string(line_counter) + "\n");
@@ -977,17 +970,33 @@ void University::updateStuds(const std::string &fin) {
                             }
                             ///i campi da qui in poi sono raggiungibili solo in caso di versione aggiuntiva
                             case update_birth: {//analizzo la data di nascita(quarto campo della riga del file)
-                                if (!(iter->second.getBirth() ==  infoStud[i])) {
-                                    //se la data di nascita letta dal file è diversa dalla data del database la cambio
-                                    iter->second.setBirth(infoStud[i]);
-                                }
+                                try {
+                                    Date date = Parse::controlItCanBeADate(infoStud[i]);
+                                    if (!(iter->second.getBirth() ==  date.toString())) {
+                                        //se la data di nascita letta dal file è diversa dalla data del database la cambio
+                                        iter->second.setBirth(infoStud[i]);
+                                        }
+                                    }catch(std::invalid_argument & err){
+                                        std::string genericError = err.what();
+                                        error.append(genericError + " alla riga " + std::to_string(line_counter)+ "\n");
+                                        doDbWrite = false;
+                                    }
                                 break;
                             }
                             case update_registrationOrEntry: {//analizzo la data di registrazione(quinto campo della riga del file)
-                                if (!(iter->second.getRegistrationOrEntry() ==  infoStud[i])) {
-                                    //se la data di registrazione letta dal file è diversa da quella del database la cambio
-                                    iter->second.setRegistration(infoStud[i]);
+                                try {
+                                    Date date = Parse::controlItCanBeADate(infoStud[i]);
+                                    if (!(iter->second.getRegistrationOrEntry() ==  date.toString())) {
+                                        //se la data di registrazione letta dal file è diversa da quella del database la cambio
+                                        iter->second.setRegistration(infoStud[i]);
+                                    }
+                                }catch(std::invalid_argument & err){
+                                    std::string genericError = err.what();
+                                    error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                    doDbWrite = false;
                                 }
+
+
                                 break;
                             }
                             case update_address: {//analizzo l'indirizzo(sesto campo della riga del file)
@@ -1203,7 +1212,7 @@ void University::updateClassroom(const std::string &fin) {
                         case update_nSeats : {//analizzo la capienza
                             try {
                                 //se il numero di posti è cambiata da quello che c'è nel database lo cambio
-                                int numSeats = Parse::checkedStoi(infoClassroom[i],"per la capienza massima dell'aula");
+                                int numSeats = Parse::checkedStoi(infoClassroom[i]," della capienza massima dell'aula");
                                 if (iter->second.getNSeats() != numSeats) {
                                     iter->second.setNSeats(numSeats);
                                 }
@@ -1211,13 +1220,14 @@ void University::updateClassroom(const std::string &fin) {
                                 // se non è un numero intero positivo non va bene, lo segnalo
                                 std::string genericError = err.what();
                                 error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                doDbWrite = false;
                             }
                             break;
                         }
                         case update_nExamSeats : {//analizzo la capienza massima per un esame
                             try {
                                 //se il numero di posti è cambiata da quello che c'è nel database lo cambio
-                                int numnExamSeats = Parse::checkedStoi(infoClassroom[i],"per la capienza per un esame dell'aula ");
+                                int numnExamSeats = Parse::checkedStoi(infoClassroom[i]," della capienza per un esame dell'aula ");
                                 if (iter->second.getNExamSeats() != numnExamSeats) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
                                     iter->second.setNExamSeats(numnExamSeats); //cambia l'email
                                 }
@@ -1225,6 +1235,7 @@ void University::updateClassroom(const std::string &fin) {
                                 // se non è un numero intero positivo non va bene, lo segnalo
                                 std::string genericError = err.what();
                                 error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                doDbWrite = false;
                             }
                             break;
                         }
@@ -1232,7 +1243,7 @@ void University::updateClassroom(const std::string &fin) {
                         case update_drawingTable: {//analizzo il numero di tavole da disegno
                             try {
                                 //se il numero di tavoli da disegno è diverso da quello che c'è nel database lo cambio
-                                int numDrawingTable = Parse::checkedStoi(infoClassroom[i], "per il numero di tavoli da disegno ");
+                                int numDrawingTable = Parse::checkedStoi(infoClassroom[i], " del numero di tavoli da disegno ");
                                 if (iter->second.getDrawingTable() != numDrawingTable) {
                                     iter->second.setDrawingTable(numDrawingTable);
                                 }
@@ -1240,6 +1251,7 @@ void University::updateClassroom(const std::string &fin) {
                                 // se non è un numero intero positivo non va bene, lo segnalo
                                 std::string genericError = err.what();
                                 error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                doDbWrite = false;
                             }
 
                             break;
@@ -1247,7 +1259,7 @@ void University::updateClassroom(const std::string &fin) {
                         case update_computer: {//analizzo il numero di computer
                             try {
                                 //se il numero di computer è diverso da quello che c'è nel database lo cambio
-                                int numComputer = Parse::checkedStoi(infoClassroom[i],"per il numero di computer");
+                                int numComputer = Parse::checkedStoi(infoClassroom[i]," del numero di computer");
                                 if (iter->second.getComputer() != numComputer) {
                                     iter->second.setComputer(numComputer);
                                 }
@@ -1255,13 +1267,14 @@ void University::updateClassroom(const std::string &fin) {
                                 // se non è un numero intero positivo non va bene, lo segnalo
                                 std::string genericError = err.what();
                                 error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                doDbWrite = false;
                             }
                             break;
                         }
                         case update_projector: {//analizzo il numero di proiettori
                             try {
                                 //se il numero di proiettori è diverso da quello che c'è nel database lo cambio
-                                int numProjector = Parse::checkedStoi(infoClassroom[i],"per il numero di proiettori");
+                                int numProjector = Parse::checkedStoi(infoClassroom[i]," del numero di proiettori");
                                 if (iter->second.getProjector() != numProjector) {
                                     iter->second.setProjector(numProjector);
                                 }
@@ -1269,13 +1282,14 @@ void University::updateClassroom(const std::string &fin) {
                                 // se non è un numero intero positivo non va bene, lo segnalo
                                 std::string genericError = err.what();
                                 error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                doDbWrite = false;
                             }
                             break;
                         }
                         case update_blackBoard: {//analizzo il numero di lavagne
                             try {
                                 //se il numero di lavagne è diverso da quello che c'è nel database lo cambio
-                                int numBlackBoard = Parse::checkedStoi(infoClassroom[i], "per il numero di lavagne");
+                                int numBlackBoard = Parse::checkedStoi(infoClassroom[i], " del numero di lavagne");
                                 if (iter->second.getBlackBoard() != numBlackBoard) {
                                     iter->second.setBlackBoard(numBlackBoard);
                                 }
@@ -1283,6 +1297,7 @@ void University::updateClassroom(const std::string &fin) {
                                 // se non è un numero intero positivo non va bene, lo segnalo
                                 std::string genericError = err.what();
                                 error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                doDbWrite = false;
                             }
                             break;
                         }

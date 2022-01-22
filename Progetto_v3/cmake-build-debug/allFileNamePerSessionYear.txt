@@ -1,3 +1,0 @@
-2021-1;calendario_esami_2022_s1
-2021-2;calendario_esami_2022_s2
-2021-3;calendario_esami_2022_s3

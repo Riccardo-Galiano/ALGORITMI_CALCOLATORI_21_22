@@ -1,26 +1,26 @@
 s000001;Illary;Di;illary.di@sympatico.ca
 s000002;Miriam;Benkhada;miriam.benkhada@centurytel.net
 s000003;Rachela;Idahosa;rachela.idahosa@libero.it
-s000004;Francesco;Cadoni;roberto.cadoni@orange.fr
-s000005;Rebeca;Feltrin;rebeca.feltrin@gmail.fr
+s000004;Roberto;Cadoni;roberto.cadoni@orange.fr
+s000005;Rebeca;Feltrin;rebeca.feltrin@yahoo.fr
 s000006;Merj;Khramchenko;merj.khramchenko@live.it
 s000007;Renato;Avramo;renato.avramo@aliceadsl.fr
 s000008;Marie;Mostafa;marie.mostafa@t-online.de
 s000009;Hra;Sereno;hra.sereno@yahoo.es
-s000010;Emiddio;Savescuti;emiddio@gmail.com
-s000011;Salvatrice;Tiri;salvatrice.zolla@live.ca
-s000012;Walter Kevin;Lupieri;walter.kevin@alice.it
+s000010;Emiddio;Savescu;emiddio.savescu@yahoo.com
+s000011;Salvatrice;Zolla;salvatrice.zolla@live.ca
+s000012;Walter;Lupieri;walter.lupieri@yahoo.es
 s000013;Edelina;Gyurka;edelina.gyurka@free.fr
-s000014;Marco Maria;Ouzeggane;marco.ouzeggane@wanadoo.fr
-s000015;Tina;Marsano;tina@club-internet.fr
+s000014;Marco;Ouzeggane;marco.ouzeggane@wanadoo.fr
+s000015;Tina;Marsano;tina.marsano@club-internet.fr
 s000016;Maikon;Jarju;maikon.jarju@earthlink.net
 s000017;Alessia;Scipioni;alessia.scipioni@arcor.de
-s000018;Fousseyni;Burgio;fousseyni.saltarel@mac.com
+s000018;Fousseyni;Saltarel;fousseyni.saltarel@mac.com
 s000019;Belen;Putignano;belen.putignano@web.de
 s000020;Neris;Okpako;neris.okpako@hotmail.com
 s000021;Ernesto;Frediani;ernesto.frediani@ig.com.br
 s000022;Matilde;Gilardino;matilde.gilardino@aim.com
-s000023;Corina;Morina;corina.morina@bellsouth.net
+s000023;Desire;Galletto;desiregalletto@libero.it
 s000024;Giangiacomo;Caramagna;giangiacomo.caramagna@blueyonder.co.uk
 s000025;Kleoparda;Vardaro;kleoparda.vardaro@libero.it
 s000026;Osariyekemwen;Arbuez;osariyekemwen.arbuez@hotmail.fr

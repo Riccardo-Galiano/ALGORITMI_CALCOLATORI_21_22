@@ -21,14 +21,14 @@ void Date::setDate(int yy, int mm, int dd) {
         _year = yy;
     }
     else {
-        throw invalid_argument{"Year must be >= 1900 and <= 2100"};
+        throw invalid_argument{"l'anno deve essere >= 1900 e <= 2100"};
     }
 
     if (mm >= 1 && mm <= 12) {
       _month = mm;
    }
    else {
-      throw invalid_argument{"Month must be 1-12"};
+      throw invalid_argument{"Il mese deve essere tra 1-12"};
    }
 
    // test se anno bisestile
@@ -37,8 +37,7 @@ void Date::setDate(int yy, int mm, int dd) {
       _day = dd;
    }
    else {
-      throw invalid_argument{
-         "Day is out of range for current month and year"};
+      throw invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene"};
    }
 }
 
@@ -109,15 +108,6 @@ unsigned int Date::getDay() const {
     return _day;
 }
 
-/*
-ostream& operator<<(ostream& output, const Date& d) {
-   static string monthName[13]{"", "January", "February",
-      "March", "April", "May", "June", "July", "August",
-      "September", "October", "November", "December"};
-   output << monthName[d._month] << ' ' << d._day << ", " << d._year;
-   return output; // enables cascading
-}
-*/
 
 ostream& operator<<(ostream& output, const Date& d){
 
