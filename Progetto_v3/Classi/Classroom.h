@@ -25,10 +25,10 @@ public:
     const int getNSeats() const;
     const int getNExamSeats() const;
 
-    void updateName(const std::string& name);
-    void updateType(const bool& LorA);
-    void updateNSeats(const int& NSeats);
-    void updateNExamSeats(const int& NExamSeats);
+    void setName(const std::string& name);
+    void setType(const bool& LorA);
+    void setNSeats(const int& NSeats);
+    void setNExamSeats(const int& NExamSeats);
     bool checkAvailability(Date& date,int slotHour);
     void setDisavailability(Date& date,int slotsStartHour,int numSlot);
     std::string getOthersInfo();
@@ -36,10 +36,10 @@ public:
     int getComputer();
     int getProjector();
     int getBlackBoard();
-    void updateDrawingTable(int computer);
-    void updateComputer(int drawingTable);
-    void updateProjector(int projector);
-    void updateBlackBoard(int blackBoard);
+    void setDrawingTable(int drawingTable );
+    void setComputer(int computer);
+    void setProjector(int projector);
+    void setBlackBoard(int blackBoard);
 
     ///remove
     void eraseThisAppealFromClassrooms(Date& date, int startSlot, int numSlots);

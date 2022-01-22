@@ -19,7 +19,7 @@ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int 
     } else if (AorL == "A") {
         _lab = false;
     }else {
-        throw std::invalid_argument("E' presente un carattere diverso da A o L");
+        throw std::invalid_argument("E' presente un carattere diverso da A o L ");
     }
     _othersInfoClassroom._blackBoard = -1;
     _othersInfoClassroom._computer = -1;
@@ -72,22 +72,22 @@ const int Classroom::getNExamSeats() const {
 }
 
 ///aggiorna il nome
-void Classroom::updateName(const std::string &name) {
+void Classroom::setName(const std::string &name) {
     _name = name;
 }
 
 ///aggiorna il tipo: lab o aula
-void Classroom::updateType(const bool &LorA) {
+void Classroom::setType(const bool &LorA) {
     _lab = LorA;
 }
 
 ///aggiorna la capienza
-void Classroom::updateNSeats(const int &NSeats) {
+void Classroom::setNSeats(const int &NSeats) {
     _nSeats = NSeats;
 }
 
 ///aggiorna la capienza per l'esame
-void Classroom::updateNExamSeats(const int &NExamSeats) {
+void Classroom::setNExamSeats(const int &NExamSeats) {
     _nExamSeats = NExamSeats;
 }
 
@@ -131,19 +131,19 @@ int Classroom::getBlackBoard() {
     return _othersInfoClassroom._blackBoard;
 }
 
-void Classroom::updateComputer(int computer) {
+void Classroom::setComputer(int computer) {
     _othersInfoClassroom._computer = computer;
 }
 
-void Classroom::updateDrawingTable(int drawingTable) {
+void Classroom::setDrawingTable(int drawingTable) {
     _othersInfoClassroom._drawingTable = drawingTable;
 }
 
-void Classroom::updateProjector(int projector) {
+void Classroom::setProjector(int projector) {
     _othersInfoClassroom._projector = projector;
 }
 
-void Classroom::updateBlackBoard(int blackBoard) {
+void Classroom::setBlackBoard(int blackBoard) {
    _othersInfoClassroom._blackBoard = blackBoard;
 }
 

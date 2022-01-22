@@ -1,21 +1,21 @@
 d000001;Giuseppe;Musso;giuseppe.musso@wanadoo.fr
 d000002;Maria;Cerrato;maria.cerrato@arcor.de
 d000003;Andrea;Seferovic;andrea.seferovic@free.fr
-d000004;Marco;Ferrero;marco.ferrero@ntlworld.com
-d000005;Francesco;Viarengo;francesco.viarengo@shaw.ca
+d000004;Francesco;Ferrero;roberto.cadoni@orange.fr
+d000005;Francesco;Feltrin;rebeca.feltrin@gmail.fr
 d000006;Alessandro;Conti;alessandro.conti@bluewin.ch
 d000007;Giovanni;Bianco;giovanni.bianco@freenet.de
-d000008;Roberto;Gallo;roberto.gallo@rambler.ru
-d000009;Luca;Fassio;luca.fassio@blueyonder.co.uk
-d000010;Antonio;Rosso;antonio.rosso@home.nl
-d000011;Paolo;Raviola;paolo.raviola@live.com.au
-d000012;Francesca;Amerio;francesca.amerio@t-online.de
-d000013;Anna;Torchio;anna.torchio@yahoo.com.br
-d000014;Davide;Marino;davide.marino@orange.fr
-d000015;Matteo;Negro;matteo.negro@live.ca
-d000016;Mario;Grasso;mario.grasso@terra.com.br
-d000017;Giulia;Graziano;giulia.graziano@comcast.net
-d000018;Luigi;Gamba;luigi.gamba@aliceadsl.fr
+d000008;Marie;Mostafa;marie.mostafa@t-online.de
+d000009;Hra;Sereno;hra.sereno@yahoo.es
+d000010;Emiddio;Savescuti;emiddio@gmail.com
+d000011;Salvatrice;Tiri;salvatrice.zolla@live.ca
+d000012;Walter Kevin;Lupieri;walter.kevin@alice.it
+d000013;Edelina;Gyurka;edelina.gyurka@free.fr
+d000014;Marco Maria;Ouzeggane;marco.ouzeggane@wanadoo.fr
+d000015;Tina;Negro;tina@club-internet.fr
+d000016;Maikon;Jarju;maikon.jarju@earthlink.net
+d000017;Giulia;Scipioni;alessia.scipioni@arcor.de
+d000018;Fousseyni;Burgio;luigi.gamba@aliceadsl.fr
 d000019;Paola;Barbero;paola.barbero@yahoo.it
 d000020;Fabio;Hoxha;fabio.hoxha@frontiernet.net
 d000021;Stefano;Palumbo;stefano.palumbo@libero.it

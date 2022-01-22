@@ -109,11 +109,11 @@ public:
         return realDates;
     }
     static int getMatr(std::string& input){
-        int nMatr;
+        std::string nMatr;
         char c;
         std::stringstream ss(input);
         ss >> c >> nMatr;
-        return nMatr;
+        return Parse::checkedStoi(nMatr," della matricola");
     }
     static std::string setId(char letterId, int numTot, int cod){
         std::stringstream ss;
@@ -127,16 +127,20 @@ public:
         }
         return false;
     }
-    static bool controlItCanBeAnId(std::string Id, int numMatr) {
+    static bool controlItCanBeAnId(std::string Id, int numMatr,char letter) {
         std::stringstream ss(Id);
         char c;
         std::string matrWithoutLetter;
-        ss >> c >> matrWithoutLetter;
+        ss >> c;
+        if(c != letter){
+            return false;
+        }
+        ss >> matrWithoutLetter;
         if (matrWithoutLetter.size() != numMatr) {
             return false;
         }
         try {
-            checkedStoi(matrWithoutLetter,"Errore matricola");
+            checkedStoi(matrWithoutLetter," della matricola");
         } catch (std::invalid_argument &err) {
             return false;
         }
@@ -167,12 +171,9 @@ public:
         for(int i=0; i<input.size(); i++){
             char currentChar = input[i];
             if(currentChar < 48 || currentChar > 57)
-                throw std::invalid_argument("Errore conversione della stringa in intero." + specificError +"\n");
+                throw std::invalid_argument("Errore conversione della stringa in intero positivo" + specificError);
         }
-        if(stoi(input) < 0)
-            throw  std::invalid_argument("Errore numero negativo."+ specificError +"\n");
-        else
-            return stoi(input);
+          return stoi(input);
     }
 };
 

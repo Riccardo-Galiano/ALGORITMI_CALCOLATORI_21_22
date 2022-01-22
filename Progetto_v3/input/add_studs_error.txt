@@ -7,8 +7,8 @@ Merj;Khramchenko;merj.khramchenko@live.it
 Renato;;renato.avramo@aliceadsl.fr
 Marie;marie.mostafa@t-online.de
 Sereno;
-Emiddio;Savescu;emiddio.savescu@yahoo.com
-Salvatrice;Zolla;salvatrice.zolla@live.ca
+
+Salvatrice;Zolla
 Walter;Lupieri;walter.lupieri@yahoo.es
 Edelina;Gyurka;edelina.gyurka@free.fr
 Marco;Ouzeggane;marco.ouzeggane@wanadoo.fr

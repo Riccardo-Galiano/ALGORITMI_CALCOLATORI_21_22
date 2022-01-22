@@ -1,16 +1,15 @@
-Giuseppe;Musso;giuseppe.musso@wanadoo.fr
-Maria;Cerrato;maria.cerrato@arcor.de
+Illary;Di;illary.di@sympatico.ca
+Miriam;Benkhada;miriam.benkhada@centurytel.net
 
-Andrea;Seferovic;andrea.seferovic@free.fr
-Marco;Ferrero;marco.ferrero@ntlworld.com
-Viarengo;francesco.viarengo@shaw.ca
-Alessandro;;alessandro.conti@bluewin.ch
-Giovanni;Bianco;giovanni.bianco@freenet.de
-Roberto;;roberto.gallo@rambler.ru
-Luca;Fassio;luca.fassio@blueyonder.co.uk
-Antonio;Rosso;antonio.rosso@home.nl
-Paolo;Raviola
-Francesca;Amerio;francesca.amerio@t-online.de
+Roberto;Cadoni;roberto.cadoni@orange.fr
+Rebeca;Feltrin;rebeca.feltrin@yahoo.fr
+Merj;Khramchenko;merj.khramchenko@live.it
+Renato;;renato.avramo@aliceadsl.fr
+Marie;marie.mostafa@t-online.de
+Sereno;
 
-Anna;Torchio;anna.torchio@yahoo.com.br
-Davide;Marino;davide.marino@orange.fr
+Salvatrice;Zolla
+Walter;Lupieri;walter.lupieri@yahoo.es
+Edelina;Gyurka;edelina.gyurka@free.fr
+Marco;Ouzeggane;marco.ouzeggane@wanadoo.fr
+Tina;Marsano;tina.marsano@club-internet.fr

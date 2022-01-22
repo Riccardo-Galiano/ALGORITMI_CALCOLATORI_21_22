@@ -1,0 +1,14 @@
+s000004;Francesco;;roberto.cadoni@orange.fr
+s000005;;rebeca.feltrin@gmail.fr
+s000013;Tosoni;;aristodonato.tosoni@virgilio.it
+s000008;Marie;Mostafa;marie.mostafa@t-online.de
+s000009;Hra;Sereno;hra.sereno@yahoo.es
+s000010;Emiddio;Savescuti;emiddio@gmail.com
+s000011;Salvatrice;Tiri;salvatrice.zolla@live.ca
+;Walter Kevin;Lupieri;walter.kevin@alice.it
+Edelina;Gyurka;edelina.gyurka@free.fr
+s000014;Marco Maria;Ouzeggane;marco.ouzeggane@wanadoo.fr;;;
+d000015;Tina;;tina@club-internet.fr
+
+s100017;;Scipioni;alessia.scipioni@arcor.de
+s0T0018;Fousseyni;Burgio;

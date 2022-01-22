@@ -54,19 +54,19 @@ const std::string &UniversityMember::getEmail() const {
 }
 
 ///aggiorna il nome
-void UniversityMember::updateName(const std::string& name) {
+void UniversityMember::setName(const std::string& name) {
     _name = name;
 
 }
 
 ///aggiorna il cognome
-void UniversityMember::updateSurnName(const std::string& surName) {
+void UniversityMember::setSurnName(const std::string& surName) {
     _surname = surName;
 
 }
 
 ///aggiorna l'email
-void UniversityMember::updateEmail(const std::string & eMail) {
+void UniversityMember::setEmail(const std::string & eMail) {
     _email = eMail;
 }
 
@@ -85,15 +85,15 @@ std::string UniversityMember::getAddress() {
     return _othersInfoMember._address;
 }
 
-void UniversityMember::updateBirth(const std::string & birth) {
+void UniversityMember::setBirth(const std::string & birth) {
   _othersInfoMember._birth = birth;
 }
 
-void UniversityMember::updateRegistration(const std::string &registrationOrEntry) {
+void UniversityMember::setRegistration(const std::string &registrationOrEntry) {
 _othersInfoMember._registrationOrEntry = registrationOrEntry;
 }
 
-void UniversityMember::updateAdress(const std::string & address) {
+void UniversityMember::setAdress(const std::string & address) {
 _othersInfoMember._address = address;
 }
 

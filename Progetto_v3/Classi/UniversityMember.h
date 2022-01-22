@@ -33,12 +33,12 @@ public:
     std::string getAddress();
 
     ///update
-    void updateName(const std::string &);
-    void updateSurnName(const std::string &);
-    void updateEmail(const std::string &);
-    void updateBirth(const std::string &);
-    void updateRegistration(const std::string &);
-    void updateAdress(const std::string &);
+    void setName(const std::string &);
+    void setSurnName(const std::string &);
+    void setEmail(const std::string &);
+    void setBirth(const std::string &);
+    void setRegistration(const std::string &);
+    void setAdress(const std::string &);
 
 
 protected:

@@ -1,0 +1,12 @@
+A;Aula A0;150;30
+;Aula A1;200;50
+A;Aula A2;100;25
+A;;220;56
+A;Aula A4;140;37
+A;Aula A5;75
+A;Aula A6;75;15
+A;Aula A7;-1;28
+L;Aula A8;140;62
+
+C;Aula B0;95;38
+A;Aula B1;157;-1
