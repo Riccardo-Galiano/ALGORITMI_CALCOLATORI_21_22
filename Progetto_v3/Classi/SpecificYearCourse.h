@@ -135,6 +135,10 @@ private:
     //value startSlot
     std::map<int,int> _startSlotPerEachAppeal;
     int _numAppeal;
+public:
+    int getNumAppeal() const;
+
+private:
     std::vector<std::string> _errorStringSpecificYearCourse;
 };
 

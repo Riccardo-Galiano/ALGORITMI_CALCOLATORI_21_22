@@ -1,0 +1,16 @@
+Giuseppe;Musso;giuseppe.musso@wanadoo.fr
+Maria;Cerrato;maria.cerrato@arcor.de
+
+Andrea;Seferovic;andrea.seferovic@free.fr
+Marco;Ferrero;marco.ferrero@ntlworld.com
+Viarengo;francesco.viarengo@shaw.ca
+Alessandro;;alessandro.conti@bluewin.ch
+Giovanni;Bianco;giovanni.bianco@freenet.de
+Roberto;;roberto.gallo@rambler.ru
+Luca;Fassio;luca.fassio@blueyonder.co.uk
+Antonio;Rosso;antonio.rosso@home.nl
+Paolo;Raviola
+Francesca;Amerio;francesca.amerio@t-online.de
+
+Anna;Torchio;anna.torchio@yahoo.com.br
+Davide;Marino;davide.marino@orange.fr

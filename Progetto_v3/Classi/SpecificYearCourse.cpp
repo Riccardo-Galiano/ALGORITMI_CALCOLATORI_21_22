@@ -417,15 +417,15 @@ bool SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> ap
 
 
     for(int i = 0; i<startSlotPerAppeal.size(); i++) {
-        _startSlotPerEachAppeal.insert(std::pair<int, int>(_numAppeal, startSlotPerAppeal[i]));
+        _startSlotPerEachAppeal.insert(std::pair<int, int>(getNumAppeal(), startSlotPerAppeal[i]));
         std::vector<std::string> allClassroomsPerAppeal = Parse::splittedLine(classroomsPerAppeal[i], '|');
         std::vector<int> allClassroomsPerAppealInt;
         //trasformo il vettore di aule string in un vettore di aule interi
         for(int j = 0; j<allClassroomsPerAppeal.size(); j++){
-            int room = Parse::checkedStoi(allClassroomsPerAppeal[j]);
+            int room = Parse::checkedStoi(allClassroomsPerAppeal[j],"Errore id Aula");
             allClassroomsPerAppealInt.push_back(room);
         }
-        _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(_numAppeal,allClassroomsPerAppealInt));
+        _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(getNumAppeal(),allClassroomsPerAppealInt));
         _numAppeal++;
     }
     if (session == "winter")
@@ -438,7 +438,7 @@ bool SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> ap
 }
 
 std::vector<int> SpecificYearCourse::getRoomsAppeal() {
-    std::vector<int> rooms = _roomsEachAppeal.at(_numAppeal);
+    std::vector<int> rooms = _roomsEachAppeal.at(getNumAppeal());
     _numAppeal++;
     return rooms;
 }
@@ -588,6 +588,10 @@ void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date,
 
 void SpecificYearCourse::eraseNumAppeal() {
  _numAppeal = 0;
+}
+
+int SpecificYearCourse::getNumAppeal() const {
+    return _numAppeal;
 }
 
 

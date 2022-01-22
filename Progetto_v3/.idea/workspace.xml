@@ -77,7 +77,7 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-s request_changes 2021-2022 ../input/file_corsi_da_spostare.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-a:d ../input/add_profs.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -158,7 +158,7 @@
       <workItem from="1642750820173" duration="16038000" />
       <workItem from="1642781327290" duration="6293000" />
       <workItem from="1642804046213" duration="2027000" />
-      <workItem from="1642843159937" duration="5214000" />
+      <workItem from="1642843159937" duration="9540000" />
     </task>
     <servers />
   </component>
@@ -179,54 +179,54 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="316" y="38" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1642804229453">
+    <state x="316" y="38" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1642850347503">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="316" y="38" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1642804229453" />
-    <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser" timestamp="1642091158344">
+    <state x="316" y="38" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1642850347503" />
+    <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser" timestamp="1642852746993">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1642091158344" />
-    <state width="1323" height="434" key="GridCell.Tab.0.bottom" timestamp="1642847843963">
+    <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1642852746993" />
+    <state width="1323" height="128" key="GridCell.Tab.0.bottom" timestamp="1642852672447">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="434" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1642847843963" />
-    <state width="1323" height="434" key="GridCell.Tab.0.center" timestamp="1642847843963">
+    <state width="1323" height="128" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1642852672447" />
+    <state width="1323" height="128" key="GridCell.Tab.0.center" timestamp="1642852672447">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="434" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1642847843963" />
-    <state width="1323" height="434" key="GridCell.Tab.0.left" timestamp="1642847843963">
+    <state width="1323" height="128" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1642852672447" />
+    <state width="1323" height="128" key="GridCell.Tab.0.left" timestamp="1642852672447">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="434" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1642847843963" />
-    <state width="1323" height="434" key="GridCell.Tab.0.right" timestamp="1642847843963">
+    <state width="1323" height="128" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1642852672447" />
+    <state width="1323" height="128" key="GridCell.Tab.0.right" timestamp="1642852672447">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="434" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1642847843963" />
-    <state width="1323" height="162" key="GridCell.Tab.1.bottom" timestamp="1642847760075">
+    <state width="1323" height="128" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1642852672447" />
+    <state width="1323" height="114" key="GridCell.Tab.1.bottom" timestamp="1642849647110">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="20" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831505" />
-    <state width="1323" height="162" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1642847760075" />
-    <state width="1323" height="162" key="GridCell.Tab.1.center" timestamp="1642847760075">
+    <state width="1323" height="114" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1642849647110" />
+    <state width="1323" height="114" key="GridCell.Tab.1.center" timestamp="1642849647110">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="20" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831504" />
-    <state width="1323" height="162" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1642847760075" />
-    <state width="1323" height="162" key="GridCell.Tab.1.left" timestamp="1642847760075">
+    <state width="1323" height="114" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1642849647110" />
+    <state width="1323" height="114" key="GridCell.Tab.1.left" timestamp="1642849647110">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="20" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831504" />
-    <state width="1323" height="162" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1642847760075" />
-    <state width="1323" height="162" key="GridCell.Tab.1.right" timestamp="1642847760075">
+    <state width="1323" height="114" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1642849647110" />
+    <state width="1323" height="114" key="GridCell.Tab.1.right" timestamp="1642849647110">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="20" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831505" />
-    <state width="1323" height="162" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1642847760075" />
+    <state width="1323" height="114" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1642849647110" />
     <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1642804045880">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -260,22 +260,22 @@
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>443</line>
+          <line>450</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>544</line>
+          <line>553</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>865</line>
+          <line>874</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>879</line>
+          <line>888</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -290,22 +290,22 @@
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1183</line>
+          <line>1192</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1207</line>
+          <line>1216</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1232</line>
+          <line>1241</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1459</line>
+          <line>1468</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -320,7 +320,7 @@
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>324</line>
+          <line>323</line>
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -335,12 +335,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>722</line>
+          <line>731</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>712</line>
+          <line>721</line>
           <option name="timeStamp" value="115" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -350,32 +350,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2620</line>
+          <line>2629</line>
           <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>419</line>
+          <line>421</line>
           <option name="timeStamp" value="136" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1480</line>
+          <line>1489</line>
           <option name="timeStamp" value="137" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2184</line>
+          <line>2193</line>
           <option name="timeStamp" value="164" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2027</line>
+          <line>2036</line>
           <option name="timeStamp" value="191" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2078</line>
+          <line>2087</line>
           <option name="timeStamp" value="192" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -385,7 +385,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2692</line>
+          <line>2701</line>
           <option name="timeStamp" value="246" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -395,37 +395,37 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1655</line>
+          <line>1664</line>
           <option name="timeStamp" value="271" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>1681</line>
+          <line>1690</line>
           <option name="timeStamp" value="278" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2850</line>
+          <line>2859</line>
           <option name="timeStamp" value="301" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2860</line>
+          <line>2869</line>
           <option name="timeStamp" value="302" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2863</line>
+          <line>2872</line>
           <option name="timeStamp" value="306" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2716</line>
+          <line>2725</line>
           <option name="timeStamp" value="350" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2727</line>
+          <line>2736</line>
           <option name="timeStamp" value="351" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -435,17 +435,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2751</line>
+          <line>2760</line>
           <option name="timeStamp" value="363" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2743</line>
+          <line>2752</line>
           <option name="timeStamp" value="369" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Classi/University.cpp</url>
-          <line>2760</line>
+          <line>2769</line>
           <option name="timeStamp" value="370" />
         </line-breakpoint>
       </breakpoints>
