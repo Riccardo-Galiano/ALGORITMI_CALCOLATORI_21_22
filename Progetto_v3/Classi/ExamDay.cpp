@@ -386,7 +386,19 @@ bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, 
     return false;
 }
 
-
+void ExamDay::updateSlot(Course course) {
+    for(auto iterSlot = _slots.begin(); iterSlot != _slots.end(); iterSlot++){
+        std::string id = course.getId();
+        //per ogni corso del vector mi chiedo se l'id è lo stesso, se si cancello l'intero corso vecchio e metto il nuovo
+        for(auto iterCourse = iterSlot->second.begin(); iterCourse != iterSlot->second.end(); iterCourse++) {
+            std::string idOldCourse = iterCourse->getId();
+            if (id == idOldCourse) {
+                iterSlot->second.erase(iterCourse);
+                iterSlot->second.push_back(course);
+            }
+        }
+    }
+}
 
 
 

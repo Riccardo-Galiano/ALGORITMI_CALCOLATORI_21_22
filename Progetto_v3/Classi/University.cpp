@@ -2659,7 +2659,10 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
     }
     ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
     _courses.at(idCorso).assignAppealToSpecificYear(acYear, session, appealDate,startSlotPerAppeal,classroomsPerAppeal);
-
+    Course course = _courses.at(idCorso);
+    SpecificYearCourse sp = course.getThisYearCourse(startAcYear);
+    std::vector<Date> allAppealPerCourse = sp.getAllAppeals();
+    _acYearSessions.at(startAcYear).updateExamDayCourse(course,allAppealPerCourse);
 }
 
 void University::assignAppealsToProf(std::string idCorso, std::string appeal, int startHour, int numSlots,
@@ -2737,6 +2740,14 @@ void University::requestChanges(std::string acYear, std::string fin) {
         }
     }
     if(allChangesArePossible) {
+        //aggiorno il calendario
+        for(auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++){
+            Course course = _courses.at(iterCourse->second.getId());
+            SpecificYearCourse sp = course.getThisYearCourse(acStart);
+            std::vector<Date> allAppealPerCourse = sp.getAllAppeals();
+            course.getThisYearCourseReference(acStart).eraseNumAppeal();
+            _acYearSessions.at(acStart).updateExamDayCourse(course,allAppealPerCourse);
+        }
         //leggo e riempio la struttura con i nomi dei file stampati per le sessioni
         readOutputFileName();
         //ristampo la sessione
@@ -2744,7 +2755,10 @@ void University::requestChanges(std::string acYear, std::string fin) {
         //prendo il nome del file per quell'anno e per quella sessione
         std::string fileName = _acYearSessions.at(acStart).getFileName(numSession);
         //rigenero i file di output
+        //prima della generazione tutti i _numAppeal devono essere 0 per tutti gli specifcyearCourse
+
         _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
+        _acYearSessions.at(acStart).allExamAppealsWrite(_courses);
     } else
         throw std::invalid_argument(error);
 }

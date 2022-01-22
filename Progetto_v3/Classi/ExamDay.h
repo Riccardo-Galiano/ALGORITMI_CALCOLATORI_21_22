@@ -36,6 +36,7 @@ public:
     int getEndHourOfThisCourseExam(const Course&);
     bool pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, std::vector<int> &idRoomsFounded,
                                    int numSeatsToSeach, int maxNumRooms);
+    void updateSlot(Course course);
     ///remove
     void removeThisAppealInfo(int startSlot,int numSlots,std::string& idCourse);
 private:

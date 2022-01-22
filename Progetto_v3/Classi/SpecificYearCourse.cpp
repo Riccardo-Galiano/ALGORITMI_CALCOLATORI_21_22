@@ -586,6 +586,9 @@ void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date,
     }
 }
 
+void SpecificYearCourse::eraseNumAppeal() {
+ _numAppeal = 0;
+}
 
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

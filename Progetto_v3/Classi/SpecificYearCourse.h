@@ -93,6 +93,7 @@ public:
     bool setProfMap(int, std::vector<std::string>, int);
     void setNewYear(int newStartYear);
     void assignGrouped (std::vector<std::string>&, std::string&,std::string&);
+    void eraseNumAppeal();
 
     ///control
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;

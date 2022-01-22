@@ -378,6 +378,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
     Date dayOne = _yearSessions.at(key).startDate;
     Date lastDay = _yearSessions.at(key).endDate;
     bool continueLoop = true;
+
     for (auto iterDateCalendar = _yearCalendar.find(dayOne.toString()); continueLoop; iterDateCalendar++) {
         ///giorno della sessione
         if (iterDateCalendar->first == lastDay.toString())
@@ -898,7 +899,11 @@ bool SessionYear::isSecondAppeal(Date newDate, Date lastDateAssignation) {
     return true;
 }
 
-
+void SessionYear::updateExamDayCourse(Course course,std::vector<Date> allAppealPerCourse) {
+    for(int i = 0; i<allAppealPerCourse.size(); i++){
+        _yearCalendar.at(allAppealPerCourse[i].toString()).updateSlot(course);
+    }
+}
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"
              << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg
