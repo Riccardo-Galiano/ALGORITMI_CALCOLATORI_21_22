@@ -17,13 +17,13 @@ public:
     explicit  Student(int, std::string, std::string, std::string,std::string,std::string,std::string);
 
     ///Student management
-    bool addStudyPlanPerStudent(std::string,std::vector<std::string>,bool addStudyPlan);
+    void addStudyPlanPerStudent(std::string,std::vector<std::string>,bool addStudyPlan);
 
     ///getter
     std::string getPlanStudyCourseString();
 
     ///control
-    bool clearStudyPlan();
+    void clearStudyPlan();
     bool studyPlanIsEmpty();
 
 private:
