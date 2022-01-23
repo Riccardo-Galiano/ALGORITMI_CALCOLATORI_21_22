@@ -11,15 +11,15 @@
 #include <algorithm>
 #include <iomanip>
 
-Course::Course(const std::string &idCorso, const std::string &nomeCorso, const int cfu, const int oreLezione,
-               const int oreEsercitazione, const int oreLaboratorio) {
+Course::Course(const std::string &idCourse, const std::string &nameCourse, const int cfu, const int lessonHour,
+               const int exerciseHours, const int labHours) {
 
-    _id = idCorso;
-    _name = nomeCorso;
+    _id = idCourse;
+    _name = nameCourse;
     _cfu = cfu;
-    _hours._lec = oreLezione;
-    _hours._ex = oreEsercitazione;
-    _hours._lab = oreLaboratorio;
+    _hours._lec = lessonHour;
+    _hours._ex = exerciseHours;
+    _hours._lab = labHours;
 
 
 }

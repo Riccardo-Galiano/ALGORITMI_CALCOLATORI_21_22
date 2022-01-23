@@ -34,10 +34,8 @@ public:
         int numCoursesParsed = 0;
         std::vector<int> posCBrackets = posCurlyBrackets(input);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
         for (int i = 0; i < posCBrackets.size() - 1; i++) {//fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
-            if (input[posCBrackets[i] + 1] ==
-                ']') {//la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
-                posFinCorsiPar.push_back(
-                        posCBrackets[i] + 2); //salva la pos della graffa successiva a quella presa in analisi: }] } <--
+            if (input[posCBrackets[i] + 1] == ']') {//la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
+                posFinCorsiPar.push_back(posCBrackets[i] + 2); //salva la pos della graffa successiva a quella presa in analisi: }] } <--
                 numCoursesParsed++;
             }
         }
@@ -88,7 +86,7 @@ public:
     static int getAcStartYear(std::string& input){
         std::string acStartYear = input.substr(0, 4);
         try {
-            return checkedStoi(acStartYear,"Errore anno accademico.");
+            return checkedStoi(acStartYear," dell'anno accademico.");
         }catch (std::invalid_argument& err){
             std::string generalError = err.what();
             throw std::invalid_argument( generalError + " La stringa in input non puo' essere un anno \n");
@@ -149,30 +147,23 @@ public:
 
     static bool controlItCanBeAnAcYear(std::string input) {
         //AAAA-AAAA
-        if (input.size() != 9)
-            return false;
-        std::string acStartYear = input.substr(0, 4);
-        std::string acEndYear = input.substr(5, 4);
-        int acStart;
-        int acEnd;
-        try {
-            acStart = checkedStoi(acStartYear,"Errore anno accademico");
-        }catch (std::invalid_argument& err){
-            return false;
+        std::vector<std::string> acYear = Parse::splittedLine(input,'-');
+        if(acYear.size() != 2){
+            throw std::invalid_argument("Formato dell'anno accademico errato");
         }
-        try {
-            acEnd = checkedStoi(acEndYear,"Errore anno accademico");
-        }catch (std::invalid_argument& err){
-            return false;
+        int acStart = checkedStoi(acYear[0]," dell'anno accademico");
+        int acEnd = checkedStoi(acYear[1]," dell'anno accademico");
+        if((acStart <= 1900 || acStart >= 2100) || (acEnd<= 1900 || acEnd >= 2100)){
+            throw std::invalid_argument("L'anno accademico deve essere incluso tra il 1900 e il 2100\n");
         }
-        return acStart + 1 == acEnd;
+        return acEnd == acStart+1;
     }
 
     static Date controlItCanBeADate(std::string input) {
         //AAAA-MM-GG
         std::vector<std::string> date = Parse::splittedLine(input,'-');
         if(date.size() != 3)
-            throw std::invalid_argument("Formato data errato");
+            throw std::invalid_argument("Formato errato della data");
         int year = Parse::checkedStoi(date[0]," di un anno");
         int month = Parse::checkedStoi(date[1]," di un mese");
         int day = Parse::checkedStoi(date[2]," di un giorno");
@@ -183,7 +174,7 @@ public:
         for(int i=0; i<input.size(); i++){
             char currentChar = input[i];
             if(currentChar < 48 || currentChar > 57)
-                throw std::invalid_argument("Errore conversione " + specificError + " da stringa ad intero positivo");
+                throw std::invalid_argument("Errore conversione " + specificError + " da stringa ad intero positivo\n");
         }
           return stoi(input);
     }

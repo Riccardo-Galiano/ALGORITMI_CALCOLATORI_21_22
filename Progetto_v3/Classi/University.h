@@ -44,6 +44,7 @@ public:
     void generateOutputFileName();
 
 
+
     ///DB management
     void versioning(std::string newVersion);
     bool checkVersioningRequest(int newVer);
@@ -111,7 +112,7 @@ public:
     void addProfessors(const std::string &fileIn);
     void addClassrooms(const std::string &fileIn);
     std::vector<std::string> addStudyCourses(const std::string &fileIn);
-    std::vector<std::string> addCourses(const std::string &fileIn);
+    void addCourses(const std::string &fileIn);
 
     ///update
     void updateStuds(const std::string &fin);

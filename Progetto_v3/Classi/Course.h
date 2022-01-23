@@ -22,7 +22,7 @@ typedef struct {
 class Course {
 public:
 
-    Course(const std::string& idCorso, const std::string& nomeCorso, const int cfu, const int oreLezione,const int oreEsercitazione, const int oreLaboratorio);
+    Course(const std::string& idCourse, const std::string& courseName, const int cfu, const int lessonHours,const int exerciseHours, const int labHours);
     bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse, int line_counter );
     bool modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate);
     bool registerStudentsToSpecificYear(int acYear, Student& stud);

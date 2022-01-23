@@ -22,7 +22,7 @@ enum {
 
 ///costruttore
 SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::string &summerSession,
-                         std::string &autumnSession, std::string &output_file_name) : _sysLog(output_file_name) {
+                         std::string &autumnSession, std::string output_file_name) : _sysLog(output_file_name) {
     std::string error;
     bool isOk = true;
     _acYear = Parse::getAcStartYear(acYear);
@@ -52,6 +52,7 @@ SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::s
         throw std::invalid_argument(error);
 }
 
+
 ///aggiunge il periodo delle sessioni
 bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std::string &name) {
     _acYear = Parse::getAcStartYear(acYear);
@@ -61,8 +62,7 @@ bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std
         ///controllo se il periodo di settimane per la sessione autunnale sia esatto
         if (!dates[0].checkGapGiven(4, dates[1]))
             throw std::invalid_argument("la durata della sessione autunnale e' diversa da 4 settimane \n");
-    } else if (!dates[0].checkGapGiven(6,
-                                       dates[1])) {//controllo se il periodo di settimane per le sessione invernale/estiva sia esatto
+    } else if (!dates[0].checkGapGiven(6,dates[1])) {//controllo se il periodo di settimane per le sessione invernale/estiva sia esatto
         if (name == _sessionNames[1])
             throw std::invalid_argument("la durata della sessione estiva e' diversa da 6 settimane \n");
         else if (name == _sessionNames[0])
@@ -71,8 +71,8 @@ bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std
 
     session s{name, dates[0], dates[1]};//salvo le info della sessione nome, data di inizio e data di fine
 
-    _yearSessions.insert(
-            std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
+    _yearSessions.insert(std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
+    //setto il calendario con le date delle sessioni
     this->setCaldendar(dates);
 
     return true;
@@ -904,6 +904,40 @@ void SessionYear::updateExamDayCourse(Course course,std::vector<Date> allAppealP
         _yearCalendar.at(allAppealPerCourse[i].toString()).updateSlot(course);
     }
 }
+
+void SessionYear::controlSuccessivitySessionPeriod() {
+    session winterSession = _yearSessions.at("winter");
+    session summerSession = _yearSessions.at("summer");
+    Date endWinterSession = winterSession.endDate;
+    Date endSummerSession = summerSession.endDate;
+    bool isOk = true;
+    std::string error;
+
+for(auto iterSingleSession = _yearSessions.begin(); iterSingleSession != _yearSessions.end(); iterSingleSession++){
+
+     if(iterSingleSession->first =="summer"){
+         //controllo che la prima data della sessione estiva sia successiva all'ultima data della sessione invernale
+         if(iterSingleSession->second.startDate < endWinterSession) {
+             error.append("Prima data della sessione estiva precedente all'ultima data della sessione invernale\n");
+             isOk = false;
+         }
+     }
+     if(iterSingleSession->first == "autumn") {
+         //controllo che la prima data della sessione autunnale sia successiva all'ultima data della sessione estiva e invernale
+         if (iterSingleSession->second.startDate < endWinterSession) {
+             error.append("Prima data della sessione autunnale precedente all'ultima data della sessione invernale\n");
+         isOk = false;
+         } if (iterSingleSession->second.startDate < endSummerSession) {
+             error.append("Prima data della sessione autunnale precedente all'ultima data della sessione estiva\n");
+             isOk = false;
+         }
+   }
+ }
+if(isOk == false)
+    throw std::invalid_argument(error);
+}
+
+
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"
              << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg

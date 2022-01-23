@@ -132,7 +132,22 @@ std::vector<std::string> program(University &uni, char **argv) {
             break;
         }
         case add_course: {
-            errorString = uni.addCourses(argv[2]);
+            std::string strToAddToLog;
+            bool isOk = true;
+            try {
+                uni.addCourses(argv[2]);
+            }
+            catch(std::exception& occurredException){
+                strToAddToLog = occurredException.what();
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -a:c per gli errori elencati precedentemente\n");
+                sysLog.appendToLog(strToAddToLog,true);
+                isOk = false;
+            }
+            if(isOk) {
+                strToAddToLog.append("Il comando -a:c e' stato eseguito correttamente\n");
+                sysLog.appendToLog(strToAddToLog, false);
+            }
+
             break;
         }
         case add_studyCourse: {

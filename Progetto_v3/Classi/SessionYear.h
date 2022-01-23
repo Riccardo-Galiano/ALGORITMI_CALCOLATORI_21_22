@@ -23,8 +23,7 @@ class SessionYear {
 
 public:
     ///constructor
-    SessionYear(std::string& acYear, std::string& winterSession,std::string& summerSession,std::string& autumnSession,std::string& output_file_name);
-
+    SessionYear(std::string& acYear, std::string& winterSession,std::string& summerSession,std::string& autumnSession,std::string output_file_name = "output_file_name");
     ///SessionYear management
     bool addSession(std::string& acYear, std::string& sessionDates,  std::string& name);
     bool setCaldendar(std::vector<Date> dates);
@@ -61,6 +60,8 @@ public:
     static bool checkHours(std::vector<int>& input);
     bool isSecondAppeal(Date newDate, Date lastDateAssignation);
     void updateExamDayCourse(Course course,std::vector<Date> allAppealPerCourse);
+    void controlSuccessivitySessionPeriod();
+
     ///output
     void allExamAppealsWrite(std::map<std::string, Course>& courses);
     void generateOutputFilesSession(std::string& outputFileName, int session, const std::map<std::string, Course>& courses, bool requestChanges);

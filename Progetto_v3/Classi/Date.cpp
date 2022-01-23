@@ -21,23 +21,24 @@ void Date::setDate(int yy, int mm, int dd) {
         _year = yy;
     }
     else {
-        throw invalid_argument{"l'anno deve essere >= 1900 e <= 2100"};
+        throw invalid_argument{"l'anno deve essere >= 1900 e <= 2100\n"};
     }
 
     if (mm >= 1 && mm <= 12) {
       _month = mm;
    }
    else {
-      throw invalid_argument{"Il mese deve essere tra 1-12"};
+      throw invalid_argument{"Il mese deve essere tra 1-12\n"};
    }
 
    // test se anno bisestile
-   if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) ||
-      (dd >= 1 && dd <= _days[_month])) {
+   if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) || (dd >= 1 && dd <= _days[_month])) {
       _day = dd;
    }
-   else {
-      throw invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene"};
+   else if( dd >31) {
+      throw std::invalid_argument("Il giorno non puo' essere maggiore di 31\n");
+   }else{
+      throw invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene\n"};
    }
 }
 
