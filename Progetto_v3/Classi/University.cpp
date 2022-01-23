@@ -1627,6 +1627,7 @@ void University::setSessionPeriod(std::string &acYear, std::string &winterSessio
         throw std::logic_error(error);
 }
 
+///controlli sulle sessioni
 void University::controlCoerenceSessionDate(std::string winterSession, std::string summerSession,std::string  autumnSession,int acYear) {
     std::string error;
     bool isOk = true;
@@ -1651,6 +1652,8 @@ void University::controlCoerenceSessionDate(std::string winterSession, std::stri
     if(isOk == false)
         throw std::logic_error(error);
 }
+
+///per ogni sessione controllo che il formato dei periodi sia corretto, le date siano corrette e che ci sia coerenza tra le date e l'anno accademico scelto
 void University::controlOfASingleSessionPeriod(std::string name , std::string sessionPeriod, int acStartYear) {
     std::vector<std::string> dateSession = Parse::splittedLine(sessionPeriod, '_');
     std::string error;
@@ -1675,7 +1678,7 @@ void University::controlOfASingleSessionPeriod(std::string name , std::string se
         startSessionDate = Parse::controlItCanBeADate(sessionPeriod.substr(0, 10));
     } catch (std::invalid_argument &err) {
         std::string genericError = err.what();
-        error.append("La prima data della sessione " + session + " con conforme con le specifiche." + genericError);
+        error.append("La prima data della sessione " + session + " non conforme con le specifiche." + genericError);
         isOk = false;
     }
     try {
@@ -1699,7 +1702,6 @@ void University::controlOfASingleSessionPeriod(std::string name , std::string se
         throw std::invalid_argument(error);
 }
 
-
 ///set indisponibilità professori in base all'anno
 void University::setProfsNoAvailability(std::string acYear, const std::string &fin) {
     std::ifstream fileIn(fin);
@@ -1708,41 +1710,61 @@ void University::setProfsNoAvailability(std::string acYear, const std::string &f
     }
     std::string line;
     std::vector<std::string> profAvailability;
-    int nMatr, year;
+    int year = 0;
+    int line_counter = 1;
     bool doDbWrite = true;
     std::string error;
-    year = Parse::getAcStartYear(acYear);
-    int line_counter = 1;
+
+    ///controllo possa essere un anno accademico
+
+    bool canBeAnAcYear = Parse::controlItCanBeAnAcYear(acYear);
+    if(canBeAnAcYear == false){
+        error.append("Il primo comando non puo' essere un anno accademico\n");
+        doDbWrite = false;
+    } else{
+        year = Parse::getAcStartYear(acYear);
+    }
 
     while (std::getline(fileIn, line)) {//fino alla fine del file leggo un rigo alla volta
-        profAvailability = Parse::splittedLine(line, ';');
-        bool canBeAnId = Parse::controlItCanBeAnId(profAvailability[0], 6,'d');
+        //se il rigo appena letto è vuoto passo al successivo
+        if(line.empty()==false) {
+            profAvailability = Parse::splittedLine(line, ';');
+            int nMatr = 0;
 
-        nMatr = Parse::getMatr(profAvailability[0]);//prendo la matricola
-        std::string idProf = Parse::setId('d',6,nMatr);
-        auto iterProf = _professors.find(nMatr);//punto al prof con matricola nMatr
-        if(profAvailability[0].empty()){
-            error.append("Non e' stata dichiarata la matricola del professore alla riga: " + std::to_string(line_counter) + "\n");
-            doDbWrite = false;
-        }else if(canBeAnId == false){
-            error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter)+ " non puo' essere un Id \n");
-            doDbWrite = false;
-        }else if(iterProf == _professors.end()){
-            error.append("la matricola " + idProf + "alla riga" + std::to_string(line_counter) + " non e' presente nel database \n");
-            doDbWrite = false;
-        }else {
-            //dovrò aggiornare l'indisponibilità di un prof per uno specifico anno accademico quindi cancello le
-            //vecchie indisponibilità di uno specifico prof per uno specifico anno
-
-            iterProf->second.noAvailabilityClear(year);
-            for (int i = 1; i < profAvailability.size(); i++) {//per ogni campo della riga letta
-                try {
-                    _professors.at(nMatr).setNoAvaibilities(year,profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
-                }catch(std::exception& err) {
-                    std::string generalError = err.what();
-                    error.append("in almeno uno dei periodi di indisponibilita' del prof con matricola: " + idProf + " alla riga: " + std::to_string(line_counter) + "\n");
+            ///se il primo campo è vuoto passo al prossimo rigo
+            if (profAvailability[0].empty()) {
+                error.append("Non e' stata dichiarata la matricola del professore alla riga: " +
+                             std::to_string(line_counter) + "\n");
+                doDbWrite = false;
+            } else if (Parse::controlItCanBeAnId(profAvailability[0], 6,'d')) {///controllo che possa essere effettivamente la matricola di un professore
+                //se un numero a 6 cifre e la lettera iniziale è una 'd' può essere una matricola
+                nMatr = Parse::getMatr(profAvailability[0]);
+                auto iterProf = _professors.find(nMatr);//punto al prof con matricola nMatr
+                if (iterProf == _professors.end()) {
+                    error.append("La matricola " + profAvailability[0] + " alla riga" + std::to_string(line_counter) +
+                                 " non e' presente nel database \n");
                     doDbWrite = false;
+                } else {
+                    //dovrò aggiornare l'indisponibilità di un prof per uno specifico anno accademico quindi cancello le
+                    //vecchie indisponibilità di uno specifico prof per uno specifico anno
+
+                    iterProf->second.noAvailabilityClear(year);
+                    for (int i = 1; i < profAvailability.size(); i++) {//per ogni campo della riga letta
+                        try {
+                            _professors.at(nMatr).setNoAvaibilities(year,
+                                                                    profAvailability[i]);//vado a settare uno dei periodi di indisponibilità del prof nella map _professor
+                        } catch (std::exception &err) {
+                            std::string generalError = err.what();
+                            error.append(generalError + std::to_string(i) + " del professore con matricola " +
+                                         profAvailability[0] + " alla riga: " + std::to_string(line_counter) + "\n");
+                            doDbWrite = false;
+                        }
+                    }
                 }
+            } else {
+                error.append("Il primo campo alla riga " + std::to_string(line_counter) +
+                             " non puo' essere la matricola di un professore\n");
+                doDbWrite = false;
             }
         }
         line_counter++;
@@ -2178,63 +2200,117 @@ void University::addStudyPlan(std::string fin) {
     bool doDbWrite = true;
     int line_counter = 1;
     while (std::getline(fileIn, line)) {
-        int id = 0;
-        bool isOk = true;
-        std::vector<int> posSemiColon = Parse::posSemiColon(line);
-        ///controlli sul primo campo di informazioni, matricola
-        std::string matr = line.substr(0, posSemiColon[0]);
-        bool canBeAnId = Parse::controlItCanBeAnId(matr,6,'s');
-        if(matr.empty()){
-            error.append("Non e' stata dichiarata la matricola dello studente al rigo: " + std::to_string(line_counter) + "\n");
-            doDbWrite = false;
-            isOk = false;
-        } else if(canBeAnId == false){
-            error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter) + " non puo' essere una matricola di uno studente \n");
-            doDbWrite = false;
-            isOk = false;
-        } else{
-            id = Parse::getMatr(matr);
-        }
-        ///controllo sul secondo campo di informazioni, anno accademico
-        std::string acYearRegistration = line.substr(posSemiColon[0]+1, posSemiColon[1]-posSemiColon[0] - 1);
-        bool canBeAnAcYear = Parse::controlItCanBeAnAcYear(acYearRegistration);
-        if(acYearRegistration.empty()){//se il campo è vuoto
-            error.append("Non e' stato dichiarato l'anno accademico al rigo: " + std::to_string(line_counter) + "\n");
-            doDbWrite = false;
-            isOk = false;
-        } else if(canBeAnAcYear == false && isOk){ //se non è vuoto controllo che possa essere un anno accademico
-            error.append("Anno accademico non valido al rigo: " + std::to_string(line_counter) + "\n");
-            doDbWrite = false;
-            isOk = false;
-        }
-        if(isOk) {
-            std::size_t pos = line.find('}');
-            std::string allCourses = line.substr(posSemiColon[1] + 2, pos - (posSemiColon[1]+2));
-            Student &stud = _students.at(id);
-            std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
-            /// mi assicuro che lo studente non abbia già un piano di studio(posso cambiarlo solo con la update)
-            try {
-                stud.addStudyPlanPerStudent(acYearRegistration, courses);
-            }catch (std::invalid_argument &err) {
-                std::string generalError = err.what();
-                error.append(generalError + ". Controllare riga: " + std::to_string(line_counter) + "\n");
+        if(line.empty() == false) {
+            int id = 0;
+            bool isOk = true;
+            std::vector<int> posSemiColon = Parse::posSemiColon(line);
+            std::string acYearRegistration;
+            bool canBeAnAcYear = true;
+
+            ///controlli sul primo campo di informazioni, matricola
+            std::string matr = line.substr(0, posSemiColon[0]);
+            bool canBeAnId = Parse::controlItCanBeAnId(matr, 6, 's');
+
+            if (matr.empty()) {
+                error.append(
+                        "Non e' stata dichiarata la matricola dello studente al rigo: " + std::to_string(line_counter) +
+                        "\n");
                 doDbWrite = false;
+                isOk = false;
+            } else if (canBeAnId == false) {
+                ///se non è un numero a 6 cifre e la prima lettera non inizia con 's'
+                error.append("Il primo campo di informazioni alla riga " + std::to_string(line_counter) +
+                             " non puo' essere una matricola di uno studente \n");
+                doDbWrite = false;
+                isOk = false;
+            } else {
+                id = Parse::getMatr(matr);
             }
-            ///registro lo studente per la prima volta nell'anno specifico dei corsi del suo piano di studio
-            try {
-                registerStudentsToSpecificYearCourses(courses, stud, acYearRegistration, line_counter);
-            } catch (std::invalid_argument &err) {
-                error.append(err.what());
-                doDbWrite = false;
+
+            ///se la matricola è ok faccio il controllo sul secondo campo di informazioni: anno accademico
+            if(isOk) {
+                acYearRegistration = line.substr(posSemiColon[0] + 1, posSemiColon[1] - posSemiColon[0] - 1);
+                if (acYearRegistration.empty()) {
+                    //se il campo dell'anno accademico è vuoto
+                    error.append("Non e' stato dichiarato l'anno accademico alla riga " + std::to_string(line_counter) +
+                                 "\n");
+                    doDbWrite = false;
+                    isOk = false;
+                } else {
+                    try {
+                        canBeAnAcYear = Parse::controlItCanBeAnAcYear(acYearRegistration);
+                    } catch (std::invalid_argument &err) {
+                        std::string genericError = err.what();
+                        error.append("Controllare riga: " + std::to_string(line_counter) + ". " + genericError);
+                        doDbWrite = false;
+                        isOk = false;
+                    }
+                    if (canBeAnAcYear == false) {
+                        error.append("Anno accademico non valido al rigo: " + std::to_string(line_counter) + "\n");
+                        doDbWrite = false;
+                        isOk = false;
+                    }
+                }
+            }
+
+            /// se anno e matricola sono ok continuo con i controlli sul piano di studio
+            if (isOk) {
+                std::vector<int> pos = Parse::posCurlyBrackets(line);
+                //mi assicuro che le parentesi graffe siano messe al posto giusto
+                try {
+                    Parse::controlStudyPlanFormat(pos, line);
+                } catch (std::invalid_argument &err) {
+                    std::string genericError = err.what();
+                    error.append("Al rigo " + std::to_string(line_counter) + genericError);
+                    doDbWrite = false;
+                    isOk = false;
+                }
+
+                if (isOk) {
+                    //se anch el parentesi graffe sono al posto giusto controllo i corsi
+                    std::string allCourses = line.substr(posSemiColon[1] + 2, pos[1] - (posSemiColon[1] + 2));
+                    Student &stud = _students.at(id);
+                    std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
+                    //controllo il formato dei corsi
+                    for (int i = 0; i < courses.size(); i++) {
+                        try {
+                            Parse::controlItCanBeACourseId(courses[i]);
+                        } catch (std::invalid_argument &err) {
+                            std::string genericError = err.what();
+                            error.append(
+                                    genericError + ". Il codice " + courses[i] + " al rigo " +
+                                    std::to_string(line_counter) +
+                                    " non puo' essere il codice di un corso \n");
+                            doDbWrite = false;
+                            isOk = false;
+                        }
+                    }
+                    /// mi assicuro che lo studente non abbia già un piano di studio(posso cambiarlo solo con la update)
+                    if (isOk) {
+                        try {
+                            stud.addStudyPlanPerStudent(acYearRegistration, courses,true);
+                        } catch (std::invalid_argument &err) {
+                            std::string generalError = err.what();
+                            error.append(generalError + ". Controllare riga: " + std::to_string(line_counter) + "\n");
+                            doDbWrite = false;
+                        }
+                        ///registro lo studente per la prima volta nell'anno specifico dei corsi del suo piano di studio
+                        try {
+                            registerStudentsToSpecificYearCourses(courses, stud, acYearRegistration, line_counter);
+                        } catch (std::invalid_argument &err) {
+                            error.append(err.what());
+                            doDbWrite = false;
+                        }
+                    }
+                }
             }
         }
         line_counter++;
-
     }
     fileIn.close();
     if(doDbWrite) {
         dbStudyPlanWrite();
-        dbCourseWrite();
+        dbCourseWrite();//BISOGNA FARLO??
     }else{
         throw std::invalid_argument(error);
     }
@@ -2272,7 +2348,7 @@ void University::readStudyPlan() {
         ss >> c >> id;
         Student &stud = _students.at(id);
         std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
-        _students.at(id).addStudyPlanPerStudent(acYearRegistration, courses);
+        _students.at(id).addStudyPlanPerStudent(acYearRegistration, courses,false);
         registerStudentsToSpecificYearCourses(courses, stud, acYearRegistration, line_counter);
         line_counter++;
     }
@@ -2327,7 +2403,7 @@ void University::updateStudyPlan(const std::string& fin) {
             std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
             /// mi assicuro che lo studente non abbia già un piano di studio(posso cambiarlo solo con la update)
             try {
-                stud.addStudyPlanPerStudent(acYearRegistration, courses);
+                stud.addStudyPlanPerStudent(acYearRegistration, courses,false);
             }catch (std::invalid_argument &err) {
                 std::string generalError = err.what();
                 error.append(generalError + ". Controllare riga: " + std::to_string(line_counter) + "\n");

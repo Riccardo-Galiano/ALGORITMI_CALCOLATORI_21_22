@@ -27,18 +27,28 @@ address) {
 bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     std::vector<std::string> dates;
     dates = Parse::splittedLine(input, '|');//inizio periodo | fine periodo
-    Date startPeriodDate = Date(dates[0]); //creo un oggetto Date passando la stringa dell'intera data(vedere costructor in Date)
-    Date endPeriodDate = Date(dates[1]);
+    if(dates.size() != 2)
+        throw std::invalid_argument("Errore formato del periodo ");
+    Date startPeriodDate = Parse::controlItCanBeADate(dates[0]);
+    Date endPeriodDate = Parse::controlItCanBeADate(dates[1]);
+    //la data iniziale deve essere inferiore alla data finale
     if(startPeriodDate < endPeriodDate) {
-        std::vector<std::pair<Date, Date>> vect;//vettore di tuple in cui mettere data di inizio e fine del periodo di indisponibilità
-        if (_noAvailab.count(acYear) == 0) {//se non c'è ancora l'anno accademico a cui sto facendo riferimento
-            vect.push_back(std::pair<Date, Date>(startPeriodDate, endPeriodDate));
-            _noAvailab.insert(std::pair<int, std::vector<std::pair<Date, Date>>>(acYear, vect));//metto in una mappa per anno accademico il vettore di tuple
-        } else {
-            _noAvailab.at(acYear).push_back(std::pair<Date, Date>(startPeriodDate,endPeriodDate));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
+        //dimostro che ci sia coerenza tra l'anno dato da comando e l'anno del periodo analizzato
+        if(startPeriodDate.getYear() == acYear + 1) {
+            std::vector<std::pair<Date, Date>> vect;//vettore di tuple in cui mettere data di inizio e fine del periodo di indisponibilità
+            if (_noAvailab.count(acYear) == 0) {//se non c'è ancora l'anno accademico a cui sto facendo riferimento
+                vect.push_back(std::pair<Date, Date>(startPeriodDate, endPeriodDate));
+                _noAvailab.insert(std::pair<int, std::vector<std::pair<Date, Date>>>(acYear,
+                                                                                     vect));//metto in una mappa per anno accademico il vettore di tuple
+            } else {
+                _noAvailab.at(acYear).push_back(std::pair<Date, Date>(startPeriodDate,
+                                                                      endPeriodDate));//se già esiste l'anno accademico devo solo aggiungere il periodo di indisponibilità al vettore di tuple corrispondende all'acYear
+            }
+        }else{
+            throw std::logic_error("Non c'e' coerenza tra l'anno accademico passato da comando e il periodo " );
         }
     } else
-        throw std::logic_error("la data finale e' inferiore a quella iniziale ");
+        throw std::logic_error("La data finale e' inferiore a quella iniziale nel periodo " );
 
     return true;
 }
@@ -66,7 +76,7 @@ std::vector<std::string> Professor::outputNoAvailabilities(int nMatr) {
 
 ///pulisce la map ad un preciso anno di _nonAvaib
 void Professor::noAvailabilityClear(int year) {
-    _noAvailab.erase(year);
+     _noAvailab.erase(year);
 }
 
 ///aggiunge un esame alla mappa degli esami che un professore deve preparare

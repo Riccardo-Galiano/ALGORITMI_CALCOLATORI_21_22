@@ -17,11 +17,10 @@ Student::Student(int matr, std::string name, std::string surname, std::string em
 
 
 
-bool Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan) {
-    ///questa funzione è usata per la add e per la update quindi io aggiungo l'anno di
-
+bool Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan,bool addStudyPlan) {
+    ///questa funzione è usata per la add e per la update
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
-    if(_studyPlan.empty() == false){
+    if(_studyPlan.empty() == false && addStudyPlan){
         std::string settedId = Parse::setId('s',6,getId());
         throw std::invalid_argument("Il piano di Studio per lo studente con matricola "+ settedId + " e' stato gia' definito \n");
     }

@@ -149,7 +149,7 @@ public:
         //AAAA-AAAA
         std::vector<std::string> acYear = Parse::splittedLine(input,'-');
         if(acYear.size() != 2){
-            throw std::invalid_argument("Formato dell'anno accademico errato");
+            throw std::invalid_argument("Formato dell'anno accademico errato\n");
         }
         int acStart = checkedStoi(acYear[0]," dell'anno accademico");
         int acEnd = checkedStoi(acYear[1]," dell'anno accademico");
@@ -157,6 +157,37 @@ public:
             throw std::invalid_argument("L'anno accademico deve essere incluso tra il 1900 e il 2100\n");
         }
         return acEnd == acStart+1;
+    }
+
+    static void controlStudyPlanFormat(std::vector<int> pos,std::string line) {
+        if (pos.size() != 2) {
+            throw std::invalid_argument(" devono esserci due graffe\n");
+
+        } else {
+            if (pos[0] != 18 || line[18] != 123) {// s000000;AAAA-AAAA; (dopo 18 caratteri deve esserci un '{' che in ASCII è 123)
+                //se la prima parentesi graffa non si trova in posizione 18 del rigo o non è una '{'
+                throw std::invalid_argument(" il piano di studio va racchiuso da due graffe{}, le uniche presenti \n");
+
+            } else if (pos[1] != line.size() - 1 || line[line.size() - 1] != 125) {//l'ultimo carattere deve essere una '}'
+                throw std::invalid_argument(" il piano di studio va racchiuso da due graffe{}, le uniche presenti\n");
+
+            }
+        }
+    }
+
+    static void controlItCanBeACourseId(std::string idCourse) {
+        if(idCourse.size() != 7)
+            throw std::invalid_argument("Errore formato corso");
+        for(int i = 0; i<idCourse.size(); i++){
+            if(i == 0 || i == 1){
+                if(idCourse[i] < 48 || idCourse[i]> 59)
+                    throw std::invalid_argument("Errore formato corso");
+            } else{
+                if (idCourse[i] < 65 || idCourse[i] > 90)
+                    throw std::invalid_argument("Errore formato corso");
+            }
+        }
+
     }
 
     static Date controlItCanBeADate(std::string input) {

@@ -17,7 +17,7 @@ public:
     explicit  Student(int, std::string, std::string, std::string,std::string,std::string,std::string);
 
     ///Student management
-    bool addStudyPlanPerStudent(std::string,std::vector<std::string>);
+    bool addStudyPlanPerStudent(std::string,std::vector<std::string>,bool addStudyPlan);
 
     ///getter
     std::string getPlanStudyCourseString();
