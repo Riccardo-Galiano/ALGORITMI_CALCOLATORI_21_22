@@ -2288,6 +2288,7 @@ void University::addStudyPlan(std::string fin) {
                             //controllo che non ci siano caratteri non voluti tra i corsi
                             bool continueLoop = true;
                             for (int i = 0; i < allCourses.size() && continueLoop; i++) {
+                                //controllo ci siano solo lettere maiuscole, numeri e ';';
                                 if (!((allCourses[i] >= 48 && allCourses[i] <= 57) || allCourses[i] == 59 ||
                                     (allCourses[i] >= 65 && allCourses[i] <= 90))) {
                                     error.append("Al rigo " + std::to_string(line_counter) +
@@ -2477,6 +2478,7 @@ void University::updateStudyPlan(const std::string& fin) {
                             //controllo che non ci siano caratteri non voluti tra i corsi
                             bool continueLoop = true;
                             for (int i = 0; i < allCourses.size() && continueLoop; i++) {
+                                //controllo ci siano solo lettere maiuscole, numeri e ';'
                                 if (!((allCourses[i] >= 48 && allCourses[i] <= 57) || allCourses[i] == 59 ||
                                       (allCourses[i] >= 65 && allCourses[i] <= 90))) {
                                     error.append("Al rigo " + std::to_string(line_counter) +
@@ -2798,7 +2800,7 @@ void University::readAllMinDistanceRequest() {
 }
 
 void University::setMinDistance(std::string acYear, std::string name) {
-    int year = Parse::getAcStartYear(acYear);
+
     std::fstream fin;
     fin.open(name, std::ios::in);
     if (!fin.is_open()) {
@@ -2807,43 +2809,103 @@ void University::setMinDistance(std::string acYear, std::string name) {
     }
     std::string line;
     std::string error;
+    int year = 0;
     bool doDbWrite = true;
-    int line_counter = 0;
-    while (std::getline(fin, line)) {
-        std::vector<std::string> infoRequest = Parse::splittedLine(line, ';');
-        int matr = Parse::getMatr(infoRequest[0]);
-        std::string matrString = infoRequest[0];
-        std::string idCorso = infoRequest[1];
-        int distance = Parse::checkedStoi(infoRequest[2],"Errore distanza.");
-        if (distance >= 14) {
-            //controllo che il corso esista
-            if (_courses.find(idCorso) == _courses.end()) {
-                error.append("il corso " + idCorso + "alla riga: " + std::to_string(line_counter) + " non esiste nel database dei corsi \n");
-                doDbWrite = false;
-            }
-            //controllo che quel prof esista
-            if (_professors.find(matr) == _professors.end()) {
-                error.append("il professore " + matrString + "alla riga: "+ std::to_string(line_counter) + " non esiste nel database dei professori \n");
-                doDbWrite = false;
-            }
-            //controllo che quel prof abbia quel corso in quell'anno accademico
-            if(doDbWrite) {
-                if (_courses.at(idCorso).profHaveThisCourse(matr, year) == false) {
-                    error.append("il professore " + matrString + " alla riga: " + std::to_string(line_counter) + " non è stato assegnato al corso " + idCorso + " nel " +  acYear + "\n");
+    int line_counter = 1;
+    //controlli sull'anno accademico
+    if(Parse::controlItCanBeAnAcYear(acYear))
+        year = Parse::getAcStartYear(acYear);
+    else
+        throw std::invalid_argument("Errore anno accademico. Gli anni in un anno accademico devono essere consecutivi\n");
+
+        while (std::getline(fin, line)) {
+            bool isOk = true;
+            int matr = 0;
+            std::string idCourse;
+            int distance = 0;
+            if(line.empty() == false) {
+                std::vector<std::string> infoRequest = Parse::splittedLine(line, ';');
+                if (infoRequest.size() == 3) {
+                    ///controlli sulla matricola
+                    if(infoRequest[0].empty()){
+                        error.append("Non e' stata dichiarata la matricola al rigo " + std::to_string(line_counter) + "\n");
+                        doDbWrite = false;
+                        isOk = false;
+                    } else if (Parse::controlItCanBeAnId(infoRequest[0],6,'d') == false){
+                        error.append("Il primo campo di informazioni al rigo " + std::to_string(line_counter) + " non puo' essere una matricola di un professore\n");
+                        doDbWrite = false;
+                        isOk = false;
+                    } else{
+                        matr = Parse::getMatr(infoRequest[0]);
+                    }
+
+                    ///controlli sul corso
+                    if(infoRequest[1].empty()){
+                        error.append("Non e' stato dichiarato il corso al rigo " + std::to_string(line_counter) + "\n");
+                        doDbWrite = false;
+                        isOk = false;
+                    } else {
+                        try {
+                            Parse::controlItCanBeACourseId(infoRequest[1]);
+                            idCourse = infoRequest[1];
+                        }catch (std::invalid_argument & err){
+                            error.append("Il secondo campo di informazioni al rigo " + std::to_string(line_counter) + " non puo' essere il codice di un corso\n");
+                            doDbWrite = false;
+                            isOk = false;
+                        }
+                    }
+
+                    ///controllo sulla distanza
+                    try {
+                        distance = Parse::checkedStoi(infoRequest[2], " della distanza");
+                    }catch (std::invalid_argument& err){
+                        std::string genericError = err.what();
+                        error.append(genericError +"  al rigo "  + std::to_string(line_counter) +" \n");
+                        doDbWrite = false;
+                        isOk = false;
+                    }
+
+                    if(isOk) {
+                        //controllo che il corso esista
+                        if (_courses.find(idCourse) == _courses.end()) {
+                            error.append("Il corso " + idCourse + "alla riga: " + std::to_string(line_counter) +
+                                         " non esiste nel database dei corsi \n");
+                            doDbWrite = false;
+                            isOk = false;
+                        }
+                        //controllo che quel prof esista
+                        if (_professors.find(matr) == _professors.end()) {
+                            error.append(
+                                    "Il professore " + infoRequest[0] + " alla riga: " + std::to_string(line_counter) +
+                                    " non esiste nel database dei professori \n");
+                            doDbWrite = false;
+                            isOk = false;
+                        }
+                        //controllo che quel prof abbia quel corso in quell'anno accademico
+                        if (isOk) {
+                            if (_courses.at(idCourse).profHaveThisCourse(matr, year) == false) {
+                                error.append("Il professore " + infoRequest[0] + " alla riga: " +
+                                        std::to_string(line_counter) +
+                                        " non e' stato assegnato al corso " + idCourse + " nel " + acYear + "\n");
+                                doDbWrite = false;
+                            }
+                        }
+                        std::string matr_idC(infoRequest[0] + "_" + idCourse);
+                        if (_acYearSessions.count(year) == 0) {
+                            error.append("Bisogna prima settare i periodi delle sessioni per il " + acYear + "\n");
+                            doDbWrite = false;
+                        }
+                        if (doDbWrite)
+                            _acYearSessions.at(year).addProfGap(matr_idC, distance);
+                    }
+                }else{
+                    error.append("Errore formato al rigo "+ std::to_string(line_counter) + ". I campi delimitati da ';' devono essere tre\n");
                     doDbWrite = false;
                 }
             }
-            //se la distanza è minore di 14 ignoro la riga del file
-            std::string matr_idC(matrString + "_" + idCorso);
-            if (_acYearSessions.count(year) == 0) {
-                error.append("Bisogna prima settare i periodi delle sessioni per il " + acYear + "\n");
-                doDbWrite = false;
-            }
-            if(doDbWrite)
-                _acYearSessions.at(year).addProfGap(matr_idC, distance);
+            line_counter++;
         }
-        line_counter++;
-    }
+
     if(doDbWrite)
         minDistanceRequestWrite();
     else

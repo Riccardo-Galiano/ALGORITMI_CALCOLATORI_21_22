@@ -230,7 +230,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                     for (int i = 0; i < coursesToConsiderInThisLoop.size() && continueLoopPerHourStart; i++) {
                         Course courseToConsider = coursesToConsiderInThisLoop[i];
                         std::vector<int> roomsFounded;
-                        SpecificYearCourse sp = courseToConsider.getThisYearCourse(_acYear);
+                        SpecificYearCourse sp = courseToConsider.getThisYearCourse(getAcYear());
                         int numAppealsAssigned = sp.amIAssignedAlreadyInThisSession(this->getSemester(sessName));
                         int endHourSlot = -1;
 
@@ -572,23 +572,24 @@ SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName
             std::string keyToSearchProfsGap = ss.str();
             if (_gapProfs.count(keyToSearchProfsGap) != 0) {
                 int requiredGap = _gapProfs.at(keyToSearchProfsGap);
-                if (second == true) {
-                    if (lastDateAssignation.whatIsTheGap(newDate) <
-                        requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
-                        if (requestChanges == true) {
+                if(requiredGap < 14) {
+                    if (second == true) {
+                        if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
+                            if (requestChanges == true) {
+                                std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
+                                throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
+                                                            " tra nuovo secondo appello e primo appello non rispettato\n");
+                            } else
+                                return false;
+                        }
+                    } else {
+                        if (newDate.whatIsTheGap(lastDateAssignation) <
+                            requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
                             std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
                             throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
-                                                        " tra nuovo secondo appello e primo appello non rispettato\n");
-                        } else
-                            return false;
-                    }
-                } else {
-                    if (newDate.whatIsTheGap(lastDateAssignation) <
-                        requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
-                        std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
-                        throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
-                                                    " tra nuovo primo appello e secondo appello non rispettato\n");
+                                                        " tra nuovo primo appello e secondo appello non rispettato\n");
 
+                        }
                     }
                 }
             }

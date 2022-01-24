@@ -42,13 +42,6 @@ bool SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> pr
     return false;
 }
 
-///setta l'Id aggiungendo degli 0 all'inizio, dove necessario
-std::string SpecificYearCourse::setId(int nMatr) const {
-    std::stringstream output;
-    output << std::setfill('0') << std::setw(6) << nMatr;
-    return output.str();
-}
-
 ///set dell'anno al successivo
 bool SpecificYearCourse::setYear() {
     this->_startYear++;
@@ -149,9 +142,10 @@ const std::string SpecificYearCourse::getProfParString() const {
             if (profs[j].mainProf)
                 matrTit = profs[j].prof_id;
         }
-        output << "d" << setId(matrTit) << ",[";
+
+        output << Parse::setId('d',6,matrTit) << ",[";
         for (int j = 0; j < profs.size(); j++) {
-            output << "{d" << setId(profs[j].prof_id) << "," << profs[j].hLez << "," << profs[j].hExe << ","
+            output << "{" << Parse::setId('d',6,profs[j].prof_id) << "," << profs[j].hLez << "," << profs[j].hExe << ","
                    << profs[j].hLab << "}";
             if (j < profs.size() - 1)
                 output << ",";

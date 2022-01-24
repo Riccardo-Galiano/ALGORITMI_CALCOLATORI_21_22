@@ -463,6 +463,16 @@ bool Course::controlAppeal(std::string appealDate) {
 }
 
 bool Course::profHaveThisCourse(int matr, int acStartYear) {
+    SpecificYearCourse sp = getLastSpecificYearCourse();
+    int lastYear = sp.getStartYear();
+    int firstYear = getFirstYearOfActivity();
+    ///se il corso non era ancora attivo non si puo' fare nulla, scateno l'eccezione
+    if(acStartYear < firstYear){
+        throw std::invalid_argument("Il corso "+ getId() + " non era ancora attivo nel "+ std::to_string(acStartYear) + "-" + std::to_string(acStartYear+1)+ "\n");
+    }else if(lastYear <acStartYear){
+        ///se il corso semplicemente non è stato aggiornato
+        fillAcYearsUntilStartAcYear(acStartYear,lastYear);
+    }
     std::vector<int> profOfCourse = _courseOfTheYear.at(acStartYear).getAllProfMatr();
     return std::find(profOfCourse.begin(), profOfCourse.end(), matr) != profOfCourse.end();
 }
