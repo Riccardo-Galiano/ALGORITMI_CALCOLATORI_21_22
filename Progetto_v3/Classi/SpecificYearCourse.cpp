@@ -23,6 +23,8 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
     _yy_semester = yy_semester;
     _studyCourseAssigned = studyCourse;
     _numAppeal = 0;
+    _totStudentsEnrolled = 0;
+    _totStudentsNotPassed = 0;
     setProfMap(nCrsiPar, prof, line_counter);//setto la mappa dei prof per ogni corso
 
 }
@@ -271,7 +273,7 @@ bool SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark
     studToUpdate._grade = mark;
     if (mark >= 18 && mark <= 32) {
         studToUpdate._passYear = passYear;
-        totStudentsNotPassed--;
+        _totStudentsNotPassed--;
         studToUpdate._passed = true;
         studToUpdate._appealPassed = appealsDate;
     }
@@ -298,7 +300,7 @@ std::string &SpecificYearCourse::getAcYearOff() {
 }
 
 int SpecificYearCourse::getTotStudentsExam() {
-    return totStudentsNotPassed; //(tot enroled - (tot enroled-totNot))
+    return _totStudentsNotPassed; //(tot enroled - (tot enroled-totNot))
 }
 
 bool SpecificYearCourse::addClassroomsToAppeal(int numAppeal, std::vector<int> &rooms) {
@@ -325,8 +327,8 @@ bool SpecificYearCourse::addStudent(int acYearRegistration, Student &stud) {
     studToAdd._startEnrolYear = acYearRegistration;
     studToAdd._passYear = -1;
     studToAdd._appealPassed = appealsInitialization;
-    totStudentsEnrolled++;
-    totStudentsNotPassed++;
+    _totStudentsEnrolled++;
+    _totStudentsNotPassed++;
     studToAdd._passed = false;
     std::pair<int, student> pair(stud.getId(), studToAdd);
     _studentsEnrolled.insert(pair);
@@ -335,7 +337,7 @@ bool SpecificYearCourse::addStudent(int acYearRegistration, Student &stud) {
 
 
 int SpecificYearCourse::getTotStudentsEnrolled() const {
-    return totStudentsEnrolled;
+    return _totStudentsEnrolled;
 }
 
 const std::map<int, std::vector<Date>> &SpecificYearCourse::getHowManyTimesIAmAssignedInASession() const {

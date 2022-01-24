@@ -41,7 +41,7 @@ public:
     std::vector<std::string> getProfsOfGapProfsString();
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
     void removeThisAppealInfoFromCalendar(int numSlots,Date& date, int& startSlot, std::string& idCourse);
-    bool tryToSetThisExamInThisSession(std::map<std::string, Course>& courses, std::map<int, Professor>& professors,std::map<int, Classroom>& classrooms, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
+    bool tryToSetThisExamInThisSession(University& myUniversity, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
 
     ///getter
     int getAcYear() const;

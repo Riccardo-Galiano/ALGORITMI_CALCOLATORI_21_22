@@ -1835,7 +1835,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
         try {
-            esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, 0,*this);
+            esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, constraintRelaxParameter,*this);
         }catch (std::logic_error& err){
             ///questo throw sarà attivo solo se non posso trovare disponibilità di aule in nessun giorno e in nessuno slot per almeno un corso
             throw std::invalid_argument(err.what());
@@ -2190,6 +2190,7 @@ bool University::renameOldDataBase(int version) {
     return false;
 }
 
+///aggiunge il piano di studio agli studenti
 void University::addStudyPlan(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -2345,6 +2346,7 @@ void University::addStudyPlan(std::string fin) {
     }
 }
 
+///riscrive il database dei piani di studio per gli studenti
 void University::dbStudyPlanWrite() {
     std::fstream fout;
     fout.open("db_piano_studi.txt", std::fstream::out | std::fstream::trunc);
@@ -2359,6 +2361,7 @@ void University::dbStudyPlanWrite() {
     fout.close();
 }
 
+///legge il database dei piani di studio degli studenti
 void University::readStudyPlan() {
     std::ifstream fileIn("db_piano_studi.txt");
     if (!fileIn.is_open()) {
@@ -2539,6 +2542,7 @@ void University::updateStudyPlan(const std::string& fin) {
     }
 }
 
+///inserisce i voti degli studenti per gli appelli da questi sostenuti
 void University::insertStudentsGrades(std::string fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
@@ -2649,6 +2653,7 @@ void University::insertStudentsGrades(std::string fin) {
         throw std::invalid_argument(error);
 }
 
+///registra lo studente in uno specifico anno del corso
 void University::registerStudentsToSpecificYearCourses(std::vector<std::string> &courses, Student &stud,std::string acYearRegistration, int line_counter) {
     int acStartYear = Parse::getAcStartYear(acYearRegistration);
     bool thereIsNotAnError = true;
@@ -2678,6 +2683,8 @@ void University::registerStudentsToSpecificYearCourses(std::vector<std::string> 
         throw std::invalid_argument(error);
     }
 }
+
+/// controlla l'unicità di un corso in un piano di studio
 void University::controlUnicity(std::vector<std::string>& controlUnicityCourses, int line_counter) {
       std::string error;
       bool isOk = true;
@@ -2706,7 +2713,7 @@ void University::controlUnicity(std::vector<std::string>& controlUnicityCourses,
           throw std::logic_error(error);
 }
 
-
+///scrive il database dei voti per gli appelli
 void University::dbAppealsWrite() {
     std::fstream fout;
     fout.open("db_appelli.txt", std::fstream::out | std::fstream::trunc);
@@ -2719,6 +2726,7 @@ void University::dbAppealsWrite() {
     fout.close();
 }
 
+///legge il database dei voti per gli appelli
 void University::readPassedAppeals() {
     std::ifstream fileIn("db_appelli.txt");
     if (!fileIn.is_open()) {
@@ -2739,6 +2747,7 @@ void University::readPassedAppeals() {
     }
 }
 
+///legge il nostro database creato per riempire la struttura dati con gli appelli per ogni sessione accademica generata
 void University::readAllExamAppeals() {
     std::ifstream fileIn("allExamAppealsDb.txt");
     if (!fileIn.is_open()) {
@@ -2774,6 +2783,7 @@ void University::readAllExamAppeals() {
     fileIn.close();
 }
 
+///scrive la versione scelta
 void University::writeVersion(int version) {
     std::fstream fout;
     fout.open("versione.txt", std::fstream::out | std::fstream::trunc);
@@ -2781,6 +2791,7 @@ void University::writeVersion(int version) {
     fout.close();
 }
 
+///legge il database di tutte le richieste aggiuntive dei prof
 void University::readAllMinDistanceRequest() {
     std::ifstream fileIn("tutte_le_richieste.txt");
     if (!fileIn.is_open()) {
@@ -2799,6 +2810,7 @@ void University::readAllMinDistanceRequest() {
     }
 }
 
+///setta le richieste aggiuntive dei prof
 void University::setMinDistance(std::string acYear, std::string name) {
 
     std::fstream fin;
@@ -2912,6 +2924,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
         throw std::invalid_argument(error);
 }
 
+///scrive il database di tutte le richieste aggiuntive dei prof
 void University::minDistanceRequestWrite() {
     std::fstream fout;
     //anno accademico;idProf;codiceCorso;distanza
@@ -3010,6 +3023,7 @@ void University::revertChanges3to2() {
 
 }
 
+///riempie i corsi raggruppati
 void University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
                                    int line) {
     for (int i = 0; i < idGroupedLetti.size(); i++) {
@@ -3042,6 +3056,7 @@ void University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std
     _coursesGrouped.insert(std::pair<std::string, std::vector<std::string>>(acYear+"-"+idCourse, idGroupedLetti));
 }
 
+///assegna le informazioni dell'appello per ogni sessione
 void University::assignInfoAppealPerSession(std::string acYear, std::string idCorso, std::string session,
                                             std::vector<std::string> appealInfo) {
     std::vector<Date> appealDate;
@@ -3082,6 +3097,7 @@ void University::assignInfoAppealPerSession(std::string acYear, std::string idCo
     _acYearSessions.at(startAcYear).updateExamDayCourse(course,allAppealPerCourse);
 }
 
+///assegna i vari appelli ai prof
 void University::assignAppealsToProf(std::string idCorso, std::string appeal, int startHour, int numSlots,
                                      std::vector<int> allProfsPerYearCourse) {
     for (int i = 0; i < allProfsPerYearCourse.size(); i++) {
@@ -3091,6 +3107,7 @@ void University::assignAppealsToProf(std::string idCorso, std::string appeal, in
     }
 }
 
+///assegna gli appelli alle classi
 void University::assignAppealsToClassroom(std::string appeal, int startSlotHour, std::vector<int> classrooms, int numSlot) {
     Date appealDate(appeal);
     for (int i = 0; i < classrooms.size(); i++) {
@@ -3098,6 +3115,7 @@ void University::assignAppealsToClassroom(std::string appeal, int startSlotHour,
     }
 }
 
+///prova a rigenerare la sessione in seguito alla richiesta dello spostamento di alcuni esami
 void University::requestChanges(std::string acYear, std::string fin) {
     //<id_corso>;<numero_sessione>;<numero_appello>;<direzione_spostamento>;<num_settimane>
     std::ifstream fileIn(fin);
@@ -3142,7 +3160,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
             tryDate = oldDate.add(numWeeks * 7);
         }
         try {
-            thisSession.tryToSetThisExamInThisSession(_courses, _professors, _classrooms, courseToConsider, numSession, numAppeal,tryDate);
+            thisSession.tryToSetThisExamInThisSession(*this, courseToConsider, numSession, numAppeal,tryDate);
             //4
             successfulChanges++;
         }
@@ -3194,6 +3212,7 @@ void University::ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse &sCourse)
     }
 }
 
+///prende l'id del corso di studio, se esiste
 int University::whatIsMyStudyCourse(Course &courseToConsider, int acStartYear) {
     int sem = 0;
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
@@ -3213,6 +3232,7 @@ bool University::controlAGAINGroupedCoursesDifferentCds_Reciprocy() {
     return true;
 }
 
+///rimuovo le info dell'appello che si vuole cambiare per il corso richiesto e i suoi raggruppati
 void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date& date, int& startSlot, std::map<std::string,std::vector<int>>& classrooms) {
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
     ///salvo le informazioni per poterle riusare dopo
@@ -3257,6 +3277,7 @@ void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse
 
 }
 
+///riassegna le info dell'appello che si vuole cambiare per il corso richiesto e i suoi raggruppati nel caso in cui il cambio non andasse a buon fine
 void University::reassignThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date date, int startSlot, std::map<std::string, std::vector<int>> classrooms) {
     SessionYear& thisSession = _acYearSessions.at(acYear);
     SpecificYearCourse& sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
@@ -3283,26 +3304,32 @@ void University::reassignThisAppealInfo(int acYear, std::string idCourse, int nu
     }
 }
 
+///prende la map dei professori
 std::map<int, Professor> University::getProfessors() const {
     return _professors;
 }
 
+///prende la map delle classi
 std::map<int, Classroom> University::getClassrooms() const {
     return _classrooms;
 }
 
+///prende la map dei corsi
 std::map<std::string, Course> University::getCourses() const {
     return _courses;
 }
 
+///setta la map dei professori
 void University::setProfessors(const std::map<int, Professor> &professors) {
     _professors = professors;
 }
 
+///setta la map delle classi
 void University::setClassrooms(const std::map<int, Classroom> &classrooms) {
     _classrooms = classrooms;
 }
 
+///setta la map dei corsi
 void University::setCourses(const std::map<std::string, Course> &courses) {
     _courses = courses;
 }

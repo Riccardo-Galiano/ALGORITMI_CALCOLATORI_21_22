@@ -110,8 +110,8 @@ private:
     int _endYear;    ///anno di fine
     bool _active;    ///attivo o non attivo?
     int _parallelCourses;    ///numero di corsi in parallelo
-    int totStudentsEnrolled = 0;
-    int totStudentsNotPassed = 0;
+    int _totStudentsEnrolled;
+    int _totStudentsNotPassed;
     std::vector<std::string> _idGroupedCourses;
     Exam _exam;
     // per ogni corso in parallelo ho un vettore dei prof

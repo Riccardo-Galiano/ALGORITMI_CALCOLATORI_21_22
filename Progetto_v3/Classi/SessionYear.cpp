@@ -730,9 +730,12 @@ void SessionYear::removeThisAppealInfoFromCalendar(int numSlots, Date &date, int
 
 }
 
-bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course> &courses, std::map<int, Professor> &profs,
-                                                std::map<int, Classroom> &allUniversityClassrooms, Course &course,
+bool SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course &course,
                                                 int numSession, int numAppeal, Date &tryDate) {
+    ///get oggetti per COPIA  e li andiamo a modificare nei passi successivi
+    std::map<int, Professor> professors = myUniversity.getProfessors();
+    std::map<int, Classroom> allUniversityClassrooms = myUniversity.getClassrooms();
+    std::map<std::string, Course> courses = myUniversity.getCourses();
     ///prendiamo l'intervallo di date della sessione richiesta
     session thisSession = _yearSessions.at(_sessionNames[numSession - 1]);
     Date startDate = thisSession.startDate;
@@ -814,7 +817,7 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course> &c
         if (i == 0)
             firstCourseOfThisLoop = true;
         ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
-        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider, tryDate, profs,
+        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider, tryDate, professors,
                                                                            allUniversityClassrooms,
                                                                            relaxPar,
                                                                            getSemester(_sessionNames[numSession - 1]),
@@ -855,13 +858,15 @@ bool SessionYear::tryToSetThisExamInThisSession(std::map<std::string, Course> &c
             SpecificYearCourse sp = courseToConsider.getThisYearCourse(getAcYear());
             int numAppealYear = sp.getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal);
             std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
-            assignTheExamToThisExamDay(startHourPerGroupedCourses, tryDate, profs, allUniversityClassrooms,
+            assignTheExamToThisExamDay(startHourPerGroupedCourses, tryDate, professors, allUniversityClassrooms,
                                        courseToConsider, _sessionNames[numSession - 1], _allExamAppealsToDo, rooms,
                                        requestChanges, numAppealYear);
+            myUniversity.setClassrooms(allUniversityClassrooms);
+            myUniversity.setProfessors(professors);
+            myUniversity.setCourses(courses);
         }
     } else
-        throw std::logic_error(
-                "Nessuna possibile coincidenza tra disponibilita' dei prof considerati e aule per tutti gli slot di questo giorno\n");
+        throw std::logic_error("Nessuna possibile coincidenza tra disponibilita' dei prof considerati e aule per tutti gli slot di questo giorno\n");
 
     return true;
 }
