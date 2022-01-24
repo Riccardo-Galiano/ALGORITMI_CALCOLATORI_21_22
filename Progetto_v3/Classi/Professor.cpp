@@ -34,7 +34,11 @@ bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     //la data iniziale deve essere inferiore alla data finale
     if(startPeriodDate < endPeriodDate) {
         //dimostro che ci sia coerenza tra l'anno dato da comando e l'anno del periodo analizzato
-        if(startPeriodDate.getYear() == acYear + 1) {
+        ///AAA SI ASSUME, SECONDO LA LEGISLAZIONE ITALIANA, CHE UN ANNO ACCADEMICO INIZI IL 01/11/aaaa E FINISCA IL 31/10/aaaB
+        Date acStartDate = Date(acYear,11,01);
+        Date acEndDate = Date(acYear+1,10,31);
+        if (startPeriodDate > acStartDate && endPeriodDate < acEndDate) {
+
             std::vector<std::pair<Date, Date>> vect;//vettore di tuple in cui mettere data di inizio e fine del periodo di indisponibilità
             if (_noAvailab.count(acYear) == 0) {//se non c'è ancora l'anno accademico a cui sto facendo riferimento
                 vect.push_back(std::pair<Date, Date>(startPeriodDate, endPeriodDate));

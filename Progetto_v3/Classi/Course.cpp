@@ -86,8 +86,13 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
     SpecificYearCourse sp = getLastSpecificYearCourse();
     int lastYear = sp.getStartYear();
+    //controllo che lo studente sia iscritto al corso
+    std::vector<std::string> studyPlan = stud.getStudyPlan();
+    if(find(studyPlan.begin(),studyPlan.end(),getId())== studyPlan.end()){
+        throw std::invalid_argument(" non e' iscritto al corso " + getId() + "\n");
+    }
     for(int year = acYear; year <= lastYear ; year++) {
-        _courseOfTheYear.at(year).addGradeToStudent(stud, acYear, mark, appealsDate,getId());///CONTROLLO SULL'ANNO DA FARE
+        _courseOfTheYear.at(year).addGradeToStudent(stud, acYear, mark, appealsDate,getId());
     }
     return true;
 }
@@ -428,13 +433,31 @@ bool Course::assignAppealToSpecificYear(std::string acYear, std::string session,
 }
 
 bool Course::controlAppeal(std::string appealDate) {
-    Date appeal(appealDate);
-    int startAc = Parse::getAcStartYear(appealDate)-1;
-    if(_courseOfTheYear.find(startAc) == _courseOfTheYear.end())///SISTEMARE VA MESSO SOLO SE L'ANNO è PRECEDENTE A QUELLO DI INIZIO ATTIVITA' DEL CORSO
-        throw std::invalid_argument("non esistono info per questo anno accademico" + std::to_string(startAc) + "_" + std::to_string(startAc+1) + ". Impossibile assegnare voti");
-    std::vector<Date> allAppealsPerYear = _courseOfTheYear.at(startAc).getAllAppeals();
-    if(std::find(allAppealsPerYear.begin(),allAppealsPerYear.end(),appeal)==allAppealsPerYear.end())
-        throw  std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso "+ getId());
+    Date appeal = Parse::controlItCanBeADate(appealDate);
+    int yearAppeal = appeal.getYear();
+    int month = appeal.getMonth();
+    auto firstYearCourse = _courseOfTheYear.begin();
+
+    ///controllo che per l'anno di quell'appello il corso risulti già attivo
+    //se novembre di AAAA devo considerare come inizio anno accademico l'anno dell'appello
+    //se da gennaio devo considerare che l'inizio dell'anno accademico non l'anno dell'appello ma quello precedente
+    if(month >= 1 && month <= 10){
+        yearAppeal--;
+    }
+    if(yearAppeal < firstYearCourse->first ) {
+        throw std::invalid_argument("Il corso non esisteva nell'anno accademico" + std::to_string(yearAppeal) + "_" +
+                                    std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti");
+    }
+    std::vector<Date> allAppealsPerYear;
+    if(_courseOfTheYear.find(yearAppeal) == _courseOfTheYear.end()){
+        throw std::invalid_argument(" Non e' stato assegnato alcun esame per il corso nell'anno accademico" + std::to_string(yearAppeal) + "_" +
+                                    std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti");
+
+    }
+    allAppealsPerYear = _courseOfTheYear.at(yearAppeal).getAllAppeals();
+    if (std::find(allAppealsPerYear.begin(), allAppealsPerYear.end(), appeal) == allAppealsPerYear.end())
+        throw std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso " + getId());
+
     return true;
 }
 

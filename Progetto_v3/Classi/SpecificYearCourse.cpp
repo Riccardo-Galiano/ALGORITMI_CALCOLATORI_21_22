@@ -270,15 +270,12 @@ bool SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay, int se
     return true;
 }
 
-///aggiunge uno studente
+///aggiunge il voto ad uno studente
 bool SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark, std::string appealsDate, std::string idCourse) {
-    //controllo che lo studente sia associato al corso in quello specifico anno
-    if (_studentsEnrolled.find(stud.getId()) == _studentsEnrolled.end()) {
-        throw InvalidDbException(" non e' iscritto al corso " + idCourse + "\n");
-    }
+
     student &studToUpdate = _studentsEnrolled.at(stud.getId());
     studToUpdate._grade = mark;
-    if (mark > 18 && mark < 30) {
+    if (mark >= 18 && mark <= 32) {
         studToUpdate._passYear = passYear;
         totStudentsNotPassed--;
         studToUpdate._passed = true;

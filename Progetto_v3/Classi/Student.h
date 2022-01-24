@@ -18,19 +18,20 @@ public:
 
     ///Student management
     void addStudyPlanPerStudent(std::string,std::vector<std::string>,bool addStudyPlan);
-
+    void readStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan);
     ///getter
     std::string getPlanStudyCourseString();
-
+    int getYearRegistration() const;
+    std::vector<std::string> getStudyPlan() const;
     ///control
     void clearStudyPlan();
     bool studyPlanIsEmpty();
 
 private:
-    std::vector<std::string> _studyPlan; //vettore di codici corso
+    //vettore corsi del piano di studio
+    std::vector<std::string> _studyPlan;
     int _yearRegistration;
-public:
-    int getYearRegistration() const;
+
 };
 
 std::ostream &operator<<(std::ostream &stud, const Student &s);

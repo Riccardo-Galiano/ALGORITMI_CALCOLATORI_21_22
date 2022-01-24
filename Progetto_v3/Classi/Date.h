@@ -16,8 +16,6 @@ class Date {
 public:
     //Date() = default;
     Date(const std::string&);
-
-
     explicit Date(int y = 1900, int m = 1, int d = 1); // default constructor
     void setDate(int, int, int); // set year, month, day
     Date &operator++(); // prefix increment operator

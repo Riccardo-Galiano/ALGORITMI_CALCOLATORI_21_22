@@ -40,6 +40,11 @@ void Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
     _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
 }
+//leggendo il db_piano di studi aggiunge alla struttura l'informazione
+void Student::readStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan) {
+    _yearRegistration = Parse::getAcStartYear( acYearRegistration);
+    _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
+}
 
 int Student::getYearRegistration() const {
     return _yearRegistration;
@@ -63,6 +68,10 @@ void Student::clearStudyPlan() {
 
 bool Student::studyPlanIsEmpty() {
     return  _studyPlan.empty();
+}
+
+std::vector<std::string> Student::getStudyPlan() const {
+    return _studyPlan;
 }
 
 ///overload operatore <<
