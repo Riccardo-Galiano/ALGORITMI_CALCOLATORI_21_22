@@ -35,18 +35,18 @@ typedef struct {
 class SpecificYearCourse {
 public:
     ///constructor
-    SpecificYearCourse(std::string ,bool ,int , std::vector<std::string> , std::vector<std::string> ,std::vector<std::string> , std::string , std::vector<int>, int);
+    SpecificYearCourse(std::string sY_eY ,bool active ,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string  yy_semester, std::vector<int> studyCourse, int line_counter);
 
     ///SpecificYearCourse management
     bool addStudent(int acYearRegistration, Student &stud);
     bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
-    int amIAssignedAlreadyInThisSession(int);
-    Date lastDateAssignationInGivenSession(int);
+    int amIAssignedAlreadyInThisSession(int session);
+    Date lastDateAssignationInGivenSession(int session);
     Date& dateAssignationInGivenSession(int numSession, int numAppeal);
     int startSlotAssignationInGivenSession(int numSession, int numAppeal);
     std::vector<int> classroomsAssignedInGivenSession(int numSession, int numAppeal);
-    bool assignExamInThisSpecificYearCourse(Date,int);
-    bool assignYY_SemToAllYear(std::string&,std::string&);
+    bool assignExamInThisSpecificYearCourse(Date examDay,int session);
+    bool assignYY_SemToAllYear(std::string& acYYoff,std::string& yy_semester);
     bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
     bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
     bool assignAppeals(std::string,std::vector<Date>,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal);
@@ -65,7 +65,7 @@ public:
     const std::string getProfParString() const;
     std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
     const std::string getGroupedCoursesIdString() const;
-    std::vector<professor> getProfsFromString (std::string, int);
+    std::vector<professor> getProfsFromString (std::string profs, int line_counter);
     const std::vector<std::string> &getIdGroupedCourses() const;
     const std::string getExamString() const;
     const Exam &getExam() const;
@@ -89,13 +89,13 @@ public:
 
     ///setter
     bool setYear();
-    bool setProfMap(int, std::vector<std::string>, int);
+    bool setProfMap(int numCrsiPar, std::vector<std::string> profsToSplit, int line_counter);
     void setNewYear(int newStartYear);
-    void assignGrouped (std::vector<std::string>&, std::string&,std::string&);
+    void assignGrouped (std::vector<std::string>& idGrouped, std::string& idCourse,std::string& thisCourse);
     void eraseNumAppeal();
 
     ///control
-    bool canIBeAssigneToFirstTwoWeekOfExamSession(int) const;
+    bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
     bool notExamsAssigned();
     void setYySemester(const std::string &yySemester);
 

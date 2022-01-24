@@ -19,26 +19,26 @@ class UniversityMember {
 public:
     ///constructor
     UniversityMember();
-    UniversityMember(const int &, const std::string &, const std::string &,const  std::string &);
-    UniversityMember(const int &, const std::string &, const std::string &,const  std::string &,const std::string &, const std::string &,const  std::string &);
+    UniversityMember(const int & matr, const std::string & name, const std::string & surname,const  std::string & email);
+    UniversityMember(const int & matr, const std::string & name, const std::string & surname,const  std::string & email,const std::string & birth, const std::string & registrationOrEntry,const  std::string & address);
 
     ///getter
     const std::string &getName() const;
     const std::string &getSurname() const;
     const int getId() const;
     const std::string &getEmail() const;
-    std::string getOtherInfoString();
-    Date getBirth();
-    Date getRegistrationOrEntry();
-    std::string getAddress();
+    std::string getOtherInfoString() const ;
+    Date getBirth() const;
+    Date getRegistrationOrEntry() const;
+    std::string getAddress() const;
 
     ///update
-    void setName(const std::string &);
-    void setSurnName(const std::string &);
-    void setEmail(const std::string &);
-    void setBirth(const std::string &);
-    void setRegistration(const std::string &);
-    void setAdress(const std::string &);
+    void setName(const std::string &name);
+    void setSurnName(const std::string & surname);
+    void setEmail(const std::string & eMail);
+    void setBirth(const std::string & birth);
+    void setRegistration(const std::string & registrationOrEntry);
+    void setAdress(const std::string & address);
 
 
 protected:

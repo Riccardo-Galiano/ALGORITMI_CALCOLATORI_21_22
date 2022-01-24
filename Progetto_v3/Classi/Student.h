@@ -13,16 +13,19 @@ class Student : public UniversityMember {
 public:
     ///constructor
     Student()= default;
-    explicit Student(int, std::string, std::string, std::string); ///matricola, nome, cognome, email
-    explicit  Student(int, std::string, std::string, std::string,std::string,std::string,std::string);
+    explicit Student(int matr, const std::string &name, const std::string &surname, const std::string &email); ///matricola, nome, cognome, email
+    explicit  Student(int matr, const std::string &name, const std::string &surname, const std::string &email,
+                      const std::string &birth, const std::string &registration, const std::string &address);
 
     ///Student management
-    void addStudyPlanPerStudent(std::string,std::vector<std::string>,bool addStudyPlan);
-    void readStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan);
+    void addStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan, bool addStudyPlan);
+    void readStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan);
     ///getter
-    std::string getPlanStudyCourseString();
+
+    std::string getPlanStudyCourseString() const;
     int getYearRegistration() const;
     std::vector<std::string> getStudyPlan() const;
+
     ///control
     void clearStudyPlan();
     bool studyPlanIsEmpty();

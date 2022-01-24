@@ -13,30 +13,32 @@
 class StudyCourse {
 public:
     ///constructor
-    StudyCourse(const int, const bool &);
+    StudyCourse(const int id, const bool & isBachelor);
 
     ///StudyCourse management
-    std::vector<std::string> addSemesterCourses(const int,const  int ,const std::string &,const std::map<int, StudyCourse>&, std::map<std::string, Course>&,int);
-    bool addOffCourses(const std::vector<std::string> &);
-    bool updateSemestersAndOffCourses( const std::string&,std::string&,std::vector<std::string>&);
-    bool assignStudyCourse(std::string);
+    std::vector<std::string> addSemesterCourses(const int year,const  int semester ,const std::string & semesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses,int posFile);
+    bool addOffCourses(const std::vector<std::string> & offCourses);
+    bool updateSemestersAndOffCourses( const std::string& idCourse,std::string& acYY,std::vector<std::string>& temp);
+    bool assignStudyCourse(std::string course);
 
     ///getter
-    const  int getId() const;
+    int getId() const;
     bool getIsBachelor() const;
     std::string getSemestersString() const;
     std::string getOffCoursesString() const;
-    std::vector<std::string> getAllCoursesOfStudyCourse();
+    std::vector<std::string> getAllCoursesOfStudyCourse() const;
 
     ///control
     bool offCoursesEmpty() const;
-    std::string isInWhichSemester(std::string) const;
-    std::vector<std::string> sameSemester(std::string,const std::map<int, StudyCourse>&,int, int posFile);
+    std::string isInWhichSemester(std::string codCourse) const;
+    std::vector<std::string> sameSemester(std::string idCourse,const std::map<int, StudyCourse>& studyCourse,int semester, int posFile);
 
 private:
     int _id; //codice del corso di studi
     bool _isBachelor; //magistrale?
-    std::map<std::string,std::vector<std::string>> _semesters; //key: "yy-semester", value: vettore di stringhe
+    //key: yy-semester
+    //value: vettore di Id corsi
+    std::map<std::string,std::vector<std::string>> _semesters;
     std::list <std::string> _offCourses;
     std::vector<std::string> _errorStringStudyCourse;
 };

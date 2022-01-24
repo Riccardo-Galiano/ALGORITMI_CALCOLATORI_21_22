@@ -10,31 +10,30 @@
 #include <vector>
 
 class Date {
-    friend std::ostream &operator<<(std::ostream &, const Date &);
-    friend std::istream &operator>>(std::istream &, Date &);
+    friend std::ostream &operator<<(std::ostream & output, const Date & d);
+    friend std::istream &operator>>(std::istream & input , Date & d);
 
 public:
     //Date() = default;
-    Date(const std::string&);
-    explicit Date(int y = 1900, int m = 1, int d = 1); // default constructor
-    void setDate(int, int, int); // set year, month, day
+    Date(const std::string& date);
+    explicit Date(int year = 1900, int month = 1, int day = 1); // default constructor
+    void setDate(int yy, int mm, int dd); // set year, month, day
     Date &operator++(); // prefix increment operator
     Date operator++(int); // postfix increment operator
     Date &operator--(); // prefix decrement operator
     Date operator--(int); // postfix decrement operator
-    Date incrementOf(int);
     Date &operator+=(unsigned int);
 
-    bool operator>(const Date &) const;
-    bool operator<(const Date &) const;
-    bool operator<=(const Date &) const;
-    bool operator>=(const Date &) const;
-    bool operator==(const Date &) const;
+    bool operator>(const Date & date) const;
+    bool operator<(const Date & date) const;
+    bool operator<=(const Date & date) const;
+    bool operator>=(const Date & date) const;
+    bool operator==(const Date & date) const;
 
-    static bool leapYear(int); // anno bisestile?
-    bool endOfMonth(int) const; // fine del mese?
-    Date add(int);
-    Date subtract(int); //LUCA E' PER TE
+    static bool leapYear(int testYear); // anno bisestile?
+    bool endOfMonth(int testDay) const; // fine del mese?
+    Date add(int daysToAdd);
+    Date subtract(int  daysToSubtract);
 
     std::string getWeekDay();
     bool checkGapGiven(int weeks, Date d);
@@ -42,7 +41,7 @@ public:
     unsigned int getYear() const;
     std::string toString();
 
-    bool isEqual(const Date);
+    bool isEqual(const Date compare);
     unsigned int getMonth() const;
     unsigned int getDay() const;
 

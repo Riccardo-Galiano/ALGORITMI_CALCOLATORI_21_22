@@ -24,7 +24,7 @@ address) {
 
 
 ///setta uno dei periodi di indisponibilità del prof analizzato
-bool Professor::setNoAvaibilities(int acYear, std::string &input) {
+void Professor::setNoAvaibilities(int acYear, std::string &input) {
     std::vector<std::string> dates;
     dates = Parse::splittedLine(input, '|');//inizio periodo | fine periodo
     if(dates.size() != 2)
@@ -54,7 +54,6 @@ bool Professor::setNoAvaibilities(int acYear, std::string &input) {
     } else
         throw std::logic_error("La data finale e' inferiore a quella iniziale nel periodo " );
 
-    return true;
 }
 
 ///stringa destinata alla scrittura del file in cui ci sono le indisponibilità del prof
@@ -84,7 +83,7 @@ void Professor::noAvailabilityClear(int year) {
 }
 
 ///aggiunge un esame alla mappa degli esami che un professore deve preparare
-bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
+void Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
     if (_examsToDo.count(date) == 0){
         //mappa di esami in quel giorno ancora non esistente
         std::map<int,std::string> examsPerDay;//mappa che contiene ad un particolare slot un esame
@@ -95,7 +94,6 @@ bool Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
         //mappa di esami in quel giorno esiste già
         _examsToDo.at(date).insert(std::pair<int,std::string>(hh,cod_exam));//aggiunge in un particolar slot (hh) di una data (date) il codice dell'esame (cod_exam)
     }
-    return true;
 }
 
 ///ritorna se lo slot a quell'ora per una certa data è libero(aggiungere i controlli per i periodi di indisponibilità per ogni prof)

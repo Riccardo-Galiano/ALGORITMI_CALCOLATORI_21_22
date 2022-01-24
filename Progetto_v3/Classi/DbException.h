@@ -12,7 +12,7 @@
 
 class DbException : public std::exception{
 public:
-    explicit DbException(std::string);
+    explicit DbException(std::string mess);
     const char * what() const noexcept override;
 private:
     std::string _message;

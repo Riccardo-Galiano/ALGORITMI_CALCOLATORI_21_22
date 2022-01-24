@@ -15,20 +15,20 @@ class Professor : public UniversityMember {
 public:
     ///constructor
     Professor():UniversityMember(){};
-    Professor(int);
-    Professor(int, std::string, std::string, std::string); ///matricola,nome, cognome, email
-    Professor(int, std::string, std::string, std::string,std::string, std::string, std::string); ///matricola,nome, cognome, email
+    Professor(int matr);
+    Professor(int matr, std::string name, std::string surname, std::string email); ///matricola,nome, cognome, email
+    Professor(int matr, std::string name, std::string surname, std::string email,std::string birth, std::string registration, std::string address); ///matricola,nome, cognome, email
 
     ///Professor management
-    bool setNoAvaibilities(int, std::string&);
-    bool addNewExam(std::string, int, std::string);
+    void setNoAvaibilities(int acYear, std::string& input);
+    void addNewExam(std::string date, int hh, std::string cod_exam);
 
     ///output
-    std::vector<std::string> outputNoAvailabilities(int);
+    std::vector<std::string> outputNoAvailabilities(int nMatr);
 
     ///control
-    void noAvailabilityClear(int);
-    bool amIavailable(std::string, int, int relaxPar);
+    void noAvailabilityClear(int year);
+    bool amIavailable(std::string date, int hh, int relaxPar);
 
     ///remove
     void eraseThisAppealFromProfs(Date& dateAppeal, int startSlot, int numSlots);

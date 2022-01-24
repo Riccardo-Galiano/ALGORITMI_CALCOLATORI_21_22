@@ -9,7 +9,7 @@
 
 class InvalidDbException : public std::exception {
 public:
-    explicit InvalidDbException(std::string);
+    explicit InvalidDbException(std::string m);
     const char * what() const noexcept override;
 private:
     std::string _message;

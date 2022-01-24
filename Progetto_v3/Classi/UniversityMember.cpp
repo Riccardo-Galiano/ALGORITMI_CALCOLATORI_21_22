@@ -26,7 +26,7 @@ UniversityMember::UniversityMember(const int & matricola, const std::string & na
     _othersInfoMember._address = address;
 }
 
-std::string UniversityMember::getOtherInfoString() {
+std::string UniversityMember::getOtherInfoString() const{
     std::stringstream ss;
     ss << _othersInfoMember._birth <<";"<< _othersInfoMember._registrationOrEntry << ";" <<_othersInfoMember._address;
     return ss.str();
@@ -73,15 +73,15 @@ void UniversityMember::setEmail(const std::string & eMail) {
 UniversityMember::UniversityMember() {}
 
 
-Date UniversityMember::getBirth() {
+Date UniversityMember::getBirth() const {
     return _othersInfoMember._birth;
 }
 
-Date UniversityMember::getRegistrationOrEntry() {
+Date UniversityMember::getRegistrationOrEntry() const {
     return _othersInfoMember._registrationOrEntry;
 }
 
-std::string UniversityMember::getAddress() {
+std::string UniversityMember::getAddress() const {
     return _othersInfoMember._address;
 }
 

@@ -9,18 +9,17 @@
 
 class SessionLog {
 public:
-    explicit SessionLog(std::string&);
-    void generateWarnings(std::vector<Course>&,int,int,int,std::map<std::string,int>,int session);
-    void generateWarningGapAppeals(std::vector<Course>&,int,int,int);
-    void generateWarningGapSameStudyCourse(std::vector<Course>&,int,int);
-    void generateWarningGapAvaibilityProfs(std::vector<Course>&,int,int);
-    void generateWarningGapProfs(std::map<std::string,int>, int,int);
+    explicit SessionLog(std::string& output_file_name);
+    void generateWarnings(std::vector<Course>& courses,int relaxPar,int gap,int year,std::map<std::string,int> gapProfs,int session);
+    void generateWarningGapAppeals(std::vector<Course>& courses,int gap,int year,int session);
+    void generateWarningGapSameStudyCourse(std::vector<Course>& courses,int year,int session);
+    void generateWarningGapAvaibilityProfs(std::vector<Course>& courses,int year,int session);
+    void generateWarningGapProfs(std::map<std::string,int> gapProfs, int year,int session);
     void writeWarnings();
-    void appendLogPerSession(int session, std::string&);
-
+    void appendLogPerSession(int session, std::string& output);
+    std::string cdsCodes(SpecificYearCourse&);
 private:
     std::string _output_file_name;
-    std::string cdsCodes(SpecificYearCourse&);
     //key: sessione
     //value: tutti i warning relativi
     std::map<int,std::string> _logPerSession;

@@ -49,7 +49,7 @@ std::vector<std::string> StudyCourse::addSemesterCourses(const int year, const i
 }
 
 ///prende tutti i corsi del corso di studio
-std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() {
+std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() const{
     std::vector<std::string> allCourses;
     for(auto iterSemester = _semesters.begin();iterSemester != _semesters.end();iterSemester++) {
         std::vector<std::string> sem = iterSemester->second;
@@ -97,7 +97,7 @@ for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); 
 }
 
 ///prende l'_id
-const int StudyCourse::getId() const {
+int StudyCourse::getId() const {
     return _id;
 }
 

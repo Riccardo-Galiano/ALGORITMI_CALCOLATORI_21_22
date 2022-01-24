@@ -7,17 +7,18 @@
 #include "Student.h"
 #include "Parse.hpp"
 //costruttore
-Student::Student(int matr, std::string name, std::string surname, std::string email): UniversityMember(matr, name, surname, email) {
+Student::Student(int matr, const std::string &name, const std::string &surname, const std::string &email): UniversityMember(matr, name, surname, email) {
 
 }
 
 //costruttore
-Student::Student(int matr, std::string name, std::string surname, std::string email,std::string birth, std::string registration, std::string address ): UniversityMember(matr, name, surname, email, birth, registration,address) {
+Student::Student(int matr, const std::string &name, const std::string &surname, const std::string &email,
+                 const std::string &birth, const std::string &registration, const std::string &address ): UniversityMember(matr, name, surname, email, birth, registration, address) {
 
 }
 
 ///aggiunge il piano di studio e l'anno di registrazione di uno studente(add) aggiorna il priano di studio di uno studente (update)
-void Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan,bool addStudyPlan) {
+void Student::addStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan, bool addStudyPlan) {
     ///questa funzione è usata per la add e per la update
     //addStudyPlan == false ---> funzione di aggiornamento updateStudyPlan
     //addStudyPlan == true ---> funzione di aggiunta addSTudyPlan
@@ -41,7 +42,7 @@ void Student::addStudyPlanPerStudent(std::string acYearRegistration, std::vector
     _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
 }
 //leggendo il db_piano di studi aggiunge alla struttura l'informazione
-void Student::readStudyPlanPerStudent(std::string acYearRegistration, std::vector<std::string> coursesStudyPlan) {
+void Student::readStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan) {
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
     _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
 }
@@ -50,7 +51,7 @@ int Student::getYearRegistration() const {
     return _yearRegistration;
 }
 
-std::string Student::getPlanStudyCourseString() {
+std::string Student::getPlanStudyCourseString() const {
     std::stringstream allCourses;
     allCourses<<"{";
     for(int i = 0; i<_studyPlan.size(); i++){

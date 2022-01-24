@@ -14,11 +14,11 @@
 class ExamDay {
 public:
     ///constructor
-    explicit ExamDay(Date);
+    explicit ExamDay(Date date);
 
     ///ExamDay management
-    bool assignExamToProf(std::map<int,Professor>&, Course , int , int );
-    bool assignExamToExamDay(int, Course&, int);
+    bool assignExamToProf(std::map<int,Professor>& allUniversityProfs, Course course , int hhStart, int num_slots);
+    bool assignExamToExamDay(int hhStart, Course& course, int year);
     int isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor>& allUniversityProfs,
                                           std::map<int, Classroom>& allUniversityClassrooms, int numSlotsRequired,
                                           int relaxPar, std::vector<int>& idRoomsFounded, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
@@ -30,10 +30,10 @@ public:
                                              char labOrClass, int maxNumRooms);
     bool checkProfsAvaibility(SpecificYearCourse& specificCourse, std::map<int, Professor>& allUniversityProfs, int relaxPar, int slotHour);
     void eraseTempGroupedCourseClassrooms();
-    std::string classroomString(std::vector<int>);
-    std::string getFormattedCoursesPerSlot(std::vector<Course>&, std::vector<Course>&);
-    bool firstSlotCourses(Course,std::vector<Course>&);
-    int getEndHourOfThisCourseExam(const Course&);
+    std::string classroomString(std::vector<int> rooms);
+    std::string getFormattedCoursesPerSlot(std::vector<Course>& coursesOfThisSLot, std::vector<Course>& coursesPrintedSofar);
+    bool firstSlotCourses(Course courseToFind,std::vector<Course>& coursesProntedSoFar);
+    int getEndHourOfThisCourseExam(const Course& course);
     bool pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, std::vector<int> &idRoomsFounded,
                                    int numSeatsToSeach, int maxNumRooms);
     void updateSlot(Course course);
