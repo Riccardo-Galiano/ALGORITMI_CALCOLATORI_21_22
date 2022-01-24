@@ -2560,62 +2560,81 @@ void University::insertStudentsGrades(std::string fin) {
     std::string line;
     int line_counter = 1;
     while (std::getline(fileIn, line)) {
-        std::string idStud = line.substr(0, 7);
-        int id;
-        bool matrIsOk = true;
-        bool markIsOk = true;
-        ///se il primo campo è vuoto ho dimenticato ha scrivere la matricola nel file
-        if(idStud.empty()){
-            error.append("Non e' stata dichiarata la matricola dello studente al rigo: " + std::to_string(line_counter) + "\n");
-            doDbWrite = false;
-            matrIsOk = false;
-        } else{
-        /// se il primo campo non è vuoto devo capire se è una matricola o no
-            try {
-                Parse::controlItCanBeAnId(idStud, 6,'s');
-            }catch (std::invalid_argument& err){
-                error.append(" Il primo campo alla riga: "+ std::to_string(line_counter) + " non puo' essere l'id di uno studente \n");
-                doDbWrite = false;
-                matrIsOk = false;
-            }
-            if(matrIsOk)///se sono arrivato qui ed è true vuol dire che il primo campo puo' essere una matricola(tutti int e formato esatto per gli studenti)
-                id = Parse::getMatr(idStud);
-        }
-        std::string markString(line.substr(8, 9));
-        int mark;
-        if(markString.empty()){
-            error.append("Non e' stata dichiarato il voto dello studente al rigo: " + std::to_string(line_counter) + "\n");
-            doDbWrite = false;
-            markIsOk = false;
-        } else{/// se il primo campo non è vuoto devo capire se è un voto o no
-            try {
-                mark = Parse::checkedStoi(markString,"Errore voto studente.");
-                if(mark < 0 || mark > 32){
-                     error.append("Il voto alla riga: "+ std::to_string(line_counter) + " non e' compreso in un intervallo tra 0 e 32 \n");
-                     markIsOk = false;
-                }
-            }catch (std::invalid_argument& err){
-                error.append(" Il secondo campo alla riga: "+ std::to_string(line_counter) + " non puo' essere il voto di un esame\n");
-                doDbWrite = false;
-                markIsOk = false;
-            }
-        }
-        //controllo che lo studente esista nel database
-        if(matrIsOk && markIsOk) {
-            if (_students.find(id) == _students.end()) {
-                error.append("lo studente alla riga " + std::to_string(line_counter) + " con matricola " + idStud + " non esiste nel database\n");
-                doDbWrite = false;
-            }else {
-                Student &stud = _students.at(id); //preso l'istanza dello studente di cui si parla
-                //prendiamo l'anno di iscrizione dello studente
-                //(perchè le info sull'esame fatto dallo studente sono salvate nello specifico anno di ogni corso a cui è iscritto il cui specifico anno è proprio l'anno di iscrizione dello studente)
-                int acYear = stud.getYearRegistration();
-                try {
-                    _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark, appealDate);
-                }catch (std::invalid_argument& err){
-                    std::string generalError = err.what();
-                    error.append("Lo studente alla riga " + std::to_string(line_counter) + " con matricola " + idStud + generalError);
+        if(line.empty() == false) {
+            std::vector<std::string> infoStud = Parse::splittedLine(line, ';');
+            if (infoStud.size() != 2) {
+                error.append("Errore formato file al rigo: " + std::to_string(line_counter) + "\n");
+            } else {
+                std::string idStud = infoStud[0];
+                int id;
+                bool matrIsOk = Parse::controlItCanBeAnId(idStud, 6, 's');
+                bool markIsOk = true;
+                ///se il primo campo è vuoto ho dimenticato a scrivere la matricola nel file
+                if (idStud.empty()) {
+                    error.append(
+                            "Non e' stata dichiarata la matricola dello studente al rigo: " +
+                            std::to_string(line_counter) +
+                            "\n");
                     doDbWrite = false;
+                    matrIsOk = false;
+                } else if (matrIsOk == false) {
+                    /// se il primo campo non è vuoto devo capire se è una matricola o no
+                    error.append(" Il primo campo alla riga " + std::to_string(line_counter) +
+                                 " non puo' essere l'id di uno studente \n");
+                    doDbWrite = false;
+                    matrIsOk = false;
+                } else {
+                    ///se sono arrivato qui vuol dire che il primo campo puo' essere una matricola(tutti int e formato esatto per gli studenti)
+                    id = Parse::getMatr(idStud);
+                }
+                ///controllo il voto
+                std::string markString = infoStud[1];
+                int mark;
+                if (markString.empty()) {
+                    error.append(
+                            "Non e' stata dichiarato il voto dello studente al rigo: " + std::to_string(line_counter) +
+                            "\n");
+                    doDbWrite = false;
+                    markIsOk = false;
+                } else {/// se il primo campo non è vuoto devo capire se è un voto o no
+                    try {
+                        mark = Parse::checkedStoi(markString, "Errore voto studente.");
+                        if (mark < 0 || mark > 32) {
+                            error.append("Il voto alla riga: " + std::to_string(line_counter) +
+                                         " non e' compreso in un intervallo tra 0 e 32 \n");
+                            markIsOk = false;
+                        }
+                    } catch (std::invalid_argument &err) {
+                        error.append(" Il secondo campo alla riga: " + std::to_string(line_counter) +
+                                     " non puo' essere il voto di un esame\n");
+                        doDbWrite = false;
+                        markIsOk = false;
+                    }
+                }
+                //controllo che lo studente esista nel database
+                if (matrIsOk && markIsOk) {
+                    if (_students.find(id) == _students.end()) {
+                        error.append(
+                                "lo studente alla riga " + std::to_string(line_counter) + " con matricola " + idStud +
+                                " non esiste nel database\n");
+                        doDbWrite = false;
+                    } else {
+                        Student &stud = _students.at(id); //preso l'istanza dello studente di cui si parla
+                        //prendiamo l'anno di iscrizione dello studente
+                        //(perchè le info sull'esame fatto dallo studente sono salvate nello specifico anno di ogni corso a cui è iscritto il cui specifico anno è proprio l'anno di iscrizione dello studente)
+                        int acYear = stud.getYearRegistration();
+                        try {
+                            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear, mark,
+                                                                                       appealDate);
+                        } catch (std::invalid_argument &err) {
+                            std::string generalError = err.what();
+                            error.append(
+                                    "Lo studente alla riga " + std::to_string(line_counter) + " con matricola " +
+                                    idStud +
+                                    generalError);
+                            doDbWrite = false;
+                        }
+                    }
                 }
             }
         }

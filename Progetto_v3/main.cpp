@@ -312,12 +312,12 @@ std::vector<std::string> program(University &uni, char **argv) {
                 uni.insertStudentsGrades(argv[2]);
             }catch(std::exception& occurredException){
                 strToAddToLog = occurredException.what();
-                strToAddToLog.append("Non e' stato possibile effettuare il comando -u:p per gli errori elencati precedentemente\n");
+                strToAddToLog.append("Non e' stato possibile effettuare il comando -i:v per gli errori elencati precedentemente\n");
                 sysLog.appendToLog(strToAddToLog,true);
                 isOk = false;
             }
             if(isOk) {
-                strToAddToLog.append("Il comando -u:p e' stato eseguito correttamente\n");
+                strToAddToLog.append("Il comando -i:v e' stato eseguito correttamente\n");
                 sysLog.appendToLog(strToAddToLog, false);
             }
             break;

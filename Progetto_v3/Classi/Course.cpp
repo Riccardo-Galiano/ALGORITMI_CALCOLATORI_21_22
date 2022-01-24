@@ -446,17 +446,18 @@ bool Course::controlAppeal(std::string appealDate) {
     }
     if(yearAppeal < firstYearCourse->first ) {
         throw std::invalid_argument("Il corso non esisteva nell'anno accademico" + std::to_string(yearAppeal) + "_" +
-                                    std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti");
+                                    std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti \n");
     }
     std::vector<Date> allAppealsPerYear;
+    //DA DIMOSTRARE QUANDO SI GENERANO SESSIONI PER ANNI IN CUI NON ABBIAMO AGGIORNAMENTE DEL CORSO
     if(_courseOfTheYear.find(yearAppeal) == _courseOfTheYear.end()){
         throw std::invalid_argument(" Non e' stato assegnato alcun esame per il corso nell'anno accademico" + std::to_string(yearAppeal) + "_" +
-                                    std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti");
+                                    std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti \n");
 
     }
     allAppealsPerYear = _courseOfTheYear.at(yearAppeal).getAllAppeals();
     if (std::find(allAppealsPerYear.begin(), allAppealsPerYear.end(), appeal) == allAppealsPerYear.end())
-        throw std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso " + getId());
+        throw std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso " + getId() +"\n");
 
     return true;
 }
