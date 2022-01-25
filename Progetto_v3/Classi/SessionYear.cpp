@@ -15,11 +15,6 @@ bool winter = false;
 bool summer = false;
 bool autumn = false;
 
-
-enum {
-    caso_estremo, caso_medio, caso_lasco
-};
-
 ///costruttore
 SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::string &summerSession,
                          std::string &autumnSession, std::string output_file_name) : _sysLog(output_file_name) {
@@ -122,10 +117,12 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
             generateOutputFilesSession(fout, 1, courses, requestChanges);
             generateOutputFilesSession(fout, 2, courses, requestChanges);
             generateOutputFilesSession(fout, 3, courses, requestChanges);
-
-            ///stampa warnigs
-            _sysLog.writeWarnings();
             allExamAppealsWrite(courses);
+            ///stampa warnigs
+            if(relaxPar != 0)
+                ///DA FARE PER OGNI SESSIONE
+                _sysLog.writeWarnings(fout);
+
             result = true;
             //posso uscire dal loop, non aspetto che il vincolo sia meno di 14 giorni
             exitloop = true;
@@ -168,6 +165,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                       std::map<int, Professor> &profs,
                                       std::map<int, Classroom> &allUniversityClassrooms, int relaxPar, int gapAppeals,
                                       bool sixHours) {
+
     ///prendiamo l'intervallo di date della sessione richiesta su cui dobbiamo esguire il ciclo
     session thisSession = _yearSessions.at(sessName);
     Date startDate = thisSession.startDate;
@@ -179,7 +177,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     bool classRoomError = false;
 
     ///raggruppiamo tutti gli esami specifici di quest'anno
-    if (relaxPar == 0)
+    //if (relaxPar == 0)
         _allExamAppealsToDo = getAllExamAppealsToDo(sessName,courses); //contiene le stringhe dei codici esame per OGNI appello
     ///else -> nulla, _allExamAppealsToDo già caricato
     ///cicliamo su ogni data della sessione per organizzare le date degli appelli
@@ -309,9 +307,12 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                                            allUniversityClassrooms, courseToConsider, sessName,
                                                            _allExamAppealsToDo, rooms, requestChanges,numAppealYear );
 
-                                _sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear,
-                                                         _gapProfs, getSemester(sessName));
-                            }
+                                }
+                            _sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals,_acYear,
+                                                     _gapProfsNoRespect, getSemester(sessName));
+                            //pulisco il vettore dei prof dei quali non viene rispettato il gap richiesto
+                            _gapProfsNoRespect.erase(_gapProfsNoRespect.begin(),_gapProfsNoRespect.end());
+
                             ///check terminazione funzione
                             if (_allExamAppealsToDo.empty()) {
                                 //se finiti gli appelli, esco
@@ -530,7 +531,6 @@ SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName
                         "Esame non puo' essere inserito dopo i primi 14 giorni della sessione essendo un primo appello\n");
             }
         }
-
     }
 
     //stesso semestre della sessione ed attivo o siamo oltre i 14 giorni(quindi esame semestre diverso, spento, entrambi o secondo appello di uno dello stesso semestre della sessione ed attivo)
@@ -580,11 +580,12 @@ SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName
                                 throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
                                                             " tra nuovo secondo appello e primo appello non rispettato\n");
                             } else
-                                return false;
+                                //lo assegno lo stesso ma devo segnalare se il gap è rispettato o no
+                                ///lo indico in una vector che verrà pulita per ogni sessione dell'anno
+                                _gapProfsNoRespect.push_back(std::pair<std::string,int>(keyToSearchProfsGap,requiredGap));
                         }
                     } else {
-                        if (newDate.whatIsTheGap(lastDateAssignation) <
-                            requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
+                        if (newDate.whatIsTheGap(lastDateAssignation) < requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
                             std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
                             throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
                                                         " tra nuovo primo appello e secondo appello non rispettato\n");

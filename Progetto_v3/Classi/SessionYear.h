@@ -84,6 +84,8 @@ private:
     //key: data come stringa "matricola-idCorso"
     //value: gap
     std::map<std::string,int> _gapProfs;
+    //vector per segnalare i prof dei quali non viene rispetatto il gap richiesto
+    std::vector<std::pair<std::string,int>> _gapProfsNoRespect;
     std::vector<std::string> _errorStringSessionYear;
     //key: session : 1
     //value: nome del file : exam_2021_s1.txt

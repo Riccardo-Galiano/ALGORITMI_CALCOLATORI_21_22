@@ -1821,30 +1821,32 @@ void University::dbNoAvailabilityWrite() {
 
 ///organizza gli esami per l'anno accademico
 void University::setExamDate(std::string acYear, std::string outputNameFile) {
-    int startAcYear = Parse::getAcStartYear(acYear);
+    int startAcYear = 0;
     int constraintRelaxParameter = 0;
     bool esito = false;
-    //riempio i corsi fino alla sessione voluta (può essere che un corso non venga aggiornata ma ciò non significa che non possa avere quel corso in quell'anno)
-    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++){
-        int lastYear = iterCourse->second.getLastSpecificYearCourse().getStartYear();
-        iterCourse->second.fillAcYearsUntilStartAcYear(startAcYear,lastYear);
+    //controllo formato anno accademico
+    if(Parse::controlItCanBeAnAcYear(acYear)){
+        startAcYear = Parse::getAcStartYear(acYear);
+    }else{
+        throw std::invalid_argument("L'anno accademico deve avere due anni consecutivi\n");
     }
+
     ///faccio dei controlli di coerenza dei dataBase
     controlDatabase(startAcYear);
-    ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare
+    ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare oppure si nota subito che non ci sono aule abbastanza capienti per un corso(eccezione)
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
         try {
-            esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, constraintRelaxParameter,*this);
+            esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, 1,*this);
         }catch (std::logic_error& err){
             ///questo throw sarà attivo solo se non posso trovare disponibilità di aule in nessun giorno e in nessuno slot per almeno un corso
             throw std::invalid_argument(err.what());
         }
-        constraintRelaxParameter++;
+           constraintRelaxParameter++;
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
     if (!esito) {
-        throw std::invalid_argument("non è possibile generare la sessione");
+        throw std::invalid_argument("non è possibile generare la sessione nonostante i vincoli rilassati");
     }else{
         generateOutputFileName();
     }
@@ -1888,8 +1890,10 @@ void University::readOutputFileName(){
 bool University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
     dataBaseIsEmpty(startAcYear);
+
     bool checkIsOK = true;
     std::string error;
+    ///controllo che tutti i corsi siano presenti in almeno un corso di studio
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         ///controllo che ogni corso in _courses esista in uno StudyCourse
         Course course = iterCourse->second;
@@ -1899,6 +1903,7 @@ bool University::controlDatabase(int startAcYear) {
         }
     }
     ///COMMENTATO PERCHE' NON MI ANDAVA DI CARICARE ALTRI CORSI PER DEBUGGARE LA GESTIONE ESAMI
+    ///controllo che tutti i corsi di studio siano presenti nel database corsi
     /*
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
         ///controllo che ogni studyCourse abbia i corsi specificati
@@ -1948,20 +1953,35 @@ bool University::dataBaseIsEmpty(int startAcYear) {
                 std::to_string(startAcYear + 1) + "\n");
                 isOk = false;
     }
-    ///controllo che gli studenti siano iscritti nei corsi di questo anno accademico
-    for (auto iter = _courses.begin(); iter != _courses.end(); iter++) {
-        int firstYear = iter->second.getFirstYearOfActivity();
-        ///se il corso è stato attivato prima della sessione rischiesta lo considero, altrimenti no
-        if (firstYear <= startAcYear) {
-            int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
-            if (studentsEnrolled == 0) {
-                error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: "+ std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1) + "\n");
+    if (isOk) {
+        //riempio i corsi fino alla sessione voluta (può essere che un corso non venga aggiornato ma ciò non significa che non possa avere quel corso in quell'anno)
+        for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+            int firstYear = iterCourse->second.getFirstYearOfActivity();
+            int lastYear = iterCourse->second.getLastSpecificYearCourse().getStartYear();
+            ///se l'anno della sessione è minore del primo anno di attività non posso generare la sessione
+            if(startAcYear < firstYear){
+                error.append("Il corso " + iterCourse->first + " non esisteva nel " + std::to_string(startAcYear)+"-"+std::to_string(startAcYear+1));
                 isOk = false;
+            }else if (startAcYear> lastYear) {
+                ///se l'anno della sessione è maggiore dell'ultimo anno nel db vuol dire che magari non ci sono aggiornamenti e mi devo rifare all'ultimo anno
+                iterCourse->second.fillAcYearsUntilStartAcYear(startAcYear, lastYear);
             }
         }
-    }
-    if(isOk == false)
+        ///controllo che tutti i corsi abbiano almeno uno studente iscritto per fare l'esame
+        for (auto iter = _courses.begin(); iter != _courses.end(); iter++) {
+            int firstYear = iter->second.getFirstYearOfActivity();
+            int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
+                if(startAcYear > firstYear) {
+                    if (studentsEnrolled == 0) {
+                        error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: " +
+                                     std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1) + "\n");
+                        isOk = false;
+                    }
+                }
+        }
+    }else {
         throw std::invalid_argument(error);
+    }
 
     return false;
 }
@@ -2742,8 +2762,7 @@ void University::readPassedAppeals() {
         int pos = appeal[3].find(']');
         std::string allStudPassedExam = appeal[3].substr(1, pos - 1);
 
-        _courses.at(idCorso).assignStudToAppealPerYear(acYear, appealDate,
-                                                       allStudPassedExam);///cambio _grade, _passed;appealPassed
+        _courses.at(idCorso).assignStudToAppealPerYear(acYear, appealDate,allStudPassedExam);///cambio _grade, _passed;appealPassed
     }
 }
 

@@ -239,7 +239,9 @@ bool ExamDay::allSLotsAreEmpty() {
     return true;
 }
 
-bool comparatorFunction (Classroom i,Classroom j) { return (i.getNExamSeats() < j.getNExamSeats()); }
+bool comparatorFunction (Classroom i,Classroom j) {
+    return (i.getNExamSeats() < j.getNExamSeats());
+}
 
 bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allUniversityClassrooms, int numSeatsToSeach, std::vector<int> &idRoomsFounded, int slotHour, int numSLotsRequired, char labOrClass, int maxNumRooms) {
     bool roomIsOk = true;
@@ -280,19 +282,19 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
         ///check se non esisteranno mai queste aule -> error!
         std::vector<Classroom> allRooms;
         std::vector<int> inutile;
-        bool lePotreitrovare;// è un problema di disponibilità aule per quel giorno o è un problema che esisterebbe anche se tutte le aule in db fossero libere?
+        bool canExist;// è un problema di disponibilità aule per quel giorno o è un problema che esisterebbe anche se tutte le aule in db fossero libere?
         //prendo tutte le aule del db
         for (auto iterClass = allUniversityClassrooms.begin(); iterClass != allUniversityClassrooms.end(); iterClass++) {
              allRooms.push_back(iterClass->second);
         }
 
         if(pickSomeOfTheseClassrooms(allRooms,inutile,numSeatsToSeach,maxNumRooms)){
-            lePotreitrovare = true;
+            canExist = true;
         }
         else
-            lePotreitrovare = false;
-        if(lePotreitrovare == false){
-            throw std::invalid_argument("aule introvabili");
+            canExist = false;
+        if(canExist == false){
+            throw std::invalid_argument("Aula introvabile");
         } else
             return false;
     }
@@ -320,19 +322,8 @@ bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<
 void ExamDay::eraseTempGroupedCourseClassrooms() {
     _tempGroupedCourseClassrooms.erase(_tempGroupedCourseClassrooms.begin(),_tempGroupedCourseClassrooms.end());
 }
-///NON SERVE
-std::string ExamDay::classroomString(std::vector<int> rooms) {
-    std::stringstream classroomsString;
-    classroomsString <<"{";
-    for(int i = 0; i<rooms.size();i++){
-        classroomsString<<"A"<<std::setfill('0')<<std::setw(3)<<rooms[i];
-        if(i<rooms.size()-1)
-            classroomsString<<",";
-    }
-    classroomsString<<"}";
-    return classroomsString.str();
-}
 
+///prende l'ora finale dell'esame di questo corso
 int ExamDay::getEndHourOfThisCourseExam(const Course &course) {
     int lastSlotFounded=0;
     for (auto iterSlots = _slots.begin(); iterSlots != _slots.end(); iterSlots++){

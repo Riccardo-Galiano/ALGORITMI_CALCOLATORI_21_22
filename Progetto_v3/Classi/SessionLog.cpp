@@ -6,6 +6,7 @@
 #include <sstream>
 #include "SessionLog.h"
 #include "Course.h"
+#include "Parse.hpp"
 
 SessionLog::SessionLog(std::string &output_file_name) {
     _output_file_name = output_file_name;
@@ -16,25 +17,32 @@ void SessionLog::generateWarningGapAppeals(std::vector<Course> &courses, int gap
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
     for (int i = 0; i < courses.size(); i++) {
         SpecificYearCourse sp = courses[i].getThisYearCourse(year);
-        ss << cdsCodes(sp) << ";";
-        ss << courses[i].getId() << ";" << "regola GAP_APPELLI: questo esame è stato programmato con uno scarto di "
-                                        << gap << " giorni\n";
+        std::vector<int> cds = sp.getStudyCourseAssigned();
+        for(int j = 0; j < cds.size(); j++) {
+            std::string setIdStudyCourse = Parse::setId('C', 3, cds[j]);
+            ss << setIdStudyCourse << courses[i].getId() << ";" << "regola GAP_APPELLI: questo esame è stato programmato con uno scarto di "
+               << gap << " giorni\n";
+        }
     }
     std::string toPass = ss.str();
     appendLogPerSession(session,toPass);
 }
 
-void SessionLog::writeWarnings() {
-    std::stringstream ss;
+void SessionLog::writeWarnings(std::string &output_name_file) {
+
+    std::vector<std::string> nameWithoutExtension = Parse::splittedLine(output_name_file, '.');
+    _output_file_name = nameWithoutExtension[0];
     for(int i=1; i<=3; i++) {
+        std::stringstream ss;
         ss << _output_file_name << "_s" << i << "_warnings.txt";
-        std::fstream fout(_output_file_name, std::ios::out);
+        std::fstream fout(ss.str(), std::ios::out);
         fout << _logPerSession.at(i);
+        fout.close();
     }
 }
 
-void SessionLog::generateWarnings(std::vector<Course> &courses, int relaxPar, int gap, int year, std::map<std::string,int> gapProfs, int session) {
-    generateWarningGapProfs(gapProfs,year,session);
+void SessionLog::generateWarnings(std::vector<Course> &courses, int relaxPar, int gap, int year, std::vector<std::pair<std::string,int>> gapProfsNoRespect, int session) {
+    generateWarningGapProfs(gapProfsNoRespect,session);
     switch (relaxPar) {
         case (1): {
             generateWarningGapSameStudyCourse(courses, year,session);
@@ -56,56 +64,49 @@ void SessionLog::generateWarnings(std::vector<Course> &courses, int relaxPar, in
     }
 }
 
-void SessionLog::generateWarningGapAvaibilityProfs(std::vector<Course>& courses, int year, int session) {
+void SessionLog::generateWarningGapAvaibilityProfs(const std::vector<Course>& courses, int year, int session) {
     std::stringstream ss;
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
     for (int i = 0; i < courses.size(); i++) {
         SpecificYearCourse sp = courses[i].getThisYearCourse(year);
-        ss << cdsCodes(sp) << ";";
-        ss << courses[i].getId() << ";" << "regola AVAIBILITY_PROFS non rispettata\n";
+        std::vector<int> cds = sp.getStudyCourseAssigned();
+        for(int j = 0; j < cds.size(); j++) {
+            std::string setIdStudyCourse = Parse::setId('C', 3, cds[j]);
+            ss << setIdStudyCourse <<";"<< courses[i].getId() << ";" << "regola AVAIBILITY_PROFS non rispettata\n";
+        }
     }
     std::string toPass = ss.str();
     appendLogPerSession(session,toPass);
 }
 
-void SessionLog::generateWarningGapSameStudyCourse(std::vector<Course> &courses, int year, int session) {
+void SessionLog::generateWarningGapSameStudyCourse(const std::vector<Course> &courses, int year, int session) {
     std::stringstream ss;
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
     for (int i = 0; i < courses.size(); i++) {
         SpecificYearCourse sp = courses[i].getThisYearCourse(year);
-        ss << cdsCodes(sp) << ";";
-        ss << courses[i].getId() << ";" << "regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata\n";
+        std::vector<int> cds = sp.getStudyCourseAssigned();
+        for(int j = 0; j < cds.size(); j++) {
+            std::string setIdStudyCourse = Parse::setId('C',3,cds[j]);
+            ss << setIdStudyCourse << ";" << courses[i].getId() << ";" << "regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata\n";
+        }
     }
     std::string toPass = ss.str();
     appendLogPerSession(session,toPass);
 }
 
-std::string SessionLog::cdsCodes(SpecificYearCourse &sp) {
+
+void SessionLog::generateWarningGapProfs(const std::vector<std::pair<std::string,int>>& gapProfsNoRespect, int session) {
     std::stringstream ss;
-    std::vector<int> cds = sp.getStudyCourseAssigned();
-    ss << "{";
-    for (int j = 0; j < cds.size(); j++) {
-        ss << "C" << cds[j];
-        if (j != cds.size() - 1)
-            ss << ",";
-    }
-    ss << "}";
-    std::string toReturn = ss.str();
-    return toReturn;
+
+        for (auto iter = gapProfsNoRespect.begin(); iter != gapProfsNoRespect.end(); iter++) {
+            ss << iter->first << ";" << " GAP_PROFESSORE di " << iter->second << " non rispettata\n";
+        }
+        std::string toReturn = ss.str();
+        appendLogPerSession(session, toReturn);
+
 }
 
-void SessionLog::generateWarningGapProfs(std::map<std::string,int> gapProfs, int year, int session) {
-    std::stringstream ss;
-    ss << year << ";{";
-    for (auto iter = gapProfs.begin(); iter != gapProfs.end(); iter++) {
-        ss << iter->first << " GAP_PROFESSORE di " << iter->second << " non rispettata\n";
-    }
-    ss << "}";
-    std::string toReturn = ss.str();
-    appendLogPerSession(session,toReturn);
-}
-
-void SessionLog::appendLogPerSession(int session, std::string& output) {
+void SessionLog::appendLogPerSession(int session, const std::string& output) {
     if(_logPerSession.count(session)==0){
         _logPerSession.insert(std::pair<int,std::string>(session,output));
     }

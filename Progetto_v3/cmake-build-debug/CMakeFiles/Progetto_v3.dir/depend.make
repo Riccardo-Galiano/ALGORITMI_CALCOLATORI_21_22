@@ -59,6 +59,7 @@ CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj: ../Classi/UniversityMember.
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Course.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Date.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Exam.h
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Parse.hpp
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/Professor.h
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.cpp
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.h
