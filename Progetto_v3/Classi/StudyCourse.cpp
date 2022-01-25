@@ -13,7 +13,10 @@
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
 ///aggiunge un semestre con i relativi corsi al corso di studio
-std::vector<std::string> StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses,int posFile) {
+std::vector<std::string>
+StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,
+                                const std::map<int, StudyCourse> &studyCourse,
+                                std::map<std::string, Course> &universityCourses, int posFile) {
     _errorStringStudyCourse.clear();
     ///key
     std::stringstream ss;
@@ -22,40 +25,47 @@ std::vector<std::string> StudyCourse::addSemesterCourses(const int year, const i
 
     ///create values
     std::vector<std::string> courses;
-    courses = Parse::splittedLine(SemesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
+    courses = Parse::splittedLine(SemesterCourses,
+                                  ',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     ///analizzo tutti i componenti del vettore courses
     for (auto iterCourses = courses.begin(); iterCourses != courses.end(); iterCourses++) {
         ///dobbiamo controllare che questo corso non esista già all'interno di questo study course
-        if(_semesters.empty() == false) {//se sono ancora all'inserimento del primo corso del primo semestre la mappa è vuota
+        if (_semesters.empty() ==
+            false) {//se sono ancora all'inserimento del primo corso del primo semestre la mappa è vuota
             std::vector<std::string> allCoursesSoFar = getAllCoursesOfStudyCourse();
             int myCount = std::count(allCoursesSoFar.begin(), allCoursesSoFar.end(), *iterCourses);
             if (myCount != 0) {
                 ///il corso esiste già
-                _errorStringStudyCourse.push_back("Il corso " + *iterCourses + " e' gia' presente nel corso di studio alla riga: " + std::to_string(posFile));
+                _errorStringStudyCourse.push_back(
+                        "Il corso " + *iterCourses + " e' gia' presente nel corso di studio alla riga: " +
+                        std::to_string(posFile));
             }
         }
         ///se abbiamo uno stesso corso in più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
-        sameSemester(*iterCourses,studyCourse,semester, posFile);
-        if (!_semesters.count(key)) {//se la chiave non esiste(non ho aggiunto ancora corsi per quel semestre di quell'anno)
+        sameSemester(*iterCourses, studyCourse, semester, posFile);
+        if (!_semesters.count(
+                key)) {//se la chiave non esiste(non ho aggiunto ancora corsi per quel semestre di quell'anno)
             std::vector<std::string> vect;
             vect.push_back(courses[0]);//salvo il primo corso del semestre
-            _semesters.insert(std::pair<std::string, std::vector<std::string>>(key, vect));//inserisco nella mappa il primo corso del semestre
+            _semesters.insert(std::pair<std::string, std::vector<std::string>>(key,
+                                                                               vect));//inserisco nella mappa il primo corso del semestre
         } else {//se la chiave esiste
-            _semesters.at(key).push_back(*iterCourses);//aggiungo nel semestre già esistenete i corsi successivi al primo
+            _semesters.at(key).push_back(
+                    *iterCourses);//aggiungo nel semestre già esistenete i corsi successivi al primo
         }
     }
     return _errorStringStudyCourse;
 }
 
 ///prende tutti i corsi del corso di studio
-std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() const{
+std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() const {
     std::vector<std::string> allCourses;
-    for(auto iterSemester = _semesters.begin();iterSemester != _semesters.end();iterSemester++) {
+    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++) {
         std::vector<std::string> sem = iterSemester->second;
-        allCourses.insert(allCourses.end(),sem.begin(),sem.end());
+        allCourses.insert(allCourses.end(), sem.begin(), sem.end());
     }
-    for(auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end();iterOffCourses++){
+    for (auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end(); iterOffCourses++) {
         allCourses.push_back(*iterOffCourses);
     }
     return allCourses;
@@ -64,7 +74,7 @@ std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() const{
 ///aggiunge un corso spento
 bool StudyCourse::addOffCourses(const std::vector<std::string> &offCourses) {
     //associo ogni corso spento a _offCourses
-    for (int i=0; i<offCourses.size(); i++) {
+    for (int i = 0; i < offCourses.size(); i++) {
         _offCourses.push_back(offCourses[i]);
     }
     _offCourses.sort();//se li vogliamo in ordine crescente;
@@ -77,19 +87,20 @@ bool StudyCourse::offCoursesEmpty() const {
 }
 
 ///aggiorna semestri e corsi spenti. Se un corso diventa spento dovrò toglierlo dal semestre a cui era assegnato
-bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse,std::string& acYY ,std::vector<std::string>& temp) {
-for(auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++){
-     //prendo il vettore con i codici del corso
-     std::vector<std::string> &corsi = iterSemesters->second;
-     //cerco il codice che deve diventare spento
-     auto found = std::find(corsi.begin(),corsi.end(),idCourse);
-        if(found != corsi.end()) {
+bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse, std::string &acYY,
+                                               std::vector<std::string> &temp) {
+    for (auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++) {
+        //prendo il vettore con i codici del corso
+        std::vector<std::string> &corsi = iterSemesters->second;
+        //cerco il codice che deve diventare spento
+        auto found = std::find(corsi.begin(), corsi.end(), idCourse);
+        if (found != corsi.end()) {
             std::stringstream ss;
-            ss << idCourse << ";" <<acYY<<";"<<iterSemesters->first;
+            ss << idCourse << ";" << acYY << ";" << iterSemesters->first;
             ///aggiorno temp ---> aggiungo "<codOffCourse>;<acYear(in cui è stato spento)>;<year>-<semester>"
             temp.push_back(ss.str());
             ///tolgo il corso dai semestri e lo aggiungo a offCourses
-             corsi.erase(found);
+            corsi.erase(found);
             _offCourses.push_back(idCourse);
         }
     }
@@ -111,23 +122,24 @@ std::string StudyCourse::getSemestersString() const {
     std::stringstream output;
     auto iterSemester = _semesters.begin();
 
-    output<<"[";
-    for(int i = 0 ; i<_semesters.size() ; i++){//per ogni semestre
-        output <<"{";
+    output << "[";
+    for (int i = 0; i < _semesters.size(); i++) {//per ogni semestre
+        output << "{";
 
         int numCoursesSemester = iterSemester->second.size();//numero di corsi del semestre
         ///streammo su output ogni corso del semestre
-        for(int j = 0;j< numCoursesSemester; j++){
-            output<< iterSemester->second[j] ;//l'iteratore punterà al j-esimo elemento del vettore di stringhe, value di ogni _semester della mappa, contenente i codici dei corsi
-            if(j< numCoursesSemester-1) //se è l'ultimo corso del semestre non va messa la virgola finale
-                output<<",";
+        for (int j = 0; j < numCoursesSemester; j++) {
+            output
+                    << iterSemester->second[j];//l'iteratore punterà al j-esimo elemento del vettore di stringhe, value di ogni _semester della mappa, contenente i codici dei corsi
+            if (j < numCoursesSemester - 1) //se è l'ultimo corso del semestre non va messa la virgola finale
+                output << ",";
         }
         iterSemester++;
-        output <<"}";
-        if(i<_semesters.size()-1)//se l'ultimo semestre non va messa la virgola
-            output <<",";
+        output << "}";
+        if (i < _semesters.size() - 1)//se l'ultimo semestre non va messa la virgola
+            output << ",";
     }
-    output <<"]";
+    output << "]";
 
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
@@ -136,27 +148,32 @@ std::string StudyCourse::getSemestersString() const {
 std::string StudyCourse::getOffCoursesString() const {
     std::stringstream output;
     int countCourses = 0;
-    output <<"[";
-    for( auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end() ; iterOffCourses++){//per ogni corso spento
-        output<< *iterOffCourses;//dereferenzio l'iteratore: prendo il value puntato dall'iteratore
-        if( countCourses< _offCourses.size() - 1)//se l'ultimo corso non va messa la virgola
-            output <<",";
-        countCourses ++;
+    output << "[";
+    for (auto iterOffCourses = _offCourses.begin();
+         iterOffCourses != _offCourses.end(); iterOffCourses++) {//per ogni corso spento
+        output << *iterOffCourses;//dereferenzio l'iteratore: prendo il value puntato dall'iteratore
+        if (countCourses < _offCourses.size() - 1)//se l'ultimo corso non va messa la virgola
+            output << ",";
+        countCourses++;
     }
-    output <<"]";
+    output << "]";
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
 
 ///controlla se un corso presente in altri corsi di studio è posto sempre allo stesso semestre
-std::vector<std::string> StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> & studyCourse,int semester,int posFile) {
+std::vector<std::string>
+StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> &studyCourse, int semester,
+                          int posFile) {
     int sem = 0;
-    for(auto iterStudyCourse = studyCourse.begin();iterStudyCourse != studyCourse.end();iterStudyCourse++){
-       std::string result = iterStudyCourse->second.isInWhichSemester(idCourse);
-       if(result != "") {
-           sem = stoi(result.substr(2, 1));
-           if(semester != sem)
-           _errorStringStudyCourse.push_back("Il corso " + idCourse + " presente alla riga " + std::to_string(posFile) +" dovrebbe essere al semestre: " + std::to_string(semester));
-       }
+    for (auto iterStudyCourse = studyCourse.begin(); iterStudyCourse != studyCourse.end(); iterStudyCourse++) {
+        std::string result = iterStudyCourse->second.isInWhichSemester(idCourse);
+        if (result != "") {
+            sem = stoi(result.substr(2, 1));
+            if (semester != sem)
+                _errorStringStudyCourse.push_back(
+                        "Il corso " + idCourse + " presente alla riga " + std::to_string(posFile) +
+                        " dovrebbe essere al semestre: " + std::to_string(semester));
+        }
     }
     return _errorStringStudyCourse;
 }
@@ -164,9 +181,10 @@ std::vector<std::string> StudyCourse::sameSemester(std::string idCourse, const s
 ///prendo semestre e anno di un corso associato ad un corso di studio
 std::string StudyCourse::isInWhichSemester(std::string codCourse) const {
     //controllo tutti i semestri del corso di studio
-    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++){
-        auto iterCourse = find(iterSemester->second.begin(),iterSemester->second.end(),codCourse);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
-        if(iterCourse != iterSemester->second.end()) {//se il corso è presente in uno dei semestri
+    for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++) {
+        auto iterCourse = find(iterSemester->second.begin(), iterSemester->second.end(),
+                               codCourse);//punto ai corsi di un semestre e cerco tra questi il corso passato e di cui dovrò assegnare l'esame
+        if (iterCourse != iterSemester->second.end()) {//se il corso è presente in uno dei semestri
             return iterSemester->first; //ne prendo il semestre e anno (primo o secondo)
         }
     }
@@ -179,16 +197,16 @@ bool StudyCourse::assignStudyCourse(std::string course) {
 }
 
 ///overload operatore <<
-std::ostream &operator<<(std::ostream &studC, const StudyCourse &s){
-    std::string settedId = Parse::setId('C',3,s.getId());
+std::ostream &operator<<(std::ostream &studC, const StudyCourse &s) {
+    std::string settedId = Parse::setId('C', 3, s.getId());
     studC << settedId << ";";
-    if(s.getIsBachelor())
+    if (s.getIsBachelor())
         studC << "BS;";
     else
         studC << "MS;";
-   studC << s.getSemestersString(); //stringa semestri
-   if(!s.offCoursesEmpty()) //ci sono corsi spenti?
-         studC <<";"<< s.getOffCoursesString();//se ci sono corsi spenti allora prendili
+    studC << s.getSemestersString(); //stringa semestri
+    if (!s.offCoursesEmpty()) //ci sono corsi spenti?
+        studC << ";" << s.getOffCoursesString();//se ci sono corsi spenti allora prendili
     return studC;
 }
 

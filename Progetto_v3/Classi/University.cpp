@@ -779,12 +779,12 @@ void University::addCourses(const std::string &fin) {
                 if (!idGrouped.empty()) {
                     fillGroupedCourse(idGrouped, newIdCourse, acYear, line_counter);
                 } else {
-                    if (_coursesGrouped.count(newIdCourse) != 0) {
+                    /*if (_coursesGrouped.count(acYear + "-" + newIdCourse) != 0) {
                         idGrouped = _coursesGrouped.at(acYear + "-" + newIdCourse);
                         SpecificYearCourse &specificYY = _courses.at(newIdCourse).getThisYearCourseReference(
                                 Parse::getAcStartYear(acYear));//corso per un anno specifico
                         specificYY.assignGrouped(idGrouped, newIdCourse, newIdCourse);
-                    }
+                    }*/
                 }
                 ///controllo che i professori di questo corso esistano già in _professors
                 try {
@@ -3148,11 +3148,13 @@ void University::requestChanges(std::string acYear, std::string fin) {
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
     bool allChangesArePossible = true;
     int numSession;
-
+    bool isFirstLine = true;
     std::string error;
     bool appealsAreAlreadyLoaded = false;
     ///tutti gli appelli delle sessioni (tutti anni accademici indistintamente) sono già caricati in memoria
     while (std::getline(fileIn, line)){
+        if(isFirstLine && line.empty())
+            throw std::invalid_argument("file vuoto");
         std::vector<std::string> infoChanges = Parse::splittedLine(line, ';');
         std::string idCourse = infoChanges[0];
         numSession = Parse::checkedStoi(infoChanges[1],"Errore numero sessione.");
