@@ -1,5 +1,5 @@
 //
-// Created by antonio_vespa on 27/12/21.
+// Created by andre on 27/12/21.
 //
 
 #include <fstream>
@@ -20,7 +20,7 @@ void SessionLog::generateWarningGapAppeals(std::vector<Course> &courses, int gap
         std::vector<int> cds = sp.getStudyCourseAssigned();
         for(int j = 0; j < cds.size(); j++) {
             std::string setIdStudyCourse = Parse::setId('C', 3, cds[j]);
-            ss << setIdStudyCourse << courses[i].getId() << ";" << "regola GAP_APPELLI: questo esame è stato programmato con uno scarto di "
+            ss << setIdStudyCourse <<";"<< courses[i].getId() << ";" << "regola GAP_APPELLI: questo esame è stato programmato con uno scarto di "
                << gap << " giorni\n";
         }
     }
@@ -34,10 +34,12 @@ void SessionLog::writeWarnings(std::string &output_name_file) {
     _output_file_name = nameWithoutExtension[0];
     for(int i=1; i<=3; i++) {
         std::stringstream ss;
-        ss << _output_file_name << "_s" << i << "_warnings.txt";
-        std::fstream fout(ss.str(), std::ios::out);
-        fout << _logPerSession.at(i);
-        fout.close();
+        if(_logPerSession.at(i).empty() == false) {
+            ss << _output_file_name << "_s" << i << "_warnings.txt";
+            std::fstream fout(ss.str(), std::ios::out);
+            fout << _logPerSession.at(i);
+            fout.close();
+        }
     }
 }
 
@@ -99,7 +101,8 @@ void SessionLog::generateWarningGapProfs(const std::vector<std::pair<std::string
     std::stringstream ss;
 
         for (auto iter = gapProfsNoRespect.begin(); iter != gapProfsNoRespect.end(); iter++) {
-            ss << iter->first << ";" << " GAP_PROFESSORE di " << iter->second << " non rispettata\n";
+            std::vector<std::string> profGapAndCourse = Parse::splittedLine(iter->first,'_');
+            ss << profGapAndCourse[0] << ";" <<profGapAndCourse[1]<< ";GAP_MINIMA_DISTANZA_PROFESSORE di " << iter->second << " non rispettato\n";
         }
         std::string toReturn = ss.str();
         appendLogPerSession(session, toReturn);

@@ -11,9 +11,7 @@
 #include "DbException.h"
 #include "University.h"
 
-bool winter = false;
-bool summer = false;
-bool autumn = false;
+
 
 ///costruttore
 SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::string &summerSession,
@@ -24,6 +22,9 @@ SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::s
     _sessionNames.emplace_back("winter");
     _sessionNames.emplace_back("summer");
     _sessionNames.emplace_back("autumn");
+    _winter = false;
+    _summer = false;
+    _autumn = false;
     ///aggiungo le date della sessione in base all'anno e alla sessione
     try {
         this->addSession(acYear, winterSession, _sessionNames[0]);
@@ -67,8 +68,7 @@ bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std
 
     session s{name, dates[0], dates[1]};//salvo le info della sessione nome, data di inizio e data di fine
 
-    _yearSessions.insert(
-            std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
+    _yearSessions.insert(std::pair<std::string, session>(name, s));//sessione Invernale, Estiva, Autunnale. Salvo la sessione
     //setto il calendario con le date delle sessioni
     this->setCaldendar(dates);
 
@@ -100,11 +100,11 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
     for (; gapAppealsSameCourse >= 0 && !exitloop; gapAppealsSameCourse--) {
         ///cerco prima di fare la sessione con relaxpar = 0 && cerco di soddisfare min distance
         if (firstIteration) {
-            winter = generateThisSession("winter", courses, professors, allUniversityClassrooms, relaxPar,
+            _winter = generateThisSession("winter", courses, professors, allUniversityClassrooms, relaxPar,
                                          gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours, true);
-            summer = generateThisSession("summer", courses, professors, allUniversityClassrooms, relaxPar,
+            _summer = generateThisSession("summer", courses, professors, allUniversityClassrooms, relaxPar,
                                          gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours, true);
-            autumn = generateThisSession("autumn", courses, professors, allUniversityClassrooms, relaxPar,
+            _autumn = generateThisSession("autumn", courses, professors, allUniversityClassrooms, relaxPar,
                                          gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours, true);
         } else {
             ///posso rilassare il vincolo del gap tra appelli di uno stesso esame fino a 6 ore tra i due appelli
@@ -112,29 +112,28 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
                 sameDayTwoAppealsSameExamAtLeastSixHours = true;
             }
             ///generare sessione invernale
-            if (winter == false)
-                winter = generateThisSession("winter", courses, professors, allUniversityClassrooms, relaxPar,
+            if (_winter == false)
+                _winter = generateThisSession("winter", courses, professors, allUniversityClassrooms, relaxPar,
                                              gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours, false);
             ///generare sessione estiva
-            if (summer == false)
-                summer = generateThisSession("summer", courses, professors, allUniversityClassrooms, relaxPar,
+            if (_summer == false)
+                _summer = generateThisSession("summer", courses, professors, allUniversityClassrooms, relaxPar,
                                              gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours, false);
             ///generare sessione autunnale
-            if (autumn == false)
-                autumn = generateThisSession("autumn", courses, professors, allUniversityClassrooms, relaxPar,
+            if (_autumn == false)
+                _autumn = generateThisSession("autumn", courses, professors, allUniversityClassrooms, relaxPar,
                                              gapAppealsSameCourse, sameDayTwoAppealsSameExamAtLeastSixHours, false);
             ///se le tre sessioni sono state generate passo all'output su file
         }
 
-        if (winter && summer && autumn) {
+        if (_winter && _summer && _autumn) {
             bool requestChanges = false;
             generateOutputFilesSession(fout, 1, courses, requestChanges);
             generateOutputFilesSession(fout, 2, courses, requestChanges);
             generateOutputFilesSession(fout, 3, courses, requestChanges);
             allExamAppealsWrite(courses);
             ///stampa warnigs
-            if (relaxPar != 0)
-                ///DA FARE PER OGNI SESSIONE
+            if (relaxPar != 0 || (relaxPar == 0 && firstIteration == false))
                 _sysLog.writeWarnings(fout);
 
             result = true;
@@ -146,9 +145,14 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
                 gapAppealsSameCourse++;
             } else {
                 result = false;
-                if (relaxPar < 2) {
+                if (relaxPar < 2 ) {
                     ///se non ci sono vincoli rilassati oppure relaxPar=1 esco
                     exitloop = true;
+                }else if(relaxPar == 2){
+                    //il vincolo di 0 giorni va mantenuto dopo relaxPar == 2 quindi ultima prova si ha rilassando il vincolo delle indisponibilità dei prof
+                    // a 0 giorni tra un appello e l'altro
+                    gapAppealsSameCourse++;
+                    relaxPar++;
                 }
                 ///else -> se relaxPar =2 opp =3, allora deve continuare a ciclare fino a quando può
             }
@@ -196,9 +200,11 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
     bool classRoomError = false;
 
     ///raggruppiamo tutti gli esami specifici di quest'anno
-    //if (relaxPar == 0)
-    _allExamAppealsToDo = getAllExamAppealsToDo(sessName,
-                                                courses); //contiene le stringhe dei codici esame per OGNI appello
+    if (relaxPar == 0 && tryToSatisfyProfsMinDistance == true) {
+        std::vector<std::string> allExamAppealsToDo = getAllExamAppealsToDo(sessName, courses);
+        _allExamAppealsToDo.insert(std::pair<std::string, std::vector<std::string>>(sessName,
+                                                                                    allExamAppealsToDo)); //contiene le stringhe dei codici esame per OGNI appello
+    }
     ///else -> nulla, _allExamAppealsToDo già caricato
     ///cicliamo su ogni data della sessione per organizzare le date degli appelli
     for (Date currentExamDay(startDate.getYear(), startDate.getMonth(), startDate.getDay());
@@ -207,7 +213,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
         //se non è domenica
         if (!(currentExamDay.getWeekDay() == "Sunday")) {
             ///ciclo su tutti gli appelli da assegnare
-            for (int indexExam = 0; indexExam < _allExamAppealsToDo.size() && continueLoop; indexExam++) {
+            for (int indexExam = 0; indexExam < _allExamAppealsToDo.at(sessName).size() && continueLoop; indexExam++) {
                 //il controllo su pop mi serve perchè se dovessi togliere degli elementi dal vettore potrei rischiare di non contare certi esami che slitterebbero ad una posizione indexExam ornai passata.
                 // Quindi per sicurezza, se dovessi togliere degli elementi dal vettore, azzero l'indice e ricomincio da zero, i secondi appelli verranno saltati alla fine del primo controllo
                 if (pop) {
@@ -215,7 +221,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                     pop = false;
                 }
                 ///esami raggruppati da considerare in questo giro
-                std::string codCurrentAppeal = _allExamAppealsToDo[indexExam];
+                std::string codCurrentAppeal = _allExamAppealsToDo.at(sessName)[indexExam];
                 std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
                 std::vector<Course> coursesToConsiderInThisLoop;
                 for (int i = 0; i < coursesGrouped.size(); i++) {
@@ -317,6 +323,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             bool againOk = startHourPerGroupedCourses != -1;
                             if (againOk) {
                                 pop = true;
+                                std::vector<std::pair<std::string,int>> gapProfsNoRespect;
                                 ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
                                 for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
                                     std::string idCourse = coursesToConsiderInThisLoop[i].getId();
@@ -327,41 +334,42 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 
                                     assignTheExamToThisExamDay(startHourPerGroupedCourses, currentExamDay, profs,
                                                                allUniversityClassrooms, courseToConsider, sessName,
-                                                               _allExamAppealsToDo, rooms, requestChanges,
+                                                               _allExamAppealsToDo.at(sessName), rooms, requestChanges,
                                                                numAppealYear);
 
+                                    std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
+                                    if(tryToSatisfyProfsMinDistance == false){
+                                        allGapProfsNoRespect(gapProfsNoRespect, allProfsMatrThisCourse,idCourse);
+                                    }
                                 }
+
                                 _sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear,
-                                                         _gapProfsNoRespect, getSemester(sessName));
+                                                         gapProfsNoRespect, getSemester(sessName));
                                 ///check terminazione funzione
-                                if (_allExamAppealsToDo.empty()) {
+                                if (_allExamAppealsToDo.at(sessName).empty()) {
                                     //se finiti gli appelli, esco
                                     continueLoop = false;
                                 }
                             }
 
-                            //pulisco il vettore dei prof dei quali non viene rispettato il gap richiesto
-                            _gapProfsNoRespect.erase(_gapProfsNoRespect.begin(), _gapProfsNoRespect.end());
-                        } else {
+                            } else {
                             ///elimino il corso e i raggruppati dal vettore di esami da assegnare
-                            ///ANDREBBERO TOLTI TUTTI(SE SONO DELLO STESSO SEMESTRE E ATTIVI SPUNTERANNO DUE VOLTE)
                             for (int j = 0; j < coursesToConsiderInThisLoop.size(); i++) {
-                                popAppealFromVector(_allExamAppealsToDo, coursesToConsiderInThisLoop[j].getId());
+                                popAppealFromVector(_allExamAppealsToDo.at(sessName), coursesToConsiderInThisLoop[j].getId());
                             }
                             pop = true;
                             continueLoopPerHourStart == false;
                         }
-
                     }
-                }
-            }
+               }
+             }
         }
     }
     if (classRoomError == true) {
         throw std::logic_error(error);
     }
     ///devo controllare che tutti gli appelli siano stati inseriti
-    if (_allExamAppealsToDo.empty()) {
+    if (_allExamAppealsToDo.at(sessName).empty()) {
         return true;
     } else
         return false;
@@ -427,8 +435,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
 std::vector<std::string>
 SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course> &courses) {
     std::vector<std::string> allExamAppealsToDo;
-    int semesterOfThisSession = getSemester(
-            sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
+    int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
     for (auto iterCourse = courses.begin(); iterCourse != courses.end(); iterCourse++) {
         int semester;
         bool isActive;
@@ -469,14 +476,6 @@ int SessionYear::getSemester(std::string sessName) {
     return -1;
 }
 
-///controlla che non ci siano -1 nel vettore. Serve per capire se l'algoritmo ha trovato un buco in seguito a tutte le considerazioni da fare
-bool SessionYear::checkHours(std::vector<int> &input) {
-    for (int i = 0; i < input.size(); i++) {
-        if (input[i] == -1)
-            return false;
-    }
-    return true;
-}
 
 ///prende l'anno
 int SessionYear::getAcYear() const {
@@ -593,14 +592,14 @@ SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName
         ///cotrollo aggiuntivo se il gap deve essere più largo (profsGap)
         for (int i = 0; i < allProfsMatrThisCourse.size(); i++) {
             std::stringstream ss;
-            ss << allProfsMatrThisCourse[i] << "_" << idCorso;
+            std::string profId = Parse::setId('d',6,allProfsMatrThisCourse[i]);
+            ss << profId << "_" << idCorso;
             std::string keyToSearchProfsGap = ss.str();
             if (_gapProfs.count(keyToSearchProfsGap) != 0) {
                 int requiredGap = _gapProfs.at(keyToSearchProfsGap);
                 if (requiredGap > 14) {
                     if (second == true) {
-                        if (lastDateAssignation.whatIsTheGap(newDate) <
-                            requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
+                        if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
                             if (requestChanges == true) {
                                 std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
                                 throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
@@ -608,11 +607,6 @@ SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName
                             } else {
                                 if (tryToSatisfyProfsMinDistance) {
                                     return false;
-                                } else {
-                                    //lo assegno lo stesso ma devo segnalare se il gap è rispettato o no
-                                    ///lo indico in una vector che verrà pulita per ogni sessione dell'anno
-                                    _gapProfsNoRespect.push_back(
-                                            std::pair<std::string, int>(keyToSearchProfsGap, requiredGap));
                                 }
                             }
                         }
@@ -894,7 +888,7 @@ bool SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
             int numAppealYear = sp.getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
             std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
             assignTheExamToThisExamDay(startHourPerGroupedCourses, tryDate, professors, allUniversityClassrooms,
-                                       courseToConsider, _sessionNames[numSession - 1], _allExamAppealsToDo, rooms,
+                                       courseToConsider, _sessionNames[numSession - 1], _allExamAppealsToDo.at(_sessionNames[numSession - 1]), rooms,
                                        requestChanges, numAppealYear);
             myUniversity.setClassrooms(allUniversityClassrooms);
             myUniversity.setProfessors(professors);
@@ -980,6 +974,22 @@ void SessionYear::controlSuccessivitySessionPeriod() {
     }
     if (isOk == false)
         throw std::invalid_argument(error);
+}
+
+void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> &gapProfsNoRespect,
+                                       std::vector<int> allProfsMatrThisCourse, std::string courseId) {
+    for (int j = 0; j < allProfsMatrThisCourse.size(); j++) {
+        std::stringstream ss;
+        std::string profId = Parse::setId('d',6,allProfsMatrThisCourse[j]);
+        ss << profId << "_" << courseId;
+        std::string keyToSearchProfsGap = ss.str();
+        if (_gapProfs.count(keyToSearchProfsGap) != 0) {
+            int requiredGap = _gapProfs.at(keyToSearchProfsGap);
+            if (requiredGap > 14) {
+                gapProfsNoRespect.push_back(std::pair<std::string, int>(keyToSearchProfsGap, requiredGap));
+            }
+        }
+    }
 }
 
 

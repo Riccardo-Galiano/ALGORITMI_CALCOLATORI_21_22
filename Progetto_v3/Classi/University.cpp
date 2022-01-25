@@ -1836,17 +1836,12 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare oppure si nota subito che non ci sono aule abbastanza capienti per un corso(eccezione)
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
-        try {
-            esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, 1,*this);
-        }catch (std::logic_error& err){
-            ///questo throw sarà attivo solo se non posso trovare disponibilità di aule in nessun giorno e in nessuno slot per almeno un corso
-            throw std::invalid_argument(err.what());
-        }
+           esito = _acYearSessions.at(startAcYear).generateNewYearSession(outputNameFile, constraintRelaxParameter,*this);
            constraintRelaxParameter++;
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
     if (!esito) {
-        throw std::invalid_argument("non è possibile generare la sessione nonostante i vincoli rilassati");
+        throw std::invalid_argument("Non è possibile generare la sessione nonostante i vincoli rilassati\n");
     }else{
         generateOutputFileName();
     }

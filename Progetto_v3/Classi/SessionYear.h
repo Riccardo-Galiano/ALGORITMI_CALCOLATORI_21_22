@@ -45,6 +45,8 @@ public:
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
     void removeThisAppealInfoFromCalendar(int numSlots,Date& date, int& startSlot, std::string& idCourse);
     bool tryToSetThisExamInThisSession(University& myUniversity, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
+    void allGapProfsNoRespect(std::vector<std::pair<std::string, int>> &gapProfsNoRespect,
+                              std::vector<int> allProfsMatrThisCourse, std::string courseId);
 
     ///getter
     int getAcYear() const;
@@ -78,11 +80,10 @@ private:
     //value: session struct
     std::map<std::string,session> _yearSessions;
     std::vector<std::string> _sessionNames;
-    std::vector<std::string> _allExamAppealsToDo;
+    std::map<std::string,std::vector<std::string>> _allExamAppealsToDo;
     //key: data come stringa "aaaa-mm-gg"
     //value: oggetto Exam Day --> controllo: non ci deve essere nessuna domenica
     std::map<std::string,ExamDay> _yearCalendar;
-
     ///gap stuff
     int _gapAppealsSameCourse = 14;
     //key: data come stringa "matricola-idCorso"
@@ -90,6 +91,9 @@ private:
     std::map<std::string,int> _gapProfs;
     //vector per segnalare i prof dei quali non viene rispetatto il gap richiesto
     std::vector<std::pair<std::string,int>> _gapProfsNoRespect;
+    bool _winter = false;
+    bool _summer = false;
+    bool _autumn = false;
     std::vector<std::string> _errorStringSessionYear;
     //key: session : 1
     //value: nome del file : exam_2021_s1.txt
