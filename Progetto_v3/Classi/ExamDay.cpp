@@ -93,7 +93,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
 }
 
 ///aggiorna la mappa di slot occupati per i professori
-bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
+void ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
     SpecificYearCourse specificCourse = course.getThisYearCourse(_date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
@@ -103,7 +103,6 @@ bool ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Cou
             allUniversityProfs.at(profsMatr[matr]).addNewExam(dateAsString, hhStart + (num_slot * 2), course.getId());//al prof con matricola matr vado ad aggiungere l'esame
         }
     }
-    return true;
 }
 
 ///un corso da assegnare è dello stesso corso di studio e dello stesso anno di uno degli esami già assegnati per una certa data?
@@ -124,20 +123,18 @@ bool ExamDay::sameStudyCourseAndYear(Course course, int year) {
 }
 
 ///assegna l'esame negli slot accettabili in una particolare data
-bool ExamDay::assignExamToExamDay(int hhStart, Course &course, int numSlot) {
+void ExamDay::assignExamToExamDay(int hhStart, Course &course, int numSlot) {
     for (int slot = hhStart; slot < hhStart + (numSlot * 2); slot = slot + 2) {
         _slots.at(slot).push_back(course);
     }
-    return true;
 }
 
 ///set degli slot con interi da 8 a 18
-bool ExamDay::setSlot() {
+void ExamDay::setSlot() {
     for (int i = 0; i < 6; i++) {
         std::vector<Course> vectCourse;
         _slots.insert(std::pair<int, std::vector<Course>>(8 + i * 2, vectCourse));
     }
-    return true;
 }
 
 ///ritorna gli slot sottoforma di stringa

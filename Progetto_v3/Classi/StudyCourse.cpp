@@ -13,10 +13,9 @@
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
 ///aggiunge un semestre con i relativi corsi al corso di studio
-std::vector<std::string>
-StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &SemesterCourses,
-                                const std::map<int, StudyCourse> &studyCourse,
-                                std::map<std::string, Course> &universityCourses, int posFile) {
+void StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &semesterCourses,
+                                     const std::map<int, StudyCourse> &studyCourse,
+                                     std::map<std::string, Course> &universityCourses, int posFile) {
     _errorStringStudyCourse.clear();
     ///key
     std::stringstream ss;
@@ -25,7 +24,7 @@ StudyCourse::addSemesterCourses(const int year, const int semester, const std::s
 
     ///create values
     std::vector<std::string> courses;
-    courses = Parse::splittedLine(SemesterCourses,
+    courses = Parse::splittedLine(semesterCourses,
                                   ',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     ///analizzo tutti i componenti del vettore courses
@@ -55,7 +54,7 @@ StudyCourse::addSemesterCourses(const int year, const int semester, const std::s
                     *iterCourses);//aggiungo nel semestre già esistenete i corsi successivi al primo
         }
     }
-    return _errorStringStudyCourse;
+
 }
 
 ///prende tutti i corsi del corso di studio
@@ -72,13 +71,13 @@ std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() const {
 }
 
 ///aggiunge un corso spento
-bool StudyCourse::addOffCourses(const std::vector<std::string> &offCourses) {
+void StudyCourse::addOffCourses(const std::vector<std::string> &offCourses) {
     //associo ogni corso spento a _offCourses
     for (int i = 0; i < offCourses.size(); i++) {
         _offCourses.push_back(offCourses[i]);
     }
     _offCourses.sort();//se li vogliamo in ordine crescente;
-    return true;
+
 }
 
 ///controlla se ci sono corsi spenti: corsiSpenti è vuoto?
@@ -87,7 +86,7 @@ bool StudyCourse::offCoursesEmpty() const {
 }
 
 ///aggiorna semestri e corsi spenti. Se un corso diventa spento dovrò toglierlo dal semestre a cui era assegnato
-bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse, std::string &acYY,
+void StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse, std::string &acYY,
                                                std::vector<std::string> &temp) {
     for (auto iterSemesters = _semesters.begin(); iterSemesters != _semesters.end(); iterSemesters++) {
         //prendo il vettore con i codici del corso
@@ -104,7 +103,6 @@ bool StudyCourse::updateSemestersAndOffCourses(const std::string &idCourse, std:
             _offCourses.push_back(idCourse);
         }
     }
-    return true;
 }
 
 ///prende l'_id

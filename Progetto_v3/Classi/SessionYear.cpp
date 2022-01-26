@@ -50,7 +50,7 @@ SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::s
 
 
 ///aggiunge il periodo delle sessioni
-bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std::string &name) {
+void SessionYear::addSession(std::string &acYear, std::string &sessionDates, std::string &name) {
     _acYear = Parse::getAcStartYear(acYear);
     ///vettore di Date in cui metterò la data di inizio e di fine
     std::vector<Date> dates = Parse::getDates(sessionDates);
@@ -72,17 +72,15 @@ bool SessionYear::addSession(std::string &acYear, std::string &sessionDates, std
     //setto il calendario con le date delle sessioni
     this->setCaldendar(dates);
 
-    return true;
 }
 
 ///creo il calendario con i giorni delle sessioni, in cui ogni giorno sarà un examDay
-bool SessionYear::setCaldendar(std::vector<Date> dates) {
+void SessionYear::setCaldendar(std::vector<Date> dates) {
     ///per ogni giorno della sessione setto la mappa YearCalendar con key la data sottoforma di stringa e un oggetto examDay come value
     for (Date d = dates[0]; !d.isEqual(dates[1]++); d = d++) {
         ExamDay examDay(d);
         _yearCalendar.insert(std::pair<std::string, ExamDay>(d.toString(), examDay));
     }
-    return false;
 }
 
 ///genera le sessioni dell'anno accademico considerato
@@ -513,8 +511,7 @@ SessionYear::getGroupedCourses(const std::map<std::string, Course> &courses, std
 }
 
 ///valuta se la data è accettabile per quell'esame
-bool
-SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName, int gapAppeals, bool requestChanges,
+bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &sessName, int gapAppeals, bool requestChanges,
                       bool tryToSatisfyProfsMinDistance) {
     SpecificYearCourse sp = course.getThisYearCourse(getAcYear());//corso per un anno specifico
     std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
@@ -732,9 +729,9 @@ bool SessionYear::sessionsPeriodIsEmpty() {
     return _yearSessions.empty();
 }
 
-bool SessionYear::addProfGap(std::string &matr_idC, int gap) {
+void SessionYear::addProfGap(std::string &matr_idC, int gap) {
     _gapProfs.insert(std::pair<std::string, int>(matr_idC, gap));
-    return true;
+   
 }
 
 std::vector<std::string> SessionYear::getProfsOfGapProfsString() {
@@ -759,7 +756,7 @@ void SessionYear::removeThisAppealInfoFromCalendar(int numSlots, Date &date, int
 
 }
 
-bool SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course &course,
+void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course &courseToConsider,
                                                 int numSession, int numAppeal, Date &tryDate) {
     ///get oggetti per COPIA  e li andiamo a modificare nei passi successivi
     std::map<int, Professor> professors = myUniversity.getProfessors();
@@ -779,7 +776,7 @@ bool SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
         throw std::invalid_argument("La data non appartiene alla sessione\n");
 
     ///controllo che il primo appello rimanga il primo appello e che il secondo rimanga il secondo
-    SpecificYearCourse specific = course.getThisYearCourse(_acYear);
+    SpecificYearCourse specific = courseToConsider.getThisYearCourse(_acYear);
     int numAppealsAssigned = specific.amIAssignedAlreadyInThisSession(this->getSemester(_sessionNames[numSession - 1]));
     //se abbiamo più appelli per quella sessione
     //(diverso da zero perchè l'appello da riassegnare l'abbiamo tolto) quindi o rimarrà l'altro appello o non ci saranno appelli)
@@ -800,7 +797,7 @@ bool SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
     }
 
     ///esami raggruppati da considerare in questo giro
-    std::string codCurrentAppeal = course.getId();
+    std::string codCurrentAppeal = courseToConsider.getId();
     std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
     std::vector<Course> coursesToConsiderInThisLoop;
     ///prendo gli oggetti corso dei corsi raggruppati iù quello selezionato
@@ -898,7 +895,6 @@ bool SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
         throw std::logic_error(
                 "Nessuna possibile coincidenza tra disponibilita' dei prof considerati e aule per tutti gli slot di questo giorno\n");
 
-    return true;
 }
 
 bool SessionYear::fileNameIsEmpty() {

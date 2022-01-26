@@ -38,19 +38,19 @@ public:
     SpecificYearCourse(std::string sY_eY ,bool active ,int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam,std::vector<std::string> idGrouped, std::string  yy_semester, std::vector<int> studyCourse, int line_counter);
 
     ///SpecificYearCourse management
-    bool addStudent(int acYearRegistration, Student &stud);
-    bool addGradeToStudent(Student &stud, int passYear, int mark,std::string appealsDate,std::string idCourse);
+    void addStudent(int acYearRegistration, Student &stud);
+    void addGradeToStudent(Student &stud, int passYear, int mark, std::string appealsDate, std::string idCourse);
     int amIAssignedAlreadyInThisSession(int session);
     Date lastDateAssignationInGivenSession(int session);
     Date& dateAssignationInGivenSession(int numSession, int numAppeal);
     int startSlotAssignationInGivenSession(int numSession, int numAppeal);
     std::vector<int> classroomsAssignedInGivenSession(int numSession, int numAppeal);
-    bool assignExamInThisSpecificYearCourse(Date examDay,int session);
-    bool assignYY_SemToAllYear(std::string& acYYoff,std::string& yy_semester);
-    bool addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
-    bool assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
-    bool assignAppeals(std::string,std::vector<Date>,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal);
-    bool addStartSlotToAppeal(int numAppeal, int startExamHour);
+    void assignExamInThisSpecificYearCourse(Date examDay, int session);
+    void assignYY_SemToAllYear(std::string& acYYoff, std::string& yy_semester);
+    void addClassroomsToAppeal(int numAppeal, std::vector<int>& rooms);
+    void assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam, std::string appealDate);
+    void assignAppeals(std::string session, std::vector<Date> appealPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal);
+    void addStartSlotToAppeal(int numAppeal, int startExamHour);
     void reassignAppeal(int numAppeal,int numSession,Date date,int startSlot,std::vector<int>classroomsPerCourse);
 
     ///remove
@@ -89,8 +89,8 @@ public:
     int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
 
     ///setter
-    bool setYear();
-    bool setProfMap(int numCrsiPar, std::vector<std::string> profsToSplit, int line_counter);
+    void setYear();
+    void setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, int line_counter);
     void setNewYear(int newStartYear);
     void assignGrouped (std::vector<std::string>& idGrouped, std::string& idCourse,std::string& thisCourse);
     void eraseNumAppeal();

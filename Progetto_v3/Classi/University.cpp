@@ -272,8 +272,9 @@ void University::readCourse() {
                                                                studyCourse,
                                                                line_counter);//aggiungo ad un corso un anno accademico e le relative info nella map _courses
         }
+        line_counter++;
     }
-    line_counter++;
+
     fileIn.close();
 }
 
@@ -612,14 +613,10 @@ std::vector<std::string> University::addStudyCourses(const std::string &fin) {
             for (i = 0; i < semestri.size(); i++) {
                 year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
                 numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-                std::vector<std::string> possibleErrors = SCourse.addSemesterCourses(year, numSemester, semestri[i],
+                SCourse.addSemesterCourses(year, numSemester, semestri[i],
                                                                                      _studyCourse, _courses,
                                                                                      line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
-                if (possibleErrors.empty() == false) {
-                    _errorStringUniversity.insert(_errorStringUniversity.end(), possibleErrors.begin(),
-                                                  possibleErrors.end());
-                    doDbwrite = false;
-                }
+
             }
             _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
             ifThereAreAlreadyCoursesFillYYSemesterVar(SCourse);
@@ -1885,7 +1882,7 @@ void University::readOutputFileName(){
     }
 }
 ///controlla se i file sono coerenti
-bool University::controlDatabase(int startAcYear) {
+void University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
     dataBaseIsEmpty(startAcYear);
 
@@ -1919,12 +1916,10 @@ bool University::controlDatabase(int startAcYear) {
 
     if(checkIsOK == false)
         throw std::invalid_argument(error);
-
-    return checkIsOK;
 }
 
 ///i database sono vuoti?
-bool University::dataBaseIsEmpty(int startAcYear) {
+void University::dataBaseIsEmpty(int startAcYear) {
     std::string error;
     bool isOk = true;
     if (_professors.empty()) {
@@ -1981,7 +1976,6 @@ bool University::dataBaseIsEmpty(int startAcYear) {
         throw std::invalid_argument(error);
     }
 
-    return false;
 }
 
 /// controllo che idGrouped NON siano corsi dello stesso CdS
@@ -2178,7 +2172,7 @@ void University::versioning(std::string newVersion) {
 }
 
 ///rename del database con _old prima dell'estensione .txt
-bool University::renameOldDataBase(int version) {
+void University::renameOldDataBase(int version) {
     if (version == 2) {
         //rename student e professor database
         int result;
@@ -2205,7 +2199,7 @@ bool University::renameOldDataBase(int version) {
         if (result != 0)
             throw InvalidDbException("file db_aule.txt non rinominato adeguatamente");
     }
-    return false;
+
 }
 
 ///aggiunge il piano di studio agli studenti

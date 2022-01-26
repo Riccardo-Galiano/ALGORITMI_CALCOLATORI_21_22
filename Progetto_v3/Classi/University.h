@@ -51,9 +51,9 @@ public:
     void revertChanges(int newVersion);
     void revertChanges2to1();
     void revertChanges3to2();
-    bool renameOldDataBase(int version);
-    bool controlDatabase(int startAcYear);
-    bool dataBaseIsEmpty(int startAcYear);
+    void renameOldDataBase(int version);
+    void controlDatabase(int startAcYear);
+    void dataBaseIsEmpty(int startAcYear);
     bool controlGroupedCoursesDifferentCds_Reciprocy(std::vector<std::string> &idGrouped,
                                                      std::string specificCourse, int line_counter,
                                                      std::string idCourse);

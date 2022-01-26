@@ -23,13 +23,13 @@ class Course {
 public:
 
     Course(const std::string& idCourse, const std::string& courseName, const int cfu, const int lessonHours,const int exerciseHours, const int labHours);
-    bool addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse, int line_counter );
-    bool modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate);
-    bool registerStudentsToSpecificYear(int acYear, Student& stud);
-    bool fillSpecificYearCourse(std::vector<std::string>& specificYearCourse, int line_counter);
+    void addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse, int line_counter );
+    void modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark, std::string appealsDate);
+    void registerStudentsToSpecificYear(int acYearRegistration, Student& stud);
+    void fillSpecificYearCourse(std::vector<std::string>& specificYearCourse, int line_counter);
     bool courseOfTheYearIsEmpty();
-    bool fillAcYearsEmpty();
-    bool controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> & professors,int year);
+    void fillAcYearsEmpty();
+    void controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> & professors, int year);
     hours controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int,Professor> & professors);
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
@@ -44,14 +44,14 @@ public:
     std::map<int,std::vector<std::string>> getGroupedCourseFromAllYear();
     void notActive();
     int getSemesterAtYear(int acStartYear,std::string name);
-    bool sameSemesterGrouped(std::map<std::string,Course> courses);
-    bool assignYY_Sem(std::string& acYYoff,std::string& yy_semester);
+    void sameSemesterGrouped(std::map<std::string,Course> courses);
+    void assignYY_Sem(std::string& acYYoff, std::string& yy_semester);
     std::vector<std::string>getAcYearStudExam();
-    bool assignStudToAppealPerYear(std::string acYear,std::string appealDate,std::string allStudsPassedExamString);
+    void assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString);
     std::vector<std::pair<std::string, int>> splittAllStudPassedExamString(std::string allStudsPassedExamString);
     std::vector<std::string>getAcYearAppeals();
-    bool assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSessionstd,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal);
-    bool controlAppeal(std::string appealDate);
+    void assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal);
+    void controlAppeal(std::string appealDate);
     bool profHaveThisCourse(int matr, int acStartYear);
     int getExamSlotPerYear(std::string acYear);
     std::vector<int> getProfsPerYear(std::string acYear);

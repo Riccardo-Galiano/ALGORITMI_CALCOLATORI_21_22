@@ -25,17 +25,16 @@ Course::Course(const std::string &idCourse, const std::string &nameCourse, const
 }
 
 ///aggiunge per ogni anno accademico il corso con le sue informazioni
-bool Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
+void Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
                                     std::vector<std::string> exam, std::vector<std::string> idGrouped,
                                     std::string yy_semester, std::vector<int> studyCourse, int line_counter) {
 ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,idGrouped, yy_semester,studyCourse,line_counter)));
 
-    return true;
 }
 
 ///riempie il vettore di stringhe specificYearcourse
-bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse,int line_counter) {
+void Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse,int line_counter) {
     std::string acYear = specificYearCourse[1];
     std::stringstream ss(acYear);
     int startYear, endYear;
@@ -79,11 +78,10 @@ bool Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     //tornerà errore se non congruenti
     std::vector<std::string> profCorsoPar = Parse::getProfPar(profSenzaQuadre, new_num_par_courses);//divido i vari corsi in parallelo
 
-    return true;
 }
 
 ///modifica uno studente in un anno specifico con il suo voto
-bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
+void Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
     SpecificYearCourse sp = getLastSpecificYearCourse();
     int lastYear = sp.getStartYear();
     //controllo che lo studente sia iscritto al corso
@@ -94,7 +92,6 @@ bool Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, in
     for(int year = acYear; year <= lastYear ; year++) {
         _courseOfTheYear.at(year).addGradeToStudent(stud, acYear, mark, appealsDate,getId());
     }
-    return true;
 }
 
 ///prende l'ultimo oggetto SpecificYearCourse dalla map _coursOfTheYear
@@ -109,11 +106,6 @@ SpecificYearCourse &Course::getLastSpecificYearCourse() {
             lastYear = actualYear;//prendo l'ultimo anno
 
     }
-/*
- potrei scrivere al posto del for
- auto iter = _courseOfTheYear.rbegin(); mi da direttamente l'ultimo anno perchè la map è organizzata con le key in ordine crescente quindi l'ultimo in coda sarà sicuramente l'anno accademico più frequente
- int lastYear = iter->first;
- */
     return _courseOfTheYear.at(lastYear);
 }
 
@@ -187,7 +179,7 @@ bool Course::courseOfTheYearIsEmpty() {
 }
 
 ///riempi i buchi tra anni accademici di un corso
-bool Course::fillAcYearsEmpty() {
+void Course::fillAcYearsEmpty() {
     for (auto iterCourseOfTheYear = _courseOfTheYear.begin();iterCourseOfTheYear != _courseOfTheYear.end(); iterCourseOfTheYear++) {//per ogni anno accademico
         auto token = iterCourseOfTheYear;//iteratore all'elemento corrente
         auto iterSuccessiveCourse = ++token;//iteratore al successivo elemento in memoria
@@ -207,11 +199,10 @@ bool Course::fillAcYearsEmpty() {
             }
         }
     }
-    return true;
 }
 
 ///controllo che esistano i professori e che le ore in totale per lezioni, lab ed esercitazioni combacino con quelle del corso
-bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year) {
+void Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year) {
         SpecificYearCourse sp = _courseOfTheYear.at(year);
         std::string error;
         bool isOk = true;
@@ -236,7 +227,6 @@ bool Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Profess
         if(isOk == false){
             throw std::invalid_argument(error);
         }
-    return true;
 }
 
 ///prendo le ore totali dei prof per un singolo corso
@@ -286,7 +276,7 @@ int Course::getSemesterAtYear(int acStartYear,std::string name) {
     return sem;
 }
 
-bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
+void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
     bool isOk = true;
     std::string error;
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
@@ -323,18 +313,16 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
     if(isOk == false){
         throw std::logic_error(error);
     }
-    return true;
 }
 
 ///tengo traccia del semstre e dell'anno del corso spento
-bool Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
+void Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
     for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
         iterSpecific->second.assignYY_SemToAllYear(acYYoff, yy_semester);
     }
-    return  true;
 }
 
-bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
+void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
     ///prendo l'ultimo anno e riempio la struttura fino all'anno che mi serve per l'iscrizione perchè l'ultimo aggiornamento può essere vecchio
     SpecificYearCourse sp = getLastSpecificYearCourse();
     int lastYear = sp.getStartYear();
@@ -356,7 +344,6 @@ bool Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
     for(int year = acYearRegistration; year <= lastYear ; year++) {
         _courseOfTheYear.at(year).addStudent(acYearRegistration, stud);
     }
-    return  true;
 
 
 }
@@ -396,11 +383,11 @@ std::vector<std::string> Course::getAcYearStudExam() {
     return  allAppealsPerYearToString;
 }
 
-bool Course::assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString) {
+void Course::assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString) {
     std::vector<std::pair<std::string, int>> allStudPassedExam = splittAllStudPassedExamString(allStudsPassedExamString);
     int startAcYear = Parse::getAcStartYear(acYear);
     _courseOfTheYear.at(startAcYear).assignAllStudsPassedExam(allStudPassedExam,appealDate);
-    return true;
+
 }
 
 std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(std::string allStudsPassedExamString) {
@@ -427,13 +414,12 @@ std::vector<std::string> Course::getAcYearAppeals() {
     return allAppealsPerCourses;
 }
 
-bool Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession,std::vector<int> startSlotPerAppeal,std::vector<std::string> classroomsPerAppeal) {
+void Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal) {
     int acStartYear = Parse::getAcStartYear(acYear);
     _courseOfTheYear.at(acStartYear).assignAppeals(session,appealsPerSession,startSlotPerAppeal,classroomsPerAppeal);
-    return true;
 }
 
-bool Course::controlAppeal(std::string appealDate) {
+void Course::controlAppeal(std::string appealDate) {
     Date appeal = Parse::controlItCanBeADate(appealDate);
     int yearAppeal = appeal.getYear();
     int month = appeal.getMonth();
@@ -460,7 +446,6 @@ bool Course::controlAppeal(std::string appealDate) {
     if (std::find(allAppealsPerYear.begin(), allAppealsPerYear.end(), appeal) == allAppealsPerYear.end())
         throw std::invalid_argument("In data " + appealDate + " non ci sono esami effettuati per il corso " + getId() +"\n");
 
-    return true;
 }
 
 bool Course::profHaveThisCourse(int matr, int acStartYear) {

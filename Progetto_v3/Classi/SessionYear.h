@@ -25,11 +25,11 @@ public:
     ///constructor
     SessionYear(std::string& acYear, std::string& winterSession,std::string& summerSession,std::string& autumnSession,std::string output_file_name = "output_file_name");
     ///SessionYear management
-    bool addSession(std::string& acYear, std::string& sessionDates,  std::string& name);
-    bool setCaldendar(std::vector<Date> dates);
+    void addSession(std::string& acYear, std::string& sessionDates,  std::string& name);
+    void setCaldendar(std::vector<Date> dates);
     //ritorna true se è stato possibile generare tutta la sessione, false altrimenti
     bool generateNewYearSession(std::string &fout, int relaxPar, University &myUniversity);
-    bool addProfGap(std::string& matr_idC, int gap);
+    void addProfGap(std::string& matr_idC, int gap);
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
     bool generateThisSession(std::string sessName, std::map<std::string, Course> &courses,
@@ -44,7 +44,7 @@ public:
     std::vector<std::string> getProfsOfGapProfsString();
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
     void removeThisAppealInfoFromCalendar(int numSlots,Date& date, int& startSlot, std::string& idCourse);
-    bool tryToSetThisExamInThisSession(University& myUniversity, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
+    void tryToSetThisExamInThisSession(University& myUniversity, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
     void allGapProfsNoRespect(std::vector<std::pair<std::string, int>> &gapProfsNoRespect,
                               std::vector<int> allProfsMatrThisCourse, std::string courseId);
 

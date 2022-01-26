@@ -17,13 +17,13 @@ public:
     explicit ExamDay(Date date);
 
     ///ExamDay management
-    bool assignExamToProf(std::map<int,Professor>& allUniversityProfs, Course course , int hhStart, int num_slots);
-    bool assignExamToExamDay(int hhStart, Course& course, int year);
+    void assignExamToProf(std::map<int,Professor>& allUniversityProfs, Course course , int hhStart, int num_slots);
+    void assignExamToExamDay(int hhStart, Course& course, int numSlot);
     int isPossibleToAssignThisExamToProfs(Course course, std::map<int, Professor>& allUniversityProfs,
                                           std::map<int, Classroom>& allUniversityClassrooms, int numSlotsRequired,
                                           int relaxPar, std::vector<int>& idRoomsFounded, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot); //ritorna lo slot dell'orario iniziale, oppure -1 se non trovato
     bool sameStudyCourseAndYear(Course,int);
-    bool setSlot();
+    void setSlot();
     std::vector<std::string> getSlotsToString();
     bool allSLotsAreEmpty();
     bool searchAvailableClassroomsInThisSlot(std::map<int, Classroom>& allUniversityClassrooms, int numSeatsToSeach, std::vector<int>& idRoomsFounded, int slotHour, int numSLotsRequired,

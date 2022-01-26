@@ -16,9 +16,9 @@ public:
     StudyCourse(const int id, const bool & isBachelor);
 
     ///StudyCourse management
-    std::vector<std::string> addSemesterCourses(const int year,const  int semester ,const std::string & semesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses,int posFile);
-    bool addOffCourses(const std::vector<std::string> & offCourses);
-    bool updateSemestersAndOffCourses( const std::string& idCourse,std::string& acYY,std::vector<std::string>& temp);
+    void addSemesterCourses(const int year,const  int semester ,const std::string & semesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses,int posFile);
+    void addOffCourses(const std::vector<std::string> & offCourses);
+    void updateSemestersAndOffCourses(const std::string& idCourse, std::string& acYY, std::vector<std::string>& temp);
     bool assignStudyCourse(std::string course);
 
     ///getter

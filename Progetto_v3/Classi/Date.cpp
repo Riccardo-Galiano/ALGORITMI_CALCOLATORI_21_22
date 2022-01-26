@@ -14,6 +14,15 @@ Date::Date(int year, int month, int day) {
     _weekday = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 }
 
+Date::Date(const std::string &date) {
+    std::stringstream ss;
+    int yy, mm, dd;
+    char c;
+    ss << date;
+    ss >> yy >> c >> mm >> c >> dd;
+    setDate(yy,mm,dd);
+}
+
 // set year, month, day
 void Date::setDate(int yy, int mm, int dd) {
 
@@ -48,8 +57,7 @@ Date& Date::operator++() {
    return *this; // reference return to create an lvalue
 }
 
-// overloaded postfix increment operator; note that the  
-// dummy integer parameter does not have a parameter name
+// overloaded postfix increment operator
 Date Date::operator++(int) {
    Date temp(_year,_month,_day); // hold current state of object
    temp.helpIncrement();
@@ -66,36 +74,36 @@ Date& Date::operator+=(unsigned int additionalDays) {
    return *this; // enables cascading                      
 }
 
-// if the year is a leap year, return true; otherwise, return false
+// controllo se un anno bisestile
 bool Date::leapYear(int testYear) {
    return (testYear % 400 == 0 ||  (testYear % 100 != 0 && testYear % 4 == 0));
 }
 
-// determine whether the day is the last day of the month
+// determina la fine di un mese
 bool Date::endOfMonth(int testDay) const {
    if (_month == 2 && leapYear(_year)) {
-      return testDay == 29; // last day of Feb. in leap year
+      return testDay == 29; // nel caso in cui fosse un anno bisestile, Febbraio
    }
    else {
       return testDay == _days[_month];
    }
 }
 
-// function to help increment the date
+// controlla l'incremento
 void Date::helpIncrement() {
-   // day is not end of month
+   // Se il giorno non è la fine del mese
    if (!endOfMonth(_day)) {
-      ++_day; // increment day
+      ++_day; // incremento il giorno
    }
    else {
-      if (_month < 12) { // day is end of month and month < 12
-         ++_month; // increment month
-         _day = 1; // first day of new month
+      if (_month < 12) { // Se il giorno è l'ultimo del mese e il mese < 12
+         ++_month; // incremento il mese
+         _day = 1; // setto il giorno al primo del mese
       }
-      else { // last day of year
-         ++_year; // increment year
-         _month = 1; // first month of new year
-         _day = 1; // first day of new month
+      else { // Se il mese è il 12(Dicembre)
+         ++_year; // incemento l'anno
+         _month = 1; // setto il mese al primo dell'anno
+         _day = 1; // setto il giorno al primo del mese
       }
    }
 }
@@ -150,6 +158,7 @@ bool Date::operator<(const Date & date) const {
     }
 }
 
+//prende il giorno della settimana
 std::string Date::getWeekDay() {
     Date d(_year,_month,_day);
     int mon;
@@ -182,15 +191,6 @@ Date Date::add(int daysToAdd) {
     return toReturn;
 }
 
-Date::Date(const std::string &date) {
-    std::stringstream ss;
-    int yy, mm, dd;
-    char c;
-    ss << date;
-    ss >> yy >> c >> mm >> c >> dd;
-    setDate(yy,mm,dd);
-}
-
 unsigned int Date::getYear() const {
     return _year;
 }
@@ -203,7 +203,7 @@ std::string Date::toString() {
 }
 
 bool Date::isEqual(const Date compare) {
-    return (_year == compare._year && _month == compare._month && _day == compare._day); //true or false
+    return (_year == compare._year && _month == compare._month && _day == compare._day); //true o false
 }
 
 
@@ -278,6 +278,7 @@ void Date::helpDecrement() {
         }
     }
 }
+
 //prefix --Date
 Date &Date::operator--() {
     helpDecrement();
