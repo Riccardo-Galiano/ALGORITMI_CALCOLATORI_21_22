@@ -452,9 +452,6 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
 
 int main(int argc, char *argv[]){
     University poliTo;
-    if (argc < 3) {
-        throw std::invalid_argument("errore numero parametri linea di comando");
-    }
     program(poliTo, argv,argc);
     if(sysLog.errorsOccurred())
         std::cerr << sysLog.getLog();

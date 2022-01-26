@@ -13,7 +13,6 @@
 #include <algorithm>
 
 
-//namespace fs = std::filesystem;
 int versioning = 0;
 
 University::University() : _version(1) {
@@ -97,6 +96,17 @@ University::University() : _version(1) {
     }
 }
 
+void University::readVersion() {
+    std::ifstream file("versione.txt");
+    if (!file.is_open()) {
+        throw DbException("file versione.txt non esistente. Non e' ancora stato usato il comando di versioning");
+    }
+    std::string version;
+    std::getline(file, version);
+    _version = Parse::checkedStoi(version,"numero versioning");
+    file.close();
+}
+
 ///leggo il database degli studenti
 void University::readStudents() {
     //dbstudenti
@@ -113,28 +123,17 @@ void University::readStudents() {
         InteroStudente = Parse::splittedLine(line, ';');
         nMatr = Parse::getMatr(InteroStudente[0]);
 
-        if (_version == 1) {
-            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
-                                                                    InteroStudente[3])));//la chiave intera è la matricola; ad ogni chiave/matricola è associato uno studente
-        } else {
-            ///version >= 2, ai fini di test avremo solo =2 oppure =3
+        if (_version == 2) {
             _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
                                                                     InteroStudente[3], InteroStudente[4],
                                                                     InteroStudente[5], InteroStudente[6])));
+        } else {
+            //chiave = num matricola; ad ogni chiave/matricola è associato uno studente
+            _students.insert(std::pair<int, Student>(nMatr, Student(nMatr, InteroStudente[1], InteroStudente[2],
+                                                                    InteroStudente[3])));
         }
     }
     fileIn.close();
-}
-
-void University::readVersion() {
-    std::ifstream file("versione.txt");
-    if (!file.is_open()) {
-        throw DbException("file versione.txt non esistente. Non e' ancora stato usato il comando di versioning");
-    }
-    std::string version;
-    std::getline(file, version);
-    _version = std::stoi(version);
-    file.close();
 }
 
 ///identico alla readStudents(); si evita di commentare per non sporcare il codice

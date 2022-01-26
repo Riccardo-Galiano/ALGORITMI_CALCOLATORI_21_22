@@ -129,9 +129,7 @@ private:
     std::map<int, Classroom> _classrooms;
     std::map<int, StudyCourse> _studyCourse;
     std::map<std::string, Course> _courses;
-    //key: "acYear-IdCourse"
-    //value: corsi grouped
-    std::map<std::string, std::vector<std::string>> _coursesGrouped;
+    std::map<std::string, std::vector<std::string>> _coursesGrouped; //key: "acYear-IdCourse" value: "corsi grouped"
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     std::vector<std::string> _potentialCourse;
