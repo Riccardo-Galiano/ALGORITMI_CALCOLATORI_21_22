@@ -455,8 +455,7 @@ std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date da
 }
 
 ///inserisco tutti i corsi raggruppati nello spYY e cancello il suo id
-void
-SpecificYearCourse::assignGrouped(std::vector<std::string> &idGrouped, std::string &idCourse, std::string &thisCourse) {
+void SpecificYearCourse::assignGrouped(std::vector<std::string> &idGrouped, std::string &idCourse, std::string &thisCourse) {
     _idGroupedCourses = idGrouped;
     _idGroupedCourses.push_back(idCourse);
     auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(), thisCourse);
@@ -585,6 +584,11 @@ void SpecificYearCourse::eraseNumAppeal() {
 
 int SpecificYearCourse::getNumAppeal() const {
     return _numAppeal;
+}
+
+void SpecificYearCourse::updateIdGroupedCourses(std::vector<std::string> grouped) {
+    _idGroupedCourses.erase(_idGroupedCourses.begin(),_idGroupedCourses.end());
+   _idGroupedCourses = grouped;
 }
 
 

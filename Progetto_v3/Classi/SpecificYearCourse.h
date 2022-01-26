@@ -55,6 +55,7 @@ public:
 
     ///remove
     void removeInfoThisAppealFromSpecificYear(int numSession, int numAppeal);
+    void updateIdGroupedCourses(std::vector<std::string> grouped);
 
     ///getter
     int getStartYear() const;

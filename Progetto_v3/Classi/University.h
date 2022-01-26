@@ -70,6 +70,7 @@ public:
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
     int whatIsMyStudyCourse(Course& course, int acStartYear);
     void allErrorClasses();
+    void controlReciprocyGrouped();
 
     ///Input (from DB)
     void readCourseNotActive();
@@ -106,6 +107,7 @@ public:
     const int getNewClassroomId() const;
     const int getNewStudyCourseId() const;
     const std::string getNewCourseId()const;
+    std::string getPotentialCourseString() const;
 
     ///add
     void addStuds(const std::string &fileIn);
@@ -132,6 +134,9 @@ private:
     std::map<std::string, std::vector<std::string>> _coursesGrouped;
     std::map<int,SessionYear> _acYearSessions;
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
+    std::vector<std::string> _potentialCourse;
+
+private:
     int _version;
     std::vector<std::string> _errorStringUniversity;
     void fillGroupedCourse (std::vector<std::string>&  idGroupedLetti, std::string& idCourse, std::string& acYear, int line);

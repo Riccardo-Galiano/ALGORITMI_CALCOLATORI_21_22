@@ -309,6 +309,7 @@ bool Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
                 sem = iterSpecificYear->second.getSemester();
                 int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,groupedCourse[i]);
                 if (sem != -1 && semGrouped != -1) {
+                    //se almeno uno dei due è -1 la coerenza tra loro non si può dimostrare quini lo considero ok
                     if (semGrouped != sem) {
                         error.append("il seguente corso raggruppato " + groupedCourse[i] +
                                      " non e' dello stesso semestre di: " + getName() + " ;corrispondente al codice: " +
