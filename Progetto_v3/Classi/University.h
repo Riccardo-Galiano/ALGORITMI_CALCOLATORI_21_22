@@ -57,7 +57,7 @@ public:
     bool controlGroupedCoursesDifferentCds_C(std::vector<std::string> idGrouped,
                                              std::string idCourseToAddToIdGrouped, int year);
     bool controlGroupedCoursesDifferentStudyCourse_Sc();
-    std::vector<std::string> insertCourses(const std::string &fin);
+    void insertCourses(const std::string &fin);
     void insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
     void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, std::string acYearRegistration, int line_counter);
@@ -136,7 +136,8 @@ private:
 private:
     int _version;
     std::vector<std::string> _errorStringUniversity;
-    void fillGroupedCourse (std::vector<std::string>&  idGroupedLetti, std::string& idCourse, std::string& acYear, int line);
+    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
+                           bool addCourses);
 };
 
 

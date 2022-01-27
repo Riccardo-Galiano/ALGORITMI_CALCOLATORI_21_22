@@ -588,6 +588,10 @@ bool SpecificYearCourse::studyCourseEmpty() {
     return _studyCourseAssigned.empty();
 }
 
+void SpecificYearCourse::updateStudyCourseAssigned(int studyCourseAssigned) {
+    _studyCourseAssigned.push_back(studyCourseAssigned);
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

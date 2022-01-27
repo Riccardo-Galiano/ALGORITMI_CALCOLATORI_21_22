@@ -15,35 +15,31 @@ StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBac
 ///aggiunge un semestre con i relativi corsi al corso di studio
 void StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &semesterCourses,
                                      const std::map<int, StudyCourse> &studyCourse, int posFile) {
-    _errorStringStudyCourse.clear();
+
     ///key
     std::stringstream ss;
     ss << year << "-" << semester;
     std::string key = ss.str(); //creo la chiave con anno e semestre
-
+    std::string error;
     ///create values
     std::vector<std::string> courses;
-    courses = Parse::splittedLine(semesterCourses,
-                                  ',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
+    courses = Parse::splittedLine(semesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
     ///analizzo tutti i componenti del vettore courses
     for (auto iterCourses = courses.begin(); iterCourses != courses.end(); iterCourses++) {
         ///dobbiamo controllare che questo corso non esista già all'interno di questo study course
-        if (_semesters.empty() ==
-            false) {//se sono ancora all'inserimento del primo corso del primo semestre la mappa è vuota
+        if (_semesters.empty() ==  false) {//se sono ancora all'inserimento del primo corso del primo semestre la mappa è vuota
             std::vector<std::string> allCoursesSoFar = getAllCoursesOfStudyCourse();
             int myCount = std::count(allCoursesSoFar.begin(), allCoursesSoFar.end(), *iterCourses);
             if (myCount != 0) {
                 ///il corso esiste già
-                _errorStringStudyCourse.push_back(
-                        "Il corso " + *iterCourses + " e' gia' presente nel corso di studio alla riga: " +
+                error.append("Il corso " + *iterCourses + " e' gia' presente nel corso di studio alla riga: " +
                         std::to_string(posFile));
             }
         }
         ///se abbiamo uno stesso corso in più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
         sameSemester(*iterCourses, studyCourse, semester, posFile);
-        if (!_semesters.count(
-                key)) {//se la chiave non esiste(non ho aggiunto ancora corsi per quel semestre di quell'anno)
+        if (!_semesters.count( key)) {//se la chiave non esiste(non ho aggiunto ancora corsi per quel semestre di quell'anno)
             std::vector<std::string> vect;
             vect.push_back(courses[0]);//salvo il primo corso del semestre
             _semesters.insert(std::pair<std::string, std::vector<std::string>>(key,
@@ -136,7 +132,7 @@ std::string StudyCourse::getSemestersString() const {
         if (i < _semesters.size() - 1)//se l'ultimo semestre non va messa la virgola
             output << ",";
     }
-    output << "]";
+    output << "];";
 
     return output.str();//ritorno la stringstream sottoforma di stringa
 }
@@ -167,10 +163,10 @@ void StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCo
         std::string result = iterStudyCourse->second.isInWhichSemester(idCourse);
         if (result != "") {
             sem = stoi(result.substr(2, 1));
-            if (semester != sem)
-                error.append("Il corso " + idCourse + " presente alla riga " + std::to_string(posFile) +
-                        " dovrebbe essere al semestre: " + std::to_string(semester));
-            same = false;
+            if (semester != sem) {
+                error.append("Errore corso " + idCourse + " presente alla riga " + std::to_string(posFile) + ".Stessi corsi in corsi di studio differenti devono appartenere ad uno stesso semestre\n");
+                same = false;
+            }
         }
     }
     if(same == false){

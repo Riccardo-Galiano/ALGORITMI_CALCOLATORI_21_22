@@ -94,6 +94,7 @@ public:
     void setNewYear(int newStartYear);
     void assignGrouped (std::vector<std::string>& idGrouped, std::string& idCourse,std::string& thisCourse);
     void eraseNumAppeal();
+    void updateStudyCourseAssigned(int studyCourseAssigned);
 
     ///control
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;

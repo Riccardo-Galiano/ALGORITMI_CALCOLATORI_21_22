@@ -11,13 +11,13 @@
 #include <algorithm>
 #include <iomanip>
 
-Course::Course(const std::string &idCourse, const std::string &nameCourse, const int cfu, const int lessonHour,
-               const int exerciseHours, const int labHours) {
+Course::Course(const std::string &idCourse, const std::string &courseName, int cfu, int lessonHours,
+               int exerciseHours, int labHours) {
 
     _id = idCourse;
-    _name = nameCourse;
+    _name = courseName;
     _cfu = cfu;
-    _hours._lec = lessonHour;
+    _hours._lec = lessonHours;
     _hours._ex = exerciseHours;
     _hours._lab = labHours;
 
@@ -157,7 +157,7 @@ const Exam Course::getExamSpecificYear(int acYear) const {
 SpecificYearCourse &Course::getThisYearCourseReference(int year){
     if(_courseOfTheYear.count(year)==0){
         ///non ci sono corsi per quell'anno
-        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto");
+        throw std::invalid_argument("Non ci sono corsi selezionabili nell'anno accademico richiesto\n");
     }
     return _courseOfTheYear.at(year);
 }
@@ -507,6 +507,16 @@ void Course::reassignAppealToSpecificYear(int acYear,int numAppeal, int numSessi
     _courseOfTheYear.at(acYear).reassignAppeal(numAppeal,numSession,date,startSlot,classroomsPerCourse);
 
 
+}
+
+void Course::updateStudyCourseInAllSpecYearCourse(int idStudyCourse) {
+    for(auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
+        iter->second.updateStudyCourseAssigned(idStudyCourse);
+    }
+}
+
+bool Course::courseExistInThisYear(int year) {
+    return _courseOfTheYear.count(year) != 0;
 }
 
 

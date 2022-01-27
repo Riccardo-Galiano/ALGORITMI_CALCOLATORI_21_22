@@ -22,7 +22,7 @@ typedef struct {
 class Course {
 public:
 
-    Course(const std::string& idCourse, const std::string& courseName, const int cfu, const int lessonHours,const int exerciseHours, const int labHours);
+    Course(const std::string& idCourse, const std::string& courseName, int cfu, int lessonHours, int exerciseHours, int labHours);
     void addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse, int line_counter );
     void modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark, std::string appealsDate);
     void registerStudentsToSpecificYear(int acYearRegistration, Student& stud);
@@ -61,7 +61,8 @@ public:
     std::string getFirstAcYearOff();
     std::vector<std::string>getIdGroupedCourseFromYear(int acYear);
     void reassignAppealToSpecificYear(int acYear,int numAppeal,int numSession,Date date,int startSlot, std::vector<int>classroomsPerCourse);
-
+    void updateStudyCourseInAllSpecYearCourse(int idStudyCourse);
+    bool courseExistInThisYear(int year);
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso
