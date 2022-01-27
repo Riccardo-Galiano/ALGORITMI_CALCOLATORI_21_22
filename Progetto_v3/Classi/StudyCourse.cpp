@@ -14,8 +14,7 @@ StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBac
 
 ///aggiunge un semestre con i relativi corsi al corso di studio
 void StudyCourse::addSemesterCourses(const int year, const int semester, const std::string &semesterCourses,
-                                     const std::map<int, StudyCourse> &studyCourse,
-                                     std::map<std::string, Course> &universityCourses, int posFile) {
+                                     const std::map<int, StudyCourse> &studyCourse, int posFile) {
     _errorStringStudyCourse.clear();
     ///key
     std::stringstream ss;
@@ -159,21 +158,24 @@ std::string StudyCourse::getOffCoursesString() const {
 }
 
 ///controlla se un corso presente in altri corsi di studio è posto sempre allo stesso semestre
-std::vector<std::string>
-StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> &studyCourse, int semester,
-                          int posFile) {
+void StudyCourse::sameSemester(std::string idCourse, const std::map<int, StudyCourse> &studyCourse, int semester,
+                               int posFile) {
+    std::string error;
+    bool same = true;
     int sem = 0;
     for (auto iterStudyCourse = studyCourse.begin(); iterStudyCourse != studyCourse.end(); iterStudyCourse++) {
         std::string result = iterStudyCourse->second.isInWhichSemester(idCourse);
         if (result != "") {
             sem = stoi(result.substr(2, 1));
             if (semester != sem)
-                _errorStringStudyCourse.push_back(
-                        "Il corso " + idCourse + " presente alla riga " + std::to_string(posFile) +
+                error.append("Il corso " + idCourse + " presente alla riga " + std::to_string(posFile) +
                         " dovrebbe essere al semestre: " + std::to_string(semester));
+            same = false;
         }
     }
-    return _errorStringStudyCourse;
+    if(same == false){
+        throw std::logic_error(error);
+    }
 }
 
 ///prendo semestre e anno di un corso associato ad un corso di studio

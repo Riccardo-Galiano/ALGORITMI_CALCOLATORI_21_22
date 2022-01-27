@@ -99,6 +99,7 @@ public:
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
     bool notExamsAssigned();
     void setYySemester(const std::string &yySemester);
+    bool studyCourseEmpty();
 
 private:
 

@@ -16,7 +16,8 @@ public:
     StudyCourse(const int id, const bool & isBachelor);
 
     ///StudyCourse management
-    void addSemesterCourses(const int year,const  int semester ,const std::string & semesterCourses,const std::map<int, StudyCourse>& studyCourse, std::map<std::string, Course>& universityCourses,int posFile);
+    void addSemesterCourses(const int year, const int semester, const std::string &semesterCourses,
+                            const std::map<int, StudyCourse> &studyCourse, int posFile);
     void addOffCourses(const std::vector<std::string> & offCourses);
     void updateSemestersAndOffCourses(const std::string& idCourse, std::string& acYY, std::vector<std::string>& temp);
     bool assignStudyCourse(std::string course);
@@ -31,7 +32,7 @@ public:
     ///control
     bool offCoursesEmpty() const;
     std::string isInWhichSemester(std::string codCourse) const;
-    std::vector<std::string> sameSemester(std::string idCourse,const std::map<int, StudyCourse>& studyCourse,int semester, int posFile);
+    void sameSemester(std::string idCourse, const std::map<int, StudyCourse>& studyCourse, int semester, int posFile);
 
 private:
     int _id; //codice del corso di studi

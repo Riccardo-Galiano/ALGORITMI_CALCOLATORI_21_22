@@ -584,6 +584,10 @@ void SpecificYearCourse::updateIdGroupedCourses(std::vector<std::string> grouped
    _idGroupedCourses = grouped;
 }
 
+bool SpecificYearCourse::studyCourseEmpty() {
+    return _studyCourseAssigned.empty();
+}
+
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";

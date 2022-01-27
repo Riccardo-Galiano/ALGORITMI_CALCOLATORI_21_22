@@ -54,10 +54,9 @@ public:
     void renameOldDataBase(int version);
     void controlDatabase(int startAcYear);
     void dataBaseIsEmpty(int startAcYear);
-    bool controlGroupedCoursesDifferentCds_Reciprocy(std::vector<std::string> &idGrouped,
-                                                     std::string specificCourse, int line_counter,
-                                                     std::string idCourse);
-    bool controlAGAINGroupedCoursesDifferentCds_Reciprocy();
+    bool controlGroupedCoursesDifferentCds_C(std::vector<std::string> idGrouped,
+                                             std::string idCourseToAddToIdGrouped, int year);
+    bool controlGroupedCoursesDifferentStudyCourse_Sc();
     std::vector<std::string> insertCourses(const std::string &fin);
     void insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
@@ -113,7 +112,7 @@ public:
     void addStuds(const std::string &fileIn);
     void addProfessors(const std::string &fileIn);
     void addClassrooms(const std::string &fileIn);
-    std::vector<std::string> addStudyCourses(const std::string &fileIn);
+    void addStudyCourses(const std::string &fin);
     void addCourses(const std::string &fileIn);
 
     ///update

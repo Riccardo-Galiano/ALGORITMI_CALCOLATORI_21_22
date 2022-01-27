@@ -40,6 +40,7 @@ void Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     int startYear, endYear;
     char c;
     std::string posLastOffCourses;
+
     //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
     //specificYearCourse avrebbe soltanto 6 campi quindi dovremmo aggiungere un settimo campo inizialmente vuoto che verrà poi riempito dalle info
     //dell'anno precedente
@@ -50,26 +51,18 @@ void Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
         throw std::invalid_argument("formato file non valido alla riga: " + std::to_string(line_counter));
     }
     ss >> startYear >> c >> endYear;
-    if (_courseOfTheYear.find(startYear) != _courseOfTheYear.end())
-        throw std::invalid_argument("per il corso" + getId() + "e' gia stato inserito l'anno" + std::to_string(startYear)+ "-" + std::to_string(endYear));
-
     SpecificYearCourse lastYearSpecificCourse = getLastSpecificYearCourse();
     std::stringstream last;
 
     std::vector<std::string> lastYearSpecificYearCourseSplitted;
     last << lastYearSpecificCourse;
-
     lastYearSpecificYearCourseSplitted = Parse::splittedLine(last.str(), ';');
-
-
-
     ///se il campo è vuoto lo riempio con le info dell'anno precedente
     for (int i = 2; i < specificYearCourse.size(); i++) {
         if (specificYearCourse[i].empty()) {
             specificYearCourse[i] = lastYearSpecificYearCourseSplitted[i - 1];
         }
     }
-
     std::string profSenzaQuadre;
     int new_num_par_courses = stoi(specificYearCourse[3]);
     //check correttezza
@@ -515,6 +508,7 @@ void Course::reassignAppealToSpecificYear(int acYear,int numAppeal, int numSessi
 
 
 }
+
 
 std::ostream &operator<<(std::ostream &course, Course &c) {
     course << "c;" << c.getId() << ";" << c.getName() << ";" << c.getCfu() << ";" << c.getHours()._lec << ";"

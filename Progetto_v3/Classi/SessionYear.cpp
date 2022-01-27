@@ -294,32 +294,32 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             if (startExamHour == -1 && firstCourseOfThisLoop)
                                 //per il primo corso non ho trovato alcuno slot in quel giorno, quindi esco dal loop
                                 continueLoopPerHourStart = false;
-                            else if (startExamHour == -1) {
+                            else if (startExamHour == -1 && firstCourseOfThisLoop == false) {
                                 //se non è il primo corso ma non trovo gli slot assegnati al primo faccio ripartire il ciclo ma ad uno slot successivo rispetto a quello assegnato al primo corso
                                 i = 0;
                                 roomsFoundedPerCourse.erase(roomsFoundedPerCourse.begin(), roomsFoundedPerCourse.end());
-                                if (startControlExamHourSlot <= 18) {
+                                _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
+                                if (startControlExamHourSlot < 18) {
+                                    ///controllo finchè ho slot in quel giorno
                                     startControlExamHourSlot = startControlExamHourSlot + 2;
-                                    _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
-                                } else {
+                                 } else {
+                                    //sono arrivato a fine giornata, esco
                                     continueLoopPerHourStart = false;
                                 }
                             } else {
                                 //se trovo gli slot assegnati segno come primo slot di controllo l'ora trovata per il corso
                                 startControlExamHourSlot = startExamHour;
+                                roomsFoundedPerCourse.insert(std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
                                 if (i == coursesToConsiderInThisLoop.size() - 1)
                                     //se anche l'ultimo raggruppato ha trovato disponibilità per gli stessi slot degli altri
                                     startHourPerGroupedCourses = startExamHour;
                             }
                             firstCourseOfThisLoop = false;
-                            roomsFoundedPerCourse.insert(
-                                    std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
 
-
-                            ///pulisco il vettore di aule temporaneo per i raggruppati
-                            _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
                             bool againOk = startHourPerGroupedCourses != -1;
                             if (againOk) {
+                                ///pulisco il vettore di aule temporaneo per i raggruppati
+                                _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
                                 pop = true;
                                 std::vector<std::pair<std::string,int>> gapProfsNoRespect;
                                 ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
@@ -353,6 +353,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                             } else {
                             ///elimino il corso e i raggruppati dal vettore di esami da assegnare
                             for (int j = 0; j < coursesToConsiderInThisLoop.size(); i++) {
+                                ///va fatto anche per i doppioni
                                 popAppealFromVector(_allExamAppealsToDo.at(sessName), coursesToConsiderInThisLoop[j].getId());
                             }
                             pop = true;

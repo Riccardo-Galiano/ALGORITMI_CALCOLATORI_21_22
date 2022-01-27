@@ -175,7 +175,27 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
             break;
         }
         case add_studyCourse: {
-            errorString = uni.addStudyCourses(argv[2]);
+            std::string strToAddToLog;
+            if(argc == 3) {
+                bool isOk = true;
+                try {
+                    uni.addStudyCourses(argv[2]);
+                }
+                catch (std::exception &occurredException) {
+                    strToAddToLog = occurredException.what();
+                    strToAddToLog.append(
+                            "Non e' stato possibile effettuare il comando -a:f per gli errori elencati precedentemente\n");
+                    sysLog.appendToLog(strToAddToLog, true);
+                    isOk = false;
+                }
+                if (isOk) {
+                    strToAddToLog.append("Il comando -a:f e' stato eseguito correttamente\n");
+                    sysLog.appendToLog(strToAddToLog, false);
+                }
+            }else{
+                strToAddToLog.append("Numero di argomenti da terminale per il comando -a:f errato.\nNon e' stato possibile effettuare il comando -a:c per gli errori elencati precedentemente\n ");
+                sysLog.appendToLog(strToAddToLog,true);
+            }
             break;
         }
         case update_student: {
@@ -248,7 +268,27 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
             break;
         }
         case insert_course: {
-            errorString = uni.insertCourses(argv[2]);
+            std::string strToAddToLog;
+            if(argc == 3) {
+                bool isOk = true;
+                try {
+                    uni.insertCourses(argv[2]);
+                }
+                catch (std::exception &occurredException) {
+                    strToAddToLog = occurredException.what();
+                    strToAddToLog.append(
+                            "Non e' stato possibile effettuare il comando -i:c per gli errori elencati precedentemente\n");
+                    sysLog.appendToLog(strToAddToLog, true);
+                    isOk = false;
+                }
+                if (isOk) {
+                    strToAddToLog.append("Il comando -i:c e' stato eseguito correttamente\n");
+                    sysLog.appendToLog(strToAddToLog, false);
+                }
+            }else{
+                strToAddToLog.append("Numero di argomenti da terminale per il comando -i:c errato.\nNon e' stato possibile effettuare il comando -a:c per gli errori elencati precedentemente\n ");
+                sysLog.appendToLog(strToAddToLog,true);
+            }
             break;
         }
         case set_session_period: {

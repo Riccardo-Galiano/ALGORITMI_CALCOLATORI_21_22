@@ -61,6 +61,7 @@ public:
     std::string getFirstAcYearOff();
     std::vector<std::string>getIdGroupedCourseFromYear(int acYear);
     void reassignAppealToSpecificYear(int acYear,int numAppeal,int numSession,Date date,int startSlot, std::vector<int>classroomsPerCourse);
+
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso
