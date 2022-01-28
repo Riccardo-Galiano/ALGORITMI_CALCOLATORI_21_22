@@ -168,10 +168,9 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
         bool firstTime = firstSlotCourses(coursesOfThisSlot[i], CoursesPrintedSoFar);
         std::string settedIdStudyCourse = Parse::setId('C',3,sp.getStudyCourseAssigned()[0]);
         std::string settedIdRooms;
+        int numVersion = sp.getNumParallelCourses();
 
         if (firstTime) {
-
-            int numVersion = sp.getNumParallelCourses();
             if (numVersion != 1) {
                 ///Se ci sono più versioni distinguo 2 casi
                 ///A] ci sono tante aule quante versioni
@@ -196,7 +195,7 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
                             room = rooms[j-1];
                         }
                         std::string settedIdRoom = Parse::setId('A',3,room);
-                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << settedIdStudyCourse << ")|" <<  settedIdStudyCourse;
+                        singleSlotSS << coursesOfThisSlot[i].getId() << "[" << j << "]" << "(" << settedIdStudyCourse << ")|" <<  settedIdRoom;
                         if (j < numVersion)
                             singleSlotSS << ";";
                     }
@@ -211,8 +210,11 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
             std::string ciao = singleSlotSS.str();
             ///push nel vettore di corsi finora considerati
             CoursesPrintedSoFar.push_back(coursesOfThisSlot[i]);
-        } else ///se non è la prima volta scrivo ';'
-            singleSlotSS << ";";
+        } else {///se non è la prima volta scrivo ';' tante volte quanto è il numero dello sue versioni
+            for (int j = 1; j <= numVersion; j++) {
+                singleSlotSS << ";";
+            }
+        }
     }
     return singleSlotSS.str();
 }

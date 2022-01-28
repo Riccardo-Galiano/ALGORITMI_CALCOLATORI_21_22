@@ -6,11 +6,10 @@
 #include "cmath"
 using namespace std;
 
-const std::vector<unsigned int> Date::_days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 //costruttore
 Date::Date(int year, int month, int day) {
-   setDate(year, month, day);
+    setDate(year, month, day);
     _weekday = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 }
 
@@ -25,7 +24,7 @@ Date::Date(const std::string &date) {
 
 // set year, month, day
 void Date::setDate(int yy, int mm, int dd) {
-
+    std::vector<int> days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (yy >= 1900 && yy <= 2100) {
         _year = yy;
     }
@@ -34,45 +33,42 @@ void Date::setDate(int yy, int mm, int dd) {
     }
 
     if (mm >= 1 && mm <= 12) {
-      _month = mm;
+        //se il mese è tra 1 e 12 va bene, altrimenti esco
+        _month = mm;
    }
    else {
       throw invalid_argument{"Il mese deve essere tra 1-12\n"};
    }
 
    // test se anno bisestile
-   if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) || (dd >= 1 && dd <= _days[_month])) {
-      _day = dd;
+   if ((_month == 2 && leapYear(_year) && dd >= 1 && dd <= 29) || (dd >= 1 && dd <= days[_month])) {
+       ///il giorno è ok se:
+       //nel caso di Febbraio e anno bisestile il giorno deve essere compreso tra 1 e 29
+       //oppure quando il giorno è compreso tra 1 e il max dei giorni del mese scelto (il cui numero ce l'abbiamo in days)
+       _day = dd;
    }
    else if( dd >31) {
       throw std::invalid_argument("Il giorno non puo' essere maggiore di 31\n");
-   }else{
+   }else{//?????
       throw invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene\n"};
    }
 }
 
-// overloaded prefix increment operator                 
+// overloaded prefix increment operator
 Date& Date::operator++() {
-   helpIncrement(); // increment date                   
-   return *this; // reference return to create an lvalue
+   helpIncrement(); //incremento controllato della data
+   return *this;
 }
 
 // overloaded postfix increment operator
 Date Date::operator++(int) {
-   Date temp(_year,_month,_day); // hold current state of object
+    //salvo la data prima di incrementarla
+    Date temp(_year,_month,_day);
    temp.helpIncrement();
-   // return unincremented, saved, temporary object      
-   return temp; // value return; not a reference return  
+    //incremento la data temporanea
+    return temp;
 }
 
-// add specified number of _days to date
-Date& Date::operator+=(unsigned int additionalDays) {
-   for (unsigned int i = 0; i < additionalDays; ++i) {
-      helpIncrement();
-   }
-
-   return *this; // enables cascading                      
-}
 
 // controllo se un anno bisestile
 bool Date::leapYear(int testYear) {
@@ -81,27 +77,31 @@ bool Date::leapYear(int testYear) {
 
 // determina la fine di un mese
 bool Date::endOfMonth(int testDay) const {
+    std::vector<int> days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
    if (_month == 2 && leapYear(_year)) {
-      return testDay == 29; // nel caso in cui fosse un anno bisestile, Febbraio
+       //se il mese è Febbraio e l'anno è bisestile
+       return testDay == 29;
    }
    else {
-      return testDay == _days[_month];
+      return testDay == days[_month];
    }
 }
 
-// controlla l'incremento
+// Incremento controllato
 void Date::helpIncrement() {
-   // Se il giorno non è la fine del mese
+    // Se il giorno non è la fine del mese incremento il giorno
    if (!endOfMonth(_day)) {
-      ++_day; // incremento il giorno
+      ++_day;
    }
    else {
-      if (_month < 12) { // Se il giorno è l'ultimo del mese e il mese < 12
-         ++_month; // incremento il mese
+       if (_month < 12) {
+           //se è l'ultimo del mese mi chiedo se è Dicembre
+           ++_month; // incremento il mese
          _day = 1; // setto il giorno al primo del mese
       }
-      else { // Se il mese è il 12(Dicembre)
-         ++_year; // incemento l'anno
+      else {
+           // Se il mese è il 12(Dicembre) incremento l'anno,setto il mese al primo dell'anno,setto il giorno al primo del mese
+           ++_year; // incemento l'anno
          _month = 1; // setto il mese al primo dell'anno
          _day = 1; // setto il giorno al primo del mese
       }
@@ -109,18 +109,18 @@ void Date::helpIncrement() {
 }
 
 // overloaded output operator
-unsigned int Date::getMonth() const {
+int Date::getMonth() const {
     return _month;
 }
 
-unsigned int Date::getDay() const {
+int Date::getDay() const {
     return _day;
 }
 
 
 ostream& operator<<(ostream& output, const Date& d){
 
-    output << setfill('0') << d._year << "-" << setw(2) << d._month << "-" << setw(2) << d._day;
+    output << setfill('0') << d.getYear() << "-" << setw(2) << d.getMonth()<< "-" << setw(2) << d.getDay();
     return output;
 }
 
@@ -134,6 +134,7 @@ istream& operator>>(istream& input, Date& d){
     return input;
 }
 
+//overload comparatore di maggioranza
 bool Date::operator>(const Date & date) const{
     if(_year>date._year){
         return true;
@@ -146,6 +147,7 @@ bool Date::operator>(const Date & date) const{
     }
 }
 
+//overload comparatore di minoranza
 bool Date::operator<(const Date & date) const {
     if(_year<date._year){
         return true;
@@ -160,17 +162,20 @@ bool Date::operator<(const Date & date) const {
 
 //prende il giorno della settimana
 std::string Date::getWeekDay() {
+    //creo il giorno
     Date d(_year,_month,_day);
-    int mon;
+    int month;
     if (d.getMonth() > 2)
-        mon = d.getMonth(); //for march to december month code is same as month
+        //da Marzo a Dicembre
+        month = d.getMonth();
     else {
-        mon = (12 + d.getMonth()); //for Jan and Feb, month code will be 13 and 14
+        month = (12 + d.getMonth()); //for Jan and Feb, month code will be 13 and 14
         d._year--; //decrease year for month Jan and Feb
     }
-    int y = d.getYear() % 100; //last two digit
-    int c = d.getYear() / 100; //first two digit
-    int w = (d.getDay() + floor((13 * (mon + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
+    std::string year = std::to_string(getYear());
+    int y = std::stoi(year.substr(2,2));
+    int c = std::stoi(year.substr(0,2));
+    int w = (d.getDay() + floor((13 * (month + 1)) / 5) + y + floor(y / 4) + floor(c / 4) + (5 * c));
     w = w % 7;
     return _weekday[w];
 }
@@ -179,7 +184,7 @@ std::string Date::getWeekDay() {
 bool Date::checkGapGiven(int weeks, Date d){
     int numDays = weeks * 7; //a quanti giorni corrisponde il numero di settimane da considerare
     Date compare = this->add(numDays);//aggiungo alla data iniziale il numero di giorni  corrispondente a quelle settimane
-    return d.isEqual(compare);
+    return d == compare;
 }
 
 ///restituisce la data corrispondente ad un periodo(in giorni) dalla data iniziale
@@ -191,7 +196,7 @@ Date Date::add(int daysToAdd) {
     return toReturn;
 }
 
-unsigned int Date::getYear() const {
+int Date::getYear() const {
     return _year;
 }
 
@@ -202,9 +207,6 @@ std::string Date::toString() {
     return ss.str();
 }
 
-bool Date::isEqual(const Date compare) {
-    return (_year == compare._year && _month == compare._month && _day == compare._day); //true o false
-}
 
 
 ///gap tra due date (start session e date dove quest'ultima è la data da controllare)
@@ -213,7 +215,7 @@ int Date::whatIsTheGap(Date& date) {
     Date currentDate(_year,_month,_day);//data di inizio della sessione
     int gap = 0;
     while(areNotEqual){
-        if(currentDate.isEqual(date)){//se uguali ho raggiunto la data finale del gap che volevo conoscere
+        if(currentDate==date){//se uguali ho raggiunto la data finale del gap che volevo conoscere
             areNotEqual = false;
         }
         else{//se non uguali controllo il giorno successivo e aggiorno il gap
@@ -260,6 +262,7 @@ Date Date::operator--(int) {
 
 void Date::helpDecrement() {
     // non è il primo giorno del mese
+    std::vector<int> days{ 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (_day>1) {
         --_day; //decremento il giorno
     }
@@ -269,7 +272,7 @@ void Date::helpDecrement() {
             if(_month==2 && leapYear(_year)){
                 _day = 29;
             }
-            _day = _days[_month]; // giorno = ultimo giorno del mese
+            _day = days[_month]; // giorno = ultimo giorno del mese
         }
         else { // se giorno=1 e mese=1 devo decrementare l'anno
             --_year;

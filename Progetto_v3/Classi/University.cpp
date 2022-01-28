@@ -1960,7 +1960,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
     if (!esito) {
-        throw std::invalid_argument("Non è possibile generare la sessione nonostante i vincoli rilassati\n");
+        throw std::invalid_argument("Non e' possibile generare la sessione nonostante i vincoli rilassati\n");
     } else {
         generateOutputFileName();
     }
