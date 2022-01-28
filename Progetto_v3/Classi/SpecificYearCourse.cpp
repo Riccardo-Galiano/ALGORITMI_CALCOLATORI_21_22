@@ -60,7 +60,7 @@ int SpecificYearCourse::getEndYear() const {
 }
 
 ///ritorna se il corso è attivo
-bool SpecificYearCourse::getisActive() const {
+bool SpecificYearCourse::getIsActive() const {
     return _active;
 }
 
@@ -600,7 +600,7 @@ void SpecificYearCourse::setAcYearOff(std::string yearOff) {
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
-    if (s.getisActive())
+    if (s.getIsActive())
         output << "attivo";
     else
         output << "non_attivo";

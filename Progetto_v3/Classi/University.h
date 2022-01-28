@@ -43,8 +43,6 @@ public:
     void reassignThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date date,int startSlot, std::map<std::string,std::vector<int>> classrooms);
     void generateOutputFileName();
 
-
-
     ///DB management
     void versioning(std::string newVersion);
     bool checkVersioningRequest(int newVer);

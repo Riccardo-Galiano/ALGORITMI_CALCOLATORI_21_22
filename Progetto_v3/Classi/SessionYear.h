@@ -67,6 +67,8 @@ public:
     bool isSecondAppeal(Date newDate, Date lastDateAssignation);
     void updateExamDayCourse(Course course,std::vector<Date> allAppealPerCourse);
     void controlSuccessivitySessionPeriod();
+    void popOffCoursesFromGrouped(std::vector<Course>& coursesToConsiderInThisLoop);
+
 
     ///output
     void allExamAppealsWrite(std::map<std::string, Course>& courses);

@@ -145,6 +145,77 @@ public:
         return true;
     }
 
+    static void checkSyntaxProfInfoANDExamData(std::string &str){
+        if(str[0] == '{' || str[str.length()-1] =='}'){
+            std::string string = str.substr(1, str.size() - 2);
+            std::vector<std::string> splitting = splittedLine(string,',');
+            if(splitting.size() == 4)
+                return;
+        }
+        throw std::invalid_argument("ERRORE FORMATO");
+    }
+
+    static bool thisCharShouldBeConsidered(char c) {
+        if (c == '[' || c == ']' || c == '{' || c == '}')
+            return true;
+        else
+            return false;
+    }
+
+    static void checkSyntaxProfs(std::string &str){
+        int state = 0;
+        bool isNotOk = false;
+        for (int i = 0; i < str.length(); i++) {
+            if (thisCharShouldBeConsidered(str[i])) {
+                char c = str[i];
+                switch (state) {
+                    case 0: {
+                        if(c == '[')
+                            state = 1;
+                        else
+                            isNotOk = true;
+                        break;
+                    }
+                    case 1: {
+                        if(c == '{')
+                            state = 2;
+                        else if(c == ']')
+                            state = 0;
+                        else
+                            isNotOk = true;
+                        break;
+                    }
+                    case 2: {
+                        if(c == '[')
+                            state = 3;
+                        else if(c == '}')
+                            state = 1;
+                        else
+                            isNotOk = true;
+                        break;
+                    }
+                    case 3: {
+                        if(c == '{')
+                            state = 4;
+                        else if(c == ']')
+                            state = 2;
+                        else
+                            isNotOk = true;
+                        break;
+                    }
+                    case 4: {
+                        if(c == '}')
+                            state = 3;
+                        else
+                            isNotOk = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if(isNotOk == true || state != 0)
+            throw std::invalid_argument("ERRORE DI FORMATO\n");
+    }
     static bool controlItCanBeAnAcYear(std::string input) {
         //AAAA-AAAA
         std::vector<std::string> acYear = Parse::splittedLine(input,'-');

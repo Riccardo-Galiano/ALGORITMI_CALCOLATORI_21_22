@@ -33,7 +33,7 @@ void Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar
     if(_courseOfTheYear.empty()== false){
         //prendo l'ultimo specifico anno prima del prossimo inserimento
         SpecificYearCourse lastSpecificYear = getLastSpecificYearCourse();
-        lastYearActivity = lastSpecificYear.getisActive();
+        lastYearActivity = lastSpecificYear.getIsActive();
         lastYear = lastSpecificYear.getStartYear();
     }
 
@@ -272,7 +272,7 @@ std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
 void Course::notActive() {
      bool firstTime = false;
      for(auto iterSpecific = _courseOfTheYear.begin(); iterSpecific != _courseOfTheYear.end();iterSpecific++){
-         if(iterSpecific->second.getisActive() == false)///controllo se il corso è non attivo
+         if(iterSpecific->second.getIsActive() == false)///controllo se il corso è non attivo
              firstTime = true;
          else if(firstTime)///se è attivo ma negli anni precedenti era già disattivato
              throw std::logic_error("Il corso con codice:" + getId() + "e' gia' stato spento! non puo' essere riattivato! Controllare l'anno:" + std::to_string(iterSpecific->first));
@@ -294,11 +294,11 @@ void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         std::vector<std::string> groupedCourse = iterSpecificYear->second.getIdGroupedCourses();
         int sem = 0;
-        bool active = iterSpecificYear->second.getisActive();
+        bool active = iterSpecificYear->second.getIsActive();
         for (int i = 0; i < groupedCourse.size();i++){
             ///controllo che i raggruppati siano o tutti spenti o tutti attivi
             SpecificYearCourse sp = courses.at(groupedCourse[i]).getThisYearCourse(iterSpecificYear->first);
-            bool activeGrouped = sp.getisActive();
+            bool activeGrouped = sp.getIsActive();
             ///se i due corsi non si trovano nello stato di attività non posso raggrupparli
             if(active != activeGrouped) {
                 error.append("il seguente corso raggruppato " + groupedCourse[i] +
@@ -347,7 +347,7 @@ void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
     //se non lo trova è perchè il corso non era ancora attivo in quell'anno
     if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
         throw InvalidDbException("il seguente corso: " + getId() + " non era attivo quando si e' iscritto lo studente con matricola: " + settedId + " nel "+ acYear);
-    } else if (_courseOfTheYear.at(acYearRegistration).getisActive() == false){
+    } else if (_courseOfTheYear.at(acYearRegistration).getIsActive() == false){
         std::string firstAcYearOff = this->getFirstAcYearOff();
         throw InvalidDbException("il seguente corso: " + getId() + " e' stato spento nel " + firstAcYearOff + ". Lo studente con matricola: " + settedId + " non puo' essere iscritto nel "+ acYear);
     }
@@ -510,7 +510,7 @@ std::string Course::getFirstAcYearOff() {
         int startYear = iterSpecificYear->second.getStartYear();
         int endYear = iterSpecificYear->second.getEndYear();
         std::string acYear = std::to_string(startYear) + "-" + std::to_string(endYear);
-        if(iterSpecificYear->second.getisActive() == false){
+        if(iterSpecificYear->second.getIsActive() == false){
             return acYear;
         }
     }

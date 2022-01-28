@@ -60,7 +60,7 @@ public:
     ///getter
     int getStartYear() const;
     int getEndYear() const;
-    bool getisActive() const;
+    bool getIsActive() const;
     int getNumParallelCourses() const;
     const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
     const std::string getProfParString() const;
@@ -105,7 +105,6 @@ public:
     bool studyCourseEmpty();
 
 private:
-
     std::string _yy_semester;
     //unico per tutti i corsi!!!
     std::string _acYearOff;

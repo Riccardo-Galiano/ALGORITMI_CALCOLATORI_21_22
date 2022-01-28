@@ -220,12 +220,18 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                 }
                 ///esami raggruppati da considerare in questo giro
                 std::string codCurrentAppeal = _allExamAppealsToDo.at(sessName)[indexExam];
-                std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
+                Course courseCurrentAppeal = courses.at(codCurrentAppeal);
                 std::vector<Course> coursesToConsiderInThisLoop;
-                for (int i = 0; i < coursesGrouped.size(); i++) {
-                    coursesToConsiderInThisLoop.push_back(courses.at(coursesGrouped[i]));
+                coursesToConsiderInThisLoop.push_back(courseCurrentAppeal);
+                ///un corso solo se è attivo ha i raggruppati che sono a loro volta attivi
+                if(courseCurrentAppeal.getThisYearCourse(_acYear).getIsActive()) {
+                    std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
+                    for (int i = 0; i < coursesGrouped.size(); i++) {
+                        coursesToConsiderInThisLoop.push_back(courses.at(coursesGrouped[i]));
+                    }
+                    ///dobbiamo togliere da coursesToConsiderInThisLoop i corsi spenti
+                    popOffCoursesFromGrouped(coursesToConsiderInThisLoop);
                 }
-
                 ///dobbiamo verificare che la data corrente sia possibile per tutti gli esami da inserire in questo giro
                 bool dateIsOk = true;
                 if (sessName != "autumn") {
@@ -442,7 +448,7 @@ SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, C
         SpecificYearCourse specificYY = iterCourse->second.getThisYearCourse(_acYear);
 
         semester = specificYY.getSemester();
-        isActive = specificYY.getisActive();
+        isActive = specificYY.getIsActive();
         int acYearOff;
         if (isActive == false) {
             std::string off = specificYY.getAcYearOff();
@@ -986,6 +992,14 @@ void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> 
             if (requiredGap > 14) {
                 gapProfsNoRespect.push_back(std::pair<std::string, int>(keyToSearchProfsGap, requiredGap));
             }
+        }
+    }
+}
+
+void SessionYear::popOffCoursesFromGrouped(std::vector<Course> &coursesToConsiderInThisLoop) {
+    for(auto iter = coursesToConsiderInThisLoop.begin(); iter != coursesToConsiderInThisLoop.end(); iter++){
+        if(iter->getThisYearCourse(_acYear).getIsActive() == false){
+            coursesToConsiderInThisLoop.erase(iter);
         }
     }
 }
