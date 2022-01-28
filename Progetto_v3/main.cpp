@@ -276,8 +276,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
                 }
                 catch (std::exception &occurredException) {
                     strToAddToLog = occurredException.what();
-                    strToAddToLog.append(
-                            "Non e' stato possibile effettuare il comando -i:c per gli errori elencati precedentemente\n");
+                    strToAddToLog.append("Non e' stato possibile effettuare il comando -i:c per gli errori elencati precedentemente\n");
                     sysLog.appendToLog(strToAddToLog, true);
                     isOk = false;
                 }

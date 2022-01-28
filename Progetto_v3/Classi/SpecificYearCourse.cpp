@@ -290,7 +290,7 @@ void SpecificYearCourse::setNewYear(int newStartYear) {
     _numAppeal = 0;
 }
 
-std::string &SpecificYearCourse::getAcYearOff() {
+std::string SpecificYearCourse::getAcYearOff() const{
     return _acYearOff;
 }
 
@@ -591,6 +591,11 @@ bool SpecificYearCourse::studyCourseEmpty() {
 void SpecificYearCourse::updateStudyCourseAssigned(int studyCourseAssigned) {
     _studyCourseAssigned.push_back(studyCourseAssigned);
 }
+
+void SpecificYearCourse::setAcYearOff(std::string yearOff) {
+    _acYearOff = yearOff;
+}
+
 
 
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

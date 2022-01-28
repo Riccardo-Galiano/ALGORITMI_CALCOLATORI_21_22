@@ -57,7 +57,7 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-a:f ../input/add_study_course.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
+    <configuration name="Progetto_v3" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i:c ../input/insert_courses_23-24.txt" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Progetto_v3" TARGET_NAME="Progetto_v3" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Progetto_v3" RUN_TARGET_NAME="Progetto_v3">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -175,10 +175,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="355" y="25" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1643311885021">
+    <state x="355" y="25" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1643369141568">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="355" y="25" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1643311885021" />
+    <state x="355" y="25" width="1011" height="690" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1643369141568" />
     <state x="488" y="80" key="#com.intellij.ide.util.MemberChooser" timestamp="1643302321215">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -187,26 +187,26 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1643145768353" />
-    <state width="1323" height="45" key="GridCell.Tab.0.bottom" timestamp="1643312227564">
+    <state width="1323" height="244" key="GridCell.Tab.0.bottom" timestamp="1643369144278">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="45" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1643312227564" />
-    <state width="1323" height="45" key="GridCell.Tab.0.center" timestamp="1643312227564">
+    <state width="1323" height="244" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1643369144278" />
+    <state width="1323" height="244" key="GridCell.Tab.0.center" timestamp="1643369144278">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="45" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1643312227564" />
-    <state width="1323" height="45" key="GridCell.Tab.0.left" timestamp="1643312227564">
+    <state width="1323" height="244" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1643369144278" />
+    <state width="1323" height="244" key="GridCell.Tab.0.left" timestamp="1643369144278">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="45" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1643312227564" />
-    <state width="1323" height="45" key="GridCell.Tab.0.right" timestamp="1643312227564">
+    <state width="1323" height="244" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1643369144278" />
+    <state width="1323" height="244" key="GridCell.Tab.0.right" timestamp="1643369144278">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="130" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1366.728@0.0.1366.728" timestamp="1642713831525" />
-    <state width="1323" height="45" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1643312227564" />
+    <state width="1323" height="244" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1643369144278" />
     <state width="1323" height="176" key="GridCell.Tab.1.bottom" timestamp="1643312232014">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

@@ -74,7 +74,7 @@ public:
     int getYearOfTheSemester() const;
     std::vector<int> getStudyCourseAssigned() const;
     int getTotStudentsEnrolled() const;
-    std::string &getAcYearOff();
+    std::string getAcYearOff() const;
     int getTotStudentsExam();
     std::vector<Date> getAllAppeals() const;
     std::vector<int> getRoomsAppeal();
@@ -88,10 +88,12 @@ public:
     char getPlaceExam();
     int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
 
+
     ///setter
     void setYear();
     void setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, int line_counter);
     void setNewYear(int newStartYear);
+    void setAcYearOff(std::string yearOff);
     void assignGrouped (std::vector<std::string>& idGrouped, std::string& idCourse,std::string& thisCourse);
     void eraseNumAppeal();
     void updateStudyCourseAssigned(int studyCourseAssigned);

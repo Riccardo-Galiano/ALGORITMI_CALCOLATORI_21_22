@@ -22,6 +22,7 @@ public:
     void updateSemestersAndOffCourses(const std::string& idCourse, std::string& acYY, std::vector<std::string>& temp);
     bool assignStudyCourse(std::string course);
 
+
     ///getter
     int getId() const;
     bool getIsBachelor() const;
@@ -40,8 +41,8 @@ private:
     //key: yy-semester
     //value: vettore di Id corsi
     std::map<std::string,std::vector<std::string>> _semesters;
-    std::list <std::string> _offCourses;
-    std::vector<std::string> _errorStringStudyCourse;
+    std::vector<std::string> _offCourses;
+
 };
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s);
 

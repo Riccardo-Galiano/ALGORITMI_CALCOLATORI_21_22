@@ -136,8 +136,7 @@ private:
 private:
     int _version;
     std::vector<std::string> _errorStringUniversity;
-    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
-                           bool addCourses);
+    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear);
 };
 
 

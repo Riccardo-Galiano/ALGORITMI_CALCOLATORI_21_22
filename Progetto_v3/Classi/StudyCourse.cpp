@@ -39,6 +39,7 @@ void StudyCourse::addSemesterCourses(const int year, const int semester, const s
         }
         ///se abbiamo uno stesso corso in più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
         sameSemester(*iterCourses, studyCourse, semester, posFile);
+
         if (!_semesters.count( key)) {//se la chiave non esiste(non ho aggiunto ancora corsi per quel semestre di quell'anno)
             std::vector<std::string> vect;
             vect.push_back(courses[0]);//salvo il primo corso del semestre
@@ -71,7 +72,7 @@ void StudyCourse::addOffCourses(const std::vector<std::string> &offCourses) {
     for (int i = 0; i < offCourses.size(); i++) {
         _offCourses.push_back(offCourses[i]);
     }
-    _offCourses.sort();//se li vogliamo in ordine crescente;
+    std::sort(_offCourses.begin(), _offCourses.end());//se li vogliamo in ordine crescente;
 
 }
 
@@ -192,6 +193,8 @@ bool StudyCourse::assignStudyCourse(std::string course) {
     return std::find(allCourses.begin(), allCourses.end(), course) != allCourses.end();
 }
 
+
+
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &studC, const StudyCourse &s) {
     std::string settedId = Parse::setId('C', 3, s.getId());
@@ -202,7 +205,7 @@ std::ostream &operator<<(std::ostream &studC, const StudyCourse &s) {
         studC << "MS;";
     studC << s.getSemestersString(); //stringa semestri
     if (!s.offCoursesEmpty()) //ci sono corsi spenti?
-        studC << ";" << s.getOffCoursesString();//se ci sono corsi spenti allora prendili
+        studC << s.getOffCoursesString();//se ci sono corsi spenti allora prendili
     return studC;
 }
 

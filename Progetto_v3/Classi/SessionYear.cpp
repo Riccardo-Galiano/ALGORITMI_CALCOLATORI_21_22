@@ -444,8 +444,10 @@ SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, C
         semester = specificYY.getSemester();
         isActive = specificYY.getisActive();
         int acYearOff;
-        if (isActive == false)
-            acYearOff = Parse::getAcStartYear(specificYY.getAcYearOff());
+        if (isActive == false) {
+            std::string off = specificYY.getAcYearOff();
+            acYearOff = Parse::getAcStartYear(off);
+        }
         ///controllo se è un corso di questo semestre ed è ATTIVO!!!!!!!!!!
         if (semester == semesterOfThisSession && isActive) {
             ///devo fare due appelli se i semestri sono uguali!!!!
@@ -867,13 +869,13 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
         } else {
             //se trovo gli slot assegnati segno come primo slot di controllo l'ora trovata per il corso
             startControlExamHourSlot = startExamHour;
+            firstCourseOfThisLoop = false;
+            roomsFoundedPerCourse.insert(std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
             if (i == coursesToConsiderInThisLoop.size() - 1)
                 //se anche l'ultimo raggruppato ha trovato disponibilità per gli stessi slot degli altri
                 startHourPerGroupedCourses = startExamHour;
         }
-        firstCourseOfThisLoop = false;
-        roomsFoundedPerCourse.insert(std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
-    }
+        }
     ///pulisco il vettore di aule temporaneo per i raggruppati
     _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
     bool dateIsOk = startHourPerGroupedCourses != -1;
@@ -893,8 +895,7 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
             myUniversity.setCourses(courses);
         }
     } else
-        throw std::logic_error(
-                "Nessuna possibile coincidenza tra disponibilita' dei prof considerati e aule per tutti gli slot di questo giorno\n");
+        throw std::logic_error("Nessuna possibile coincidenza tra disponibilita' dei prof considerati e aule per tutti gli slot di questo giorno\n");
 
 }
 

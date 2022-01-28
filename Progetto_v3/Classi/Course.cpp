@@ -28,9 +28,28 @@ Course::Course(const std::string &idCourse, const std::string &courseName, int c
 void Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
                                     std::vector<std::string> exam, std::vector<std::string> idGrouped,
                                     std::string yy_semester, std::vector<int> studyCourse, int line_counter) {
-///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
+    bool lastYearActivity = false;
+    int lastYear = 0;
+    if(_courseOfTheYear.empty()== false){
+        //prendo l'ultimo specifico anno prima del prossimo inserimento
+        SpecificYearCourse lastSpecificYear = getLastSpecificYearCourse();
+        lastYearActivity = lastSpecificYear.getisActive();
+        lastYear = lastSpecificYear.getStartYear();
+    }
+
+    ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
+    //inserisco il nuovo anno
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,idGrouped, yy_semester,studyCourse,line_counter)));
 
+    //se il penultimo anno il corso era attivo e quest'anno è spento setto anche l'anno di spegnimento
+    if( lastYearActivity && active== false){
+        _courseOfTheYear.at(stoi(sY_eY.substr(0, 4))).setAcYearOff(sY_eY);
+    } else if (active == false){
+        //è spento ma lo era anche l'anno prima
+        //prendo l'anno di spegnimento salvato e lo risalvo l'anno dopo
+        std::string offYear = _courseOfTheYear.at(lastYear).getAcYearOff();
+        _courseOfTheYear.at(stoi(sY_eY.substr(0, 4))).setAcYearOff(offYear);
+    }
 }
 
 ///riempie il vettore di stringhe specificYearcourse
@@ -518,6 +537,8 @@ void Course::updateStudyCourseInAllSpecYearCourse(int idStudyCourse) {
 bool Course::courseExistInThisYear(int year) {
     return _courseOfTheYear.count(year) != 0;
 }
+
+
 
 
 std::ostream &operator<<(std::ostream &course, Course &c) {
