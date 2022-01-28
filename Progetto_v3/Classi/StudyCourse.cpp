@@ -21,10 +21,15 @@ void StudyCourse::addSemesterCourses(const int year, const int semester, const s
     ss << year << "-" << semester;
     std::string key = ss.str(); //creo la chiave con anno e semestre
     std::string error;
+    bool isOK = true;
     ///create values
     std::vector<std::string> courses;
-    courses = Parse::splittedLine(semesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
 
+    courses = Parse::splittedLine(semesterCourses,',');//adesso ho i corsi del semestre passati alla funzione che non erano divisi
+    if(courses.size() == 0){
+        error.append("Semestre vuoto alla riga "+  std::to_string(posFile)+ "\n");
+        isOK = false;
+    }
     ///analizzo tutti i componenti del vettore courses
     for (auto iterCourses = courses.begin(); iterCourses != courses.end(); iterCourses++) {
         ///dobbiamo controllare che questo corso non esista già all'interno di questo study course
@@ -34,7 +39,8 @@ void StudyCourse::addSemesterCourses(const int year, const int semester, const s
             if (myCount != 0) {
                 ///il corso esiste già
                 error.append("Il corso " + *iterCourses + " e' gia' presente nel corso di studio alla riga: " +
-                        std::to_string(posFile));
+                        std::to_string(posFile)+ "\n");
+                isOK = false;
             }
         }
         ///se abbiamo uno stesso corso in più cds, devo controllare che sia presente allo stesse semestre tra tutti i cds
@@ -43,12 +49,13 @@ void StudyCourse::addSemesterCourses(const int year, const int semester, const s
         if (!_semesters.count( key)) {//se la chiave non esiste(non ho aggiunto ancora corsi per quel semestre di quell'anno)
             std::vector<std::string> vect;
             vect.push_back(courses[0]);//salvo il primo corso del semestre
-            _semesters.insert(std::pair<std::string, std::vector<std::string>>(key,
-                                                                               vect));//inserisco nella mappa il primo corso del semestre
+            _semesters.insert(std::pair<std::string, std::vector<std::string>>(key,vect));//inserisco nella mappa il primo corso del semestre
         } else {//se la chiave esiste
-            _semesters.at(key).push_back(
-                    *iterCourses);//aggiungo nel semestre già esistenete i corsi successivi al primo
+            _semesters.at(key).push_back(*iterCourses);//aggiungo nel semestre già esistenete i corsi successivi al primo
         }
+    }
+    if(isOK == false){
+        throw std::logic_error(error);
     }
 
 }
@@ -185,6 +192,7 @@ std::string StudyCourse::isInWhichSemester(std::string codCourse) const {
             return iterSemester->first; //ne prendo il semestre e anno (primo o secondo)
         }
     }
+
     return "";
 }
 
@@ -193,6 +201,9 @@ bool StudyCourse::assignStudyCourse(std::string course) {
     return std::find(allCourses.begin(), allCourses.end(), course) != allCourses.end();
 }
 
+std::vector<std::string> StudyCourse::getOffCourses() const {
+    return _offCourses;
+}
 
 
 ///overload operatore <<

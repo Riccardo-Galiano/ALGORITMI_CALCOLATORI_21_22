@@ -170,8 +170,6 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
         std::string settedIdRooms;
 
         if (firstTime) {
-            //non mi serve più
-            //std::string classrooms =  classroomString(rooms);
 
             int numVersion = sp.getNumParallelCourses();
             if (numVersion != 1) {

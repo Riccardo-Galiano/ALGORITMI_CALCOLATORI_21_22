@@ -258,9 +258,12 @@ void University::readCourse() {
             for (int i = 1; i <= _studyCourse.size(); i++) {
                 ///se gli study course già ci sono, entra, altrimenti non esegue for
                 std::string result = _studyCourse.at(i).isInWhichSemester(lastReadCourse);
-                if (!result.empty()) {
+                auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
+                //controllo se appartiene a questo corso di studio ma è spento
+                std::vector<std::string> offCourse = _studyCourse.at(i).getOffCourses();
+                auto isOffInThisSemester = find(offCourse.begin(), offCourse.end(),lastReadCourse) ;
+                if (!result.empty() || isOffInThisSemester != offCourse.end()) {
                     //ho trovato il suo corso di studi
-                    auto iterStudyCourse = _studyCourse.find(i); //prendo id del corso di studio associato
                     studyCourse.push_back(iterStudyCourse->first);
                     yy_semester = result;
                 }
@@ -599,11 +602,11 @@ void University::addStudyCourses(const std::string &fin) {
             ///controllo che formato file sia corretto:
             ///se L3 -> 6 semestri, se LM -> 4 semestri
             if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
-                error.append(
-                        "Formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea alla riga:" +
+                error.append("Formato file corsi di studio non valido: numero semestri incompatibile con tipo di laurea alla riga:" +
                         std::to_string(line_counter));
                 doDbwrite = false;
             }
+
 
             ///creo StudyCourse
             bool isBachelor = false;
@@ -737,9 +740,20 @@ void University::addCourses(const std::string &fin) {
                 examData = examData.substr(1, examData.size() - 2);//tolgo le { } che racchiudono le info degli esami
                 splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
                 idGroupedCourse = specificYearCourse[9];//id dei vari corsi raggruppati
-                idGroupedCourse = idGroupedCourse.substr(1, idGroupedCourse.size() -
-                                                            2);// tolgo le { } che racchiudono gli id
+                idGroupedCourse = idGroupedCourse.substr(1, idGroupedCourse.size() - 2);// tolgo le { } che racchiudono gli id
                 idGrouped = Parse::splittedLine(idGroupedCourse, ',');//scissione degli id dei corsi raggruppati
+
+                //rendo unici gli elementi del vettore
+                std::sort(idGrouped.begin(), idGrouped.end());
+                idGrouped.erase(std::unique(idGrouped.begin(), idGrouped.end()),idGrouped.end());
+
+                ///controllo che nei raggruppati non ci sia il corso con il nuovo codice e che non ci sia uno stesso corso tra i raggruppati
+                if(find(idGrouped.begin(), idGrouped.end(), newIdCourse) != idGrouped.end()){
+                    ///tra i raggruppati c'è uno stesso corso?
+                    auto posNewId = find(idGrouped.begin(),idGrouped.end(),newIdCourse);
+                    idGrouped.erase(posNewId);
+                }
+
                 ///ricerca "anno-semestre" di questo corso
                 std::string yy_semester;
                 std::vector<int> studyCourse;

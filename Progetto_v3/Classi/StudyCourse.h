@@ -34,6 +34,7 @@ public:
     bool offCoursesEmpty() const;
     std::string isInWhichSemester(std::string codCourse) const;
     void sameSemester(std::string idCourse, const std::map<int, StudyCourse>& studyCourse, int semester, int posFile);
+    std::vector<std::string> getOffCourses() const;
 
 private:
     int _id; //codice del corso di studi

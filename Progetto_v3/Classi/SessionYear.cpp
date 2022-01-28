@@ -222,7 +222,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                 std::string codCurrentAppeal = _allExamAppealsToDo.at(sessName)[indexExam];
                 Course courseCurrentAppeal = courses.at(codCurrentAppeal);
                 std::vector<Course> coursesToConsiderInThisLoop;
-                coursesToConsiderInThisLoop.push_back(courseCurrentAppeal);
+
                 ///un corso solo se è attivo ha i raggruppati che sono a loro volta attivi
                 if(courseCurrentAppeal.getThisYearCourse(_acYear).getIsActive()) {
                     std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
