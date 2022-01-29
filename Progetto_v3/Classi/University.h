@@ -59,15 +59,14 @@ public:
     void insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
     void registerStudentsToSpecificYearCourses(std::vector<std::string>& courses,Student& stud, std::string acYearRegistration, int line_counter);
-    void thereIsAHoleInTheCoursesCodes();
-    void checkDistance(std::string& minor, std::string& major);
-    void assignInfoAppealPerSession(std::string acYear,std::string idCorso,std::string session, std::vector<std::string> appealInfo);
+
+    void assignAppealPerCourse(std::string acYear, std::string lastReadCourse, std::vector<int> classroom,
+                               Date appeal, int startSlotHour, int numSession);
     void assignAppealsToProf(std::string idCorso,std::string appeal, int startHour, int numSlots,std::vector<int> allProfsPerYearCourse);
     void assignAppealsToClassroom(std::string appeal,int startSlotHour,std::vector<int>classrooms,int numSlot);
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
     int whatIsMyStudyCourse(Course& course, int acStartYear);
-    void allErrorClasses();
-    void controlReciprocyGrouped();
+    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear);
 
     ///Input (from DB)
     void readCourseNotActive();
@@ -80,10 +79,10 @@ public:
     void readSessionAcYear();
     void readProfsNoAvailability();
     void readPassedAppeals();
-    void readAllExamAppeals();
     void readVersion();
     void readAllMinDistanceRequest();
     void readOutputFileName();
+    void readExamAppealsPerAcSession(std::string acYear);
 
     ///Output(to DB)
     void dbStudsWrite();
@@ -133,8 +132,6 @@ private:
 
 private:
     int _version;
-    std::vector<std::string> _errorStringUniversity;
-    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear);
 };
 
 

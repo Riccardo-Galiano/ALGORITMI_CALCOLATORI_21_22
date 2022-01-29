@@ -83,15 +83,15 @@ University::University() : _version(1) {
         //std::cerr << exc.what() << std::endl;
     }
     try {
-        readAllExamAppeals();
-    }
-    catch (DbException &exc) {
-        //std::cerr << exc.what() << std::endl;
-    }
-    try {
         readAllMinDistanceRequest();
     }
     catch (DbException &exc) {
+        //std::cerr << exc.what() << std::endl <<std::endl;
+    }
+    try{
+        //leggo e riempio la struttura con i nomi dei file stampati per le sessioni
+        readOutputFileName();
+    }catch (DbException &exc) {
         //std::cerr << exc.what() << std::endl <<std::endl;
     }
 }
@@ -2060,7 +2060,7 @@ void University::dataBaseIsEmpty(int startAcYear) {
         isOk = false;
     }
     if (_acYearSessions.find(startAcYear) == _acYearSessions.end()) {
-        error.append("Non ci sono informazioni sulle sessioni per questo anno: " + std::to_string(startAcYear) + "-" +
+        error.append("Non ci sono informazioni sui periodi delle sessioni per questo anno accademico: " + std::to_string(startAcYear) + "-" +
                      std::to_string(startAcYear + 1) + "\n");
         isOk = false;
     } else if (_acYearSessions.at(startAcYear).sessionsPeriodIsEmpty()) {
@@ -2151,105 +2151,7 @@ bool University::controlGroupedCoursesDifferentCds_C(std::vector<std::string> id
     return everIsOk;
 }
 
-///verifica che non ci siano buchi negli id dei corsi nei corsi di studio
-void University::thereIsAHoleInTheCoursesCodes() {
-    ///controllo non ci siano buchi, se c'è mi ritorna la stringa non consecutiva che crea il buco
-    std::vector<std::string> allCoursesCodesFromSemesters;
-    std::vector<std::string> codesReturned;
-    ///prendo tutti corsi di tutti i semestri di tutti i corsi di studio
-    for (int i = 1; i <= _studyCourse.size(); i++) {
-        codesReturned = _studyCourse.at(i).getAllCoursesOfStudyCourse();
-        allCoursesCodesFromSemesters.insert(allCoursesCodesFromSemesters.end(), codesReturned.begin(),
-                                            codesReturned.end());
-    }
-    ///for per controllare che le stringhe siano sequenziali
-    std::sort(allCoursesCodesFromSemesters.begin(), allCoursesCodesFromSemesters.end());
-    allCoursesCodesFromSemesters.erase(unique(allCoursesCodesFromSemesters.begin(), allCoursesCodesFromSemesters.end()),
-                                       allCoursesCodesFromSemesters.end());
-    for (int i = 1; i < allCoursesCodesFromSemesters.size(); i++) {
-        checkDistance(allCoursesCodesFromSemesters[i - 1], allCoursesCodesFromSemesters[i]);
-    }
-}
 
-///verifica la distanza tra due id successivi
-void University::checkDistance(std::string &minor, std::string &major) {
-    int size_min = minor.size();
-    int size_maj = major.size();
-    std::string error("File non corretto: le stringhe dei corsi non sono consecutive -> (" + major + ")");
-    if (size_maj != size_min)
-        throw std::invalid_argument("errore codice corso!");
-    bool notEqual = false;
-    int posNotEqual = 0;
-    ///prendo la posizione in cui i codici iniziano a cambiare
-    for (int j = 0; j < size_maj && !notEqual; j++) {
-        if (major[j] != minor[j]) {
-            notEqual = true;
-            posNotEqual = j;
-        }
-    }
-    //prendo le prime lettere diverse per la major e minor
-    char lettMaj = major[posNotEqual];
-    char lettMin = minor[posNotEqual];
-    int distance = lettMaj - lettMin;
-    //due possibili scenari:
-    // 1) il primo carattere(numero) è uguale per entrambi i codici. Esempio: minor = "01ZZZZZ". major = "02AAAAA" o minor = "01AAABA". major = "01AAABB"
-    // In questo caso se la distanza è 1 devo controllare che i successivi caratteri siano tutte A per major e Z per minor
-    //2)il primo carattere(numero) è diverso per i due codici. Esempio: minor = "19ZZZZZ". major = "20AAAAA"
-    //In questo caso se la distanza è 1 devo controllare che i successivi caratteri siano: 0 per major e 9 per minor, tutte A per major e Z per minor
-    if (distance == 1) {
-        for (int i = posNotEqual + 1; i < size_maj; i++) {
-            if ((major[i] != 'A' || minor[i] != 'Z') && (major[i] != '0' || minor[i] != '9'))
-                throw std::invalid_argument(error.c_str());//non consecutivi
-        }
-    } else {
-        //se la distanza non è 1
-        throw std::invalid_argument(error.c_str());//non consecutivi
-    }
-    ///se esco il check è andato bene, sono consecutivi
-}
-
-
-//controllo la proprietà di reciprocità dei corsi raggruppati: se a ragg con c, allora c con a
-///a (b,c,d)
-//b (f,a,c,d)
-///c (a,b,d)
-///d (a,c,b)
-void University::controlReciprocyGrouped() {
-    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-        //a
-        std::map<int, std::vector<std::string>> allGroupedCourse = iterCourse->second.getGroupedCourseFromAllYear();
-        ///per ogni anno accademico del corso
-        for (auto iterSpecific = allGroupedCourse.begin(); iterSpecific != allGroupedCourse.end(); iterSpecific++) {
-
-            std::vector<std::string> groupedOfThisYear = allGroupedCourse.at(iterSpecific->first); //(b,c,d)
-            groupedOfThisYear.push_back(iterCourse->second.getId()); //(b,c,d,a)
-            ///controllo tutti nel vettore, meno l'ultimo che è lui stesso (a)
-            for (int j = 0; j < groupedOfThisYear.size() - 1; j++) {
-                //b
-                std::map<int, std::vector<std::string>> allGroupedCourse2 = _courses.at(
-                        groupedOfThisYear[j]).getGroupedCourseFromAllYear();
-                std::string name = _courses.at(groupedOfThisYear[j]).getName();
-                ///prendo anno accademico considerato
-                std::vector<std::string> groupedOfThisYear2 = allGroupedCourse2.at(iterSpecific->first); //(a,c,d)
-                groupedOfThisYear2.push_back(groupedOfThisYear[j]); //(a,c,d,b)
-                ///rimuoviamo corso per corso -> alla fine dovrà rimanere 0
-                for (int k = 0; k < groupedOfThisYear.size(); k++) {
-                    auto pos = std::find(groupedOfThisYear2.begin(), groupedOfThisYear2.end(), groupedOfThisYear[k]);
-                    if (pos == groupedOfThisYear2.end())
-                        throw std::logic_error(
-                                "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati non in comune con gli altri: " +
-                                name + ". Il codice assente e':" + groupedOfThisYear[k]);
-                    groupedOfThisYear2.erase(pos);
-                }
-                if (groupedOfThisYear2.empty() == false) {
-                    throw std::logic_error(
-                            "Proprieta' di reciprocita' dei corsi non rispettata! Il seguente corso ha dei corsi raggruppati in piu': " +
-                            name);
-                }
-            }
-        }
-    }
-}
 
 ///tiene traccia delle info di corsi ormai spenti(per sessioni precedenti alla data di disattivazione)
 void University::dbCourseNotActive() {
@@ -2899,40 +2801,101 @@ void University::readPassedAppeals() {
     }
 }
 
-///legge il nostro database creato per riempire la struttura dati con gli appelli per ogni sessione accademica generata
-void University::readAllExamAppeals() {
-    std::ifstream fileIn("allExamAppealsDb.txt");
-    if (!fileIn.is_open()) {
-        throw DbException("file allExamAppealsDb.txt non esistente");
-    }
-    std::string line;
-    while (std::getline(fileIn, line)) {
-        std::vector<std::string> appeals = Parse::splittedLine(line, ';');
-        std::string idCorso = appeals[0];
-        std::string acYear = appeals[1];
-        std::string appealsSession = appeals[2];
-        std::vector<std::string> infoEachSession = Parse::splittedLine(appeals[2], '%');
-        //per ogni sessione
-        for (int i = 0; i < infoEachSession.size(); i++) {
-            //tolgo le quadre
-            std::vector<int> posSquareBrackets = Parse::posSquareBrackets(infoEachSession[i]);
-            //prendo la sessione
-            std::string session = infoEachSession[i].substr(0, posSquareBrackets[0]);
-            //prendo le info di tutti gli appelli
-            std::string appealsPerSessionString = infoEachSession[i].substr(posSquareBrackets[0] + 1,
-                                                                            posSquareBrackets[1] -
-                                                                            posSquareBrackets[0] - 1);
-            std::vector<int> posCurlyBrackets = Parse::posCurlyBrackets(appealsPerSessionString);
-            std::vector<std::string> appealInfo;
-            //prendo le info per ogni appello per ogni sessione
-            for (int j = 0; j < posCurlyBrackets.size(); j = j + 2) {
-                appealInfo.push_back(appealsPerSessionString.substr(posCurlyBrackets[j] + 1,
-                                                                    posCurlyBrackets[j + 1] - posCurlyBrackets[j] - 1));
+void University::readExamAppealsPerAcSession(std::string acYear) {
+    int year = Parse::getAcStartYear(acYear);
+    ///per ogni sessione
+    for(int i = 1; i<=3; i++) {
+        std::stringstream ss;
+        std::string nameFile = _acYearSessions.at(year).getFileName(i);
+        ss << nameFile << ".txt";
+        std::ifstream fileIn(ss.str());
+        if (!fileIn.is_open()) {
+            throw DbException("file" +ss.str()+" non esistente\n");
+        }
+        std::string line;
+        while (std::getline(fileIn, line)) {
+            //leggo la data
+            Date date(line);
+            for (int j = 0; j < 6; j++) {
+                //leggo tutti gli slot
+                std::getline(fileIn, line);
+                //siamo negli slot
+                int numSlotStart = 8 + 2 * j;
+                std::vector<std::string> appealsPerSlot = Parse::splittedLine(line, ';');
+                if (appealsPerSlot.size() != 1) {
+                    //vuol dire che ho qualche esame assegnato in quell'orario di quel giorno
+
+                    for (int k = 1; k < appealsPerSlot.size(); k++) {
+                        std::vector<int> classrooms;
+                        if (appealsPerSlot[k].empty() == false) {
+                            //prendo l'idCourse
+                            std::string idCourse = appealsPerSlot[k].substr(0, 7);
+                            ///prendo il numero di corsi in parallelo
+                            int numParallelCourse = _courses.at(idCourse).getThisYearCourse(year).getNumParallelCourses();
+                            ///per il numero di corsi in parallelo
+                            int version = k;
+                            int cicli = k+numParallelCourse;
+                            for(version = k; version<cicli;version++){
+                                int pos = appealsPerSlot[k].find('|');
+                                std::string idClassroom = appealsPerSlot[version].substr(pos+1, appealsPerSlot[version].size() - pos);
+                                classrooms.push_back(Parse::getMatr(idClassroom));
+
+                            }
+                            k = version-1;
+                            //ho le classi da assegnare per quel'appello per il corso lastReadCourse
+                            assignAppealPerCourse(acYear, idCourse, classrooms, date, numSlotStart, i);
+
+                            }
+                        }
+
+                    }
+                }
             }
-            assignInfoAppealPerSession(acYear, idCorso, session, appealInfo);
+        fileIn.close();
+    }
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
+        Course course = _courses.at(iterCourse->first);
+        SpecificYearCourse sp = course.getThisYearCourse(year);
+        ///prendo tutti gli appelli dell'anno e per ogni appello vado a cambiare il corso nel calendario
+        std::vector<Date> allAppealPerCourse = sp.getAllAppeals();
+        _acYearSessions.at(year).updateExamDayCourse(course, allAppealPerCourse);
+    }
+
+}
+void University::assignAppealPerCourse(std::string acYear, std::string lastReadCourse, std::vector<int> classroom,
+                                       Date appeal, int startSlotHour, int numSession) {
+
+    //numero di slot necessari per quel corso
+    int numSlot = _courses.at(lastReadCourse).getExamSlotPerYear(acYear);
+    int startAcYear = Parse::getAcStartYear(acYear);
+    //professori del corso per quell'anno
+    std::vector<int> allProfsPerYearCourse = _courses.at(lastReadCourse).getProfsPerYear(acYear);
+
+        ///segno l'esame nei professori del corso(appello,ora di inizio,numero di slot)
+        assignAppealsToProf(lastReadCourse, appeal.toString(),startSlotHour, numSlot,allProfsPerYearCourse);
+        ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
+        assignAppealsToClassroom(appeal.toString(),startSlotHour, classroom, numSlot);
+        ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
+        Course &course = _courses.at(lastReadCourse);
+        _acYearSessions.at(startAcYear).assignAppealsToCalendar(appeal.toString(),startSlotHour,course, numSlot);
+
+        SpecificYearCourse &specificYY = course.getThisYearCourseReference(startAcYear);//corso per un anno specifico
+        int numAppealYear = specificYY.getNumNextAppeal();
+        ///aggiorno strutture dati degli esami dell'anno specifico
+        specificYY.assignExamInThisSpecificYearCourse(appeal, numSession);
+        specificYY.addClassroomsToAppeal(numAppealYear, classroom);
+        specificYY.addStartSlotToAppeal(numAppealYear, startSlotHour);
+
+}
+
+///assegna i vari appelli ai prof
+void University::assignAppealsToProf(std::string idCorso, std::string appeal, int startHour, int numSlots,
+                                     std::vector<int> allProfsPerYearCourse) {
+    for (int i = 0; i < allProfsPerYearCourse.size(); i++) {
+        for (int num_slot = 0; num_slot < numSlots; num_slot++) {
+            _professors.at(allProfsPerYearCourse[i]).addNewExam(appeal, startHour + (num_slot * 2), idCorso);
         }
     }
-    fileIn.close();
 }
 
 ///scrive la versione scelta
@@ -3262,62 +3225,6 @@ University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::str
     _coursesGrouped.insert(std::pair<std::string, std::vector<std::string>>(acYear + "-" + idCourse, idGroupedLetti));
 }
 
-///assegna le informazioni dell'appello per ogni sessione
-void University::assignInfoAppealPerSession(std::string acYear, std::string idCorso, std::string session,
-                                            std::vector<std::string> appealInfo) {
-    std::vector<Date> appealDate;
-    std::vector<int> startSlotPerAppeal;
-    std::vector<std::string> classroomsPerAppeal;
-    int numSlot = _courses.at(idCorso).getExamSlotPerYear(acYear);
-    int startAcYear = Parse::getAcStartYear(acYear);
-    std::vector<int> allProfsPerYearCourse = _courses.at(idCorso).getProfsPerYear(acYear);
-
-
-    for (int i = 0; i < appealInfo.size(); i++) {
-        std::vector<std::string> infoOfSingleAppeal = Parse::splittedLine(appealInfo[i], ',');
-        ///prendo le date degli appelli per quella sessione
-        appealDate.emplace_back(infoOfSingleAppeal[0]);
-        startSlotPerAppeal.emplace_back(Parse::checkedStoi(infoOfSingleAppeal[1], "Errore ora di inizio."));
-        classroomsPerAppeal.emplace_back(infoOfSingleAppeal[2]);
-        ///segno l'esame nei professori del corso(appello,ora di inizio,numero di slot)
-        assignAppealsToProf(idCorso, infoOfSingleAppeal[0],
-                            Parse::checkedStoi(infoOfSingleAppeal[1], "Errore ora di inizio."), numSlot,
-                            allProfsPerYearCourse);
-        ///segno l'esame nelle aule (appello, ora di inizio, numero di slot)
-        std::vector<std::string> allClassroomsString = Parse::splittedLine(infoOfSingleAppeal[2], '|');
-        std::vector<int> allClassrooms;
-        //converto il vettore di stringhe in un vettore di interi
-        for (int j = 0; j < allClassroomsString.size(); j++) {
-            allClassrooms.push_back(Parse::checkedStoi(allClassroomsString[j], "Errore aula."));
-        }
-        assignAppealsToClassroom(infoOfSingleAppeal[0],
-                                 Parse::checkedStoi(infoOfSingleAppeal[1], "Errore ora di inizio."), allClassrooms,
-                                 numSlot);
-        ///segno l'esame nel calendario (appello, ora di inizio, numero di slot, corso)
-        Course &course = _courses.at(idCorso);
-        _acYearSessions.at(startAcYear).assignAppealsToCalendar(infoOfSingleAppeal[0],
-                                                                Parse::checkedStoi(infoOfSingleAppeal[1],
-                                                                                   "Errore ora di inizio"),
-                                                                course, numSlot);
-    }
-    ///salvo le date dell'appello in  _howManyTimesIAmAssignedInASession
-    _courses.at(idCorso).assignAppealToSpecificYear(acYear, session, appealDate, startSlotPerAppeal,
-                                                    classroomsPerAppeal);
-    Course course = _courses.at(idCorso);
-    SpecificYearCourse sp = course.getThisYearCourse(startAcYear);
-    std::vector<Date> allAppealPerCourse = sp.getAllAppeals();
-    _acYearSessions.at(startAcYear).updateExamDayCourse(course, allAppealPerCourse);
-}
-
-///assegna i vari appelli ai prof
-void University::assignAppealsToProf(std::string idCorso, std::string appeal, int startHour, int numSlots,
-                                     std::vector<int> allProfsPerYearCourse) {
-    for (int i = 0; i < allProfsPerYearCourse.size(); i++) {
-        for (int num_slot = 0; num_slot < numSlots; num_slot++) {
-            _professors.at(allProfsPerYearCourse[i]).addNewExam(appeal, startHour + (num_slot * 2), idCorso);
-        }
-    }
-}
 
 ///assegna gli appelli alle classi
 void
@@ -3337,6 +3244,9 @@ void University::requestChanges(std::string acYear, std::string fin) {
     }
     std::string ac = acYear.substr(0, 4);
     int acStart = Parse::checkedStoi(ac, "Errore anno accademico.");
+
+    ///leggo i file della sessione epr quell'anno
+    readExamAppealsPerAcSession(acYear);
     SessionYear &thisSession = _acYearSessions.at(acStart);
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
@@ -3406,8 +3316,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
             course.getThisYearCourseReference(acStart).eraseNumAppeal();
             _acYearSessions.at(acStart).updateExamDayCourse(course, allAppealPerCourse);
         }
-        //leggo e riempio la struttura con i nomi dei file stampati per le sessioni
-        readOutputFileName();
+
         //ristampo la sessione
         bool requestChanges = true;
         //prendo il nome del file per quell'anno e per quella sessione
@@ -3415,7 +3324,6 @@ void University::requestChanges(std::string acYear, std::string fin) {
         //rigenero i file di output
         //prima della generazione tutti i _numAppeal devono essere 0 per tutti gli specifcyearCourse
         _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
-        _acYearSessions.at(acStart).allExamAppealsWrite(_courses);
     } else
         throw std::invalid_argument(error);
 }
@@ -3585,6 +3493,7 @@ std::string University::getPotentialCourseString() const {
     }
     return courseNotExist.str();
 }
+
 
 
 

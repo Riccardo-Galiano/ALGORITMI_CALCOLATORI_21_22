@@ -65,7 +65,7 @@ public:
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course& course,Date& currentExamDay,std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms, int relaxPar,int session,std::vector<int>& roomsFounded, int endHourSlot,bool firstCourseOfThisLoop,int startControlExamHourSlot,bool requestChanges);
     static bool checkHours(std::vector<int>& input);
     bool isSecondAppeal(Date newDate, Date lastDateAssignation);
-    void updateExamDayCourse(Course course,std::vector<Date> allAppealPerCourse);
+    void updateExamDayCourse(Course course,std::vector<Date> appealPerCourse);
     void controlSuccessivitySessionPeriod();
     void popOffCoursesFromGrouped(std::vector<Course>& coursesToConsiderInThisLoop);
 

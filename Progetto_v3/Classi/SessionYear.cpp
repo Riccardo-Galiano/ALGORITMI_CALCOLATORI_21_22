@@ -129,7 +129,7 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
             generateOutputFilesSession(fout, 1, courses, requestChanges);
             generateOutputFilesSession(fout, 2, courses, requestChanges);
             generateOutputFilesSession(fout, 3, courses, requestChanges);
-            allExamAppealsWrite(courses);
+
             ///stampa warnigs
             if (relaxPar != 0 || (relaxPar == 0 && firstIteration == false))
                 _sysLog.writeWarnings(fout);
@@ -166,20 +166,6 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
 }
 
 
-void SessionYear::allExamAppealsWrite(std::map<std::string, Course> &courses) {
-    std::fstream fout;
-    fout.open("allExamAppealsDb.txt", std::fstream::out | std::fstream::trunc);
-    if (!fout.is_open()) {
-        throw DbException("file allExamAppealsDb.txt non esistente");
-    }
-    for (auto iterCourse = courses.begin(); iterCourse != courses.end(); iterCourse++) {
-        std::vector<std::string> allAppealsPerCourses = iterCourse->second.getAcYearAppeals();
-        for (int i = 0; i < allAppealsPerCourses.size(); i++) {
-            fout << allAppealsPerCourses[i] << std::endl;
-        }
-    }
-    fout.close();
-}
 
 ///programma una sessione in particolare
 bool SessionYear::generateThisSession(std::string sessName, std::map<std::string, Course> &courses,
@@ -224,7 +210,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                 std::vector<Course> coursesToConsiderInThisLoop;
 
                 ///un corso solo se è attivo ha i raggruppati che sono a loro volta attivi
-                if(courseCurrentAppeal.getThisYearCourse(_acYear).getIsActive()) {
+                if (courseCurrentAppeal.getThisYearCourse(_acYear).getIsActive()) {
                     std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
                     for (int i = 0; i < coursesGrouped.size(); i++) {
                         coursesToConsiderInThisLoop.push_back(courses.at(coursesGrouped[i]));
@@ -258,22 +244,23 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 
                     ///ciclo sull'appello del codCOurse in posizione indexExam di _allExamAppealsToDo e i suoi raggruppati se il primo controllo sulle date è andato bene
                     for (int i = 0; i < coursesToConsiderInThisLoop.size() && continueLoopPerHourStart; i++) {
+                        ///se primo corso del loop indico che è il primo e faccio iniziare il controllo
+                        if (i == 0)
+                            firstCourseOfThisLoop = true;
                         Course courseToConsider = coursesToConsiderInThisLoop[i];
                         std::vector<int> roomsFounded;
                         SpecificYearCourse sp = courseToConsider.getThisYearCourse(getAcYear());
                         int numAppealsAssigned = sp.amIAssignedAlreadyInThisSession(this->getSemester(sessName));
                         int endHourSlot = -1;
 
-                        ///se primo corso del loop indico che è il primo e faccio iniziare il controllo
-                        if (i == 0)
-                            firstCourseOfThisLoop = true;
+
 
                         if (numAppealsAssigned == 1) {//sarà un secondo appello
                             Date lastDateAssignation = sp.lastDateAssignationInGivenSession(
                                     this->getSemester(sessName));//data primo appello
                             ///se è stato segnato il vincolo delle sei ore e la data che sto controllando è la stessa del primo appello
                             ///mi serve sapere l'ultimo slot orario occupato dal primo appello
-                            if (sixHours && lastDateAssignation==currentExamDay) {
+                            if (sixHours && lastDateAssignation == currentExamDay) {
                                 endHourSlot = _yearCalendar.at(
                                         lastDateAssignation.toString()).getEndHourOfThisCourseExam(courseToConsider);
                             }
@@ -309,14 +296,16 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                 if (startControlExamHourSlot < 18) {
                                     ///controllo finchè ho slot in quel giorno
                                     startControlExamHourSlot = startControlExamHourSlot + 2;
-                                 } else {
+                                } else {
                                     //sono arrivato a fine giornata, esco
                                     continueLoopPerHourStart = false;
                                 }
                             } else {
                                 //se trovo gli slot assegnati segno come primo slot di controllo l'ora trovata per il corso
                                 startControlExamHourSlot = startExamHour;
-                                roomsFoundedPerCourse.insert(std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
+                                roomsFoundedPerCourse.insert(
+                                        std::pair<std::string, std::vector<int>>(courseToConsider.getId(),
+                                                                                 roomsFounded));
                                 if (i == coursesToConsiderInThisLoop.size() - 1)
                                     //se anche l'ultimo raggruppato ha trovato disponibilità per gli stessi slot degli altri
                                     startHourPerGroupedCourses = startExamHour;
@@ -328,7 +317,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                 ///pulisco il vettore di aule temporaneo per i raggruppati
                                 _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
                                 pop = true;
-                                std::vector<std::pair<std::string,int>> gapProfsNoRespect;
+                                std::vector<std::pair<std::string, int>> gapProfsNoRespect;
                                 ///allora posso assegnare i corsi (facendo pop da _allExamAppealsToDo!!!)
                                 for (int i = 0; i < coursesToConsiderInThisLoop.size(); i++) {
                                     std::string idCourse = coursesToConsiderInThisLoop[i].getId();
@@ -343,11 +332,10 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                                                numAppealYear);
 
                                     std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
-                                    if(tryToSatisfyProfsMinDistance == false){
-                                        allGapProfsNoRespect(gapProfsNoRespect, allProfsMatrThisCourse,idCourse);
+                                    if (tryToSatisfyProfsMinDistance == false) {
+                                        allGapProfsNoRespect(gapProfsNoRespect, allProfsMatrThisCourse, idCourse);
                                     }
                                 }
-
                                 _sysLog.generateWarnings(coursesToConsiderInThisLoop, relaxPar, gapAppeals, _acYear,
                                                          gapProfsNoRespect, getSemester(sessName));
                                 ///check terminazione funzione
@@ -356,21 +344,22 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                     continueLoop = false;
                                 }
                             }
-
-                            } else {
+                        } else {
                             ///elimino il corso e i raggruppati dal vettore di esami da assegnare
                             for (int j = 0; j < coursesToConsiderInThisLoop.size(); i++) {
-                                ///va fatto anche per i doppioni
-                                popAppealFromVector(_allExamAppealsToDo.at(sessName), coursesToConsiderInThisLoop[j].getId());
+                                ///va fatto anche per i doppioni!!!!
+                                popAppealFromVector(_allExamAppealsToDo.at(sessName),
+                                                    coursesToConsiderInThisLoop[j].getId());
                             }
                             pop = true;
                             continueLoopPerHourStart == false;
                         }
                     }
-               }
-             }
+                }
+            }
         }
     }
+    ///se abbiamo errori per delle aule lanciamo l'eccezione
     if (classRoomError == true) {
         throw std::logic_error(error);
     }
@@ -940,9 +929,9 @@ bool SessionYear::isSecondAppeal(Date newDate, Date lastDateAssignation) {
     return true;
 }
 
-void SessionYear::updateExamDayCourse(Course course, std::vector<Date> allAppealPerCourse) {
-    for (int i = 0; i < allAppealPerCourse.size(); i++) {
-        _yearCalendar.at(allAppealPerCourse[i].toString()).updateSlot(course);
+void SessionYear::updateExamDayCourse(Course course,std::vector<Date> appealPerCourse) {
+    for(int i = 0; i<appealPerCourse.size(); i++) {
+        _yearCalendar.at(appealPerCourse[i].toString()).updateSlot(course);
     }
 }
 
