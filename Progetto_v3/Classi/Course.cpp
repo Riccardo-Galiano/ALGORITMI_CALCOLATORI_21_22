@@ -58,16 +58,13 @@ void Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
     std::stringstream ss(acYear);
     int startYear, endYear;
     char c;
-    std::string posLastOffCourses;
+    std::string posLastGroupedCourses;
 
     //se l'utente usasse la possibilità di lasciare vuoto il campo invariato rispetto all'anno precedente sull'ultimo campo di informazioni(id corsi)
     //specificYearCourse avrebbe soltanto 6 campi quindi dovremmo aggiungere un settimo campo inizialmente vuoto che verrà poi riempito dalle info
     //dell'anno precedente
     if (specificYearCourse.size() == 6) {
-        specificYearCourse.push_back(posLastOffCourses);
-    }
-    if (specificYearCourse.size() != 7) {
-        throw std::invalid_argument("formato file non valido alla riga: " + std::to_string(line_counter));
+        specificYearCourse.push_back(posLastGroupedCourses);
     }
     ss >> startYear >> c >> endYear;
     SpecificYearCourse lastYearSpecificCourse = getLastSpecificYearCourse();

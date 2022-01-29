@@ -35,8 +35,7 @@ SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsi
 void SpecificYearCourse::setProfMap(int numCorsiPar, std::vector<std::string> profsToSplit, int line_counter) {
 
     std::vector<professor> profConOre;
-    for (int i = 0;
-         i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
+    for (int i = 0; i < numCorsiPar; i++) {//per ogni corso in parallelo vado ad inserire i prof con le loro informazioni
         profConOre = getProfsFromString(profsToSplit[i],line_counter);//mi ritorna il vettore in cui ad ogni posizione c'è un prof, con le sue informazioni,per ogni corso in parallelo
         _professors.insert(std::pair<int, std::vector<professor>>(i,profConOre));//ad ogni key (id del corso in parallelo) verrà associato un vettore con i prof che ne fano parte
     }
@@ -72,45 +71,58 @@ int SpecificYearCourse::getNumParallelCourses() const {
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
 std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs, int line_counter) {
     int mainProf; //titolare del corso
-    std::vector<std::string> singoliProfDaLeggere;
+    std::vector<std::string> singleProfsToRead;
     std::vector<professor> profToReturn;
-    std::string profSenzaQuadre;
+    std::string profsWithoutSquareBrackets;
     std::string idMainProf;
     char c;
     int found = profs.find_first_of(","); //cerca la prima virgola
-    idMainProf = profs.substr(0, found);//salva l'id del titolare
-    std::stringstream ssIdProf(idMainProf);//manipolo l'id per togliere la "d" e avere solo un intero
-    ssIdProf >> c >> mainProf;
-    profSenzaQuadre = profs.substr(found + 2, (profs.size() - found - 2) -
-                                              1); //tolgo le [ ] che delimitano i vari prof con le relative informazioni
-    std::vector<int> foundBracket;
 
-    ///cerco e salvo le posizioni di { o } in profSenzaQuadre
-    std::size_t posB = profSenzaQuadre.find_first_of("{}");
-    bool toContinue = true;
-    while (toContinue) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-        if (posB == std::string::npos)
-            toContinue = false;
-        else {
-            foundBracket.push_back(
-                    posB);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
-            posB = profSenzaQuadre.find_first_of("{}", posB + 1);//continuo a controllare la stringa
-        }
-    }
+    idMainProf = profs.substr(0, found);//salva l'id del titolare
+    if(Parse::controlItCanBeAnId(idMainProf,6,'d') == false)
+        throw std::invalid_argument("Errore formato matricola del titolare o manca una virgola al rigo " + std::to_string(line_counter) + "\n");
+    mainProf = Parse::getMatr(idMainProf);
+    if( profs[found + 1] == 91 && profs[profs.size()-1] == 93 )// codice ASCII  '[' = 91  ']' = 93
+        //tolgo le [ ] che delimitano i vari prof con le relative informazioni
+        profsWithoutSquareBrackets = profs.substr(found + 2, (profs.size() - found - 2) - 1);
+    else
+        throw std::invalid_argument("Errore formato interno per ogni singolo corso parallelo alla riga "+ std::to_string(line_counter));
+
+    ///cerco e salvo le posizioni di { o } in profsWithoutSquareBrackets
+    std::vector<int> foundBracket = Parse::posCurlyBrackets(profsWithoutSquareBrackets);;
+
     ///estrae ogni prof con le relative info
     for (int i = 0; i < foundBracket.size(); i += 2) {
-        singoliProfDaLeggere.push_back(
-                profSenzaQuadre.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
-
+        int startCurlyBrackets = foundBracket[i];
+        int endCurlyBrackets = foundBracket[i+1];
+        if(profsWithoutSquareBrackets[startCurlyBrackets] == 123 && profsWithoutSquareBrackets[endCurlyBrackets] == 125){
+            singleProfsToRead.push_back( profsWithoutSquareBrackets.substr(foundBracket[i] + 1, foundBracket[i + 1] - foundBracket[i] - 1));
+        } else{
+            throw std::invalid_argument("Errore formato informazioni del singolo professore al rigo " + std::to_string(line_counter) + ". Vanno racchiusi tra due parentesi {} \n");
+        }
     }
+
     int id = -1, hlez = -1, hexe = -1, hlab = -1;
     bool mainProfFound = false;
-    for (int i = 0; i < singoliProfDaLeggere.size(); i++) {//inserisco le info per ogni prof
-        std::stringstream ss(singoliProfDaLeggere[i]);
-        ss >> c >> id >> c >> hlez >> c >> hexe >> c
-           >> hlab; //d interoId , oreLezione , oreEsercitazione , oreLaboratorio
-        if (id == -1 || hlez == -1 || hexe == -1 || hlab == -1)
-            throw std::invalid_argument("ore professore non valide alla riga:" + std::to_string(line_counter));
+    for (int i = 0; i < singleProfsToRead.size(); i++) {//inserisco le info per ogni prof
+        std::vector<std::string> infoSingleProf = Parse::splittedLine(singleProfsToRead[i],',');
+        if(infoSingleProf.size() != 4)
+            throw std::invalid_argument("Errore numero informazioni del singolo professore al rigo "+ std::to_string(line_counter) +"\n");
+
+        if(Parse::controlItCanBeAnId(infoSingleProf[0],6,'d') == false)
+            throw std::invalid_argument("Errore formato matricola del professore al rigo " + std::to_string(line_counter) + "\n");
+        else
+            id = Parse::getMatr(infoSingleProf[0]);
+
+        try{
+            hlez = Parse::checkedStoi(infoSingleProf[1]," delle ore di lezione");
+            hexe = Parse::checkedStoi(infoSingleProf[2]," delle ore di esercitazione");
+            hlab = Parse::checkedStoi(infoSingleProf[3]," delle ore di laboratorio");
+        }catch (std::invalid_argument(& err)){
+            std::string genericError = err.what();
+            throw std::invalid_argument(genericError + " al rigo " + std::to_string(line_counter) + "\n");
+        }
+
         professor p{};//struct
         p.prof_id = id;
         p.hLez = hlez;
@@ -123,7 +135,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
     if (mainProfFound == false) {
-         throw std::invalid_argument("manca il professore titolare alla riga: " + std::to_string(line_counter));
+         throw std::invalid_argument("Manca il professore titolare alla riga: " + std::to_string(line_counter));
     }
     return profToReturn;
 }

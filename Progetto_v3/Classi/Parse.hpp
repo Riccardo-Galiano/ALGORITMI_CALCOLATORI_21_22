@@ -32,9 +32,12 @@ public:
         std::vector<std::string> profCorsiPar;
         std::vector<int> posFinCorsiPar;
         int numCoursesParsed = 0;
-        std::vector<int> posCBrackets = posCurlyBrackets(input);//prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
-        for (int i = 0; i < posCBrackets.size() - 1; i++) {//fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
-            if (input[posCBrackets[i] + 1] == ']') {//la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
+        //prendo le posizioni delle graffe che userò per dividere gli id dei prof dei vari corsi in parallelo
+        std::vector<int> posCBrackets = posCurlyBrackets(input);
+        //fino a quando non finiscono le parentesi graffe o il numero di corsi in parallelo
+        for (int i = 0; i < posCBrackets.size() - 1; i++) {
+            //la ricorrenza }] si ha alla fine di ogni corso in parallelo; se dopo una parentesi graffa si ha una quadra il corso in parallelo è finito
+            if (input[posCBrackets[i] + 1] == ']') {
                 posFinCorsiPar.push_back(posCBrackets[i] + 2); //salva la pos della graffa successiva a quella presa in analisi: }] } <--
                 numCoursesParsed++;
             }
@@ -48,9 +51,35 @@ public:
         }
 
         if (profCorsiPar.size() != num_parallel_courses)
-            throw std::invalid_argument("docenti non congruenti con il numero di corsi paralleli");
+            throw std::invalid_argument("Numero di raggruppamenti dei professori non congruente con il numero di corsi paralleli ");
         return profCorsiPar;
     };
+    static void controlExamInfo(std::vector<std::string> examData){
+
+          int examDuration = Parse::checkedStoi(examData[0]," della durata dell'esame ");
+          if(examDuration == 0){
+             throw std::invalid_argument(" La durata dell'esame non puo' essere zero ");
+
+          }
+          int timeEntry = Parse::checkedStoi(examData[1]," del tempo di entrata ");
+          if( timeEntry == 0){
+              throw std::invalid_argument("Il tempo di entrata non puo' essere zero ");
+
+          }
+          int exitTime = Parse::checkedStoi(examData[2]," del tempo di uscita ");
+          if(exitTime == 0){
+              throw std::invalid_argument("Il tempo di uscita non puo' essere zero ");
+
+          }
+          std::string modality = examData[3];
+          if( modality != "S" && modality != "O" && modality != "SO" && modality != "P"){
+              throw std::invalid_argument("La modalita' d'esame non e' S,O,SO,P ");
+          }
+          std::string place = examData[4];
+          if(place != "A" && place != "B")
+              throw std::invalid_argument("Il luogo dell'esam enon e' A,L");
+
+    }
     static std::vector<int> posCurlyBrackets(std::string &input) {
         std::vector<int> output;
         std::size_t found = input.find_first_of("{}");
@@ -214,7 +243,7 @@ public:
             }
         }
         if(isNotOk == true || state != 0)
-            throw std::invalid_argument("ERRORE DI FORMATO\n");
+            throw std::invalid_argument("Errore del formato dei corsi\n");
     }
     static bool controlItCanBeAnAcYear(std::string input) {
         //AAAA-AAAA
