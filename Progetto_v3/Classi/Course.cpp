@@ -220,7 +220,7 @@ void Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Profess
         std::map<int, std::vector<professor>> profsOfParallelCourses = sp.getProfsOfParallelCourses();
         for (int i = 0; i < profsOfParallelCourses.size(); i++) {
             std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);
-            hours hourProfs = controlProfsOfSingleCourse(profsOfSingleCourse, professors);
+            hours hourProfs = controlProfsOfSingleCourse(profsOfSingleCourse, professors, line_counter);
             if(hoursCourse._lec != hourProfs._lec) {
                 error.append("Le ore delle lezioni non sono coerenti con le ore del corso alla riga " + std::to_string(line_counter) + "\n");
                 isOk = false;
@@ -240,13 +240,14 @@ void Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Profess
 }
 
 ///prendo le ore totali dei prof per un singolo corso
-hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int, Professor> &professors) {
+hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,
+                                         const std::map<int, Professor> &professors, int line_counter) {
     hours h{0,0,0};
     ///per ogni prof del corso verifico se esista nel db_professori, in tal caso prendo le sue ore e le sommo
     for (int i = 0; i < profsOfSingleCourse.size(); i++) {
         if (professors.find(profsOfSingleCourse[i].prof_id) == professors.end()) {
             std::string settedId = Parse::setId('d',6,profsOfSingleCourse[i].prof_id);
-            throw std::invalid_argument("Il seguente professore non e' stato trovato nel database:" + settedId + ". Controllare il seguente corso che si vuole inserire:" + getName() +"\n");
+            throw std::invalid_argument("Il seguente professore " + settedId +" al rigo "+std::to_string(line_counter)+ " non e' stato trovato nel database\n");
         } else
         {
             h._lec = h._lec + profsOfSingleCourse[i].hLez;

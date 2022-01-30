@@ -73,11 +73,11 @@ public:
           }
           std::string modality = examData[3];
           if( modality != "S" && modality != "O" && modality != "SO" && modality != "P"){
-              throw std::invalid_argument("La modalita' d'esame non e' S/O/SO/P ");
+              throw std::invalid_argument("La modalita' d'esame non e' S/O/SO/P \n ");
           }
           std::string place = examData[4];
           if(place != "A" && place != "B")
-              throw std::invalid_argument("Il luogo dell'esame non e' A/L");
+              throw std::invalid_argument("Il luogo dell'esame non e' A/L \n");
 
     }
     static std::vector<int> posCurlyBrackets(std::string &input) {

@@ -31,7 +31,8 @@ public:
     void fillAcYearsEmpty();
     void
     controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors, int year, int line_counter);
-    hours controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int,Professor> & professors);
+    hours controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,
+                                     const std::map<int, Professor> &professors, int line_counter);
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();
     const SpecificYearCourse & getThisYearCourse(int year) const;

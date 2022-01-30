@@ -86,7 +86,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         //tolgo le [ ] che delimitano i vari prof con le relative informazioni
         profsWithoutSquareBrackets = profs.substr(found + 2, (profs.size() - found - 2) - 1);
     else
-        throw std::invalid_argument("Errore formato interno per ogni singolo corso parallelo alla riga "+ std::to_string(line_counter));
+        throw std::invalid_argument("Errore formato del professore del singolo corso parallelo alla riga "+ std::to_string(line_counter)+"\n");
 
     ///cerco e salvo le posizioni di { o } in profsWithoutSquareBrackets
     std::vector<int> foundBracket = Parse::posCurlyBrackets(profsWithoutSquareBrackets);;

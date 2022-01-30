@@ -42,6 +42,7 @@ public:
     void removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date& date, int& startSlot, std::map<std::string,std::vector<int>>& classrooms);
     void reassignThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date date,int startSlot, std::map<std::string,std::vector<int>> classrooms);
     void generateOutputFileName();
+    void popOffCoursesFromGroupedString(std::vector<std::string> &coursesToConsider, int year);
 
     ///DB management
     void versioning(std::string newVersion);
