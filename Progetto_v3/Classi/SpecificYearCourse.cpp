@@ -288,11 +288,13 @@ void SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark
     }
 }
 
+///assegna anno e semestre di un corso ad un anno specifico
 void SpecificYearCourse::assignYY_SemToAllYear(std::string &acYYoff, std::string &yy_semester) {
     _yy_semester = yy_semester;
     _acYearOff = acYYoff;
 }
 
+///setta un nuovo anno
 void SpecificYearCourse::setNewYear(int newStartYear) {
     _startYear = newStartYear;
     _endYear = newStartYear + 1;
@@ -302,18 +304,22 @@ void SpecificYearCourse::setNewYear(int newStartYear) {
     _numAppeal = 0;
 }
 
+///prende i corsi spenti
 std::string SpecificYearCourse::getAcYearOff() const{
     return _acYearOff;
 }
 
+///prende il numero di studenti che devono fare l'esame
 int SpecificYearCourse::getTotStudentsExam() {
     return _totStudentsNotPassed; //(tot enroled - (tot enroled-totNot))
 }
 
+///aggiunge le aule ad un appello della sessione accademica
 void SpecificYearCourse::addClassroomsToAppeal(int numAppeal, std::vector<int> &rooms) {
     _roomsEachAppeal.insert(std::pair<int, std::vector<int>>(numAppeal, rooms));
 }
 
+///prende il numero del prossimo appello
 int SpecificYearCourse::getNumNextAppeal() {
     int tot = 0;
     auto start = _howManyTimesIAmAssignedInASession.begin();
@@ -324,6 +330,7 @@ int SpecificYearCourse::getNumNextAppeal() {
     return tot;
 }
 
+///aggiunge uno studente allo specifico anno
 void SpecificYearCourse::addStudent(int acYearRegistration, Student &stud) {
     std::string appealsInitialization = "1900-01-01";
 
@@ -341,16 +348,17 @@ void SpecificYearCourse::addStudent(int acYearRegistration, Student &stud) {
 
 }
 
-
+///prende il numero di studenti iscritti in quell'anno
 int SpecificYearCourse::getTotStudentsEnrolled() const {
     return _totStudentsEnrolled;
 }
 
+///ritorna la mappa degli appelli per le sessioni di un anno accademico
 const std::map<int, std::vector<Date>> &SpecificYearCourse::getHowManyTimesIAmAssignedInASession() const {
     return _howManyTimesIAmAssignedInASession;
 }
 
-
+///prende tutti gli appelli di un anno
 std::vector<Date> SpecificYearCourse::getAllAppeals() const {
     std::vector<Date> allAppeals;
     std::map<int, std::vector<Date>> allSessionPerYear = getHowManyTimesIAmAssignedInASession();
@@ -360,6 +368,7 @@ std::vector<Date> SpecificYearCourse::getAllAppeals() const {
     return allAppeals;
 }
 
+///assegna uno studente con il suo voto ad un appello dell'anno
 void SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam,
                                                   std::string appealDate) {
     for (int i = 0; i < allStudPassedExam.size(); i++) {
@@ -373,6 +382,193 @@ void SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::str
     }
 }
 
+///assegna gli appelli alal mappa _howManyTimesIAmAssignedInASession che tiene traccia degli appelli per un anno e divisi per sessione
+void SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> appealPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal) {
+
+
+    for(int i = 0; i<startSlotPerAppeal.size(); i++) {
+        _startSlotPerEachAppeal.insert(std::pair<int, int>(getNumAppeal(), startSlotPerAppeal[i]));
+        std::vector<std::string> allClassroomsPerAppeal = Parse::splittedLine(classroomsPerAppeal[i], '|');
+        std::vector<int> allClassroomsPerAppealInt;
+        //trasformo il vettore di aule string in un vettore di aule interi
+        for(int j = 0; j<allClassroomsPerAppeal.size(); j++){
+            int room = Parse::checkedStoi(allClassroomsPerAppeal[j],"Errore id Aula");
+            allClassroomsPerAppealInt.push_back(room);
+        }
+        _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(getNumAppeal(),allClassroomsPerAppealInt));
+        _numAppeal++;
+    }
+    if (session == "winter")
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, appealPerSession));
+    else if (session == "summer")
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(2, appealPerSession));
+    else if (session == "autumn")
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, appealPerSession));
+
+}
+
+///prende le aule usate per gli appelli di una sessione
+std::vector<int> SpecificYearCourse::getRoomsAppeal() {
+    std::vector<int> rooms = _roomsEachAppeal.at(getNumAppeal());
+    _numAppeal++;
+    return rooms;
+}
+
+///Ritorna se sono stati assegnati degli esami o meno
+bool SpecificYearCourse::notExamsAssigned() {
+    return _howManyTimesIAmAssignedInASession.empty();
+}
+
+///prende gli studenti che hanno passato l'esame in questo appello
+std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) {
+    std::map<int, student> allStudentsPassed;
+    for (auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end(); iterStud++) {
+        student currentStud = iterStud->second;
+        if (currentStud._passed == true) {
+            Date appealPassed = currentStud._appealPassed;
+            if (appealPassed == dateAppeal) {
+                allStudentsPassed.insert(std::pair<int, student>(currentStud._studId, currentStud));
+            }
+        }
+    }
+    return allStudentsPassed;
+}
+
+///inserisco tutti i corsi raggruppati nello spYY e cancello il suo id
+void SpecificYearCourse::assignGrouped(std::vector<std::string> &idGrouped, std::string &idCourse, std::string &thisCourse) {
+    _idGroupedCourses = idGrouped;
+    _idGroupedCourses.push_back(idCourse);
+    auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(), thisCourse);
+    _idGroupedCourses.erase(pos);
+}
+
+///formatta le aule per la scrittura su file degli appelli delle sessioni
+std::string SpecificYearCourse::getRoomsPerAppealsString(int numAppeals) {
+    std::stringstream ss;
+    std::vector<int> roomsPerAppeals = _roomsEachAppeal.at(numAppeals);
+    for (int i = 0; i < roomsPerAppeals.size(); i++) {
+        ss << roomsPerAppeals[i];
+        if (i < roomsPerAppeals.size() - 1)
+            ss << "|";
+    }
+    return ss.str();
+}
+
+///aggiungo l'ora di inizio per un appello
+void SpecificYearCourse::addStartSlotToAppeal(int numAppeal, int startExamHour) {
+    _startSlotPerEachAppeal.insert(std::pair<int, int>(numAppeal, startExamHour));
+
+}
+
+///prende l'ora di inizio di un appello
+int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
+    return _startSlotPerEachAppeal.at(numAppeals);
+}
+
+///setta anno e semestre di uno specifico anno
+void SpecificYearCourse::setYySemester(const std::string &yySemester) {
+    _yy_semester = yySemester;
+}
+
+///prende il luogo in cui sarà fatto l'esame, aula o laboratorio
+char SpecificYearCourse::getPlaceExam() {
+    return _exam.getPlace();
+}
+
+///ritorna la data di uno specifico appello di una sessione
+Date &SpecificYearCourse::dateAssignationInGivenSession(int numSession, int numAppeal) {
+    return _howManyTimesIAmAssignedInASession.at(numSession)[numAppeal-1];
+}
+
+///ritorna lo slot di inizio di un appello di una sessione
+int SpecificYearCourse::startSlotAssignationInGivenSession(int numSession, int numAppeal) {
+    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal);
+    return _startSlotPerEachAppeal.at(numAppealPerYear);
+}
+
+///ritorna le aule di un appello di una sessione
+std::vector<int> SpecificYearCourse::classroomsAssignedInGivenSession(int numSession, int numAppeal) {
+    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal);
+    return _roomsEachAppeal.at(numAppealPerYear);
+}
+
+///converte il numero di appello per sessione in numero di appello annuale
+int SpecificYearCourse::getNumAppealFromNumSessNumAppealInSession(int numSession, int numAppeal){
+    int numAppealYear = 0;
+    if(_active) {
+        if (numSession == 3)
+            //se autunno sarà l'ultimo appello dell'anno (3)
+            numAppealYear = 3;
+        else if (numSession == 1)
+            //se inverno sarà o primo (0) o, se c'è un secondo appello (1)
+            //numAppealYear: 1-1 = 0 ; 2-1 = 1
+            numAppealYear = numAppeal - 1;
+        else if (numSession == 2) {
+            //se estiva bisogna distinguere il caso in cui la sessione abbia 1 o 2 appelli
+            //se ne ha uno vuol dire che numAppealYear = 2 (perchè quella invernale avr
+            //se ne ha due vuol dire che numAppealYear può essere 1 o 2
+            int sizeSession = _howManyTimesIAmAssignedInASession.count(numSession - 1); //1 oppure 2
+            if (sizeSession == 1) {
+                numAppealYear = 2;
+            } else
+                numAppealYear = numAppeal;
+        }
+    } else
+        numAppealYear = numSession;
+    return numAppealYear;
+}
+
+///rimuove le informazioni dell'appello da un anno specifico
+void SpecificYearCourse::removeInfoThisAppealFromSpecificYear(int numSession, int numAppeal) {
+    ///pop da vettore date
+    if(numAppeal == 2)
+        ///se secondo appello tolgo l'ultimo del vettore date
+        _howManyTimesIAmAssignedInASession.at(numSession).pop_back();
+    else {
+        ///se primo appello
+        std::vector<Date> dateInThisSession = _howManyTimesIAmAssignedInASession.at(numSession);
+        std::vector<Date> newDateInThisSession;
+        _howManyTimesIAmAssignedInASession.erase(numSession);
+        ///se c'è un solo appello in questa sessione
+        if(dateInThisSession.size() != 1){
+            ///se ci sono più appelli riprendo il secondo appello
+            newDateInThisSession.push_back(dateInThisSession[1]);
+        }
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int,std::vector<Date>>(numSession,newDateInThisSession));
+    }
+    ///pop da slots
+    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
+    _startSlotPerEachAppeal.erase(numAppealPerYear);
+    ///pop da rooms
+    _roomsEachAppeal.erase(numAppealPerYear);
+}
+
+///prende le aule di uno specifico appello di una sessione
+std::vector<int> SpecificYearCourse::getRoomsAppealInSession(int numSession, int numAppeal) {
+    return _roomsEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal));
+}
+
+///riassegna l'appello vecchio allo specifiYear nel caso in cui la request_changes non sia andata a buon fine
+void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date, int startSlot, std::vector<int> classroomsPerCourse) {
+
+    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
+
+    _startSlotPerEachAppeal.insert(std::pair<int, int>(numAppealPerYear, startSlot));
+    _roomsEachAppeal.insert(std::pair<int, std::vector<int>>(numAppealPerYear, classroomsPerCourse));
+    std::vector<Date> vectDate;
+    vectDate.push_back(date);
+    ///se non esiste la chiave
+    if (_howManyTimesIAmAssignedInASession.find(numSession) == _howManyTimesIAmAssignedInASession.end()) {
+        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(numSession, vectDate));
+    } else if (numAppeal == 2) {
+        //se esiste ed è un secondo appello da inserire lo metto alla fine
+        _howManyTimesIAmAssignedInASession.at(numSession).push_back(date);
+    } else {
+        //se esiste ed è un primo appello da inserire lo metto all'inizio
+        std::vector<Date> &vectD = _howManyTimesIAmAssignedInASession.at(numSession);
+        vectD.insert(vectD.begin(), date);
+    }
+}
 std::string SpecificYearCourse::getAppealsForAllSession() {
     std::stringstream ss;
     int numAppeals = 0;
@@ -383,8 +579,7 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
             case 1: {
                 ss << "winter[";
                 break;
-            }
-            case 2: {
+            }case 2: {
                 ss << "summer[";
                 break;
             }
@@ -411,205 +606,38 @@ std::string SpecificYearCourse::getAppealsForAllSession() {
     return ss.str();
 }
 
-void SpecificYearCourse::assignAppeals(std::string session, std::vector<Date> appealPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal) {
-
-
-    for(int i = 0; i<startSlotPerAppeal.size(); i++) {
-        _startSlotPerEachAppeal.insert(std::pair<int, int>(getNumAppeal(), startSlotPerAppeal[i]));
-        std::vector<std::string> allClassroomsPerAppeal = Parse::splittedLine(classroomsPerAppeal[i], '|');
-        std::vector<int> allClassroomsPerAppealInt;
-        //trasformo il vettore di aule string in un vettore di aule interi
-        for(int j = 0; j<allClassroomsPerAppeal.size(); j++){
-            int room = Parse::checkedStoi(allClassroomsPerAppeal[j],"Errore id Aula");
-            allClassroomsPerAppealInt.push_back(room);
-        }
-        _roomsEachAppeal.insert(std::pair<int,std::vector<int>>(getNumAppeal(),allClassroomsPerAppealInt));
-        _numAppeal++;
-    }
-    if (session == "winter")
-        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(1, appealPerSession));
-    else if (session == "summer")
-        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(2, appealPerSession));
-    else if (session == "autumn")
-        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(3, appealPerSession));
-
-}
-
-std::vector<int> SpecificYearCourse::getRoomsAppeal() {
-    std::vector<int> rooms = _roomsEachAppeal.at(getNumAppeal());
-    _numAppeal++;
-    return rooms;
-}
-
-bool SpecificYearCourse::notExamsAssigned() {
-    return _howManyTimesIAmAssignedInASession.empty();
-}
-
-std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) {
-    std::map<int, student> allStudentsPassed;
-    for (auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end(); iterStud++) {
-        student currentStud = iterStud->second;
-        if (currentStud._passed == true) {
-            Date appealPassed = currentStud._appealPassed;
-            if (appealPassed == dateAppeal) {
-                allStudentsPassed.insert(std::pair<int, student>(currentStud._studId, currentStud));
-            }
-        }
-    }
-    return allStudentsPassed;
-}
-
-///inserisco tutti i corsi raggruppati nello spYY e cancello il suo id
-void SpecificYearCourse::assignGrouped(std::vector<std::string> &idGrouped, std::string &idCourse, std::string &thisCourse) {
-    _idGroupedCourses = idGrouped;
-    _idGroupedCourses.push_back(idCourse);
-    auto pos = std::find(_idGroupedCourses.begin(), _idGroupedCourses.end(), thisCourse);
-    _idGroupedCourses.erase(pos);
-}
-
-std::string SpecificYearCourse::getRoomsPerAppealsString(int numAppeals) {
-    std::stringstream ss;
-    std::vector<int> roomsPerAppeals = _roomsEachAppeal.at(numAppeals);
-    for (int i = 0; i < roomsPerAppeals.size(); i++) {
-        ss << roomsPerAppeals[i];
-        if (i < roomsPerAppeals.size() - 1)
-            ss << "|";
-    }
-    return ss.str();
-}
-
-void SpecificYearCourse::addStartSlotToAppeal(int numAppeal, int startExamHour) {
-    _startSlotPerEachAppeal.insert(std::pair<int, int>(numAppeal, startExamHour));
-
-}
-
-int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
-    return _startSlotPerEachAppeal.at(numAppeals);
-}
-
-void SpecificYearCourse::setYySemester(const std::string &yySemester) {
-    _yy_semester = yySemester;
-}
-
-char SpecificYearCourse::getPlaceExam() {
-    return _exam.getPlace();
-}
-
-Date &SpecificYearCourse::dateAssignationInGivenSession(int numSession, int numAppeal) {
-    return _howManyTimesIAmAssignedInASession.at(numSession)[numAppeal-1];
-}
-
-int SpecificYearCourse::startSlotAssignationInGivenSession(int numSession, int numAppeal) {
-    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal);
-    return _startSlotPerEachAppeal.at(numAppealPerYear);
-}
-
-std::vector<int> SpecificYearCourse::classroomsAssignedInGivenSession(int numSession, int numAppeal) {
-    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession,numAppeal);
-    return _roomsEachAppeal.at(numAppealPerYear);
-}
-
-int SpecificYearCourse::getNumAppealFromNumSessNumAppealInSession(int numSession, int numAppeal){
-    int numAppealYear = 0;
-    if(_active) {
-        if (numSession == 3)
-            //se autunno sarà l'ultimo appello dell'anno (3)
-            numAppealYear = 3;
-        else if (numSession == 1)
-            //se inverno sarà o primo (0) o, se c'è un secondo appello (1)
-            //numAppealYear: 1-1 = 0 ; 2-1 = 1
-            numAppealYear = numAppeal - 1;
-        else if (numSession == 2) {
-            //se estiva bisogna distinguere il caso in cui la sessione abbia 1 o 2 appelli
-            //se ne ha uno vuol dire che numAppealYear = 2 (perchè quella invernale avr
-            //se ne ha due vuol dire che numAppealYear può essere 1 o 2
-            int sizeSession = _howManyTimesIAmAssignedInASession.count(numSession - 1); //1 oppure 2
-            if (sizeSession == 1) {
-                numAppealYear = 2;
-            } else
-                numAppealYear = numAppeal;
-        }
-    } else
-        numAppealYear = numSession;
-    return numAppealYear;
-}
-
-void SpecificYearCourse::removeInfoThisAppealFromSpecificYear(int numSession, int numAppeal) {
-    ///pop da vettore date
-    if(numAppeal == 2)
-        ///se secondo appello tolgo l'ultimo del vettore date
-        _howManyTimesIAmAssignedInASession.at(numSession).pop_back();
-    else {
-        ///se primo appello
-        std::vector<Date> dateInThisSession = _howManyTimesIAmAssignedInASession.at(numSession);
-        std::vector<Date> newDateInThisSession;
-        _howManyTimesIAmAssignedInASession.erase(numSession);
-        ///se c'è un solo appello in questa sessione
-        if(dateInThisSession.size() != 1){
-            ///se ci sono più appelli riprendo il secondo appello
-            newDateInThisSession.push_back(dateInThisSession[1]);
-        }
-        _howManyTimesIAmAssignedInASession.insert(std::pair<int,std::vector<Date>>(numSession,newDateInThisSession));
-    }
-    ///pop da slots
-    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
-    _startSlotPerEachAppeal.erase(numAppealPerYear);
-    ///pop da rooms
-    _roomsEachAppeal.erase(numAppealPerYear);
-}
-
-std::vector<int> SpecificYearCourse::getRoomsAppealInSession(int numSession, int numAppeal) {
-    return _roomsEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal));
-}
-
-void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date, int startSlot, std::vector<int> classroomsPerCourse) {
-
-    int numAppealPerYear = getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
-
-    _startSlotPerEachAppeal.insert(std::pair<int, int>(numAppealPerYear, startSlot));
-    _roomsEachAppeal.insert(std::pair<int, std::vector<int>>(numAppealPerYear, classroomsPerCourse));
-    std::vector<Date> vectDate;
-    vectDate.push_back(date);
-    ///se non esiste la chiave
-    if (_howManyTimesIAmAssignedInASession.find(numSession) == _howManyTimesIAmAssignedInASession.end()) {
-        _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(numSession, vectDate));
-    } else if (numAppeal == 2) {
-        //se esiste ed è un secondo appello da inserire lo metto alla fine
-        _howManyTimesIAmAssignedInASession.at(numSession).push_back(date);
-    } else {
-        //se esiste ed è un primo appello da inserire lo metto all'inizio
-        std::vector<Date> &vectD = _howManyTimesIAmAssignedInASession.at(numSession);
-        vectD.insert(vectD.begin(), date);
-    }
-}
-
+///pulisce la variabile privata _numAppeal
 void SpecificYearCourse::eraseNumAppeal() {
  _numAppeal = 0;
 }
 
+///prende il numero di appelli _numAppeal
 int SpecificYearCourse::getNumAppeal() const {
     return _numAppeal;
 }
 
+///aggiorna i raggruppati per quell'anno
 void SpecificYearCourse::updateIdGroupedCourses(std::vector<std::string> grouped) {
     _idGroupedCourses.erase(_idGroupedCourses.begin(),_idGroupedCourses.end());
    _idGroupedCourses = grouped;
 }
 
+///ritorna se il vettore in cui vengono salavati i corsi di studio a cui vengono assegnati i corsi sia vuoto o meno
 bool SpecificYearCourse::studyCourseEmpty() {
     return _studyCourseAssigned.empty();
 }
 
+///aggiorna i corsi di studi a cui un corso è assegnato
 void SpecificYearCourse::updateStudyCourseAssigned(int studyCourseAssigned) {
     _studyCourseAssigned.push_back(studyCourseAssigned);
 }
 
+///setta l'anno di spegnimento del corso
 void SpecificYearCourse::setAcYearOff(std::string yearOff) {
     _acYearOff = yearOff;
 }
 
-
-
+///overload output operator
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
     if (s.getIsActive())

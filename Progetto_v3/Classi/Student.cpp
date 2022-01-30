@@ -41,16 +41,19 @@ void Student::addStudyPlanPerStudent(std::string acYearRegistration, const std::
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
     _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
 }
-//leggendo il db_piano di studi aggiunge alla struttura l'informazione
+
+///leggendo il db_piano di studi aggiunge alla struttura l'informazione
 void Student::readStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan) {
     _yearRegistration = Parse::getAcStartYear( acYearRegistration);
     _studyPlan.insert(_studyPlan.begin(),coursesStudyPlan.begin(),coursesStudyPlan.end());
 }
 
+///prende l'anno di registrazione
 int Student::getYearRegistration() const {
     return _yearRegistration;
 }
 
+///formato del piano di studio per la scrittura su file
 std::string Student::getPlanStudyCourseString() const {
     std::stringstream allCourses;
     allCourses<<"{";
@@ -63,14 +66,17 @@ std::string Student::getPlanStudyCourseString() const {
     return allCourses.str();
 }
 
+///pulisce il piano di studio
 void Student::clearStudyPlan() {
     _studyPlan.erase( _studyPlan.begin(), _studyPlan.end());
 }
 
+///il piano di studio è vuoto?
 bool Student::studyPlanIsEmpty() {
     return  _studyPlan.empty();
 }
 
+///prendi il piano di studio di uno studente
 std::vector<std::string> Student::getStudyPlan() const {
     return _studyPlan;
 }

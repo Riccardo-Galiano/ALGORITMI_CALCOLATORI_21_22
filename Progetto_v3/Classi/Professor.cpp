@@ -15,7 +15,6 @@ Professor::Professor(int matr, std::string name, std::string surname, std::strin
 Professor::Professor(int matr) : UniversityMember() {
     _id = matr;
 }
-
 Professor::Professor(int matr, std::string name, std::string surname, std::string email, std::string birth, std::string registration, std::string address): UniversityMember(matr, name,surname, email,birth,
 registration,
 address) {
@@ -126,6 +125,7 @@ bool Professor::amIavailable(std::string date, int hh, int relaxPar) {
 
 }
 
+///rimuove un appello dagli _examToDo del professore
 void Professor::eraseThisAppealFromProfs(Date& dateAppeal, int startSlot, int numSlots) {
     ///ciclare per numslots!!!!!!!!!!
     for(int i = 0; i<numSlots; i++){
@@ -134,7 +134,6 @@ void Professor::eraseThisAppealFromProfs(Date& dateAppeal, int startSlot, int nu
     }
 
 }
-
 
 ///overload operatore <<
 std::ostream &operator<<(std::ostream &prof, const Professor &s) {

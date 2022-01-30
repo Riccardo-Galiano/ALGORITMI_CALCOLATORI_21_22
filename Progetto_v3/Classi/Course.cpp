@@ -267,6 +267,7 @@ std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
     }
     return  allGrouped;
 }
+
 ///controlla se è stato già spento
 void Course::notActive() {
      bool firstTime = false;
@@ -278,15 +279,17 @@ void Course::notActive() {
     }
 }
 
+///prende il semestre a cui è associato un corso
 int Course::getSemesterAtYear(int acStartYear,std::string name) {
    int sem = 0;
     if(_courseOfTheYear.find(acStartYear) != _courseOfTheYear.end())
           sem =_courseOfTheYear.at(acStartYear).getSemester();
     else
-        throw InvalidDbException("non esistono info per il corso: " + name + "\n");
+        throw InvalidDbException("Non esistono info per il corso: " + name + "\n");
     return sem;
 }
 
+///controllo se i raggruppati siano dello stesso semestre affinchè possano essere effettivamente raggruppabili
 void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
     bool isOk = true;
     std::string error;
@@ -300,7 +303,7 @@ void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
             bool activeGrouped = sp.getIsActive();
             ///se i due corsi non si trovano nello stato di attività non posso raggrupparli
             if(active != activeGrouped) {
-                error.append("il seguente corso raggruppato " + groupedCourse[i] +
+                error.append("Il seguente corso raggruppato " + groupedCourse[i] +
                              " non e' nello stesso stato di attivita' del corso: " + getName() +
                              " ;corrispondente al codice: " + getId() + "\n");
                 isOk = false;
@@ -312,7 +315,7 @@ void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
                 if (sem != -1 && semGrouped != -1) {
                     //se almeno uno dei due è -1 la coerenza tra loro non si può dimostrare quini lo considero ok
                     if (semGrouped != sem) {
-                        error.append("il seguente corso raggruppato " + groupedCourse[i] +
+                        error.append("Il seguente corso raggruppato " + groupedCourse[i] +
                                      " non e' dello stesso semestre di: " + getName() + " ;corrispondente al codice: " +
                                      getId() + "\n");
                         isOk = false;
@@ -333,6 +336,7 @@ void Course::assignYY_Sem(std::string& acYYoff, std::string& yy_semester) {
     }
 }
 
+///registro uno studente ad uno specifico anno(anno di iscrizione)
 void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stud) {
     ///prendo l'ultimo anno e riempio la struttura fino all'anno che mi serve per l'iscrizione perchè l'ultimo aggiornamento può essere vecchio
     SpecificYearCourse sp = getLastSpecificYearCourse();
@@ -359,6 +363,7 @@ void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
 
 }
 
+///formatta le righe per il dbAppelli trasformando le info per ogni studente in stringhe
 std::vector<std::string> Course::getAcYearStudExam() {
     std::vector<std::string> allAppealsPerYearToString;
     bool push = false;
@@ -394,6 +399,7 @@ std::vector<std::string> Course::getAcYearStudExam() {
     return  allAppealsPerYearToString;
 }
 
+///assegna gli appelli agli studenti per un anno specifico
 void Course::assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString) {
     std::vector<std::pair<std::string, int>> allStudPassedExam = splittAllStudPassedExamString(allStudsPassedExamString);
     int startAcYear = Parse::getAcStartYear(acYear);
@@ -401,6 +407,7 @@ void Course::assignStudToAppealPerYear(std::string acYear, std::string appealDat
 
 }
 
+///splitta matricola e voto
 std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(std::string allStudsPassedExamString) {
     std::vector<std::pair<std::string, int>> allStudsPassedExam;
     std::vector<int> posCB = Parse::posCurlyBrackets(allStudsPassedExamString);
@@ -412,6 +419,7 @@ std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(s
     return allStudsPassedExam;
 }
 
+///prende gli appelli di un anno
 std::vector<std::string> Course::getAcYearAppeals() {
     std::vector<std::string> allAppealsPerCourses;
     for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
@@ -425,11 +433,13 @@ std::vector<std::string> Course::getAcYearAppeals() {
     return allAppealsPerCourses;
 }
 
+///assegna gli appelli ad un anno
 void Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal) {
     int acStartYear = Parse::getAcStartYear(acYear);
     _courseOfTheYear.at(acStartYear).assignAppeals(session,appealsPerSession,startSlotPerAppeal,classroomsPerAppeal);
 }
 
+///controllo che l'appello dia effettivamente una data e che esiat nella sessione
 void Course::controlAppeal(std::string appealDate) {
     Date appeal = Parse::controlItCanBeADate(appealDate);
     int yearAppeal = appeal.getYear();
@@ -459,6 +469,7 @@ void Course::controlAppeal(std::string appealDate) {
 
 }
 
+///Controlla se il prof sia effettivamente assegnato a questo corso in uno specifico anno
 bool Course::profHaveThisCourse(int matr, int acStartYear) {
     SpecificYearCourse sp = getLastSpecificYearCourse();
     int lastYear = sp.getStartYear();
@@ -474,20 +485,26 @@ bool Course::profHaveThisCourse(int matr, int acStartYear) {
     return std::find(profOfCourse.begin(), profOfCourse.end(), matr) != profOfCourse.end();
 }
 
+///prende il numero di slots necessari alla generazione dell'esame in un determinato anno
 int Course::getExamSlotPerYear(std::string acYear) {
     int startAc = Parse::getAcStartYear(acYear);
     Exam examInfo = _courseOfTheYear.at(startAc).getExam();
     return examInfo.howManySlots();
 }
 
+///prende i prof assegnati ad un corso in un determinato anno
 std::vector<int> Course::getProfsPerYear(std::string acYear) {
     int startAc = Parse::getAcStartYear(acYear);
     return  _courseOfTheYear.at(startAc).getAllProfMatr();
 }
+
+///prende il primo anno di attività del corso
 int Course::getFirstYearOfActivity() {
     auto iterSpecificYearCourse = _courseOfTheYear.begin();
     return iterSpecificYearCourse->first;
 }
+
+///eredita per un corso le informazioni necessarie di anno in anno fino a lastYear
 void Course::fillAcYearsUntilStartAcYear(int startAcYear, int lastYear) {
 
     for(int i = lastYear; i < startAcYear; i++){
@@ -498,12 +515,15 @@ void Course::fillAcYearsUntilStartAcYear(int startAcYear, int lastYear) {
     }
 
 }
+
+///aggiorna l'anno e semestre in tutti gli specific year del corso
 void Course::updateYYSemesterInAllSpecYearCourse(std::string& yy_semester) {
     for(auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
         iter->second.setYySemester(yy_semester);
     }
 }
 
+///prend eil primo anno di spegnimento
 std::string Course::getFirstAcYearOff() {
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         int startYear = iterSpecificYear->second.getStartYear();
@@ -516,10 +536,12 @@ std::string Course::getFirstAcYearOff() {
     return  "";
 }
 
+///prende gli id dei raggruppati per uno specifico anno
 std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) {
     return _courseOfTheYear.at(acYear).getIdGroupedCourses();
 }
 
+///riassegna l'appello ad uno specifico anno. Request_changes nl caso in cui non si possa riscrivere l'esame
 void Course::reassignAppealToSpecificYear(int acYear,int numAppeal, int numSession, Date date, int startSlot,
                                           std::vector<int> classroomsPerCourse) {
     _courseOfTheYear.at(acYear).reassignAppeal(numAppeal,numSession,date,startSlot,classroomsPerCourse);
@@ -527,19 +549,19 @@ void Course::reassignAppealToSpecificYear(int acYear,int numAppeal, int numSessi
 
 }
 
+///aggiorna i corsi di studio per uno specifico anno
 void Course::updateStudyCourseInAllSpecYearCourse(int idStudyCourse) {
     for(auto iter = _courseOfTheYear.begin(); iter != _courseOfTheYear.end(); iter++) {
         iter->second.updateStudyCourseAssigned(idStudyCourse);
     }
 }
 
+///Mi chiedo se il corso esiste anche in quell'anno
 bool Course::courseExistInThisYear(int year) {
     return _courseOfTheYear.count(year) != 0;
 }
 
-
-
-
+///output operator overload
 std::ostream &operator<<(std::ostream &course, Course &c) {
     course << "c;" << c.getId() << ";" << c.getName() << ";" << c.getCfu() << ";" << c.getHours()._lec << ";"
            << c.getHours()._ex << ";" << c.getHours()._lab << std::endl;

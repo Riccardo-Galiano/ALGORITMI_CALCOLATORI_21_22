@@ -8,10 +8,12 @@
 #include "Course.h"
 #include "Parse.hpp"
 
+//costruttore
 SessionLog::SessionLog(std::string &output_file_name) {
     _output_file_name = output_file_name;
 }
 
+///genera i warning del gap tra gli appelli
 void SessionLog::generateWarningGapAppeals(std::vector<Course> &courses, int gap, int year, int session) {
     std::stringstream ss;
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
@@ -28,6 +30,7 @@ void SessionLog::generateWarningGapAppeals(std::vector<Course> &courses, int gap
     appendLogPerSession(session,toPass);
 }
 
+///scrive i warnings
 void SessionLog::writeWarnings(std::string &output_name_file) {
 
     std::vector<std::string> nameWithoutExtension = Parse::splittedLine(output_name_file, '.');
@@ -43,6 +46,7 @@ void SessionLog::writeWarnings(std::string &output_name_file) {
     }
 }
 
+///metodo genrale della generazione warnings
 void SessionLog::generateWarnings(std::vector<Course> &courses, int relaxPar, int gap, int year, std::vector<std::pair<std::string,int>> gapProfsNoRespect, int session) {
     generateWarningGapProfs(gapProfsNoRespect,session);
     switch (relaxPar) {
@@ -66,6 +70,7 @@ void SessionLog::generateWarnings(std::vector<Course> &courses, int relaxPar, in
     }
 }
 
+///metodo specifico per il vincolo dell'indisponibilità di un professore
 void SessionLog::generateWarningGapAvaibilityProfs(const std::vector<Course>& courses, int year, int session) {
     std::stringstream ss;
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
@@ -81,6 +86,7 @@ void SessionLog::generateWarningGapAvaibilityProfs(const std::vector<Course>& co
     appendLogPerSession(session,toPass);
 }
 
+///metodo specifico per il vincolo dei due giorni tra esami dello stesso corso di studio e lo stesso anno
 void SessionLog::generateWarningGapSameStudyCourse(const std::vector<Course> &courses, int year, int session) {
     std::stringstream ss;
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
@@ -96,7 +102,7 @@ void SessionLog::generateWarningGapSameStudyCourse(const std::vector<Course> &co
     appendLogPerSession(session,toPass);
 }
 
-
+///metodo specifico per il vincolo della minima distanza tra due appelli di uno stesso corso
 void SessionLog::generateWarningGapProfs(const std::vector<std::pair<std::string,int>>& gapProfsNoRespect, int session) {
     std::stringstream ss;
 
@@ -109,6 +115,7 @@ void SessionLog::generateWarningGapProfs(const std::vector<std::pair<std::string
 
 }
 
+///inserisce i warnings per sessione
 void SessionLog::appendLogPerSession(int session, const std::string& output) {
     if(_logPerSession.count(session)==0){
         _logPerSession.insert(std::pair<int,std::string>(session,output));

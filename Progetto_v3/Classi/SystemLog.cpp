@@ -4,13 +4,14 @@
 
 #include "SystemLog.h"
 
-
+///ciò che serve stampare
 void SystemLog::appendToLog(std::string &toAppend, bool isError) {
     _log.append(toAppend);
     if(!_notOK && isError)
         _notOK = isError;
 }
 
+///prende _log
 std::string SystemLog::getLog() {
     return _log;
 }

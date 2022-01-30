@@ -2303,6 +2303,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     }
 }
 
+///scrittura su file dei nomi delle sessioni per usarli nella request_changes
 void University::generateOutputFileName() {
     std::fstream outputFile;
     outputFile.open("allFileNamePerSessionYear.txt", std::fstream::out | std::fstream::trunc);
@@ -2321,6 +2322,7 @@ void University::generateOutputFileName() {
     outputFile.close();
 }
 
+///lettura del file che tiene traccia dei nomi dei file per la sessione accademica
 void University::readOutputFileName() {
     std::ifstream fileIn("allFileNamePerSessionYear.txt");
     if (!fileIn.is_open()) {
@@ -3495,8 +3497,7 @@ void University::revertChanges3to2() {
 }
 
 ///riempie i corsi raggruppati
-void
-University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear) {
+void University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear) {
     std::vector<std::string> allGroupedReciprocy;
     int year = Parse::getAcStartYear(acYear);
     for (int i = 0; i < idGroupedLetti.size(); i++) {
@@ -3860,6 +3861,7 @@ void University::setCourses(const std::map<std::string, Course> &courses) {
     _courses = courses;
 }
 
+///prende i corsi che sono stati usati come raggruppati ma non ancora creati
 std::string University::getPotentialCourseString() const {
     std::stringstream courseNotExist;
     for (int i = 0; i < _potentialCourse.size(); i++) {
@@ -3870,6 +3872,7 @@ std::string University::getPotentialCourseString() const {
     return courseNotExist.str();
 }
 
+///non considera i corsi spenti come raggruppati
 void University::popOffCoursesFromGroupedString(std::vector<std::string> &coursesToConsider, int year) {
 
     for(int i = 0; i<coursesToConsider.size(); i++){

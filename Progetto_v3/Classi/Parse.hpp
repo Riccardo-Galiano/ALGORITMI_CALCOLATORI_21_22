@@ -27,6 +27,7 @@ public:
         }
         return toReturn;
     }
+
     ///restituisce un vettore di stringhe con i prof di ciascun corso in parallelo
     static std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses) {
         std::vector<std::string> profCorsiPar;
@@ -54,6 +55,8 @@ public:
             throw std::invalid_argument("Numero di raggruppamenti dei professori non congruente con il numero di corsi paralleli ");
         return profCorsiPar;
     };
+
+    ///controlla le informazioni in input per l'esame
     static void controlExamInfo(std::vector<std::string> examData){
 
           int examDuration = Parse::checkedStoi(examData[0]," della durata dell'esame ");
@@ -80,6 +83,8 @@ public:
               throw std::invalid_argument("Il luogo dell'esame non e' A/L \n");
 
     }
+
+    ///prende le posizioni delle parentesi graffe in una stringa
     static std::vector<int> posCurlyBrackets(std::string &input) {
         std::vector<int> output;
         std::size_t found = input.find_first_of("{}");
@@ -89,6 +94,8 @@ public:
         }
         return output;
     }
+
+    ///prende le posizioni delle parentesi quadre in una stringa
     static std::vector<int> posSquareBrackets(std::string &input) {
         std::vector<int> output;
         std::size_t found = input.find_first_of("[]");
@@ -98,6 +105,8 @@ public:
         }
         return output;
     }
+
+    ///prende le posizioni dei punti e virgola in una stringa
     static std::vector<int> posSemiColon(std::string &input) {
         std::vector<int> output;
         std::size_t found = input.find_first_of(';');
@@ -108,10 +117,14 @@ public:
         }
         return output;
     }
+
+    ///splitta gli id dei raggruppati
     static std::vector<std::string> SplittedGroupedID(std::string &input){
         input = input.substr(1,input.size() - 2);// tolgo le { } che racchiudono gli id
         return splittedLine(input, ',');//scissione degli id dei corsi raggruppati
     };
+
+    ///prende il primo anno di un anno accademico
     static int getAcStartYear(std::string& input){
         std::string acStartYear = input.substr(0, 4);
         try {
@@ -121,6 +134,8 @@ public:
             throw std::invalid_argument( generalError + " La stringa in input non puo' essere un anno \n");
         }
     }
+
+    ///prende delle date da una stringa
     static std::vector<Date> getDates(std::string& input){
         std::vector<std::string> dates = splittedLine(input,'_');
         std::stringstream ss;
@@ -135,6 +150,8 @@ public:
         }
         return realDates;
     }
+
+    ///prende la matricola prima di lettere identificative all'inizio
     static int getMatr(std::string& input){
         std::string nMatr;
         char c;
@@ -142,11 +159,15 @@ public:
         ss >> c >> nMatr;
         return Parse::checkedStoi(nMatr," della matricola");
     }
+
+    ///setta l'id per un prof o studente
     static std::string setId(char letterId, int numTot, int cod){
         std::stringstream ss;
         ss << letterId << std::setfill('0') <<std::setw(numTot)<<cod;
         return ss.str();
     }
+
+    ///controlla se un vettore sia vuoto
     static bool controlFieldsVectorAreEmpty(std::vector<std::string> infoVector) {
         for (int i = 0; i < infoVector.size(); i++) {
             if (infoVector[i].empty())
@@ -154,6 +175,8 @@ public:
         }
         return false;
     }
+
+    ///cotrolla se la stringa possa essere un ID
     static bool controlItCanBeAnId(std::string Id, int numMatr,char letter) {
         std::stringstream ss(Id);
         char c;
@@ -174,6 +197,7 @@ public:
         return true;
     }
 
+    ///contorlla la sintassi dei corsi paralleli in addCourses e InsertCourses????????
     static void checkSyntaxProfInfoANDExamData(std::string &str){
         if(str[0] == '{' || str[str.length()-1] =='}'){
             std::string string = str.substr(1, str.size() - 2);
@@ -184,6 +208,7 @@ public:
         throw std::invalid_argument("ERRORE FORMATO");
     }
 
+    ///vedere se un carattere e utilizzabile per l'assegnazione corsi
     static bool thisCharShouldBeConsidered(char c) {
         if (c == '[' || c == ']' || c == '{' || c == '}')
             return true;
@@ -191,6 +216,7 @@ public:
             return false;
     }
 
+    ///controlla la sintassi dei corsi paralleli
     static void checkSyntaxProfs(std::string &str){
         int state = 0;
         bool isNotOk = false;
@@ -245,6 +271,8 @@ public:
         if(isNotOk == true || state != 0)
             throw std::invalid_argument("Errore del formato dei corsi paralleli ");
     }
+
+    ///controllo se la stringa passata possa essere un anno accademico
     static bool controlItCanBeAnAcYear(std::string input) {
         //AAAA-AAAA
         std::vector<std::string> acYear = Parse::splittedLine(input,'-');
@@ -259,6 +287,7 @@ public:
         return acEnd == acStart+1;
     }
 
+    ///controllo del formato per i piano di studio
     static void controlStudyPlanFormat(std::vector<int> pos,std::string line) {
         if (pos.size() != 2) {
             throw std::invalid_argument(" devono esserci due graffe\n");
@@ -275,6 +304,7 @@ public:
         }
     }
 
+    ///controllo che la stringa in ingresso possa essere un ID o no
     static void controlItCanBeACourseId(std::string idCourse) {
         if(idCourse.size() != 7)
             throw std::invalid_argument("Errore formato corso");
@@ -290,6 +320,7 @@ public:
 
     }
 
+    ///controllo che possa essere una data
     static Date controlItCanBeADate(std::string input) {
         //AAAA-MM-GG
         std::vector<std::string> date = Parse::splittedLine(input,'-');
@@ -301,6 +332,8 @@ public:
         return Date(input);
 
     }
+
+    ///controllo sui numeri, convertibili ad intero positivo
     static int checkedStoi(std::string& input,std::string specificError){
         for(int i=0; i<input.size(); i++){
             char currentChar = input[i];

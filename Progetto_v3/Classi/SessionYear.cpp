@@ -429,8 +429,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
 }
 
 ///prende tutti gli appelli da fare nella sessione sessName
-std::vector<std::string>
-SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course> &courses) {
+std::vector<std::string>SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course> &courses) {
     std::vector<std::string> allExamAppealsToDo;
     int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
     for (auto iterCourse = courses.begin(); iterCourse != courses.end(); iterCourse++) {
@@ -729,11 +728,13 @@ bool SessionYear::sessionsPeriodIsEmpty() {
     return _yearSessions.empty();
 }
 
+///setta la minima distanza tra un appello e l'altro di uno stesso esame su richiesta del professore
 void SessionYear::addProfGap(std::string &matr_idC, int gap) {
     _gapProfs.insert(std::pair<std::string, int>(matr_idC, gap));
    
 }
 
+///formatta per la scrittura le minime distanze tra un appello e l'altro di uno stesso esame su richiesta dei professori
 std::vector<std::string> SessionYear::getProfsOfGapProfsString() {
     std::vector<std::string> gapProfsString;
     for (auto iterGap = _gapProfs.begin(); iterGap != _gapProfs.end(); iterGap++) {
@@ -746,16 +747,19 @@ std::vector<std::string> SessionYear::getProfsOfGapProfsString() {
     return gapProfsString;
 }
 
+///assegna gli appelli all'oggetto ExamDay del calendario(_yearCalendar)
 void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour, Course &course, int numSlots) {
     _yearCalendar.at(appeal).assignExamToExamDay(startSlotHour, course, numSlots);
 }
 
+///rimuove l'appello richiesto dal calendario della sessione
 void SessionYear::removeThisAppealInfoFromCalendar(int numSlots, Date &date, int &startSlot,
                                                    std::string &idCourse) {
     _yearCalendar.at(date.toString()).removeThisAppealInfo(startSlot, numSlots, idCourse);
 
 }
 
+///prova la riassegnazione di un esame su richiesta del comando request_changes
 void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course &courseToConsider,
                                                 int numSession, int numAppeal, Date &tryDate) {
     ///get oggetti per COPIA  e li andiamo a modificare nei passi successivi
@@ -901,10 +905,12 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
 
 }
 
+///ritorna se la mappa in cui vengono salvati i nomi dei file delle sessioni è vuota o meno
 bool SessionYear::fileNameIsEmpty() {
     return _fileNamePerAcSession.empty();
 }
 
+///formatta i nomi delle sessioni per anno accademico in modo tale che se ne tenga traccia in un file
 std::vector<std::string> SessionYear::getSessionAndFileName() {
     std::vector<std::string> fileNamePerSession;
     for (auto iterFileName = _fileNamePerAcSession.begin();
@@ -916,15 +922,20 @@ std::vector<std::string> SessionYear::getSessionAndFileName() {
     return fileNamePerSession;
 }
 
+///prende il nome del file ad una determinata sessione
 std::string SessionYear::getFileName(int numSession) {
     return _fileNamePerAcSession.at(numSession);
 }
 
+///setta i nomi dei file per la sessione accademica
 void SessionYear::setFileNamePerSession(int numSession, std::string fileName) {
     _fileNamePerAcSession.insert(std::pair<int, std::string>(numSession, fileName));
 }
 
+///ritorna se è un secondo appello della sessione
 bool SessionYear::isSecondAppeal(Date newDate, Date lastDateAssignation) {
+    //newDate = nuova data da assegnare
+    //lastdateAssignation = data dell'altro appello presente
     if (newDate < lastDateAssignation) {
         //cambiamento di un primo appello
         return false;
@@ -935,12 +946,15 @@ bool SessionYear::isSecondAppeal(Date newDate, Date lastDateAssignation) {
     return true;
 }
 
+///aggiorna gli oggetti ExamDay del calendario
 void SessionYear::updateExamDayCourse(Course course,std::vector<Date> appealPerCourse) {
     for(int i = 0; i<appealPerCourse.size(); i++) {
         _yearCalendar.at(appealPerCourse[i].toString()).updateSlot(course);
     }
 }
 
+///controlla che la data iniziale della sessione estiva sia successiva a quella finale della sessione invernale
+///e che la data iniziale della sessione autunnale sia successiva a quella finale della sessione estiva e invernale
 void SessionYear::controlSuccessivitySessionPeriod() {
     session winterSession = _yearSessions.at("winter");
     session summerSession = _yearSessions.at("summer");
@@ -976,6 +990,7 @@ void SessionYear::controlSuccessivitySessionPeriod() {
         throw std::invalid_argument(error);
 }
 
+///prende i gap tra due appelli di uno stesso esame che non sono stati rispettati per la geneazione esami
 void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> &gapProfsNoRespect,
                                        std::vector<int> allProfsMatrThisCourse, std::string courseId) {
     for (int j = 0; j < allProfsMatrThisCourse.size(); j++) {
@@ -992,6 +1007,7 @@ void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> 
     }
 }
 
+///elimina i corsi spenti dai raggrupapti in fase di genrazione della sessione
 void SessionYear::popOffCoursesFromGrouped(std::vector<Course> &coursesToConsiderInThisLoop) {
     for(auto iter = coursesToConsiderInThisLoop.begin(); iter != coursesToConsiderInThisLoop.end(); iter++){
         if(iter->getThisYearCourse(_acYear).getIsActive() == false){
@@ -1000,7 +1016,7 @@ void SessionYear::popOffCoursesFromGrouped(std::vector<Course> &coursesToConside
     }
 }
 
-
+///output operator overload
 std::ostream &operator<<(std::ostream &sessions, const SessionYear &s) {
     sessions << s.getAcYear() << "-" << s.getAcYear() + 1 << ";"
              << s.getSessions();//aaaa-aaaa ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg ; aaaa-mm-gg_aaaa-mm-gg

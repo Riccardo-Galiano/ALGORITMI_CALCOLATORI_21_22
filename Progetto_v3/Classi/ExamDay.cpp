@@ -228,6 +228,7 @@ bool ExamDay::firstSlotCourses(Course courseToFind, std::vector<Course> &Courses
     return true;
 }
 
+///ritorna se tutti gli slot per quell'examDay sono vuoti o meno
 bool ExamDay::allSLotsAreEmpty() {
     for (auto iterSLots = _slots.begin(); iterSLots != _slots.end(); iterSLots++) {
         if (iterSLots->second.empty() == false)
@@ -236,10 +237,12 @@ bool ExamDay::allSLotsAreEmpty() {
     return true;
 }
 
+///comparatore di nuemri di posti a sedere per l'esame tra due aule
 bool comparatorFunction (Classroom i,Classroom j) {
     return (i.getNExamSeats() < j.getNExamSeats());
 }
 
+///Ricerca le aule libere in un determinato slot
 bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allUniversityClassrooms, int numSeatsToSeach, std::vector<int> &idRoomsFounded, int slotHour, int numSLotsRequired, char labOrClass, int maxNumRooms) {
     bool roomIsOk = true;
     bool examInLab;
@@ -297,6 +300,7 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
     }
 }
 
+///controlla se in un determinato slot ci siano o meno indisponibilità dei professori
 bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<int, Professor> &allUniversityProfs,
                                    int relaxPar, int slotHour) {
 
@@ -316,6 +320,9 @@ bool ExamDay::checkProfsAvaibility(SpecificYearCourse &specificCourse, std::map<
     return true;
 }
 
+///pulisce il vettore di aule temporaneo utilizzato per considerare un'aula potenzialmente occupata
+///nel caso in cui si debba ancora vedere se i raggruppati del corso che ha occupato potenzialmente l'aula
+///possano trovare disponibilità negli stessi slot orari
 void ExamDay::eraseTempGroupedCourseClassrooms() {
     _tempGroupedCourseClassrooms.erase(_tempGroupedCourseClassrooms.begin(),_tempGroupedCourseClassrooms.end());
 }
@@ -335,6 +342,7 @@ int ExamDay::getEndHourOfThisCourseExam(const Course &course) {
     return lastSlotFounded+2;
 }
 
+///rimuovo le informazioni di un appello dagli slot di un exmDay
 void ExamDay::removeThisAppealInfo(int startSlot,int numSlots,std::string& idCourse){
 
     for(int i = 0; i < numSlots; i++){
@@ -350,6 +358,7 @@ void ExamDay::removeThisAppealInfo(int startSlot,int numSlots,std::string& idCou
     }
 }
 
+///cerco di assegnare un numero di aule uguale al numero di corsi paralleli
 bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, std::vector<int> &idRoomsFounded,
                                         int numSeatsToSeach, int maxNumRooms) {
     //ordino le aule in senso crescente di #posti
@@ -374,6 +383,7 @@ bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, 
     return false;
 }
 
+///aggiorna il corso in uno slot
 void ExamDay::updateSlot(Course course) {
     for(auto iterSlot = _slots.begin(); iterSlot != _slots.end(); iterSlot++){
         std::string id = course.getId();

@@ -8,7 +8,7 @@
 #include "Classroom.h"
 #include "Parse.hpp"
 
-
+///costruttori
 Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int examSeats) {
     _id = id;
     _name = name;
@@ -91,6 +91,7 @@ void Classroom::setNExamSeats(const int &NExamSeats) {
     _nExamSeats = NExamSeats;
 }
 
+///controlla la indisponibilità
 bool Classroom::checkAvailability(Date& date,int slotHour) {
     std::stringstream ss;
     ss << date.toString() << ';' << slotHour;
@@ -100,6 +101,7 @@ bool Classroom::checkAvailability(Date& date,int slotHour) {
         return true;
 }
 
+///setta la indisponibilità
 void Classroom::setDisavailability(Date& date, int slotStartHour, int numSlot) {
     for(int slot=0; slot < numSlot; slot++) {
         int hour = slotStartHour + (slot * 2);
@@ -109,44 +111,54 @@ void Classroom::setDisavailability(Date& date, int slotStartHour, int numSlot) {
     }
 }
 
+///prende le altre info della versioning
 std::string Classroom::getOthersInfo() {
     std::stringstream ss;
     ss<<_othersInfoClassroom._drawingTable <<";"<<_othersInfoClassroom._computer <<";"<<_othersInfoClassroom._projector<<";"<<_othersInfoClassroom._blackBoard;
     return ss.str();
 }
 
+///prende il numero di tavoli da disegno
 int Classroom::getDrawingTable() {
     return _othersInfoClassroom._drawingTable;
 }
 
+///prende il numero di computer
 int Classroom::getComputer() {
     return _othersInfoClassroom._computer;
 }
 
+///prende il numero di proiettori
 int Classroom::getProjector() {
     return _othersInfoClassroom._projector;
 }
 
+///prende il numero di lavagne
 int Classroom::getBlackBoard() {
     return _othersInfoClassroom._blackBoard;
 }
 
+///setta il numero dei computer
 void Classroom::setComputer(int computer) {
     _othersInfoClassroom._computer = computer;
 }
 
+///setta il numero dei tavoli da disegno
 void Classroom::setDrawingTable(int drawingTable) {
     _othersInfoClassroom._drawingTable = drawingTable;
 }
 
+///setta il numero dei proiettori
 void Classroom::setProjector(int projector) {
     _othersInfoClassroom._projector = projector;
 }
 
+///setta il numero delle lavagne
 void Classroom::setBlackBoard(int blackBoard) {
    _othersInfoClassroom._blackBoard = blackBoard;
 }
 
+///toglie l'appello dalle indisponibilità dell'aula
 void Classroom::eraseThisAppealFromClassrooms(Date &date, int startSlot, int numSlots) {
     for(int i = 0; i<numSlots; i++){
         int slot = startSlot + 2*i;
@@ -157,7 +169,7 @@ void Classroom::eraseThisAppealFromClassrooms(Date &date, int startSlot, int num
     }
 }
 
-
+///overload output operator
 std::ostream &operator<<(std::ostream &room, const Classroom &c) {
     std::string settedId = Parse::setId('A', 3, c.getId());
     room << settedId << ";";
