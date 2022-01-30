@@ -29,7 +29,8 @@ public:
     void fillSpecificYearCourse(std::vector<std::string>& specificYearCourse, int line_counter);
     bool courseOfTheYearIsEmpty();
     void fillAcYearsEmpty();
-    void controlTheExistenceAndHoursOfProfessors(const std::map<int,Professor> & professors, int year);
+    void
+    controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors, int year, int line_counter);
     hours controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCourse,const std::map<int,Professor> & professors);
     SpecificYearCourse &getLastSpecificYearCourse();
     std::vector<SpecificYearCourse>  getSpecificYearsCourse();

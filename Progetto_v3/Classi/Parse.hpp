@@ -58,26 +58,26 @@ public:
 
           int examDuration = Parse::checkedStoi(examData[0]," della durata dell'esame ");
           if(examDuration == 0){
-             throw std::invalid_argument(" La durata dell'esame non puo' essere zero ");
+             throw std::invalid_argument("La durata dell'esame non puo' essere zero \n");
 
           }
           int timeEntry = Parse::checkedStoi(examData[1]," del tempo di entrata ");
           if( timeEntry == 0){
-              throw std::invalid_argument("Il tempo di entrata non puo' essere zero ");
+              throw std::invalid_argument("Il tempo di entrata non puo' essere zero \n ");
 
           }
           int exitTime = Parse::checkedStoi(examData[2]," del tempo di uscita ");
           if(exitTime == 0){
-              throw std::invalid_argument("Il tempo di uscita non puo' essere zero ");
+              throw std::invalid_argument("Il tempo di uscita non puo' essere zero \n");
 
           }
           std::string modality = examData[3];
           if( modality != "S" && modality != "O" && modality != "SO" && modality != "P"){
-              throw std::invalid_argument("La modalita' d'esame non e' S,O,SO,P ");
+              throw std::invalid_argument("La modalita' d'esame non e' S/O/SO/P ");
           }
           std::string place = examData[4];
           if(place != "A" && place != "B")
-              throw std::invalid_argument("Il luogo dell'esam enon e' A,L");
+              throw std::invalid_argument("Il luogo dell'esame non e' A/L");
 
     }
     static std::vector<int> posCurlyBrackets(std::string &input) {
@@ -243,7 +243,7 @@ public:
             }
         }
         if(isNotOk == true || state != 0)
-            throw std::invalid_argument("Errore del formato dei corsi\n");
+            throw std::invalid_argument("Errore del formato dei corsi paralleli ");
     }
     static bool controlItCanBeAnAcYear(std::string input) {
         //AAAA-AAAA

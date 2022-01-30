@@ -76,7 +76,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
     std::string profsWithoutSquareBrackets;
     std::string idMainProf;
     char c;
-    int found = profs.find_first_of(","); //cerca la prima virgola
+    int found = profs.find_first_of(','); //cerca la prima virgola
 
     idMainProf = profs.substr(0, found);//salva l'id del titolare
     if(Parse::controlItCanBeAnId(idMainProf,6,'d') == false)
@@ -115,12 +115,12 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
             id = Parse::getMatr(infoSingleProf[0]);
 
         try{
-            hlez = Parse::checkedStoi(infoSingleProf[1]," delle ore di lezione");
-            hexe = Parse::checkedStoi(infoSingleProf[2]," delle ore di esercitazione");
-            hlab = Parse::checkedStoi(infoSingleProf[3]," delle ore di laboratorio");
+            hlez = Parse::checkedStoi(infoSingleProf[1]," delle ore di lezione di un professore");
+            hexe = Parse::checkedStoi(infoSingleProf[2]," delle ore di esercitazione di un professore");
+            hlab = Parse::checkedStoi(infoSingleProf[3]," delle ore di laboratorio di un professore");
         }catch (std::invalid_argument(& err)){
             std::string genericError = err.what();
-            throw std::invalid_argument(genericError + " al rigo " + std::to_string(line_counter) + "\n");
+            throw std::invalid_argument("Errore al rigo " + std::to_string(line_counter) +". "+ genericError);
         }
 
         professor p{};//struct
@@ -135,7 +135,7 @@ std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs,
         profToReturn.push_back(p);//aggiunge una struct professor al vettore di struct professor
     }
     if (mainProfFound == false) {
-         throw std::invalid_argument("Manca il professore titolare alla riga: " + std::to_string(line_counter));
+         throw std::invalid_argument("Manca il professore titolare tra i professori del corso parallelo alla riga: " + std::to_string(line_counter)+ "\n");
     }
     return profToReturn;
 }

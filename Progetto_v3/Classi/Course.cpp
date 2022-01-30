@@ -211,7 +211,8 @@ void Course::fillAcYearsEmpty() {
 }
 
 ///controllo che esistano i professori e che le ore in totale per lezioni, lab ed esercitazioni combacino con quelle del corso
-void Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors,int year) {
+void Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Professor> &professors, int year,
+                                                     int line_counter) {
         SpecificYearCourse sp = _courseOfTheYear.at(year);
         std::string error;
         bool isOk = true;
@@ -221,15 +222,15 @@ void Course::controlTheExistenceAndHoursOfProfessors(const std::map<int, Profess
             std::vector<professor> profsOfSingleCourse = profsOfParallelCourses.at(i);
             hours hourProfs = controlProfsOfSingleCourse(profsOfSingleCourse, professors);
             if(hoursCourse._lec != hourProfs._lec) {
-                error.append("le ore delle lezioni non sono coerenti con le ore del corso: " + getId() + "\n");
+                error.append("Le ore delle lezioni non sono coerenti con le ore del corso alla riga " + std::to_string(line_counter) + "\n");
                 isOk = false;
             }
             else if (hoursCourse._lab != hourProfs._lab) {
-                error.append("le ore dei laboratori non sono coerenti con le ore del corso: " + getId() + "\n");
+                error.append("Le ore dei laboratori non sono coerenti con le ore del corsoalla riga " + std::to_string(line_counter) +"\n");
                 isOk = false;
             }
             else if (hoursCourse._ex != hourProfs._ex) {
-                error.append("le ore delle esercitazioni non sono coerenti con le ore del corso:" + getId() + "\n");
+                error.append("Le ore delle esercitazioni non sono coerenti con le ore del corsoalla riga " + std::to_string(line_counter) + "\n");
                 isOk = false;
             }
         }
@@ -245,7 +246,7 @@ hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCou
     for (int i = 0; i < profsOfSingleCourse.size(); i++) {
         if (professors.find(profsOfSingleCourse[i].prof_id) == professors.end()) {
             std::string settedId = Parse::setId('d',6,profsOfSingleCourse[i].prof_id);
-            throw std::invalid_argument("Il seguente professore non e' stato trovato nel database:" + settedId + ". Controllare il seguente corso che si vuole inserire:" + getName());
+            throw std::invalid_argument("Il seguente professore non e' stato trovato nel database:" + settedId + ". Controllare il seguente corso che si vuole inserire:" + getName() +"\n");
         } else
         {
             h._lec = h._lec + profsOfSingleCourse[i].hLez;

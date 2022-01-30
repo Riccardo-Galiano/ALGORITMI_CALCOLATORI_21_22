@@ -569,75 +569,109 @@ void University::addStudyCourses(const std::string &fin) {
     std::string error;
     std::string line;//stringa di appoggio in cui mettere l'intero rigo
     int line_counter = 1;
+    bool fileIsEmpty = true;
     std::vector<std::string> infoStudyCourse;    //accoglierà il vettore con la riga del file scissa
+
     while (std::getline(fileIn, line)) {
         ///codice, livello
-        infoStudyCourse = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
-        if (infoStudyCourse.size() != 2) {
-            error.append("errore formato file corsi di studio alla riga: " + std::to_string(line_counter));
-            doDbwrite = false;
-        } else {
-            int codCorso = getNewStudyCourseId();
-            std::string levelCourse = infoStudyCourse[0];//triennale o magistrale
-            ///devo leggere i semestri
-            std::vector<int> posSem;
-            ///cerco nella stringa se ci sono i due caratteri inseriti nella find_first_of
-            std::size_t found = infoStudyCourse[1].find_first_of("{}");
-            while (found !=
-                   std::string::npos) {//massimo valore per variabile di tipo size_t. In altre parole il fine stringa
-                posSem.push_back(
-                        found);//prendo la posizione del carattere trovato dalla find_first_of e lo inserisco in un vettore posizioni
-                found = infoStudyCourse[1].find_first_of("{}", found + 1);//continuo a controllare la stringa
-            } //alla fine di questo while posSem conterrà le posizioni in corrispondenza delle quali nel vettore tokens[1] sono presenti: { o }
-
-            std::vector<std::string> semestri;
-            for (i = 0; i < posSem.size() - 1; i = i +
-                                                   2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
-                int posStart = posSem[i] + 1;// tolgo la graffa
-                int len = posSem[i + 1] - posSem[i] - 1; //pos(}) - pos({) -1
-                semestri.push_back(infoStudyCourse[1].substr(posStart,
-                                                             len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
-            } //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
-            ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
-            ///controllo che formato file sia corretto:
-            ///se L3 -> 6 semestri, se LM -> 4 semestri
-            if ((levelCourse == "BS" && semestri.size() != 6) || (levelCourse == "MS" && semestri.size() != 4)) {
-                error.append("Formato file corsi di studio non valido: numero semestri incompatibile con tipo di laurea alla riga:" +
-                        std::to_string(line_counter));
+        if(line.empty()==false) {
+            bool lineIsOk = true;
+            fileIsEmpty = false;
+            infoStudyCourse = Parse::splittedLine(line, ';');//inserisco i vari campi delimitati dal ;
+            if (infoStudyCourse.size() != 2 ) {
+                error.append("Errore formato file corsi di studio alla riga: " + std::to_string(line_counter)+ ". Numero di campi di informazione non valido o sono stati inseriti corsi spenti\n");
                 doDbwrite = false;
-            }
-
-
-            ///creo StudyCourse
-            bool isBachelor = false;
-            if (levelCourse.compare("BS") == 0)
-                isBachelor = true;
-            StudyCourse SCourse(codCorso, isBachelor);
-            //carico corsi e semestri letti nello studycourse
-            int year = 1;
-            int numSemester = 1;
-            for (i = 0; i < semestri.size(); i++) {
-                year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
-                numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
-                try {
-                    SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse,
-                                               line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
-
-                } catch (std::logic_error &err) {
-                    error.append(err.what());
+            } else {
+                int codCorso = getNewStudyCourseId();
+                std::string levelCourse = infoStudyCourse[0];//triennale o magistrale
+                std::vector<int> posSem;
+                std::vector<std::string> semestri;
+                ///devo leggere i semestri
+                if(infoStudyCourse[1].empty()){
+                    error.append("Il campo di informazione per i corsi del corso di studio e' vuoto alla riga "  + std::to_string(line_counter)+"\n");
                     doDbwrite = false;
+                    lineIsOk = false;
+                } else if(infoStudyCourse[1][0] != 91 || infoStudyCourse[1][infoStudyCourse[1].size()-1] != 93) {//se il primo carattere e' diverso da '[' o l'ultimo da ']' o entrambi diversi
+                            error.append("Errore formato file. I semestri di un corso di studio vanno racchiusi tra due [] al rigo "+ std::to_string(line_counter)+"\n");
+                            doDbwrite = false;
+                            lineIsOk = false;
+                }else{
+                    posSem = Parse::posCurlyBrackets(infoStudyCourse[1]);
+                    for (i = 0; i < posSem.size() - 1; i = i + 2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
+                        int posStart = posSem[i];// graffa{
+                        int posEnd = posSem[i + 1];// graffa}
+                        int len = posEnd - posSem[i]-1; //pos(}) - pos({) -1
+                        if(infoStudyCourse[1][posStart] == 123 && infoStudyCourse[1][posEnd] == 125) { //parentesi graffe in ASCII '{' = 123 '}' = 125
+                            semestri.push_back(infoStudyCourse[1].substr(posStart + 1, len));   //salvo la sottostringa dal valore successivo al carattere cercato dalla find_first_of fino al valore precedente alla posizione del successivo carattere trovato
+                        }else{
+                            error.append("Errore formato semestri al rigo " + std::to_string(line_counter)+"\n");
+                            doDbwrite = false;
+                            lineIsOk = false;
+                        }
+                    }
                 }
-            }
-            if (doDbwrite) {
-                _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
-                ifThereAreAlreadyCoursesFillYYSemesterVar(SCourse);
+
+
+                //alla fine di questo for il vector "semestre" conterrà i corsi di ogni semestre disposti al suo interno in modo che ogni "cella" di "semestre" contiene tutti i corsi di un certo semestre
+                ///semestre[0] = tutti i corsi di anno1_semestre1, semestre[1] = tutti i  corsi anno1_semestre2, semestre[2] = tutti i  corsi anno2_semestre1, ...
+                if (levelCourse.empty()) {
+                    error.append("Non e' stato dichiarato il tipo di laurea, triennale o magistrale, al rigo " +
+                                 std::to_string(line_counter) + "\n");
+                } else if (levelCourse != "BS" && levelCourse != "MS") {
+                    //il primo campo non e' vuoto, vediamo se non e' BS o MS
+                    error.append(
+                            "Il primo campo di informazione non e' BS o MS al rigo " + std::to_string(line_counter) +
+                            "\n");
+                    doDbwrite = false;
+                    lineIsOk = false;
+                } else if ((levelCourse == "BS" && semestri.size() != 6) ||
+                           (levelCourse == "MS" && semestri.size() != 4)) {
+                    ///controllo che formato file sia corretto:
+                    ///se L3 -> 6 semestri, se LM -> 4 semestri
+                    error.append(
+                            "Formato file corsi di studio non valido: numero semestri incompatibile con tipo di laurea alla riga:" +
+                            std::to_string(line_counter));
+                    doDbwrite = false;
+                    lineIsOk = false;
+                }
+
+                if (lineIsOk) {
+                    ///creo StudyCourse
+                    bool isBachelor = false;
+                    if (levelCourse.compare("BS") == 0)
+                        isBachelor = true;
+                    StudyCourse SCourse(codCorso, isBachelor);
+                    //carico corsi e semestri letti nello studycourse
+                    int year = 1;
+                    int numSemester = 1;
+                    for (i = 0; i < semestri.size(); i++) {
+                        year = 1 + i / 2; //i=0 => y = 1, i=1 => y = 1, i=2 => y = 2; i=3 => y = 2
+                        numSemester = 1 + i % 2; //i=0 => s = 1, i=1 => s = 2, i=2 => s = 1; i=3 => s = 2
+                        try {
+                            SCourse.addSemesterCourses(year, numSemester, semestri[i], _studyCourse,
+                                                       line_counter);//passo: l'anno, primo o secondo semestre,tutta la stringa di corsi del semestre
+
+                        } catch (std::logic_error &err) {
+                            error.append(err.what());
+                            doDbwrite = false;
+                            lineIsOk = false;
+                        }
+                    }
+                    if (lineIsOk) {
+                        _studyCourse.insert(std::pair<int, StudyCourse>(codCorso, SCourse));
+                        ifThereAreAlreadyCoursesFillYYSemesterVar(SCourse);
+                    }
+                }
             }
         }
         line_counter++;
     }
     fileIn.close();
-    if (doDbwrite) {
 
+    if(fileIsEmpty){
+        error.append("Il file in input e' vuoto\n");
+        doDbwrite = false;
+    }else if (doDbwrite) {
         ///controllo che i corsi raggruppati non siano negli stessi cds
         try {
             controlGroupedCoursesDifferentStudyCourse_Sc();
@@ -683,18 +717,23 @@ void University::addCourses(const std::string &fin) {
             int exerciseHours = 0;
             int labHours = 0;
             fileIsEmpty = false;
+            bool lineIsOk = true;
 
             specificYearCourse = Parse::splittedLine(line, ';');
             //controllo che il formato file sia corretto: 10 campi
             if (specificYearCourse.size() != 10) {
-                error.append("Formato file corsi non valido alla riga: " + std::to_string(line_counter) + "\n");
+                error.append("Formato file corsi non valido alla riga: " + std::to_string(line_counter) +". Numero di campi di informazione errato" "\n");
                 doDbWrite = false;
-            }
-            //controllo che tutti campi siano specificati
-            for (int i = 0; i < specificYearCourse.size(); i++) {
-                if (specificYearCourse[i].empty()) {
-                    error.append("Uno o più campi sono vuoti alla riga: " + std::to_string(line_counter) + "\n");
-                    doDbWrite = false;
+                lineIsOk = false;
+            }else {
+                //controllo che tutti campi siano specificati
+                for (int i = 0; i < specificYearCourse.size(); i++) {
+                    if (specificYearCourse[i].empty()) {
+                        error.append("Campo di informazione " + std::to_string(i + 1) + " vuoto alla riga: " +
+                                     std::to_string(line_counter) + "\n");
+                        doDbWrite = false;
+                        lineIsOk = false;
+                    }
                 }
             }
             //controllo che l'esame non sia già presente in base dati
@@ -703,25 +742,28 @@ void University::addCourses(const std::string &fin) {
                 if (iterCourses->second.getName() == specificYearCourse[1] &&
                     iterCourses->second.getCfu() == Parse::checkedStoi(specificYearCourse[2], " dei cfu")) {
                     error.append(
-                            "C'e' un corso già presente in base dati alla riga: " + std::to_string(line_counter) + "\n");
+                            "C'e' un corso gia' presente in base dati alla riga: " + std::to_string(line_counter) + "\n");
                     doDbWrite = false;
+                    lineIsOk = false;
                 }
             }
 
-            if (doDbWrite) {
+            if (lineIsOk) {
                 std::string newIdCourse = getNewCourseId();
                 //anno accademico
                 try {
                     if (Parse::controlItCanBeAnAcYear(specificYearCourse[0]))
                         acYear = specificYearCourse[0];
                     else {
-                        error.append("Gli anni di un anno accademico devono essere consecutivi\n");
+                        error.append("Gli anni di un anno accademico devono essere consecutivi. Errore alla riga "+std::to_string(line_counter)+"\n");
                         doDbWrite = false;
+                        lineIsOk = false;
                     }
                 } catch (std::invalid_argument &err) {
                     std::string genericError = err.what();
-                    error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                    error.append("Errore anno accademico alla riga " + std::to_string(line_counter) +". "+ genericError);
                     doDbWrite = false;
+                    lineIsOk = false;
                 }
 
                 try {
@@ -733,11 +775,12 @@ void University::addCourses(const std::string &fin) {
                                                               " del numero di corsi in parallelo");//numero di corsi in parallelo
                 } catch (std::invalid_argument &err) {
                     std::string genericError = err.what();
-                    error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                    error.append("Errore alla riga " + std::to_string(line_counter) +". " + genericError);
                     doDbWrite = false;
+                    lineIsOk = false;
                 }
                 ///se non ho problemi per l'anno accademico, di conversione dei cfu,ore lezione, esercitazione e laboratorio posso andare avanti altrimenti passo al prossimo rigo del file
-                if (doDbWrite) {
+                if (lineIsOk) {
                     _courses.insert(
                             std::pair<std::string, Course>(newIdCourse, Course(newIdCourse, specificYearCourse[1],
                                                                                cfu, lessonHours, exerciseHours,
@@ -756,6 +799,7 @@ void University::addCourses(const std::string &fin) {
                         std::string genericError = err.what();
                         error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
                         doDbWrite = false;
+                        lineIsOk = false;
                     }
 
                     ///controlli sulle informazioni dell'esame
@@ -766,24 +810,27 @@ void University::addCourses(const std::string &fin) {
                                                    2);//tolgo le { } che racchiudono le info degli esami
                         splittedExamData = Parse::splittedLine(examData, ',');//scissione info esami
                         if (splittedExamData.size() != 5) {
-                            error.append("Errore formato delle informazione per l'esame al rigo " +
+                            error.append("Errore formato delle informazioni per l'esame al rigo " +
                                          std::to_string(line_counter) + "\n");
                             doDbWrite = false;
+                            lineIsOk = false;
                         } else
                             try {
                                 Parse::controlExamInfo(splittedExamData);
                             } catch (std::invalid_argument &err) {
                                 std::string genericError = err.what();
-                                error.append(genericError + " al rigo " + std::to_string(line_counter) + "\n");
+                                error.append("Errore al rigo "+ std::to_string(line_counter) +". "+genericError);
                                 doDbWrite = false;
+                                lineIsOk = false;
                             }
 
                     } else {
                         error.append(
-                                "Errore formato delle informazione per l'esame al rigo " +
+                                "Errore formato delle informazioni per l'esame al rigo " +
                                 std::to_string(line_counter) +
                                 "\n");
                         doDbWrite = false;
+                        lineIsOk = false;
                     }
 
                     ///controlli sui raggruppati
@@ -810,16 +857,18 @@ void University::addCourses(const std::string &fin) {
                                     std::string genericError = err.what();
                                     error.append(genericError + " al rigo " + std::to_string(line_counter) + "\n");
                                     doDbWrite = false;
+                                    lineIsOk = false;
                                 }
                             }
                         }
                     } else {
-                        error.append("Errore formato delle informazione per i raggruppati al rigo " +
+                        error.append("Errore formato delle informazioni per i raggruppati al rigo " +
                                      std::to_string(line_counter) + "\n");
                         doDbWrite = false;
+                        lineIsOk = false;
                     }
 
-                    if (doDbWrite) {
+                    if (lineIsOk) {
                         ///ricerca "anno-semestre" di questo corso
                         std::string yy_semester;
                         std::vector<int> studyCourse;
@@ -860,43 +909,50 @@ void University::addCourses(const std::string &fin) {
                         catch (std::exception &err) {
                             error.append(err.what());
                             doDbWrite = false;
+                            lineIsOk = false;
                         }
-                        ///qui: fill dei corsi raggruppati dell'anno accademico
-                        if (!idGrouped.empty()) {
-                            //se ho dei raggruppati cerco di capire se questi raggruppati non abbiano raggruppati, in questo caso li aggiorno aggiungendo i nuovo
-                            fillGroupedCourse(idGrouped, newIdCourse, acYear);
-                        } else {
-                            //se idGrouped è 0 devo vedere se già è legato ad un altro corso, in quel caso FILLO con i corsi del raggruppato
-                            if (_coursesGrouped.count(acYear + "-" + newIdCourse) != 0) {
-                                idGrouped = _coursesGrouped.at(acYear + "-" + newIdCourse);
-                                SpecificYearCourse &specificYY = _courses.at(newIdCourse).getThisYearCourseReference(
-                                        Parse::getAcStartYear(acYear));//corso per un anno specifico
-                                specificYY.assignGrouped(idGrouped, newIdCourse, newIdCourse);
-                            }
-                        }
-                        ///controllo che i professori di questo corso esistano già in _professors
-                        try {
-                            _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(getProfessors(),
-                                                                                             Parse::getAcStartYear(
-                                                                                                     acYear));
-                        } catch (std::exception &err) {
-                            error.append(err.what());
-                            doDbWrite = false;
-                        }
-                        int year = Parse::getAcStartYear(acYear);
-                        SpecificYearCourse sp = _courses.at(newIdCourse).getThisYearCourse(year);
-                        if (sp.studyCourseEmpty() == false) {
-                            //se ho trovato almeno un corso di studio controllo che i raggruppati non siano in questo corso di studio e che tra raggruppati non siano negli stessi corsi di studio
-                            std::vector<std::string> grouped = sp.getIdGroupedCourses();
-                            if (!grouped.empty()) {
-                                try {
-                                    /// controllo che idGrouped NON siano corsi dello stesso CdS
-                                    controlGroupedCoursesDifferentCds_C(grouped,
-                                                                        newIdCourse, year);
+                        if (lineIsOk) {
+                            ///qui: fill dei corsi raggruppati dell'anno accademico
+                            if (!idGrouped.empty()) {
+                                //se ho dei raggruppati cerco di capire se questi raggruppati non abbiano raggruppati, in questo caso li aggiorno aggiungendo i nuovo
+                                fillGroupedCourse(idGrouped, newIdCourse, acYear);
+                            } else {
+                                //se idGrouped è 0 devo vedere se già è legato ad un altro corso, in quel caso FILLO con i corsi del raggruppato
+                                if (_coursesGrouped.count(acYear + "-" + newIdCourse) != 0) {
+                                    idGrouped = _coursesGrouped.at(acYear + "-" + newIdCourse);
+                                    SpecificYearCourse &specificYY = _courses.at(
+                                            newIdCourse).getThisYearCourseReference(Parse::getAcStartYear(acYear));//corso per un anno specifico
+                                    specificYY.assignGrouped(idGrouped, newIdCourse, newIdCourse);
                                 }
-                                catch (std::exception &err) {
-                                    error.append(err.what());
-                                    doDbWrite = false;
+                            }
+
+                            try {
+                                _courses.at(newIdCourse).controlTheExistenceAndHoursOfProfessors(getProfessors(),
+                                                                                                 Parse::getAcStartYear(
+                                                                                                         acYear),
+                                                                                                 line_counter);
+                            } catch (std::exception &err) {
+                                error.append(err.what());
+                                doDbWrite = false;
+                                lineIsOk = false;
+                            }
+                            ///controllo che i professori di questo corso esistano già in _professors
+                            int year = Parse::getAcStartYear(acYear);
+                            SpecificYearCourse sp = _courses.at(newIdCourse).getThisYearCourse(year);
+                            if (sp.studyCourseEmpty() == false) {
+                                //se ho trovato almeno un corso di studio controllo che i raggruppati non siano in questo corso di studio e che tra raggruppati non siano negli stessi corsi di studio
+                                std::vector<std::string> grouped = sp.getIdGroupedCourses();
+                                if (!grouped.empty()) {
+                                    try {
+                                        /// controllo che idGrouped NON siano corsi dello stesso CdS
+                                        controlGroupedCoursesDifferentCds_C(grouped,
+                                                                            newIdCourse, year);
+                                    }
+                                    catch (std::exception &err) {
+                                        error.append(err.what());
+                                        doDbWrite = false;
+                                        lineIsOk = false;
+                                    }
                                 }
                             }
                         }
@@ -906,17 +962,20 @@ void University::addCourses(const std::string &fin) {
         }
         line_counter++;
     }
+    fileIn.close();
 
-    //posso entrsre solo se i controlli e gli inserimenti sono andati bene e se il file non è vuoto
-    if(doDbWrite && fileIsEmpty == false) {
+    if(fileIsEmpty){
+        error.append("Il file in input e' vuoto\n");
+        doDbWrite = false;
+    }else if(doDbWrite) {
+        //posso entrare solo se i controlli e gli inserimenti sono andati bene e se il file non è vuoto
         ///controlli che possono essere fatti solo dopo aver letto tutto il file
         if (_potentialCourse.empty() == false) {
             std::string courseNotExist = getPotentialCourseString();
             error.append("I seguenti corsi " + courseNotExist +
                          " sono usati come raggruppati ma non esistono nel database e non vengono generati dal file appena usato \n");
             doDbWrite = false;
-        }
-        if (doDbWrite) {
+        }else{
             for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
                 ///controllo se i corsi raggruppati siano dello stesso semestre del principale e di corsi di studio differenti
                 try {
@@ -928,8 +987,8 @@ void University::addCourses(const std::string &fin) {
             }
         }
     }
-    fileIn.close();
-    if (doDbWrite && fileIsEmpty == false) {
+
+    if (doDbWrite) {
         dbCourseWrite();
     } else {
         throw std::invalid_argument(error);
@@ -1483,12 +1542,14 @@ void University::insertCourses(const std::string &fin) {
             std::vector<std::string> idGrouped;
             std::vector<std::string> splittedExamData;
             std::string idGroupedCourse;
+            bool lineFileIsOk = true;
             fileIsEmpty = false;
 
             specificYearCourse = Parse::splittedLine(line, ';');
             if (specificYearCourse.size() != 7 && specificYearCourse.size() != 6) {
                 error.append("Errore formato del file, numero di campi non congruente con il formato esatto al rigo" +std::to_string(line_counter)+ "\n");
                 doDbWrite = false;
+                lineFileIsOk = false;
             } else {
                 //se il numero di campi del rigo è esatto
                 //controlli sull'id
@@ -1497,6 +1558,7 @@ void University::insertCourses(const std::string &fin) {
                     error.append("Non e' stato inserito l'id del corso che si vuole aggiornare al rigo " +
                                  std::to_string(line_counter) + "\n");
                     doDbWrite = false;
+                    lineFileIsOk = false;
                 } else {
                     try {
                         Parse::controlItCanBeACourseId(specificYearCourse[0]);
@@ -1505,11 +1567,13 @@ void University::insertCourses(const std::string &fin) {
                             error.append("IdCorso della riga " + std::to_string(line_counter) +
                                          " non presente nel database\n");
                             doDbWrite = false;
+                            lineFileIsOk = false;
                         }
                     } catch (std::invalid_argument &err) {
                         std::string genericError = err.what();
                         error.append(genericError + "al rigo " + std::to_string(line_counter) + "\n");
                         doDbWrite = false;
+                        lineFileIsOk = false;
                     }
                 }
 
@@ -1520,6 +1584,7 @@ void University::insertCourses(const std::string &fin) {
                             "Non e' stato inserito l'anno accademico per il corso che si vuole aggiornare al rigo " +
                             std::to_string(line_counter) + "\n");
                     doDbWrite = false;
+                    lineFileIsOk = false;
                 } else {
                     try {
                         if (Parse::controlItCanBeAnAcYear(specificYearCourse[1]))
@@ -1528,15 +1593,17 @@ void University::insertCourses(const std::string &fin) {
                             error.append("L'anno accademico deve essere costituito da anni consecutivi al rigo " +
                                          std::to_string(line_counter) + "\n");
                             doDbWrite = false;
+                            lineFileIsOk = false;
                         }
                     } catch (std::invalid_argument &err) {
                         std::string genericError = err.what();
                         error.append(genericError + " al rigo " + std::to_string(line_counter) + "\n");
                         doDbWrite = false;
+                        lineFileIsOk = false;
                     }
                 }
 
-                if (doDbWrite) {
+                if (lineFileIsOk) {
                     int year = Parse::getAcStartYear(acYear);
                     auto CourseToUpdate = _courses.find(specificYearCourse[0]);//iteratore al corso da aggiornare
                     SpecificYearCourse sp = _courses.at(specificYearCourse[0]).getLastSpecificYearCourse();
@@ -1556,6 +1623,7 @@ void University::insertCourses(const std::string &fin) {
                             std::string genericError = err.what();
                             error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
                             doDbWrite = false;
+                            lineFileIsOk = false;
                         }
 
                         //controllo sintassi professori
@@ -1571,6 +1639,7 @@ void University::insertCourses(const std::string &fin) {
                             std::string genericError = err.what();
                             error.append(genericError + " alla riga " + std::to_string(line_counter) + "\n");
                             doDbWrite = false;
+                            lineFileIsOk = false;
                         }
 
                         ///controlli sulle informazioni dell'esame
@@ -1583,6 +1652,7 @@ void University::insertCourses(const std::string &fin) {
                                 error.append("Errore formato delle informazione per l'esame al rigo " +
                                              std::to_string(line_counter) + "\n");
                                 doDbWrite = false;
+                                lineFileIsOk = false;
                             } else
                                 try {
                                     Parse::controlExamInfo(splittedExamData);
@@ -1590,6 +1660,7 @@ void University::insertCourses(const std::string &fin) {
                                     std::string genericError = err.what();
                                     error.append(genericError + " al rigo " + std::to_string(line_counter) + "\n");
                                     doDbWrite = false;
+                                    lineFileIsOk = false;
                                 }
 
                         } else {
@@ -1598,6 +1669,7 @@ void University::insertCourses(const std::string &fin) {
                                     std::to_string(line_counter) +
                                     "\n");
                             doDbWrite = false;
+                            lineFileIsOk = false;
                         }
 
                         ///controlli sui raggruppati
@@ -1628,6 +1700,7 @@ void University::insertCourses(const std::string &fin) {
                                         std::string genericError = err.what();
                                         error.append(genericError + " al rigo " + std::to_string(line_counter) + "\n");
                                         doDbWrite = false;
+                                        lineFileIsOk = false;
                                     }
                                 }
                             }
@@ -1635,12 +1708,13 @@ void University::insertCourses(const std::string &fin) {
                             error.append("Errore formato delle informazione per i raggruppati al rigo " +
                                          std::to_string(line_counter) + "\n");
                             doDbWrite = false;
+                            lineFileIsOk = false;
                         }
 
                         ///ricerca "anno-semestre" di questo corso
                         std::string yy_semester;
                         std::vector<int> studyCourse;
-                        if (doDbWrite) {
+                        if (lineFileIsOk) {
                             for (int i = 1; i <= _studyCourse.size(); i++) {
                                 ///se gli study course già ci sono, entra, altrimenti non esegue for
                                 std::string result = _studyCourse.at(i).isInWhichSemester(specificYearCourse[0]);
@@ -1662,6 +1736,7 @@ void University::insertCourses(const std::string &fin) {
                                     error.append("Il seguente corso " + idGrouped[i] + " ,raggruppato alla riga " +
                                                  std::to_string(line_counter) + " non esiste nel database dei corsi\n");
                                     doDbWrite = false;
+                                    lineFileIsOk = false;
                                 }
                             }
 
@@ -1673,6 +1748,7 @@ void University::insertCourses(const std::string &fin) {
                                     std::string genericError = err.what();
                                     error.append(genericError + ". Riga " + std::to_string(line_counter));
                                     doDbWrite = false;
+                                    lineFileIsOk = false;
                                 }
                             } else if (specificYearCourse[2] == "non_attivo") {
                                 isActive = false;
@@ -1690,9 +1766,10 @@ void University::insertCourses(const std::string &fin) {
                                 error.append(
                                         "Il corso non e' attivo,non_attivo al rigo " + std::to_string(line_counter));
                                 doDbWrite = false;
+                                lineFileIsOk = false;
                             }
 
-                            if (doDbWrite) {
+                            if (lineFileIsOk) {
                                 _courses.at(specificYearCourse[0]).addSpecificYearCourses(acYear, isActive,
                                                                                           num_parallel_courses,
                                                                                           profCorsoPar,
@@ -1721,7 +1798,7 @@ void University::insertCourses(const std::string &fin) {
                                     _courses.at(specificYearCourse[0]).controlTheExistenceAndHoursOfProfessors(
                                             getProfessors(),
                                             Parse::getAcStartYear(
-                                                    acYear));
+                                                    acYear), line_counter);
                                 } catch (std::exception &err) {
                                     error.append(err.what());
                                     doDbWrite = false;
@@ -1751,6 +1828,7 @@ void University::insertCourses(const std::string &fin) {
                                          "-" + std::to_string(lastYear + 1) + "). Riga " +
                                          std::to_string(line_counter) +
                                          "\n");
+                            doDbWrite = false;
                         }
                     }
                 }
@@ -1759,7 +1837,11 @@ void University::insertCourses(const std::string &fin) {
         line_counter++;
     }
     fileIn.close();
-    if (doDbWrite && fileIsEmpty == false) {
+    if(fileIsEmpty){
+        error.append("Il file in input e' vuoto\n");
+        doDbWrite = false;
+    }else if (doDbWrite){
+        //se non e' vuoto e non ci sono stati errori vuol dire che ho inserito dei corsi e devo fare dei controlli aggiuntivi
         for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
             ///se c'è un gap tra anni prendo il precedente
             iterCourse->second.fillAcYearsEmpty();
@@ -1776,8 +1858,8 @@ void University::insertCourses(const std::string &fin) {
         }
     }
 
-    ///tutto ok, posso aggiornare effettivamente db
-    if (doDbWrite && fileIsEmpty == false) {
+    if (doDbWrite) {
+        ///tutto ok, posso aggiornare effettivamente il database
         if (_tempInfoNotActiveCoursesToWriteInTheDB.empty() == false) {
             dbCourseNotActive();
             dbStudyCourseWrite();
