@@ -13,6 +13,9 @@
 #include "SessionYear.h"
 #include "SystemLog.h"
 
+#define MAX_VERSIONING 3
+#define MIN_VERSIONING 1
+
 class University {
 public:
 
@@ -48,8 +51,8 @@ public:
     void versioning(std::string newVersion);
     bool checkVersioningRequest(int newVer);
     void revertChanges(int newVersion);
-    void revertChanges2to1();
-    void revertChanges3to2();
+    void revertChanges2();
+    void revertChanges3();
     void renameOldDataBase(int version);
     void controlDatabase(int startAcYear);
     void dataBaseIsEmpty(int startAcYear);

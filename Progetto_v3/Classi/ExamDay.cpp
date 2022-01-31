@@ -31,13 +31,14 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     int numSlotsFoundedSoFar = 0;
     int foundedStartHourSlot = -1;  //rimarrà -1 se non riesco a trovare nulla, altrimenti l'orario di inizio
     int numStuds = specificCourse.getTotStudentsExam(); //tot posti DA TROVARE
-    int numLoop = (20/2)-(startControlExamHourSlot/2);
+    int remainingSlots = (20 / 2) - (startControlExamHourSlot / 2);
     bool classroomIsOk = false;
     bool thereAreEnoughClassrooms;
-
+    if (remainingSlots < numSlotsRequired)
+        return -1;
     ///ricerca slot->aule->profs
     bool toContinue = true;
-    for (int i = 0; i < numLoop && foundedStartHourSlot == -1; i++) {
+    for (int i = 0; i <= (remainingSlots - numSlotsRequired) && foundedStartHourSlot == -1; i++) {
         toContinue=true;
         int slotHour = startControlExamHourSlot + 2 * i;
         ///se endHourSlot è diverso da -1 vuol dire che il corso che stiamo cercando di assegnare ha un primo appello e che
