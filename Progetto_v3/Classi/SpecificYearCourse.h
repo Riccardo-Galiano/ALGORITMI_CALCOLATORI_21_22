@@ -87,6 +87,7 @@ public:
     int getStartHourAppeal(int numAppeals);
     char getPlaceExam();
     int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
+    int getNumAppealsAssignedPerSession(int numSession);
 
 
     ///setter

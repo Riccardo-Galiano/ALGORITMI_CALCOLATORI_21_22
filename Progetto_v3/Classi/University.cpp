@@ -3591,94 +3591,187 @@ University::assignAppealsToClassroom(std::string appeal, int startSlotHour, std:
 ///prova a rigenerare la sessione in seguito alla richiesta dello spostamento di alcuni esami
 void University::requestChanges(std::string acYear, std::string fin) {
     //<id_corso>;<numero_sessione>;<numero_appello>;<direzione_spostamento>;<num_settimane>
+    std::string error;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
         throw DbException("Errore apertura del file per le richieste del cambio data esami \n");
     }
-    std::string ac = acYear.substr(0, 4);
-    int acStart = Parse::checkedStoi(ac, "Errore anno accademico.");
 
-    ///leggo i file della sessione epr quell'anno
+    if(Parse::controlItCanBeAnAcYear(acYear)==false)
+        throw std::invalid_argument("Gli anni di un anno accademico devono essere consecutivi\n");
+
+    std::string ac = acYear.substr(0, 4);
+    int acStart = Parse::getAcStartYear(ac);
+    //se il controllo sull'anno accademico è andato bene controllo se abbiamo una sessione per quell'anno
+    if(_acYearSessions.at(acStart).fileNameIsEmpty())
+        throw std::invalid_argument("Per l'anno richiesto non e' mai stata generata una sessione\n");
+
+    ///se abbiamo la sessione per quell'anno leggo le sessioni riempiendo la struttura dati per quell'anno
     readExamAppealsPerAcSession(acYear);
     SessionYear &thisSession = _acYearSessions.at(acStart);
     std::string line;
     int successfulChanges = 0; //se >1 alla fine dovrò riscrivere tutto il file sessioni
     bool allChangesArePossible = true;
     int numSession;
-    bool isFirstLine = true;
-    std::string error;
-    ///tutti gli appelli delle sessioni per questo anno accdemico sono caricati in memoria
+    bool fileIsEmpty = true;
+    int line_counter = 1;
+    ///tutti gli appelli delle sessioni per questo anno accademico sono caricati in memoria
     while (std::getline(fileIn, line)) {
-        if (isFirstLine && line.empty())
-            throw std::invalid_argument("file vuoto");
-        std::vector<std::string> infoChanges = Parse::splittedLine(line, ';');
-        std::string idCourse = infoChanges[0];
-        numSession = Parse::checkedStoi(infoChanges[1], "Errore numero sessione.");
-        int numAppeal = Parse::checkedStoi(infoChanges[2], "Errore numero appello");
-        char directionOfSfift = infoChanges[3][0];
-        int numWeeks = Parse::checkedStoi(infoChanges[4], "Errore numero di setimane");
+        bool lineIsOk = true;
+        if (line.empty() == false) {
+            fileIsEmpty = false;
+            std::vector<std::string> infoChanges = Parse::splittedLine(line, ';');
 
-        ///2) cancello le informazioni dell'appello selezionato in questa riga + raggruppati e le salvo
-        ///3) cerco di soddisfare il cambiamento
-        ///4) se riesco, aggiungo appello alla sessione di questo anno accademico è successfulChanges++
-        ///5) se non riesco, devo ripristinare info appello + emit warning
-        Date oldDate;
-        int startSlot;
-        std::map<std::string, std::vector<int>> classrooms;
-        //2 -> rimozione + salvataggio
-        removeThisAppealAndGroupedInfo(acStart, idCourse, numSession, numAppeal, oldDate, startSlot, classrooms);
-        //3
-        Course &courseToConsider = _courses.at(idCourse);
-        Date tryDate;
-        if (directionOfSfift == 'd') {
-            tryDate = oldDate.subtract(numWeeks * 7);
-        } else {
-            tryDate = oldDate.add(numWeeks * 7);
-        }
-        try {
-            thisSession.tryToSetThisExamInThisSession(*this, courseToConsider, numSession, numAppeal, tryDate);
-            //4
-            successfulChanges++;
-        }
-        catch (std::exception &err) {
-            //5
-            ///warning
-            //aggiungo ai warnings il motivo per il quale non è stato possibile cambiare data
-            std::string nameFileSession = _acYearSessions.at(acStart).getFileName(numSession);
-            std::fstream fout;
-            std::string nameFileSessionWriting = nameFileSession + "-s" + std::to_string(numSession) + ".txt";
-            fout.open(nameFileSessionWriting, std::fstream::out);
-            if (!fout.is_open()) {
-                throw DbException("file warnings della sessione non esistente");
+            //controlli sul formato della riga
+            if (infoChanges.size() != 5) {
+                error.append(
+                        "Numero di campi di informazione non valido alla riga " + std::to_string(line_counter) + "\n");
+                lineIsOk = false;
+                allChangesArePossible = false;
+            } else {
+                for (int i = 0; i < infoChanges.size(); i++) {
+                    if (infoChanges[i].empty()) {
+                        error.append("Campo di informazione " + std::to_string(i) + " alla riga " +
+                                     std::to_string(line_counter) + "\n");
+                        lineIsOk = false;
+                        allChangesArePossible = false;
+                    }
+                }
             }
-            fout << err.what();
-            fout.close();
-            ///ripristino le info iniziali
-            reassignThisAppealInfo(acStart, idCourse, numSession, numAppeal, oldDate, startSlot, classrooms);
-            //segnalo l'errore da lanciare successivamente con il throw
-            error.append(err.what());
-            allChangesArePossible = false;
-        }
-    }
-    if (allChangesArePossible) {
-        //aggiorno il calendario
-        for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-            Course course = _courses.at(iterCourse->second.getId());
-            SpecificYearCourse sp = course.getThisYearCourse(acStart);
-            std::vector<Date> allAppealPerCourse = sp.getAllAppeals();
-            course.getThisYearCourseReference(acStart).eraseNumAppeal();
-            _acYearSessions.at(acStart).updateExamDayCourse(course, allAppealPerCourse);
-        }
+            if (lineIsOk) {
+                ///controllo sull'idCourse
+                int numAppeal = 0;
+                char directionOfShift;
+                int numWeeks = 0;
+                std::string idCourse;
+                try {
+                    Parse::controlItCanBeACourseId(infoChanges[0]);
+                    idCourse = infoChanges[0];
+                    if(_courses.count(idCourse)==0){
+                        error.append("Il corso "+ idCourse +" alla riga "+std::to_string(line_counter)+" non esiste nel database corsi\n");
+                        lineIsOk = false;
+                        allChangesArePossible = false;
+                    }
+                    numSession = Parse::checkedStoi(infoChanges[1], " del numero della sessione ");
+                    if(numSession < 1 || numSession > 3){
+                        error.append("Il numero della sessione al rigo "+std::to_string(line_counter)+" non e' compreso tra 1 e 3\n");
+                        lineIsOk = false;
+                        allChangesArePossible = false;
+                    }
+                    numAppeal = Parse::checkedStoi(infoChanges[2], " del numero dell'appello ");
+                    if(numAppeal != 1 && numAppeal != 2) {
+                        error.append(
+                                "Il numero dell'appello al rigo " + std::to_string(line_counter) + " non e' 1 o 2\n");
+                        lineIsOk = false;
+                        allChangesArePossible = false;
+                    }
 
-        //ristampo la sessione
-        bool requestChanges = true;
-        //prendo il nome del file per quell'anno e per quella sessione
-        std::string fileName = _acYearSessions.at(acStart).getFileName(numSession);
-        //rigenero i file di output
-        //prima della generazione tutti i _numAppeal devono essere 0 per tutti gli specifcyearCourse
-        _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
+                    if(infoChanges[3].size() != 1){
+                         error.append("Il carattere di shift al rigo "+std::to_string(line_counter)+" non e' 'd' o 'u' \n");
+                         lineIsOk = false;
+                         allChangesArePossible = false;
+                    }else {
+                         directionOfShift = infoChanges[3][0];
+                         if (directionOfShift != 'd' && directionOfShift != 'u') {
+                         error.append("Il numero dell'appello al rigo " + std::to_string(line_counter) +  " non e' 1 o 2\n");
+                         lineIsOk = false;
+                         allChangesArePossible = false;
+                         }
+                    }
+                    numWeeks = Parse::checkedStoi(infoChanges[4], " del numero di settimane ");
+
+                }catch (std::invalid_argument& err){
+                    std::string genericError = err.what();
+                    error.append(genericError+ " alla riga "+std::to_string(line_counter)+"\n");
+                    lineIsOk= false;
+                    allChangesArePossible = false;
+                }
+
+                if(lineIsOk){
+                    //controllo che, se un secondo appello, quell'esame abbia veramente due appelli in quella sessione
+                    if(numAppeal == 2){
+                        SpecificYearCourse sp = _courses.at(idCourse).getThisYearCourse(acStart);
+                        int numAppealsPerSession = sp.getNumAppealsAssignedPerSession(numSession);
+                        if(numAppealsPerSession != 2){
+                            error.append("E' stato richiesto di cambiare il secondo appello per un esame che ha solo un appello nella sessione " +std::to_string(numSession)+ " richiesta al rigo "+std::to_string(line_counter)+"\n");
+                            line_counter = false;
+                            allChangesArePossible = false;
+                        }
+                    }
+                }
+
+                if(lineIsOk) {
+                    ///2) cancello le informazioni dell'appello selezionato in questa riga + raggruppati e le salvo
+                    ///3) cerco di soddisfare il cambiamento
+                    ///4) se riesco, aggiungo appello alla sessione di questo anno accademico è successfulChanges++
+                    ///5) se non riesco, devo ripristinare info appello + emit warning
+                    Date oldDate;
+                    int startSlot;
+                    std::map<std::string, std::vector<int>> classrooms;
+                    //2 -> rimozione + salvataggio
+                    removeThisAppealAndGroupedInfo(acStart, idCourse, numSession, numAppeal, oldDate, startSlot,
+                                                   classrooms);
+                    //3
+                    Course &courseToConsider = _courses.at(idCourse);
+                    Date tryDate;
+                    if (directionOfShift == 'd') {
+                        tryDate = oldDate.subtract(numWeeks * 7);
+                    } else {
+                        tryDate = oldDate.add(numWeeks * 7);
+                    }
+                    try {
+                        thisSession.tryToSetThisExamInThisSession(*this, courseToConsider, numSession, numAppeal,
+                                                                  tryDate);
+                        //4
+                        successfulChanges++;
+                    }
+                    catch (std::exception &err) {
+                        //5
+                        ///warning
+                        //aggiungo ai warnings il motivo per il quale non è stato possibile cambiare data
+                        std::string nameFileSession = _acYearSessions.at(acStart).getFileName(numSession);
+                        std::ofstream fout;
+                        std::string nameFileSessionWriting = nameFileSession + "_warnings.txt";
+                        fout.open(nameFileSessionWriting, std::ios::app);
+                        if (!fout.is_open()) {
+                            throw DbException("file warnings della sessione non esistente");
+                        }
+                        std::string genericError = err.what();
+                        fout << idCourse << ";" << genericError;
+                        fout.close();
+                        ///ripristino le info iniziali
+                        reassignThisAppealInfo(acStart, idCourse, numSession, numAppeal, oldDate, startSlot,
+                                               classrooms);
+                        //segnalo l'errore da lanciare successivamente con il throw
+                        allChangesArePossible = false;
+                    }
+                }
+            }
+        }
+            line_counter++;
+    }
+    if(fileIsEmpty == false) {
+        if (allChangesArePossible) {
+            //aggiorno il calendario
+            for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+                Course course = _courses.at(iterCourse->second.getId());
+                SpecificYearCourse sp = course.getThisYearCourse(acStart);
+                std::vector<Date> allAppealPerCourse = sp.getAllAppeals();
+                course.getThisYearCourseReference(acStart).eraseNumAppeal();
+                _acYearSessions.at(acStart).updateExamDayCourse(course, allAppealPerCourse);
+            }
+
+            //ristampo la sessione
+            bool requestChanges = true;
+            //prendo il nome del file per quell'anno e per quella sessione
+            std::string fileName = _acYearSessions.at(acStart).getFileName(numSession);
+            //rigenero i file di output
+            //prima della generazione tutti i _numAppeal devono essere 0 per tutti gli specifcyearCourse
+            _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
+        } else
+            throw std::invalid_argument(error);
     } else
-        throw std::invalid_argument(error);
+        throw std::invalid_argument("Il file in input e' vuoto\n");
 }
 
 ///se ci sono dei corsi del corso di studio presenti anche nel database corsi allora devo andare a settare anno e semestre che non avevo settato all'inserimento dei corsi in Course e inserisco il corso di studio
@@ -3741,13 +3834,12 @@ University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int
     //savo lo slot iniziale(sarà lo slot iniziale per tutti i corsi raggruppati)
     startSlot = sp.startSlotAssignationInGivenSession(numSession, numAppeal);
     //devo prendere le aule per ogni corso raggruppato
-    std::vector<std::string> idGroupedCourse;
     std::vector<std::string> coursesToConsider;
 
     ///prendo solo gli attivi se lui è attivo altrimenti se spento lo considero da solo
     if (_courses.at(idCourse).getThisYearCourse(acYear).getIsActive()) {
         //se attivo prendo i raggruppati
-        idGroupedCourse = _courses.at(idCourse).getIdGroupedCourseFromYear(acYear);
+        coursesToConsider = _courses.at(idCourse).getIdGroupedCourseFromYear(acYear);
         ///dobbiamo togliere da coursesToConsiderInThisLoop i corsi spenti
         popOffCoursesFromGroupedString(coursesToConsider, acYear);
         coursesToConsider.push_back(idCourse);
@@ -3758,10 +3850,10 @@ University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int
     for (int i = 0; i < coursesToConsider.size(); i++) {
         SpecificYearCourse &spGrouped = _courses.at(coursesToConsider[i]).getThisYearCourseReference(acYear);
         std::vector<int> classroomPerCourse = spGrouped.classroomsAssignedInGivenSession(numSession, numAppeal);
-        classrooms.insert(std::pair<std::string, std::vector<int>>(idGroupedCourse[i], classroomPerCourse));
+        classrooms.insert(std::pair<std::string, std::vector<int>>(coursesToConsider[i], classroomPerCourse));
     }
     ///RIMOZIONE
-    ///deve rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
+    ///devo rimuovere le info da SpecificYearCourse, professori relativi, Classroom selezionate, slots occupati
     ///rimuovo dal corso indicato nel file
     ///per fare un unico ciclo aggiungo l'idCourse letto nel file ai suoi raggruppati e ciclo su tutti i corsi da togliere, letto da file e i suoi raggruppati
 
@@ -3795,13 +3887,13 @@ void University::reassignThisAppealInfo(int acYear, std::string idCourse, int nu
     SessionYear &thisSession = _acYearSessions.at(acYear);
 
     ///corsi a cui riassegnare le info
-    std::vector<std::string> idGroupedCourse;
+
     std::vector<std::string> coursesToConsider;
 
     ///prendo solo gli attivi se lui è attivo altrimenti se spento lo considero da solo
     if (_courses.at(idCourse).getThisYearCourse(acYear).getIsActive()) {
         //se attivo prendo i raggruppati
-        idGroupedCourse = _courses.at(idCourse).getIdGroupedCourseFromYear(acYear);
+        coursesToConsider = _courses.at(idCourse).getIdGroupedCourseFromYear(acYear);
         ///dobbiamo togliere da coursesToConsiderInThisLoop i corsi spenti
         popOffCoursesFromGroupedString(coursesToConsider, acYear);
         coursesToConsider.push_back(idCourse);

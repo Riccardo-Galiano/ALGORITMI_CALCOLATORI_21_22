@@ -533,15 +533,13 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
             else
                 return false;
         }
-    } else if (howManyTimesIAmAssignedAlreadyInThisSession == 0 && requestChanges ==
-                                                                   false) {//se i canBeAssigneToFirstTwoWeekOfExamSession mi devo chiedere se è un primo appello
+    } else if (howManyTimesIAmAssignedAlreadyInThisSession == 0 && requestChanges == false) {//se i canBeAssigneToFirstTwoWeekOfExamSession mi devo chiedere se è un primo appello
         ///se primo appello devo dimostrare che la data appartenga ai primi 14 giorni,
         if (startDate.whatIsTheGap(newDate) > 14) {
             //nel caso della setExam e quindi non requestChanges ritorno solo false
             return false;
         }
-    } else if (howManyTimesIAmAssignedAlreadyInThisSession == 1 && requestChanges ==
-                                                                   true) {//se i canBeAssigneToFirstTwoWeekOfExamSession mi devo chiedere se è un primo appello
+    } else if (howManyTimesIAmAssignedAlreadyInThisSession == 1 && requestChanges == true) {//se i canBeAssigneToFirstTwoWeekOfExamSession mi devo chiedere se è un primo appello
         //l'altro appello
         Date lastDateAssignation = sp.lastDateAssignationInGivenSession(this->getSemester(sessName));
         bool second = isSecondAppeal(newDate, lastDateAssignation);
@@ -800,7 +798,7 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
 
     ///esami raggruppati da considerare in questo giro
     std::string codCurrentAppeal = courseToConsider.getId();
-    std::vector<std::string> coursesGrouped = getGroupedCourses(courses, codCurrentAppeal);
+
     std::vector<Course> coursesToConsiderInThisLoop;
     Course courseCurrentAppeal = courses.at(codCurrentAppeal);
     ///un corso solo se è attivo ha i raggruppati che sono a loro volta attivi

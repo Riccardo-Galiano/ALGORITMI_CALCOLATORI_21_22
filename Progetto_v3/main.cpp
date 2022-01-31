@@ -468,8 +468,8 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
                     uni.requestChanges(argv[3], argv[4]);
                 } catch (std::exception &occurredException) {
                     strToAddToLog = occurredException.what();
-                    strToAddToLog.append(
-                            "Non e' stato possibile effettuare il comando -s request_changes per gli errori elencati precedentemente\n");
+                    strToAddToLog.append("Non e' stato possibile effettuare il comando -s request_changes per gli errori elencati precedentemente o descritti nei warnings relativi alla sessione richiesta\n");
+                    sysLog.appendToLog(strToAddToLog, true);
                     sysLog.appendToLog(strToAddToLog, true);
                     isOk = false;
                 }

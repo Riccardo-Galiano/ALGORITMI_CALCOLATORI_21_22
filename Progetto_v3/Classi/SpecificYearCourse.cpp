@@ -637,6 +637,10 @@ void SpecificYearCourse::setAcYearOff(std::string yearOff) {
     _acYearOff = yearOff;
 }
 
+int SpecificYearCourse::getNumAppealsAssignedPerSession(int numSession) {
+    return _howManyTimesIAmAssignedInASession.at(numSession).size();
+}
+
 ///overload output operator
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {
     output << s.getStartYear() << "-" << s.getEndYear() << ";";
