@@ -696,7 +696,18 @@ void University::addStudyCourses(const std::string &fin) {
             error.append(err.what());
             doDbwrite = false;
         }
+        for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+            ///controllo se i corsi raggruppati siano dello stesso semestre del principale e di corsi di studio differenti
+            try {
+                iterCourse->second.sameSemesterGrouped(getCourses());
+            } catch (std::exception &err) {
+                error.append(err.what());
+                doDbwrite = false;
+            }
+        }
     }
+
+
 
     if (doDbwrite) {
         if (_tempInfoNotActiveCoursesToWriteInTheDB.empty() == false) {
@@ -2376,9 +2387,7 @@ void University::controlDatabase(int startAcYear) {
             checkIsOK = false;
         }
     }
-    ///COMMENTATO PERCHE' NON MI ANDAVA DI CARICARE ALTRI CORSI PER DEBUGGARE LA GESTIONE ESAMI
-    ///controllo che tutti i corsi di studio siano presenti nel database corsi
-    /*
+
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
         ///controllo che ogni studyCourse abbia i corsi specificati
         StudyCourse sCourse = iter->second;
@@ -2391,7 +2400,7 @@ void University::controlDatabase(int startAcYear) {
                 checkIsOK = false;
             }
         }
-    }*/
+    }
 
     if (checkIsOK == false)
         throw std::invalid_argument(error);
@@ -2453,7 +2462,7 @@ void University::dataBaseIsEmpty(int startAcYear) {
             for (auto iter = _courses.begin(); iter != _courses.end(); iter++) {
                 int firstYear = iter->second.getFirstYearOfActivity();
                 int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
-                if (startAcYear > firstYear) {
+                if (startAcYear >= firstYear) {
                     if (studentsEnrolled == 0) {
                         error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: " +
                                      std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1));
@@ -2475,7 +2484,6 @@ void University::dataBaseIsEmpty(int startAcYear) {
 /// controllo che idGrouped NON siano corsi dello stesso CdS
 bool University::controlGroupedCoursesDifferentCds_C(std::vector<std::string> idGrouped,
                                                      std::string idCourseToAddToIdGrouped, int year) {
-    //ESSENDO GIA' RECIPROCI HA SENSO CONTROLLARE ANCHE I CDS DEI RAGGRUPPATI? SE NON SI TROVANO CON IL PRINCIPALE ONON CI SARANNO ANCHE CON GLI ALTRI
     bool everIsOk = true;
     std::string error;
     std::vector<std::string> coursesToConsider(idGrouped);
@@ -2502,7 +2510,7 @@ bool University::controlGroupedCoursesDifferentCds_C(std::vector<std::string> id
                             std::string settedId = Parse::setId('C', 3, cds[k]);
                             error.append("Stesso corso di studio tra: " + coursesToConsider[i] + " e " +
                                          coursesToConsider[j] +
-                                         " considerata la reciprocita' tra raggruppati nonostante non fosse esplicita nel file in input. Corso di studio:" +
+                                         ". considerata la reciprocita' tra raggruppati al corso di studio " +
                                          settedId + "\n");
                         }
                     }

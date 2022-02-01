@@ -296,24 +296,14 @@ void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         std::vector<std::string> groupedCourse = iterSpecificYear->second.getIdGroupedCourses();
         int sem = 0;
-        bool active = iterSpecificYear->second.getIsActive();
         for (int i = 0; i < groupedCourse.size();i++){
-            ///controllo che i raggruppati siano o tutti spenti o tutti attivi
+
             SpecificYearCourse sp = courses.at(groupedCourse[i]).getThisYearCourse(iterSpecificYear->first);
-            bool activeGrouped = sp.getIsActive();
-            ///se i due corsi non si trovano nello stato di attività non posso raggrupparli
-            if(active != activeGrouped) {
-                error.append("Il seguente corso raggruppato " + groupedCourse[i] +
-                             " non e' nello stesso stato di attivita' del corso: " + getName() +
-                             " ;corrispondente al codice: " + getId() + "\n");
-                isOk = false;
-            }
-            ///se sono entrambi attivi mi chiedo se sono dello stesso semestre
-            if(active != false && activeGrouped != false) {
-                sem = iterSpecificYear->second.getSemester();
+
+              sem = iterSpecificYear->second.getSemester();
                 int semGrouped = courses.at(groupedCourse[i]).getSemesterAtYear(iterSpecificYear->first,groupedCourse[i]);
                 if (sem != -1 && semGrouped != -1) {
-                    //se almeno uno dei due è -1 la coerenza tra loro non si può dimostrare quini lo considero ok
+                    //se almeno uno dei due è -1 la coerenza tra loro non si può dimostrare quindi lo considero ok
                     if (semGrouped != sem) {
                         error.append("Il seguente corso raggruppato " + groupedCourse[i] +
                                      " non e' dello stesso semestre di: " + getName() + " ;corrispondente al codice: " +
@@ -321,7 +311,7 @@ void Course::sameSemesterGrouped(std::map<std::string,Course> courses) {
                         isOk = false;
                     }
                 }
-            }
+
         }
     }
     if(isOk == false){

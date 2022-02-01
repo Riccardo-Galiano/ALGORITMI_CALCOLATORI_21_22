@@ -68,6 +68,7 @@ public:
     void updateExamDayCourse(Course course,std::vector<Date> appealPerCourse);
     void controlSuccessivitySessionPeriod();
     void popOffCoursesFromGrouped(std::vector<Course>& coursesToConsiderInThisLoop);
+    void fillCoursesAlreadyControlledPerThisDay(std::vector<Course> coursesToConsiderInThisLoop,std::vector<std::string>&coursesAlreadycontrolledPerday);
 
 
     ///output
