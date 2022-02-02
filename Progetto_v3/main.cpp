@@ -102,7 +102,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
                 strToAddToLog.append("Numero di argomenti da terminale per il comando -a:s errato.\nNon e' stato possibile effettuare il comando -a:s per gli errori elencati precedentemente\n ");
                 sysLog.appendToLog(strToAddToLog,true);
             }
-        }
+        } // O(n)
         case add_professor: {
             std::string strToAddToLog;
             if(argc == 3) {
@@ -125,7 +125,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
                 sysLog.appendToLog(strToAddToLog,true);
             }
                 break;
-        }
+        } // O(n)
         case add_classroom: {
             std::string strToAddToLog;
             if(argc == 3) {
@@ -148,7 +148,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
                 sysLog.appendToLog(strToAddToLog,true);
             }
             break;
-        }
+        } // O(n)
         case add_course: {
             std::string strToAddToLog;
             if(argc == 3) {
@@ -173,7 +173,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
             }
 
             break;
-        }
+        } // O(n^2)
         case add_studyCourse: {
             std::string strToAddToLog;
             if(argc == 3) {
@@ -197,7 +197,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
                 sysLog.appendToLog(strToAddToLog,true);
             }
             break;
-        }
+        } //O(n)
         case update_student: {
             std:: string strToAddToLog;
             if(argc == 3) {
