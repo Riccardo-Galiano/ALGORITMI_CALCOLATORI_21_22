@@ -550,7 +550,7 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
         /// prime due settimane ok?
         if (startDate.whatIsTheGap(newDate) < 14) {
             if (requestChanges)
-                throw std::invalid_argument("Esame non puo' essere inserito nei primi 14 giorni della sessione\n");
+                throw std::invalid_argument("L'esame non puo' essere inserito nei primi 14 giorni della sessione\n");
             else
                 return false;
         }
@@ -594,15 +594,14 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
             //sono in presenza dell'assegnazione o del cambiamento di un secondo appello
             if (lastDateAssignation.whatIsTheGap(newDate) < gapAppeals) {//dal primo appello sono passati 14 giorni?
                 if (requestChanges == true) {
-                    throw std::invalid_argument(
-                            "Il gap di 14 giorni tra il nuovo secondo appello e il primo non rispettato\n ");
+                    throw std::invalid_argument("Il gap di 14 giorni tra i due appelli non e' rispettato\n");
                 } else
                     return false;
             }
         } else {
             //controllo gap tra nuovo primo appello e secondo
             if (newDate.whatIsTheGap(lastDateAssignation) < gapAppeals) {//dal primo appello sono passati 14 giorni?
-                throw std::invalid_argument("Gap di 14 giorni tra nuovo primo appello e secondo non rispettato\n");
+                throw std::invalid_argument("Il gap di 14 giorni tra i due appelli non e' rispettato\n");
             }
         }
         ///cotrollo aggiuntivo se il gap deve essere più largo (profsGap)
@@ -618,8 +617,8 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
                         if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
                             if (requestChanges == true) {
                                 std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
-                                throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
-                                                            " tra nuovo secondo appello e primo appello non rispettato\n");
+                                throw std::invalid_argument("Il Gap ulteriore del professore con matricola " + settedId +
+                                                            " tra nuovo appello e quello esistente non e' rispettato\n");
                             } else {
                                 if (tryToSatisfyProfsMinDistance) {
                                     return false;
@@ -630,8 +629,8 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
                         if (newDate.whatIsTheGap(lastDateAssignation) <
                             requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
                             std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
-                            throw std::invalid_argument("Gap ulteriore del professore con matricola " + settedId +
-                                                        " tra nuovo primo appello e secondo appello non rispettato\n");
+                            throw std::invalid_argument("Il Gap ulteriore del professore con matricola " + settedId +
+                                                        " tra nuovo appello e quello esistente non e' rispettato\n");
 
                         }
                     }
@@ -839,8 +838,7 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
             Course &courseToConsider = coursesToConsiderInThisLoop[i];
             //la data analizzata rispetta i primi requisiti per l'assegnazione di un esame(specificYearCourse)
             //requisiti: se non stesso semestre o non attivo o entrambi o secondi appelli va oltre i primi 14 giorni della sessione; se secondo appello va 14 giorni oltre il primo appello
-            if (dateIsOK(tryDate, courseToConsider, _sessionNames[numSession - 1], gapAppeals, requestChanges, false) ==
-                false) {
+            if (dateIsOK(tryDate, courseToConsider, _sessionNames[numSession - 1], gapAppeals, requestChanges, false) == false) {
                 //se non va bene per uno non va bene per tutti
                 //genera un'eccezione
                 //se un primo appello deve essere nei primi 14 giorni e lontano altri 14 dal secondo appello
@@ -859,44 +857,52 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
     bool continueLoopPerHourStart = true;
     bool firstCourseOfThisLoop = true;
     int startControlExamHourSlot = 8;
-
+    bool again = false;
     //ciclo su tutti i corsi raggruppati a quello richiesto nel file ed esso stesso
     for (int i = 0; i < coursesToConsiderInThisLoop.size() && continueLoopPerHourStart; i++) {
         Course courseToConsider = coursesToConsiderInThisLoop[i];
         std::vector<int> roomsFounded;
 
         ///se primo corso del loop indico che è il primo e faccio iniziare il controllo
-        if (i == 0)
+        if (again) {
+            i = 0;
             firstCourseOfThisLoop = true;
+        }
+        int startExamHour;
         ///controllo che i prof siano disponibili e che nei due giorni precedenti non ci siano esami già assegnati con stesso corso di studio e stesso anno dell'esame da assegnare
-        int startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider, tryDate, professors,
+        try {
+            startExamHour = checkIfProfsAvailableAndGapSameSemesterCourses(courseToConsider, tryDate, professors,
                                                                            allUniversityClassrooms,
                                                                            relaxPar,
                                                                            getSemester(_sessionNames[numSession - 1]),
                                                                            roomsFounded, endHourSlot,
                                                                            firstCourseOfThisLoop,
                                                                            startControlExamHourSlot, requestChanges);
-        if (startExamHour == -1 && firstCourseOfThisLoop)
-            //per il primo corso non ho trovato alcuno slot in quel giorno, quindi esco dal loop
-            continueLoopPerHourStart = false;
-        else if (startExamHour == -1 && firstCourseOfThisLoop == false) {
-            //se non è il primo corso ma non trovo gli slot assegnati al primo faccio ripartire il ciclo ma ad uno slot successivo rispetto a quello assegnato al primo corso
-            i = 0;
-            roomsFoundedPerCourse.erase(roomsFoundedPerCourse.begin(), roomsFoundedPerCourse.end());
-            _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
-            if (startControlExamHourSlot < 18) {
-                startControlExamHourSlot = startControlExamHourSlot + 2;
+        }catch (std::invalid_argument &err){
+            throw std::invalid_argument("Non e' stato ossibile assegnare l'esame "+ coursesToConsiderInThisLoop[i].getId() + " per mancanza di aule abbastanza capienti ");
+        }
+        if (startExamHour == -1 )
+            //Se per il corso considerato non trovo alcuno slot esco
+            throw std::invalid_argument("non si è trovato alcuno slot libero considerata la coincidenza tra disponibilita' dei professori e aule libere");
+        else {
+            //se trovo un' ora da cui partire per il corso analizzato devo capire se è uguale all'ora da cui sono partito
+            //se non è il primo corso vuol dire che in precedenza ho trovato uno slot per i precedenti e quidni devo controllare
+            //che abbia trovato gli slot a partire dallo stesso orario di quest'ultimo
+            if (firstCourseOfThisLoop == false && startExamHour != startControlExamHourSlot) {
+                roomsFoundedPerCourse.erase(roomsFoundedPerCourse.begin(), roomsFoundedPerCourse.end());
+                _yearCalendar.at(tryDate.toString()).eraseTempGroupedCourseClassrooms();
+                startControlExamHourSlot = startExamHour;
+                again = true;
             } else {
-                throw std::invalid_argument("non si è trovato alcuno slot libero considerata la coincidenza tra disponibilita' dei professori e aule libere");
+                //se trovo gli slot assegnati segno come primo slot di controllo l'ora trovata per il corso
+                startControlExamHourSlot = startExamHour;
+                roomsFoundedPerCourse.insert(
+                        std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
+                again = false;
+                if (i == coursesToConsiderInThisLoop.size() - 1)
+                    //se anche l'ultimo raggruppato ha trovato disponibilità per gli stessi slot degli altri
+                    startHourPerGroupedCourses = startExamHour;
             }
-        } else {
-            //se trovo gli slot assegnati segno come primo slot di controllo l'ora trovata per il corso
-            startControlExamHourSlot = startExamHour;
-            firstCourseOfThisLoop = false;
-            roomsFoundedPerCourse.insert(std::pair<std::string, std::vector<int>>(courseToConsider.getId(), roomsFounded));
-            if (i == coursesToConsiderInThisLoop.size() - 1)
-                //se anche l'ultimo raggruppato ha trovato disponibilità per gli stessi slot degli altri
-                startHourPerGroupedCourses = startExamHour;
         }
         firstCourseOfThisLoop = false;
      }

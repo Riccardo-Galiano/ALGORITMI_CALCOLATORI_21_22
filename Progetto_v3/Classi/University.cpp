@@ -3663,10 +3663,10 @@ void University::requestChanges(std::string acYear, std::string fin) {
             } else {
                 for (int i = 0; i < infoChanges.size(); i++) {
                     if (infoChanges[i].empty()) {
-                        error.append("Campo di informazione " + std::to_string(i) + " alla riga " +
-                                     std::to_string(line_counter) + "\n");
+                        error.append("Campo di informazione " + std::to_string(i) + " alla riga " + std::to_string(line_counter) + "\n");
                         lineIsOk = false;
                         allChangesArePossible = false;
+
                     }
                 }
             }
@@ -3735,6 +3735,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
                                     "\n");
                             line_counter = false;
                             allChangesArePossible = false;
+                            lineIsOk = false;
                         }
                     }
                 }
@@ -3781,7 +3782,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
                         ///ripristino le info iniziali
                         reassignThisAppealInfo(acStart, idCourse, numSession, numAppeal, oldDate, startSlot,
                                                classrooms);
-                        //segnalo l'errore da lanciare successivamente con il throw
+                        
                         allChangesArePossible = false;
                     }
                 }
