@@ -2327,7 +2327,15 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     }
     ///se le sessioni non possono essere generate nonostante i vincoli rilassati
     if (!esito) {
-        throw std::invalid_argument("Non e' possibile generare la sessione nonostante i vincoli rilassati\n");
+        ///messaggio per ogni sessione
+        std::string error;
+        if(_acYearSessions.at(startAcYear).allExamAppealToDoIsEmpityAtSession("winter") == false)
+            error.append("Non e' possibile generare la sessione invernale nonostante i vincoli rilassati\n");
+        if(_acYearSessions.at(startAcYear).allExamAppealToDoIsEmpityAtSession("summer") == false)
+            error.append("Non e' possibile generare la sessione estiva nonostante i vincoli rilassati\n");
+        if(_acYearSessions.at(startAcYear).allExamAppealToDoIsEmpityAtSession("autumn") == false)
+            error.append("Non e' possibile generare la sessione autunnale nonostante i vincoli rilassati\n");
+        throw std::invalid_argument(error);
     } else {
         generateOutputFileName();
     }

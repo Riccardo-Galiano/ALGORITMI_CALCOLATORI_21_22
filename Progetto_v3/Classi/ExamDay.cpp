@@ -245,7 +245,7 @@ bool comparatorFunction (Classroom i,Classroom j) {
 
 ///Ricerca le aule libere in un determinato slot
 bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allUniversityClassrooms, int numSeatsToSeach, std::vector<int> &idRoomsFounded, int slotHour, int numSLotsRequired, char labOrClass, int maxNumRooms) {
-    bool roomIsOk = true;
+
     bool examInLab;
     std::vector<Classroom> potentialRooms;
     if(labOrClass == 'A')
@@ -253,13 +253,14 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
     else
         examInLab = true;
     ///per tutte le aule controllo se è libera per il numero di slot richiesti e quanti posti ci siano
-    for (int i = 1; i < allUniversityClassrooms.size(); i++){
+    for (int i = 1; i <= allUniversityClassrooms.size(); i++){
         Classroom &room = allUniversityClassrooms.at(i);
         ///controllo se la classRoom considerata è dello stesso tipo di examInLab (aula o lab? dove faccio l'esame?)
         bool isLab = room.isThisLab();
         bool thisRoomIsNotUsedByAGroupedCourse = std::find(_tempGroupedCourseClassrooms.begin(), _tempGroupedCourseClassrooms.end(), i) == _tempGroupedCourseClassrooms.end();
             ///tra corsi raggruppati non può essere assegnata la stessa POSSSIBILE aula(possibile perchè non è ancora sicuro, ci sono altri controlli da fare prima dell'assegnazione)
             if (examInLab == isLab && thisRoomIsNotUsedByAGroupedCourse) {
+                bool roomIsOk = true;
                 ///controllo che per numSlotsRequired consecutivi l'aula sia disponibile
                 for (int j = 0; j < numSLotsRequired && roomIsOk; j++) {
                     int slot = slotHour + 2 * j;
@@ -286,7 +287,12 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
         bool canExist;// è un problema di disponibilità aule per quel giorno o è un problema che esisterebbe anche se tutte le aule in db fossero libere?
         //prendo tutte le aule del db
         for (auto iterClass = allUniversityClassrooms.begin(); iterClass != allUniversityClassrooms.end(); iterClass++) {
-             allRooms.push_back(iterClass->second);
+            ///controllare che sia un lab o no in base a quello che cerchiamo
+            bool isLab = iterClass->second.isThisLab();
+            ///tra le aule utilizzabili devo anche non considerare le aule assegnate ai raggruppati
+            if (examInLab == isLab && find(_tempGroupedCourseClassrooms.begin(),_tempGroupedCourseClassrooms.end(),iterClass->first)==_tempGroupedCourseClassrooms.end()) {
+                allRooms.push_back(iterClass->second);
+            }
         }
 
         if(pickSomeOfTheseClassrooms(allRooms,inutile,numSeatsToSeach,maxNumRooms)){
@@ -295,7 +301,7 @@ bool ExamDay::searchAvailableClassroomsInThisSlot(std::map<int, Classroom> &allU
         else
             canExist = false;
         if(canExist == false){
-            throw std::invalid_argument("Aula introvabile");
+            throw std::invalid_argument("");
         } else
             return false;
     }

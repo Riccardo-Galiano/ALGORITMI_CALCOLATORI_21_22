@@ -287,7 +287,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                                                                                requestChanges);
                             } catch (std::invalid_argument &err) {
                                 ///dovrò segnalare che non posso trovare le aule e quindi assegnare l'esame per questo esame e i suoi raggruppati
-                                error.append(err.what());
+                                error.append("Non e' stato possibile assegnare l'esame "+ coursesToConsiderInThisLoop[i].getId() +" per mancanza di aule abbastanza capienti\n");
                                 classRoomError = true;
                                 existRooms = false;
                             }
@@ -318,14 +318,18 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                 firstCourseOfThisLoop = false;
                             } else {
                                 ///elimino i corsi di questo loop dal vettore di esami da assegnare
-                                for (int j = 0; j < coursesToConsiderInThisLoop.size(); i++) {
-                                    for (int k = 0; k < _allExamAppealsToDo.at(sessName).size(); k++) {
-                                        if (_allExamAppealsToDo.at(sessName)[k] ==
-                                            coursesToConsiderInThisLoop[j].getId()) {
-                                            popAppealFromVector(_allExamAppealsToDo.at(sessName),
-                                                                coursesToConsiderInThisLoop[j].getId());
-                                        }
-                                    }
+                                for (int j = 0; j < coursesToConsiderInThisLoop.size(); j++) {
+                                    bool otherCourse = false;
+                                    roomsFoundedPerCourse.erase(roomsFoundedPerCourse.begin(),roomsFoundedPerCourse.end());
+                                    _yearCalendar.at(currentExamDay.toString()).eraseTempGroupedCourseClassrooms();
+                                      while(otherCourse == false) {
+                                          auto pos = find(_allExamAppealsToDo.at(sessName).begin(),_allExamAppealsToDo.at(sessName).end(),coursesToConsiderInThisLoop[j].getId());
+                                          if (pos != _allExamAppealsToDo.at(sessName).end())
+                                              popAppealFromVector(_allExamAppealsToDo.at(sessName),
+                                                                  coursesToConsiderInThisLoop[j].getId());
+                                          else
+                                              otherCourse = true;
+                                      }
                                 }
                                 pop = true;
                                 continueLoopPerHourStart == false;
@@ -1024,11 +1028,18 @@ void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> 
 
 ///elimina i corsi spenti dai raggrupapti in fase di genrazione della sessione
 void SessionYear::popOffCoursesFromGrouped(std::vector<Course> &coursesToConsiderInThisLoop) {
-    for(auto iter = coursesToConsiderInThisLoop.begin(); iter != coursesToConsiderInThisLoop.end(); iter++){
+    bool continueLoop = true;
+    for(auto iter = coursesToConsiderInThisLoop.begin(); iter != coursesToConsiderInThisLoop.end() && continueLoop; iter++){
         if(iter->getThisYearCourse(_acYear).getIsActive() == false){
             coursesToConsiderInThisLoop.erase(iter);
+            if(iter == coursesToConsiderInThisLoop.end())
+                continueLoop = false;
         }
     }
+}
+
+bool SessionYear::allExamAppealToDoIsEmpityAtSession(std::string sessionName) {
+    return  _allExamAppealsToDo.at(sessionName).empty();
 }
 
 

@@ -69,7 +69,7 @@ public:
     void controlSuccessivitySessionPeriod();
     void popOffCoursesFromGrouped(std::vector<Course>& coursesToConsiderInThisLoop);
     void fillCoursesAlreadyControlledPerThisDay(std::vector<Course> coursesToConsiderInThisLoop,std::vector<std::string>&coursesAlreadycontrolledPerday);
-
+    bool allExamAppealToDoIsEmpityAtSession(std::string sessionName);
 
     ///output
     void allExamAppealsWrite(std::map<std::string, Course>& courses);
