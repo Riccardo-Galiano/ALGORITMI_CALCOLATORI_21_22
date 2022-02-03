@@ -66,6 +66,7 @@ public:
     void updateStudyCourseInAllSpecYearCourse(int idStudyCourse);
     bool courseExistInThisYear(int year);
 
+
 private:
     std::string _id;///codice identificativo del corso
     std::string _name;///nome del corso

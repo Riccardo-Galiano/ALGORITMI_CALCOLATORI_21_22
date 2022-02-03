@@ -59,6 +59,7 @@ public:
     bool controlGroupedCoursesDifferentCds_C(std::vector<std::string> idGrouped,
                                              std::string idCourseToAddToIdGrouped, int year);
     bool controlGroupedCoursesDifferentStudyCourse_Sc();
+    void controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year);
     void insertCourses(const std::string &fin);
     void insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
@@ -71,6 +72,8 @@ public:
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
     int whatIsMyStudyCourse(Course& course, int acStartYear);
     void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear);
+    void controlGroupedExistenceInSameYears();
+    void controlProfsAndHour();
 
     ///Input (from DB)
     void readCourseNotActive();
@@ -134,7 +137,6 @@ private:
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     std::vector<std::string> _potentialCourse;
 
-private:
     int _version;
 };
 

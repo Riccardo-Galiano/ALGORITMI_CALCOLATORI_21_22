@@ -39,6 +39,10 @@ void Course::addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar
 
     ///key: l'anno di inizio dell'anno accademico. Value:: un oggetto SpecificYearCourse che conterrà le varie info specifiche per ogni anno accademico per ogni corso
     //inserisco il nuovo anno
+    if(_courseOfTheYear.count(stoi(sY_eY.substr(0, 4))) != 0){
+         auto pos = _courseOfTheYear.find(stoi(sY_eY.substr(0, 4)));
+         _courseOfTheYear.erase(pos);
+    }
     _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(stoi(sY_eY.substr(0, 4)),SpecificYearCourse(sY_eY, active, nCrsiPar, prof, exam,idGrouped, yy_semester,studyCourse,line_counter)));
 
     //se il penultimo anno il corso era attivo e quest'anno è spento setto anche l'anno di spegnimento
@@ -548,7 +552,15 @@ void Course::updateStudyCourseInAllSpecYearCourse(int idStudyCourse) {
 
 ///Mi chiedo se il corso esiste anche in quell'anno
 bool Course::courseExistInThisYear(int year) {
-    return _courseOfTheYear.count(year) != 0;
+    int firstYear = getFirstYearOfActivity();
+    int lastYear = getLastSpecificYearCourse().getStartYear();
+    if(firstYear > year)
+        return false;
+    else {
+        if(lastYear < year)
+            fillAcYearsUntilStartAcYear(year,lastYear);
+        return true;
+    }
 }
 
 ///output operator overload
@@ -562,3 +574,4 @@ std::ostream &operator<<(std::ostream &course, Course &c) {
     }
     return course;
 }
+

@@ -365,7 +365,26 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
             break;
         }
         case versioning:{
-            uni.versioning(argv[2]);
+            std:: string strToAddToLog;
+            if(argc == 3) {
+                bool isOk = true;
+                try {
+                    uni.versioning(argv[2]);
+                } catch (std::exception &occurredException) {
+                    strToAddToLog = occurredException.what();
+                    strToAddToLog.append(
+                            "Non e' stato possibile effettuare il comando -up per gli errori elencati precedentemente\n");
+                    sysLog.appendToLog(strToAddToLog, true);
+                    isOk = false;
+                }
+                if (isOk) {
+                    strToAddToLog.append("Il comando -up e' stato eseguito correttamente\n");
+                    sysLog.appendToLog(strToAddToLog, false);
+                }
+            }else{
+                strToAddToLog.append("Numero di argomenti da terminale per il comando -up errato.\nNon e' stato possibile effettuare il comando -up per gli errori elencati precedentemente\n ");
+                sysLog.appendToLog(strToAddToLog,true);
+            }
             break;
         }
         case add_study_plan_student:{
@@ -491,7 +510,11 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
 
 int main(int argc, char *argv[]){
     University poliTo;
-    program(poliTo, argv,argc);
+    try {
+        program(poliTo, argv, argc);
+    }catch(std::invalid_argument &err){
+        std::cerr<<err.what();
+    }
     if(sysLog.errorsOccurred())
         std::cerr << sysLog.getLog();
     else

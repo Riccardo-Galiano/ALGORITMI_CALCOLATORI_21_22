@@ -105,6 +105,7 @@ public:
     void setYySemester(const std::string &yySemester);
     bool studyCourseEmpty();
 
+
 private:
     std::string _yy_semester;
     //unico per tutti i corsi!!!
