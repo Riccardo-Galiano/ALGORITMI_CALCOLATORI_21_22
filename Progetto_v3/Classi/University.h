@@ -46,6 +46,8 @@ public:
 
     ///DB management
     void versioning(std::string newVersion);
+    void updateStateVersioning(int newVersion);
+    bool checkVersionContainsThis(int version);
     bool checkVersioningRequest(int newVer);
     void revertChanges(int newVersion);
     void revertChanges2();
@@ -94,7 +96,7 @@ public:
     void dbDateSessionsWrite();
     void dbNoAvailabilityWrite();
     void dbAppealsWrite();
-    void writeVersion(int version);
+    void writeVersion();
 
     ///get new ID
     const int getNewStudentId() const ;
@@ -143,7 +145,7 @@ private:
     std::vector<std::string> _tempInfoNotActiveCoursesToWriteInTheDB;
     std::vector<std::string> _potentialCourse;
 
-    int _version;
+    std::vector<int> _version;
 };
 
 

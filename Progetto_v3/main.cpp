@@ -1,11 +1,6 @@
 #include <iostream>
 #include "./Classi/University.h"
-#include <fstream>
-#include <sstream>
-#include "Classi/Student.h"
 #include <vector>
-#include "Classi/Professor.h"
-#include "Classi/DbException.h"
 #include "Classi/SystemLog.h"
 
 using namespace std;
@@ -36,41 +31,41 @@ SystemLog sysLog;
 int returnCode(char *argv[]) {
     std::string paramInput = argv[1];
     std::string secondParamInput = argv[2];
-    if (paramInput.compare("-a:s") == 0)
+    if (paramInput == "-a:s")
         return add_student;
-    else if (paramInput.compare("-a:d") == 0)
+    else if (paramInput == "-a:d")
         return add_professor;
-    else if (paramInput.compare("-a:a") == 0)
+    else if (paramInput == "-a:a")
         return add_classroom;
-    else if (paramInput.compare("-a:c") == 0)
+    else if (paramInput == "-a:c")
         return add_course;
-    else if (paramInput.compare("-a:f") == 0)
+    else if (paramInput == "-a:f")
         return add_studyCourse;
-    else if (paramInput.compare("-u:s") == 0)
+    else if (paramInput == "-u:s")
         return update_student;
-    else if (paramInput.compare("-u:d") == 0)
+    else if (paramInput == "-u:d")
         return update_professor;
-    else if (paramInput.compare("-u:a") == 0)
+    else if (paramInput == "-u:a")
         return update_classroom;
-    else if (paramInput.compare("-i:c") == 0)
+    else if (paramInput == "-i:c")
         return insert_course;
-    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("current_a")==0)
+    else if(paramInput == "-s" && secondParamInput == "current_a")
         return set_session_period;
-    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("set_availability")==0)
+    else if(paramInput == "-s" && secondParamInput == "set_availability")
         return set_availability;
-    else if (paramInput.compare("-g")==0)
+    else if (paramInput == "-g")
         return set_exam_date;
-    else if (paramInput.compare("-up")==0)
+    else if (paramInput == "-up")
         return versioning;
-    else if (paramInput.compare("-a:p")==0)
+    else if (paramInput == "-a:p")
         return add_study_plan_student;
-    else if (paramInput.compare("-u:p")==0)
+    else if (paramInput == "-u:p")
         return update_study_plan_student;
-    else if (paramInput.compare("-i:v")==0)
+    else if (paramInput == "-i:v")
         return insert_students_grades;
-    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("set_min_distance")==0)
+    else if(paramInput == "-s" && secondParamInput == "set_min_distance")
         return set_min_distance;
-    else if(paramInput.compare("-s") == 0 && secondParamInput.compare("request_changes")==0)
+    else if(paramInput == "-s" && secondParamInput == "request_changes")
         return request_changes;
     return -1;
 }

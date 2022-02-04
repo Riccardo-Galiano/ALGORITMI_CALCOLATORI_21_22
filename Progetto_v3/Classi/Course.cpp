@@ -437,7 +437,7 @@ bool Course::profHaveThisCourse(int matr, int acStartYear) {
         throw std::invalid_argument("Il corso "+ getId() + " non era ancora attivo nel "+ std::to_string(acStartYear) + "-" + std::to_string(acStartYear+1)+ "\n");
     }else if(lastYear <acStartYear){
         ///se il corso semplicemente non è stato aggiornato
-        fillAcYearsUntilStartAcYear(acStartYear,lastYear);
+        fillAcYearsUntilStartAcYear(acStartYear, lastYear);
     }
     std::vector<int> profOfCourse = _courseOfTheYear.at(acStartYear).getAllProfMatr();
     return std::find(profOfCourse.begin(), profOfCourse.end(), matr) != profOfCourse.end();
@@ -522,7 +522,7 @@ bool Course::courseExistInThisYear(int year) {
         return false;
     else {
         if(lastYear < year)
-            fillAcYearsUntilStartAcYear(year,lastYear);
+            fillAcYearsUntilStartAcYear(year, lastYear);
         return true;
     }
 }
