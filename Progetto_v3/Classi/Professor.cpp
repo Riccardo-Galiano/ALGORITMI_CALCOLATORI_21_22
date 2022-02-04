@@ -82,7 +82,7 @@ void Professor::noAvailabilityClear(int year) {
 }
 
 ///aggiunge un esame alla mappa degli esami che un professore deve preparare
-void Professor::addNewExam(std::string date, int hh, std::string cod_exam) {
+void Professor::addNewExam(const std::string &date, int hh, const std::string &cod_exam) {
     if (_examsToDo.count(date) == 0){
         //mappa di esami in quel giorno ancora non esistente
         std::map<int,std::string> examsPerDay;//mappa che contiene ad un particolare slot un esame

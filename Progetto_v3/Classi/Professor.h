@@ -21,7 +21,7 @@ public:
 
     ///Professor management
     void setNoAvaibilities(int acYear, std::string& input);
-    void addNewExam(std::string date, int hh, std::string cod_exam);
+    void addNewExam(const std::string &date, int hh, const std::string &cod_exam);
 
     ///output
     std::vector<std::string> outputNoAvailabilities(int nMatr);

@@ -12,7 +12,7 @@ void SystemLog::appendToLog(std::string &toAppend, bool isError) {
 }
 
 ///prende _log
-std::string SystemLog::getLog() {
+std::string SystemLog::getLog() const {
     return _log;
 }
 

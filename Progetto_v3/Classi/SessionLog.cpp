@@ -14,7 +14,7 @@ SessionLog::SessionLog(std::string &output_file_name) {
 }
 
 ///genera i warning del gap tra gli appelli
-void SessionLog::generateWarningGapAppeals(std::vector<Course> &courses, int gap, int year, int session) {
+void SessionLog::generateWarningGapAppeals(const std::vector<Course> &courses, int gap, int year, int session) {
     std::stringstream ss;
     ///<id_corso_studi>;<id_esame>;<regola non rispettata>
     for (int i = 0; i < courses.size(); i++) {

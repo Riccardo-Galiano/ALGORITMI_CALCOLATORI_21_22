@@ -11,7 +11,7 @@
 class SystemLog {
 public:
     void appendToLog(std::string& toAppend, bool isError);
-    std::string getLog();
+    std::string getLog() const;
     bool errorsOccurred() const;
 private:
     std::string _log;

@@ -94,6 +94,24 @@ string
 Course.h
 C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
 
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.cpp
+algorithm
+-
+fstream
+-
+SessionYear.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
+Parse.hpp
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
+ExamDay.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
+StudyCourse.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h
+DbException.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
+University.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h
+
 C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h
 map
 -

@@ -112,29 +112,29 @@ void Classroom::setDisavailability(Date& date, int slotStartHour, int numSlot) {
 }
 
 ///prende le altre info della versioning
-std::string Classroom::getOthersInfo() {
+std::string Classroom::getOthersInfo()const {
     std::stringstream ss;
     ss<<_othersInfoClassroom._drawingTable <<";"<<_othersInfoClassroom._computer <<";"<<_othersInfoClassroom._projector<<";"<<_othersInfoClassroom._blackBoard;
     return ss.str();
 }
 
 ///prende il numero di tavoli da disegno
-int Classroom::getDrawingTable() {
+int Classroom::getDrawingTable() const{
     return _othersInfoClassroom._drawingTable;
 }
 
 ///prende il numero di computer
-int Classroom::getComputer() {
+int Classroom::getComputer()const {
     return _othersInfoClassroom._computer;
 }
 
 ///prende il numero di proiettori
-int Classroom::getProjector() {
+int Classroom::getProjector() const{
     return _othersInfoClassroom._projector;
 }
 
 ///prende il numero di lavagne
-int Classroom::getBlackBoard() {
+int Classroom::getBlackBoard() const{
     return _othersInfoClassroom._blackBoard;
 }
 

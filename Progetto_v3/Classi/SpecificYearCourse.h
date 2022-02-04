@@ -64,9 +64,9 @@ public:
     int getNumParallelCourses() const;
     const std::map<int, std::vector<professor>> getProfsOfParallelCourses()const;
     const std::string getProfParString() const;
-    std::vector<int> getAllProfMatr(); //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
+    std::vector<int> getAllProfMatr()const; //ritorna LE MATRICOLE dei prof, indistintamente rispetto al corso parallelo a cui sono assegnati
     const std::string getGroupedCoursesIdString() const;
-    std::vector<professor> getProfsFromString (std::string profs, int line_counter);
+    std::vector<professor> getProfsFromString (std::string profs, int line_counter)const;
     const std::vector<std::string> &getIdGroupedCourses() const;
     const std::string getExamString() const;
     const Exam &getExam() const;
@@ -75,19 +75,19 @@ public:
     std::vector<int> getStudyCourseAssigned() const;
     int getTotStudentsEnrolled() const;
     std::string getAcYearOff() const;
-    int getTotStudentsExam();
+    int getTotStudentsExam()const;
     std::vector<Date> getAllAppeals() const;
-    std::vector<int> getRoomsAppeal();
-    std::vector<int> getRoomsAppealInSession(int numSession, int numAppeal);
-    int getNumNextAppeal();
+    std::vector<int> getRoomsAppeal() ;
+    int getNumNextAppeal() const;
     const std::map<int, std::vector<Date>> &getHowManyTimesIAmAssignedInASession() const;
-    std::map<int, student> getStudentsPassedInThisAppeal(Date dateAppeal);
-    std::string getAppealsForAllSession();
-    std::string getRoomsPerAppealsString(int numAppeals);
-    int getStartHourAppeal(int numAppeals);
-    char getPlaceExam();
-    int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour);
-    int getNumAppealsAssignedPerSession(int numSession);
+    std::map<int, student> getStudentsPassedInThisAppeal(Date dateAppeal)const;
+    std::string getAppealsForAllSession()const;
+    std::string getRoomsPerAppealsString(int numAppeals)const;
+    int getStartHourAppeal(int numAppeals)const;
+    char getPlaceExam()const;
+    int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour)const;
+    int getNumAppealsAssignedPerSession(int numSession)const;
+    int getNumAppeal() const;
 
 
     ///setter
@@ -140,11 +140,8 @@ private:
     //value startSlot
     std::map<int,int> _startSlotPerEachAppeal;
     int _numAppeal;
-public:
-    int getNumAppeal() const;
 
-private:
-    std::vector<std::string> _errorStringSpecificYearCourse;
+
 };
 
 std::ostream& operator<<(std::ostream& output, const SpecificYearCourse& s);

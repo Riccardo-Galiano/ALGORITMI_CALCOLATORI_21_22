@@ -21,12 +21,12 @@ public:
 
     University();
 
-    ///getter
+    ///getter University
     std::map<int, Professor> getProfessors() const;
     std::map<int, Classroom> getClassrooms() const;
     std::map<std::string, Course> getCourses() const;
 
-    ///setter
+    ///setter University
     void setProfessors(const std::map<int, Professor> &professors);
     void setClassrooms(const std::map<int, Classroom> &classrooms);
     void setCourses(const std::map<std::string, Course> &courses);
@@ -39,9 +39,6 @@ public:
     void setMinDistance(std::string acYear,std::string name);
     void requestChanges(std::string acYear,std::string fin);
     void minDistanceRequestWrite();
-    void controlCoerenceSessionDate(std::string winterSession,std::string  summerSession,std::string autumnSession,int acYear);
-    void controlOfASingleSessionPeriod(std::string name,std::string sessionPeriod, int acStartYear);
-    void controlUnicity(std::vector<std::string>& controlUnicityCourses,int line_counter);
     void removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal, Date& date, int& startSlot, std::map<std::string,std::vector<int>>& classrooms);
     void reassignThisAppealInfo(int acYear, std::string idCourse, int numSession, int numAppeal,Date date,int startSlot, std::map<std::string,std::vector<int>> classrooms);
     void generateOutputFileName();
@@ -54,12 +51,7 @@ public:
     void revertChanges2();
     void revertChanges3();
     void renameOldDataBase(int version);
-    void controlDatabase(int startAcYear);
     void dataBaseIsEmpty(int startAcYear);
-    bool controlGroupedCoursesDifferentCds_C(std::vector<std::string> idGrouped,
-                                             std::string idCourseToAddToIdGrouped, int year);
-    bool controlGroupedCoursesDifferentStudyCourse_Sc();
-    void controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year);
     void insertCourses(const std::string &fin);
     void insertStudentsGrades(std::string fin);
     void addStudyPlan(std::string fin);
@@ -72,8 +64,7 @@ public:
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
     int whatIsMyStudyCourse(Course& course, int acStartYear);
     void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear);
-    void controlGroupedExistenceInSameYears();
-    void controlProfsAndHour();
+
 
     ///Input (from DB)
     void readCourseNotActive();
@@ -124,6 +115,18 @@ public:
     void updateProfessors(const std::string &fin);
     void updateClassroom(const std::string &fin);
     void updateStudyPlan(const std::string& fin);
+
+    ///control
+    void controlCoerenceSessionDate(std::string winterSession,std::string  summerSession,std::string autumnSession,int acYear);
+    void controlOfASingleSessionPeriod(std::string name,std::string sessionPeriod, int acStartYear);
+    void controlUnicity(std::vector<std::string>& controlUnicityCourses,int line_counter);
+    void controlDatabase(int startAcYear);
+    bool controlGroupedCoursesDifferentCds_C(std::vector<std::string> idGrouped,
+                                             std::string idCourseToAddToIdGrouped, int year);
+    bool controlGroupedCoursesDifferentStudyCourse_Sc();
+    void controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year);
+    void controlGroupedExistenceInSameYears();
+    void controlProfsAndHour();
 
 private:
     SystemLog _universityLog;

@@ -69,7 +69,7 @@ int SpecificYearCourse::getNumParallelCourses() const {
 }
 
 ///scinde le varie info per ogni prof e li mette in un vettore di struct professor
-std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs, int line_counter) {
+std::vector<professor> SpecificYearCourse::getProfsFromString(std::string profs, int line_counter)const {
     int mainProf; //titolare del corso
     std::vector<std::string> singleProfsToRead;
     std::vector<professor> profToReturn;
@@ -171,7 +171,7 @@ const std::string SpecificYearCourse::getProfParString() const {
 }
 
 ///prende tutte le matricole di tutti i professori per un corso di uno specifico anno per tutti i corsi paralleli
-std::vector<int> SpecificYearCourse::getAllProfMatr() {
+std::vector<int> SpecificYearCourse::getAllProfMatr() const{
     std::vector<int> professors;
     std::vector<professor> profs;
     for (int i = 0; i < _professors.size(); i++) {
@@ -310,7 +310,7 @@ std::string SpecificYearCourse::getAcYearOff() const{
 }
 
 ///prende il numero di studenti che devono fare l'esame
-int SpecificYearCourse::getTotStudentsExam() {
+int SpecificYearCourse::getTotStudentsExam()const {
     return _totStudentsNotPassed; //(tot enroled - (tot enroled-totNot))
 }
 
@@ -320,7 +320,7 @@ void SpecificYearCourse::addClassroomsToAppeal(int numAppeal, std::vector<int> &
 }
 
 ///prende il numero del prossimo appello
-int SpecificYearCourse::getNumNextAppeal() {
+int SpecificYearCourse::getNumNextAppeal() const {
     int tot = 0;
     auto start = _howManyTimesIAmAssignedInASession.begin();
     auto end = _howManyTimesIAmAssignedInASession.end();
@@ -420,7 +420,7 @@ bool SpecificYearCourse::notExamsAssigned() {
 }
 
 ///prende gli studenti che hanno passato l'esame in questo appello
-std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) {
+std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) const{
     std::map<int, student> allStudentsPassed;
     for (auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end(); iterStud++) {
         student currentStud = iterStud->second;
@@ -443,7 +443,7 @@ void SpecificYearCourse::assignGrouped(std::vector<std::string> &idGrouped, std:
 }
 
 ///formatta le aule per la scrittura su file degli appelli delle sessioni
-std::string SpecificYearCourse::getRoomsPerAppealsString(int numAppeals) {
+std::string SpecificYearCourse::getRoomsPerAppealsString(int numAppeals)const {
     std::stringstream ss;
     std::vector<int> roomsPerAppeals = _roomsEachAppeal.at(numAppeals);
     for (int i = 0; i < roomsPerAppeals.size(); i++) {
@@ -461,7 +461,7 @@ void SpecificYearCourse::addStartSlotToAppeal(int numAppeal, int startExamHour) 
 }
 
 ///prende l'ora di inizio di un appello
-int SpecificYearCourse::getStartHourAppeal(int numAppeals) {
+int SpecificYearCourse::getStartHourAppeal(int numAppeals) const{
     return _startSlotPerEachAppeal.at(numAppeals);
 }
 
@@ -471,7 +471,7 @@ void SpecificYearCourse::setYySemester(const std::string &yySemester) {
 }
 
 ///prende il luogo in cui sarà fatto l'esame, aula o laboratorio
-char SpecificYearCourse::getPlaceExam() {
+char SpecificYearCourse::getPlaceExam()const {
     return _exam.getPlace();
 }
 
@@ -493,7 +493,7 @@ std::vector<int> SpecificYearCourse::classroomsAssignedInGivenSession(int numSes
 }
 
 ///converte il numero di appello per sessione in numero di appello annuale
-int SpecificYearCourse::getNumAppealFromNumSessNumAppealInSession(int numSession, int numAppeal){
+int SpecificYearCourse::getNumAppealFromNumSessNumAppealInSession(int numSession, int numAppeal)const{
     int numAppealYear = 0;
     if(_active) {
         if (numSession == 3)
@@ -543,10 +543,6 @@ void SpecificYearCourse::removeInfoThisAppealFromSpecificYear(int numSession, in
     _roomsEachAppeal.erase(numAppealPerYear);
 }
 
-///prende le aule di uno specifico appello di una sessione
-std::vector<int> SpecificYearCourse::getRoomsAppealInSession(int numSession, int numAppeal) {
-    return _roomsEachAppeal.at(getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal));
-}
 
 ///riassegna l'appello vecchio allo specifiYear nel caso in cui la request_changes non sia andata a buon fine
 void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date, int startSlot, std::vector<int> classroomsPerCourse) {
@@ -569,7 +565,7 @@ void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date,
         vectD.insert(vectD.begin(), date);
     }
 }
-std::string SpecificYearCourse::getAppealsForAllSession() {
+std::string SpecificYearCourse::getAppealsForAllSession()const {
     std::stringstream ss;
     int numAppeals = 0;
     for (auto iterSessionAppeals = _howManyTimesIAmAssignedInASession.begin();
@@ -637,7 +633,7 @@ void SpecificYearCourse::setAcYearOff(std::string yearOff) {
     _acYearOff = yearOff;
 }
 
-int SpecificYearCourse::getNumAppealsAssignedPerSession(int numSession) {
+int SpecificYearCourse::getNumAppealsAssignedPerSession(int numSession)const {
     return _howManyTimesIAmAssignedInASession.at(numSession).size();
 }
 

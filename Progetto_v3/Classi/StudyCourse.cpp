@@ -222,11 +222,6 @@ std::string StudyCourse::isInWhichSemester(std::string codCourse) const {
     return "";
 }
 
-//esiste tra i corsi del corso di studio
-bool StudyCourse::assignStudyCourse(std::string course) {
-    std::vector<std::string> allCourses = getAllCoursesOfStudyCourse();
-    return std::find(allCourses.begin(), allCourses.end(), course) != allCourses.end();
-}
 
 ///prende i corsi spenti
 std::vector<std::string> StudyCourse::getOffCourses() const {

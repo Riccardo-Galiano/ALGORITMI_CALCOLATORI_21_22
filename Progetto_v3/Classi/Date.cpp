@@ -49,7 +49,7 @@ void Date::setDate(int yy, int mm, int dd) {
    }
    else if( dd >31) {
       throw std::invalid_argument("Il giorno non puo' essere maggiore di 31\n");
-   }else{//?????
+   }else{
       throw invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene\n"};
    }
 }
@@ -63,7 +63,7 @@ Date& Date::operator++() {
 // overloaded postfix increment operator
 Date Date::operator++(int) {
     //salvo la data prima di incrementarla
-    Date temp(_year,_month,_day);
+   Date temp(_year,_month,_day);
    temp.helpIncrement();
     //incremento la data temporanea
     return temp;

@@ -24,12 +24,10 @@ class SessionYear {
 public:
     ///constructor
     SessionYear(std::string& acYear, std::string& winterSession,std::string& summerSession,std::string& autumnSession,std::string output_file_name = "output_file_name");
+
     ///SessionYear management
-    void addSession(std::string& acYear, std::string& sessionDates,  std::string& name);
-    void setCaldendar(std::vector<Date> dates);
     //ritorna true se è stato possibile generare tutta la sessione, false altrimenti
     bool generateNewYearSession(std::string &fout, int relaxPar, University &myUniversity);
-    void addProfGap(std::string& matr_idC, int gap);
     //param=> 0: invernale, 1: estiva, 2: autunnale
     //ritorna true se è stato possibile, false altrimenti
     bool generateThisSession(std::string sessName, std::map<std::string, Course> &courses,
@@ -42,20 +40,26 @@ public:
                                     std::vector<int> idRooms, bool requestChanges, int numAppealYear);
     static void popAppealFromVector(std::vector<std::string>& allExamAppealsToDo,std::string codExam);
     std::vector<std::string> getProfsOfGapProfsString();
-    void assignAppealsToCalendar(std::string appeal, int startSlotHour, Course& course, int numSlots);
+    void assignAppealsToCalendar(std::string appeal, int startSlotHour, const Course &course, int numSlots);
     void removeThisAppealInfoFromCalendar(int numSlots,Date& date, int& startSlot, std::string& idCourse);
     void tryToSetThisExamInThisSession(University& myUniversity, Course& courseToConsider, int numSession, int numAppeal, Date& tryDate);
     void allGapProfsNoRespect(std::vector<std::pair<std::string, int>> &gapProfsNoRespect,
-                              std::vector<int> allProfsMatrThisCourse, std::string courseId);
+                              const std::vector<int> &allProfsMatrThisCourse, std::string courseId);
+    void addProfGap(const std::string &matr_idC, int gap);
+    void fillCoursesAlreadyControlledPerThisDay(const std::vector<Course> &coursesToConsiderInThisLoop, std::vector<std::string>&coursesAlreadycontrolledPerday);
+    void addSession(std::string& acYear, std::string& sessionDates, const std::string &name);
+    void setCaldendar(std::vector<Date> dates);
+    void setFileNamePerSession(int numSession, const std::string &fileName);
 
     ///getter
     int getAcYear() const;
     std::string getSessions() const;
-    std::vector<std::string> getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course>& courses);
-    int getSemester(std::string sessName);
-    std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>& courses, std::string idCourseSelected);
-    std::string getFileName(int numSession);
-    void setFileNamePerSession(int numSession,std::string fileName);
+    std::vector<std::string> getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course>& courses)const;
+    int getSemester(std::string sessName) const;
+    std::vector<std::string> getGroupedCourses(const std::map<std::string, Course>& courses, std::string idCourseSelected)const;
+    std::string getFileName(int numSession)const;
+    std::vector<std::string>getSessionAndFileName()const;
+
 
     ///control
     int isPossibleToAssignThisExam(Course course,Date,std::map<int, Professor>&,std::map<int, Classroom>&,int, int, int,std::vector<int>&, int endHour,bool firstCourseOfThisLoop,int startControlExamHourSlot,bool requestChanges);
@@ -63,19 +67,16 @@ public:
     bool dateIsOK(Date &newDate, const Course &course, std::string &sessName, int gapAppeals, bool requestChanges,
                   bool tryToSatisfyProfsMinDistance);
     int checkIfProfsAvailableAndGapSameSemesterCourses(Course& course,Date& currentExamDay,std::map<int, Professor>& profs,std::map<int, Classroom>& classrooms, int relaxPar,int session,std::vector<int>& roomsFounded, int endHourSlot,bool firstCourseOfThisLoop,int startControlExamHourSlot,bool requestChanges);
-    static bool checkHours(std::vector<int>& input);
     bool isSecondAppeal(Date newDate, Date lastDateAssignation);
     void updateExamDayCourse(Course course,std::vector<Date> appealPerCourse);
     void controlSuccessivitySessionPeriod();
     void popOffCoursesFromGrouped(std::vector<Course>& coursesToConsiderInThisLoop);
-    void fillCoursesAlreadyControlledPerThisDay(std::vector<Course> coursesToConsiderInThisLoop,std::vector<std::string>&coursesAlreadycontrolledPerday);
     bool allExamAppealToDoIsEmpityAtSession(std::string sessionName);
 
     ///output
-    void allExamAppealsWrite(std::map<std::string, Course>& courses);
     void generateOutputFilesSession(std::string& outputFileName, int session, const std::map<std::string, Course>& courses, bool requestChanges);
     bool fileNameIsEmpty();
-    std::vector<std::string>getSessionAndFileName();
+
 private:
     SessionLog _sysLog;
     int _acYear;
@@ -97,7 +98,6 @@ private:
     bool _winter = false;
     bool _summer = false;
     bool _autumn = false;
-    std::vector<std::string> _errorStringSessionYear;
     //key: session : 1
     //value: nome del file : exam_2021_s1.txt
     std::map<int,std::string> _fileNamePerAcSession;

@@ -17,7 +17,7 @@ public:
     int getLeaveTime() const;
     const std::string &getMode() const;
     char getPlace() const;
-    int howManySlots();
+    int howManySlots()const;
 
 private:
     int _time; //tempo dell'esame

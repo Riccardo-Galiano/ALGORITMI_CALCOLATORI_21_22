@@ -94,7 +94,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
 }
 
 ///aggiorna la mappa di slot occupati per i professori
-void ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, Course course, int hhStart, int num_slots) {
+void ExamDay::assignExamToProf(std::map<int, Professor> &allUniversityProfs, const Course &course, int hhStart, int num_slots) {
     ///dobbiamo marcare come "occupati" gli slots negli oggetti professore interessati (tutti quelli di un corso specifico)
     SpecificYearCourse specificCourse = course.getThisYearCourse(_date.getYear() - 1); //prendiamo corso specifico dell'anno di questo Exam Day
     std::vector<int> profsMatr = specificCourse.getAllProfMatr(); //tutti i professori di tutti i corsi paralleli
@@ -124,7 +124,7 @@ bool ExamDay::sameStudyCourseAndYear(Course course, int year) {
 }
 
 ///assegna l'esame negli slot accettabili in una particolare data
-void ExamDay::assignExamToExamDay(int hhStart, Course &course, int numSlot) {
+void ExamDay::assignExamToExamDay(int hhStart, const Course &course, int numSlot) {
     for (int slot = hhStart; slot < hhStart + (numSlot * 2); slot = slot + 2) {
         _slots.at(slot).push_back(course);
     }
@@ -391,7 +391,7 @@ bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, 
 }
 
 ///aggiorna il corso in uno slot
-void ExamDay::updateSlot(Course course) {
+void ExamDay::updateSlot(const Course &course) {
     for(auto iterSlot = _slots.begin(); iterSlot != _slots.end(); iterSlot++){
         std::string id = course.getId();
         //per ogni corso del vector mi chiedo se l'id è lo stesso, se si cancello l'intero corso vecchio e metto il nuovo

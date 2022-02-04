@@ -20,8 +20,8 @@ public:
     ///Student management
     void addStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan, bool addStudyPlan);
     void readStudyPlanPerStudent(std::string acYearRegistration, const std::vector<std::string> &coursesStudyPlan);
-    ///getter
 
+    ///getter
     std::string getPlanStudyCourseString() const;
     int getYearRegistration() const;
     std::vector<std::string> getStudyPlan() const;

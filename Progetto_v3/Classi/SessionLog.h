@@ -1,4 +1,6 @@
-
+//
+// Created by andre on 10/12/2021.
+//
 #ifndef PROGETTO_V3_SESSIONLOG_H
 #define PROGETTO_V3_SESSIONLOG_H
 
@@ -11,7 +13,7 @@ class SessionLog {
 public:
     explicit SessionLog(std::string& output_file_name);
     void generateWarnings(std::vector<Course>& courses,int relaxPar,int year,int gap,std::vector<std::pair<std::string,int>> gapProfsNoRespect,int session);
-    void generateWarningGapAppeals(std::vector<Course>& courses,int gap,int year,int session);
+    void generateWarningGapAppeals(const std::vector<Course> &courses, int gap, int year, int session);
     void generateWarningGapSameStudyCourse(const std::vector<Course>& courses,int year,int session);
     void generateWarningGapAvaibilityProfs(const std::vector<Course>& courses,int year,int session);
     void generateWarningGapProfs(const std::vector<std::pair<std::string,int>>& gapProfsNoRespect,int session);

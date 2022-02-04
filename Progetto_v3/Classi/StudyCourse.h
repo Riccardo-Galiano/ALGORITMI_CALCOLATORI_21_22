@@ -20,7 +20,6 @@ public:
                             const std::map<int, StudyCourse> &studyCourse, int posFile);
     void addOffCourses(const std::vector<std::string> & offCourses);
     void updateSemestersAndOffCourses(const std::string& idCourse, std::string& acYY, std::vector<std::string>& temp);
-    bool assignStudyCourse(std::string course);
 
 
     ///getter

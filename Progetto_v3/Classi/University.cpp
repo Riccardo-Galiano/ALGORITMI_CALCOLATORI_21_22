@@ -725,7 +725,7 @@ void University::addStudyCourses(const std::string &fin) {
 void University::addCourses(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file inserimento nuovi corsi");
+        throw std::invalid_argument("Errore apertura file inserimento nuovi corsi\n");
     }
     std::string line;
     int line_counter = 1;
@@ -2621,11 +2621,15 @@ void University::dataBaseIsEmpty(int startAcYear) {
             for (auto iter = _courses.begin(); iter != _courses.end(); iter++) {
                 int firstYear = iter->second.getFirstYearOfActivity();
                 int studentsEnrolled = iter->second.getThisYearCourse(startAcYear).getTotStudentsEnrolled();
-                if (startAcYear >= firstYear) {
-                    if (studentsEnrolled == 0) {
-                        error.append("Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: " +
-                                     std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1));
-                        isOk = false;
+                 if (startAcYear >= firstYear) {
+                    bool isActive = iter->second.getThisYearCourse(startAcYear).getIsActive();
+                    if(isActive) {
+                        if (studentsEnrolled == 0) {
+                            error.append(
+                                    "Il corso " + iter->second.getId() + " non ha studenti iscritti in questo anno: " +
+                                    std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1));
+                            isOk = false;
+                        }
                     }
                 }
             }
@@ -3383,6 +3387,12 @@ void University::readPassedAppeals() {
 void University::readExamAppealsPerAcSession(std::string acYear) {
     int year = Parse::getAcStartYear(acYear);
     ///per ogni sessione
+    for(auto iterCourse = _courses.begin(); iterCourse != _courses.end();iterCourse++){
+        int lastYear = iterCourse->second.getLastSpecificYearCourse().getStartYear();
+        if(lastYear<year){
+            iterCourse->second.fillAcYearsUntilStartAcYear(year,lastYear);
+        }
+    }
     for (int i = 1; i <= 3; i++) {
         std::stringstream ss;
         std::string nameFile = _acYearSessions.at(year).getFileName(i);

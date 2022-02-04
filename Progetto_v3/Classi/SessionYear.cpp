@@ -50,7 +50,7 @@ SessionYear::SessionYear(std::string &acYear, std::string &winterSession, std::s
 
 
 ///aggiunge il periodo delle sessioni
-void SessionYear::addSession(std::string &acYear, std::string &sessionDates, std::string &name) {
+void SessionYear::addSession(std::string &acYear, std::string &sessionDates, const std::string &name) {
     _acYear = Parse::getAcStartYear(acYear);
     ///vettore di Date in cui metterò la data di inizio e di fine
     std::vector<Date> dates = Parse::getDates(sessionDates);
@@ -388,7 +388,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 }
 
 ///tiene traccia dei corsi che non abbiamo potuto inserire in quel giorno
-void SessionYear::fillCoursesAlreadyControlledPerThisDay(std::vector<Course> coursesToConsiderInThisLoop,std::vector<std::string>&coursesAlreadycontrolledPerday) {
+void SessionYear::fillCoursesAlreadyControlledPerThisDay(const std::vector<Course> &coursesToConsiderInThisLoop, std::vector<std::string>&coursesAlreadycontrolledPerday) {
         for(int i = 0; i<coursesToConsiderInThisLoop.size(); i++){
             coursesAlreadycontrolledPerday.push_back(coursesToConsiderInThisLoop[i].getId());
         }
@@ -450,7 +450,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
 }
 
 ///prende tutti gli appelli da fare nella sessione sessName
-std::vector<std::string>SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course> &courses) {
+std::vector<std::string>SessionYear::getAllExamAppealsToDo(std::string sessName, std::map<std::string, Course> &courses) const{
     std::vector<std::string> allExamAppealsToDo;
     int semesterOfThisSession = getSemester(sessName); //primo semestre = winter, sec sem = summer, (terzo semestre) = autumn
     for (auto iterCourse = courses.begin(); iterCourse != courses.end(); iterCourse++) {
@@ -477,15 +477,17 @@ std::vector<std::string>SessionYear::getAllExamAppealsToDo(std::string sessName,
             allExamAppealsToDo.push_back(iterCourse->first);
             allExamAppealsToDo.push_back(iterCourse->first);
         } else {
-            ///altrimenti solo uno...
-            allExamAppealsToDo.push_back(iterCourse->first);
+            ///altrimenti mi chiedo se ha studenti, se non ne ha lo salto altrimenti lo segno con un unico appello
+            int studentsEnrolled = iterCourse->second.getThisYearCourse(_acYear).getTotStudentsEnrolled();
+            if(studentsEnrolled != 0)
+                allExamAppealsToDo.push_back(iterCourse->first);
         }
     }
     return allExamAppealsToDo;
 }
 
 ///prende il semstre
-int SessionYear::getSemester(std::string sessName) {
+int SessionYear::getSemester(std::string sessName) const {
     if (sessName == "winter")
         return 1;
     else if (sessName == "summer")
@@ -519,7 +521,7 @@ std::string SessionYear::getSessions() const {
 
 ///prende i corsi raggruppati del corso su cui effettuo la funzione
 std::vector<std::string>
-SessionYear::getGroupedCourses(const std::map<std::string, Course> &courses, std::string idCourseSelected) {
+SessionYear::getGroupedCourses(const std::map<std::string, Course> &courses, std::string idCourseSelected)const {
     ///prendo il corso considerato
     Course course = courses.at(idCourseSelected);
     ///prendo corso di questo giro + i suoi esami raggruppati
@@ -747,7 +749,7 @@ bool SessionYear::sessionsPeriodIsEmpty() {
 }
 
 ///setta la minima distanza tra un appello e l'altro di uno stesso esame su richiesta del professore
-void SessionYear::addProfGap(std::string &matr_idC, int gap) {
+void SessionYear::addProfGap(const std::string &matr_idC, int gap) {
     _gapProfs.insert(std::pair<std::string, int>(matr_idC, gap));
    
 }
@@ -766,7 +768,7 @@ std::vector<std::string> SessionYear::getProfsOfGapProfsString() {
 }
 
 ///assegna gli appelli all'oggetto ExamDay del calendario(_yearCalendar)
-void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour, Course &course, int numSlots) {
+void SessionYear::assignAppealsToCalendar(std::string appeal, int startSlotHour, const Course &course, int numSlots) {
     _yearCalendar.at(appeal).assignExamToExamDay(startSlotHour, course, numSlots);
 }
 
@@ -936,7 +938,7 @@ bool SessionYear::fileNameIsEmpty() {
 }
 
 ///formatta i nomi delle sessioni per anno accademico in modo tale che se ne tenga traccia in un file
-std::vector<std::string> SessionYear::getSessionAndFileName() {
+std::vector<std::string> SessionYear::getSessionAndFileName() const{
     std::vector<std::string> fileNamePerSession;
     for (auto iterFileName = _fileNamePerAcSession.begin();
          iterFileName != _fileNamePerAcSession.end(); iterFileName++) {
@@ -948,12 +950,12 @@ std::vector<std::string> SessionYear::getSessionAndFileName() {
 }
 
 ///prende il nome del file ad una determinata sessione
-std::string SessionYear::getFileName(int numSession) {
+std::string SessionYear::getFileName(int numSession)const {
     return _fileNamePerAcSession.at(numSession);
 }
 
 ///setta i nomi dei file per la sessione accademica
-void SessionYear::setFileNamePerSession(int numSession, std::string fileName) {
+void SessionYear::setFileNamePerSession(int numSession, const std::string &fileName) {
     _fileNamePerAcSession.insert(std::pair<int, std::string>(numSession, fileName));
 }
 
@@ -1017,7 +1019,7 @@ void SessionYear::controlSuccessivitySessionPeriod() {
 
 ///prende i gap tra due appelli di uno stesso esame che non sono stati rispettati per la geneazione esami
 void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> &gapProfsNoRespect,
-                                       std::vector<int> allProfsMatrThisCourse, std::string courseId) {
+                                       const std::vector<int> &allProfsMatrThisCourse, std::string courseId) {
     for (int j = 0; j < allProfsMatrThisCourse.size(); j++) {
         std::stringstream ss;
         std::string profId = Parse::setId('d',6,allProfsMatrThisCourse[j]);

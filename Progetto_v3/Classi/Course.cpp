@@ -182,14 +182,6 @@ SpecificYearCourse &Course::getThisYearCourseReference(int year){
     return _courseOfTheYear.at(year);
 }
 
-///il corso è vuoto?
-bool Course::courseOfTheYearIsEmpty() {
-    if (_courseOfTheYear.empty()) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 ///riempi i buchi tra anni accademici di un corso
 void Course::fillAcYearsEmpty() {
@@ -262,15 +254,6 @@ hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCou
     return h;
 }
 
-///per anno accademico ho i corsi raggruppati di un corso
-std::map<int,std::vector<std::string>> Course::getGroupedCourseFromAllYear() {
-    std::map<int, std::vector<std::string>> allGrouped;
-    for(auto iterSpecificYear = _courseOfTheYear.begin();iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
-        std::vector<std::string> vect = iterSpecificYear->second.getIdGroupedCourses();
-        allGrouped.insert(std::pair<int, std::vector<std::string>>(iterSpecificYear->first,vect));
-    }
-    return  allGrouped;
-}
 
 ///controlla se è stato già spento
 void Course::notActive() {
@@ -284,7 +267,7 @@ void Course::notActive() {
 }
 
 ///prende il semestre a cui è associato un corso
-int Course::getSemesterAtYear(int acStartYear,std::string name) {
+int Course::getSemesterAtYear(int acStartYear,std::string name) const{
    int sem = 0;
     if(_courseOfTheYear.find(acStartYear) != _courseOfTheYear.end())
           sem =_courseOfTheYear.at(acStartYear).getSemester();
@@ -358,7 +341,7 @@ void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
 }
 
 ///formatta le righe per il dbAppelli trasformando le info per ogni studente in stringhe
-std::vector<std::string> Course::getAcYearStudExam() {
+std::vector<std::string> Course::getAcYearStudExam() const{
     std::vector<std::string> allAppealsPerYearToString;
     bool push = false;
   for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
@@ -413,25 +396,6 @@ std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(s
     return allStudsPassedExam;
 }
 
-///prende gli appelli di un anno
-std::vector<std::string> Course::getAcYearAppeals() {
-    std::vector<std::string> allAppealsPerCourses;
-    for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
-        if(iterSpecific->second.notExamsAssigned() == false) {
-            std::stringstream ss;
-            std::string appealsForSessions = iterSpecific->second.getAppealsForAllSession();
-            ss << getId() << ";" << iterSpecific->first << "_" << iterSpecific->first + 1 << ";" << appealsForSessions;
-            allAppealsPerCourses.push_back(ss.str());
-        }
-    }
-    return allAppealsPerCourses;
-}
-
-///assegna gli appelli ad un anno
-void Course::assignAppealToSpecificYear(std::string acYear, std::string session, std::vector<Date> appealsPerSession, std::vector<int> startSlotPerAppeal, std::vector<std::string> classroomsPerAppeal) {
-    int acStartYear = Parse::getAcStartYear(acYear);
-    _courseOfTheYear.at(acStartYear).assignAppeals(session,appealsPerSession,startSlotPerAppeal,classroomsPerAppeal);
-}
 
 ///controllo che l'appello dia effettivamente una data e che esiat nella sessione
 void Course::controlAppeal(std::string appealDate) {
@@ -480,20 +444,20 @@ bool Course::profHaveThisCourse(int matr, int acStartYear) {
 }
 
 ///prende il numero di slots necessari alla generazione dell'esame in un determinato anno
-int Course::getExamSlotPerYear(std::string acYear) {
+int Course::getExamSlotPerYear(std::string acYear)const {
     int startAc = Parse::getAcStartYear(acYear);
     Exam examInfo = _courseOfTheYear.at(startAc).getExam();
     return examInfo.howManySlots();
 }
 
 ///prende i prof assegnati ad un corso in un determinato anno
-std::vector<int> Course::getProfsPerYear(std::string acYear) {
+std::vector<int> Course::getProfsPerYear(std::string acYear)const {
     int startAc = Parse::getAcStartYear(acYear);
     return  _courseOfTheYear.at(startAc).getAllProfMatr();
 }
 
 ///prende il primo anno di attività del corso
-int Course::getFirstYearOfActivity() {
+int Course::getFirstYearOfActivity()const {
     auto iterSpecificYearCourse = _courseOfTheYear.begin();
     return iterSpecificYearCourse->first;
 }
@@ -518,7 +482,7 @@ void Course::updateYYSemesterInAllSpecYearCourse(std::string& yy_semester) {
 }
 
 ///prend eil primo anno di spegnimento
-std::string Course::getFirstAcYearOff() {
+std::string Course::getFirstAcYearOff() const {
     for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
         int startYear = iterSpecificYear->second.getStartYear();
         int endYear = iterSpecificYear->second.getEndYear();
@@ -531,7 +495,7 @@ std::string Course::getFirstAcYearOff() {
 }
 
 ///prende gli id dei raggruppati per uno specifico anno
-std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) {
+std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) const{
     return _courseOfTheYear.at(acYear).getIdGroupedCourses();
 }
 

@@ -29,7 +29,7 @@ char Exam::getPlace() const {
 }
 
 ///quanti slot servono per un esame
-int Exam::howManySlots() {
+int Exam::howManySlots()const {
     int sum = this->getTime() + this->getEnterTime() + this->getLeaveTime();//sommo le ore per l'esame per entrare e uscire dall'aula
     int num_slots = 0;
     int duration = 2 * 60; //slot da due ore
