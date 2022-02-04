@@ -29,10 +29,6 @@ public:
     const bool isThisLab() const;
     const int getNSeats() const;
     const int getNExamSeats() const;
-    int getDrawingTable() const;
-    int getComputer()const;
-    int getProjector()const;
-    int getBlackBoard()const;
     std::string getOthersInfo()const;
 
     ///setter
@@ -41,10 +37,7 @@ public:
     void setNSeats(const int& NSeats);
     void setNExamSeats(const int& NExamSeats);
     void setDisavailability(Date& date,int slotsStartHour,int numSlot);
-    void setDrawingTable(int drawingTable );
-    void setComputer(int computer);
-    void setProjector(int projector);
-    void setBlackBoard(int blackBoard);
+
 
     ///control
     bool checkAvailability(Date& date,int slotHour);

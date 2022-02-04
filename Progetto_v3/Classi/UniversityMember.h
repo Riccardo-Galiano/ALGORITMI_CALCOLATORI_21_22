@@ -28,17 +28,13 @@ public:
     const int getId() const;
     const std::string &getEmail() const;
     std::string getOtherInfoString() const ;
-    Date getBirth() const;
-    Date getRegistrationOrEntry() const;
-    std::string getAddress() const;
+
 
     ///update
     void setName(const std::string &name);
     void setSurnName(const std::string & surname);
     void setEmail(const std::string & eMail);
-    void setBirth(const std::string & birth);
-    void setRegistration(const std::string & registrationOrEntry);
-    void setAdress(const std::string & address);
+
 
 
 protected:

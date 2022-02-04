@@ -143,7 +143,6 @@ CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.obj: ../Classi/University
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Classroom.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Course.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Date.h
-CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/DbException.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Exam.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/ExamDay.h
 CMakeFiles/Progetto_v3.dir/main.cpp.obj: ../Classi/Professor.h

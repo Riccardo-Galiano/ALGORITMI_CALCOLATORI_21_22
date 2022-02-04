@@ -118,45 +118,6 @@ std::string Classroom::getOthersInfo()const {
     return ss.str();
 }
 
-///prende il numero di tavoli da disegno
-int Classroom::getDrawingTable() const{
-    return _othersInfoClassroom._drawingTable;
-}
-
-///prende il numero di computer
-int Classroom::getComputer()const {
-    return _othersInfoClassroom._computer;
-}
-
-///prende il numero di proiettori
-int Classroom::getProjector() const{
-    return _othersInfoClassroom._projector;
-}
-
-///prende il numero di lavagne
-int Classroom::getBlackBoard() const{
-    return _othersInfoClassroom._blackBoard;
-}
-
-///setta il numero dei computer
-void Classroom::setComputer(int computer) {
-    _othersInfoClassroom._computer = computer;
-}
-
-///setta il numero dei tavoli da disegno
-void Classroom::setDrawingTable(int drawingTable) {
-    _othersInfoClassroom._drawingTable = drawingTable;
-}
-
-///setta il numero dei proiettori
-void Classroom::setProjector(int projector) {
-    _othersInfoClassroom._projector = projector;
-}
-
-///setta il numero delle lavagne
-void Classroom::setBlackBoard(int blackBoard) {
-   _othersInfoClassroom._blackBoard = blackBoard;
-}
 
 ///toglie l'appello dalle indisponibilità dell'aula
 void Classroom::eraseThisAppealFromClassrooms(Date &date, int startSlot, int numSlots) {

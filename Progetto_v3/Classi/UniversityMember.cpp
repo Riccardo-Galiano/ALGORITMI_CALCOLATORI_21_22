@@ -72,34 +72,4 @@ void UniversityMember::setEmail(const std::string & eMail) {
     _email = eMail;
 }
 
-///ritorna la data di nascita
-Date UniversityMember::getBirth() const {
-    return _othersInfoMember._birth;
-}
-
-///ritorna la data di registrazione
-Date UniversityMember::getRegistrationOrEntry() const {
-    return _othersInfoMember._registrationOrEntry;
-}
-
-///ritorna l'indirizzo
-std::string UniversityMember::getAddress() const {
-    return _othersInfoMember._address;
-}
-
-///setta la data di nascita
-void UniversityMember::setBirth(const std::string & birth) {
-  _othersInfoMember._birth = birth;
-}
-
-///setta la data della regsitrazione
-void UniversityMember::setRegistration(const std::string &registrationOrEntry) {
-_othersInfoMember._registrationOrEntry = registrationOrEntry;
-}
-
-///setta l'indirizzo
-void UniversityMember::setAdress(const std::string & address) {
-_othersInfoMember._address = address;
-}
-
 

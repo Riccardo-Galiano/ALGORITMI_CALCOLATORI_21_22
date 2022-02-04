@@ -1168,10 +1168,7 @@ const std::string University::getNewCourseId() const {
 enum {
     update_name = 1,
     update_surName = 2,
-    update_eMail = 3,
-    update_birth = 4,
-    update_registrationOrEntry = 5,
-    update_address = 6
+    update_eMail = 3
 };
 
 void University::updateStuds(const std::string &fin) {
@@ -1246,46 +1243,6 @@ void University::updateStuds(const std::string &fin) {
                                 if (!(iter->second.getEmail() == infoStud[i])) {
                                     //se l'email letta dal file è diversa dall'email del database la cambio
                                     iter->second.setEmail(infoStud[i]);
-                                }
-                                break;
-                            }
-                                ///i campi da qui in poi sono raggiungibili solo in caso di versione aggiuntiva
-                            case update_birth: {//analizzo la data di nascita(quarto campo della riga del file)
-                                try {
-                                    Date date = Parse::controlItCanBeADate(infoStud[i]);
-                                    if (!(iter->second.getBirth() == date.toString())) {
-                                        //se la data di nascita letta dal file è diversa dalla data del database la cambio
-                                        iter->second.setBirth(infoStud[i]);
-                                    }
-                                } catch (std::invalid_argument &err) {
-                                    std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
-                                    doDbWrite = false;
-                                }
-                                break;
-                            }
-                            case update_registrationOrEntry: {//analizzo la data di registrazione(quinto campo della riga del file)
-                                try {
-                                    Date date = Parse::controlItCanBeADate(infoStud[i]);
-                                    if (!(iter->second.getRegistrationOrEntry() == date.toString())) {
-                                        //se la data di registrazione letta dal file è diversa da quella del database la cambio
-                                        iter->second.setRegistration(infoStud[i]);
-                                    }
-                                } catch (std::invalid_argument &err) {
-                                    std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
-                                    doDbWrite = false;
-                                }
-
-
-                                break;
-                            }
-                            case update_address: {//analizzo l'indirizzo(sesto campo della riga del file)
-                                if (!(iter->second.getAddress() == infoStud[i])) {
-                                    //se l'indirizzo letto dal file è diverso da quello del database lo cambio
-                                    iter->second.setAdress(infoStud[i]);
                                 }
                                 break;
                             }
@@ -1376,25 +1333,7 @@ void University::updateProfessors(const std::string &fin) {
                                 }
                                 break;
                             }
-                                ///i campi da qui in poi sono raggiungibili solo in caso di versione aggiuntiva
-                            case update_birth: {//analizzo la data di nascita
-                                if (!(iter->second.getBirth() == infoProf[i])) {
-                                    iter->second.setBirth(infoProf[i]);
-                                }
-                                break;
-                            }
-                            case update_registrationOrEntry: {//analizzo la data di registrazione
-                                if (!(iter->second.getRegistrationOrEntry() == infoProf[i])) {
-                                    iter->second.setRegistration(infoProf[i]);
-                                }
-                                break;
-                            }
-                            case update_address: {//analizzo l'indirizzo
-                                if (!(iter->second.getAddress() == infoProf[i])) {
-                                    iter->second.setAdress(infoProf[i]);
-                                }
-                                break;
-                            }
+
                         }
                     }
                 }
@@ -1419,10 +1358,6 @@ enum {
     update_nameClassroom = 2,
     update_nSeats = 3,
     update_nExamSeats = 4,
-    update_drawingTable = 5,
-    update_computer = 6,
-    update_projector = 7,
-    update_blackBoard = 8
 };
 
 ///aggiorno le Classroom
@@ -1525,76 +1460,6 @@ void University::updateClassroom(const std::string &fin) {
                                     if (iter->second.getNExamSeats() !=
                                         numnExamSeats) {//se la capienza dell'aula per gli esami letta da file non è uguale alla capienza dell'aula per gli esami del database
                                         iter->second.setNExamSeats(numnExamSeats); //cambia l'email
-                                    }
-                                } catch (std::invalid_argument &err) {
-                                    // se non è un numero intero positivo non va bene, lo segnalo
-                                    std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
-                                    doDbWrite = false;
-                                }
-                                break;
-                            }
-                                ///da qui in poi sarà raggiungibile solo in caso di versione aggiuntiva
-                            case update_drawingTable: {//analizzo il numero di tavole da disegno
-                                try {
-                                    //se il numero di tavoli da disegno è diverso da quello che c'è nel database lo cambio
-                                    int numDrawingTable = Parse::checkedStoi(infoClassroom[i],
-                                                                             " del numero di tavoli da disegno ");
-                                    if (iter->second.getDrawingTable() != numDrawingTable) {
-                                        iter->second.setDrawingTable(numDrawingTable);
-                                    }
-                                } catch (std::invalid_argument &err) {
-                                    // se non è un numero intero positivo non va bene, lo segnalo
-                                    std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
-                                    doDbWrite = false;
-                                }
-
-                                break;
-                            }
-                            case update_computer: {//analizzo il numero di computer
-                                try {
-                                    //se il numero di computer è diverso da quello che c'è nel database lo cambio
-                                    int numComputer = Parse::checkedStoi(infoClassroom[i],
-                                                                         " del numero di computer");
-                                    if (iter->second.getComputer() != numComputer) {
-                                        iter->second.setComputer(numComputer);
-                                    }
-                                } catch (std::invalid_argument &err) {
-                                    // se non è un numero intero positivo non va bene, lo segnalo
-                                    std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
-                                    doDbWrite = false;
-                                }
-                                break;
-                            }
-                            case update_projector: {//analizzo il numero di proiettori
-                                try {
-                                    //se il numero di proiettori è diverso da quello che c'è nel database lo cambio
-                                    int numProjector = Parse::checkedStoi(infoClassroom[i],
-                                                                          " del numero di proiettori");
-                                    if (iter->second.getProjector() != numProjector) {
-                                        iter->second.setProjector(numProjector);
-                                    }
-                                } catch (std::invalid_argument &err) {
-                                    // se non è un numero intero positivo non va bene, lo segnalo
-                                    std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
-                                    doDbWrite = false;
-                                }
-                                break;
-                            }
-                            case update_blackBoard: {//analizzo il numero di lavagne
-                                try {
-                                    //se il numero di lavagne è diverso da quello che c'è nel database lo cambio
-                                    int numBlackBoard = Parse::checkedStoi(infoClassroom[i],
-                                                                           " del numero di lavagne");
-                                    if (iter->second.getBlackBoard() != numBlackBoard) {
-                                        iter->second.setBlackBoard(numBlackBoard);
                                     }
                                 } catch (std::invalid_argument &err) {
                                     // se non è un numero intero positivo non va bene, lo segnalo
@@ -1719,7 +1584,7 @@ void University::insertCourses(const std::string &fin) {
                     int lastYear = sp.getStartYear();
 
                     //se è minore o uguale all'anno dell'ultimo aggiornamento inserito non va bene!!
-                    if (lastYear <= year) {
+                    if (lastYear < year) {
                         //se l'anno del nuovo aggiornamento è maggiore dell'anno dell'ultimo aggiornamento posso procedere
                         ///fillSpecificYearCourse mi aggiorna il vettore specificYearCourse aggiungendo le info dell'anno accademico precedente negli spazi vuoti
                         try {
@@ -2064,13 +1929,13 @@ void University::fillPerControlWithOldSpecificYear() {
                     maxYear = lastYearGrouped;
                 }
                 groupedCourse.push_back(_courses.at(grouped[i]));
-                groupedCourse[i].fillAcYearsEmpty();
+                _courses.at(groupedCourse[i].getId()).fillAcYearsEmpty();
             }
             //aggiungo il corso in considerazione
             groupedCourse.push_back(iterCourse->second);
             for (int i = 0; i < groupedCourse.size(); i++) {
                 int last = groupedCourse[i].getLastSpecificYearCourse().getStartYear();
-std::string id = groupedCourse[i].getId();
+                std::string id = groupedCourse[i].getId();
                 //devo riempire i gap fra anni
                 _courses.at(id).fillAcYearsUntilStartAcYear(maxYear, last);
             }
