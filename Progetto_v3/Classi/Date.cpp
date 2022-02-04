@@ -207,9 +207,7 @@ std::string Date::toString() {
     return ss.str();
 }
 
-
-
-///gap tra due date (start session e date dove quest'ultima è la data da controllare)
+///gap tra due date (date è la data da controllare rispetto a quella per cui il metodo è stato chiamato)
 int Date::whatIsTheGap(Date& date) {
     bool areNotEqual = true;
     Date currentDate(_year,_month,_day);//data di inizio della sessione

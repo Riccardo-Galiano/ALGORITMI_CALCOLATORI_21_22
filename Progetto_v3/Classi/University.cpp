@@ -952,7 +952,7 @@ void University::addCourses(const std::string &fin) {
                             ///qui: fill dei corsi raggruppati dell'anno accademico
                             if (!idGrouped.empty()) {
                                 //se ho dei raggruppati cerco di capire se questi raggruppati non abbiano raggruppati, in questo caso li aggiorno aggiungendo i nuovo
-                                fillGroupedCourse(idGrouped, newIdCourse, acYear);
+                                fillGroupedCourse(idGrouped, newIdCourse, acYear, true);
                             } else {
                                 //se idGrouped è 0 devo vedere se già è legato ad un altro corso, in quel caso FILLO con i corsi del raggruppato
                                 if (_coursesGrouped.count(acYear + "-" + newIdCourse) != 0) {
@@ -1934,7 +1934,7 @@ void University::insertCourses(const std::string &fin) {
                                     ///qui: fill dei corsi raggruppati dell'anno accademico
                                     if (!idGrouped.empty()) {
                                         //se ho dei raggruppati ne garantisco la reciprocità
-                                        fillGroupedCourse(idGrouped, specificYearCourse[0], acYear);
+                                        fillGroupedCourse(idGrouped, specificYearCourse[0], acYear, false);
                                     } else {
                                         //se idGrouped è 0 devo vedere se già è legato ad un altro corso, in quel caso FILLO con i corsi del raggruppato
                                         if (_coursesGrouped.count(acYear + "-" + specificYearCourse[0]) != 0) {
@@ -1998,6 +1998,7 @@ void University::insertCourses(const std::string &fin) {
         error.append("Il file in input e' vuoto\n");
         doDbWrite = false;
     } else if (doDbWrite) {
+       fillPerControlWithOldSpecificYear();
         //se non e' vuoto e non ci sono stati errori vuol dire che ho inserito dei corsi e devo fare dei controlli aggiuntivi
         try {
             controlProfsAndHour();
@@ -2007,10 +2008,7 @@ void University::insertCourses(const std::string &fin) {
             doDbWrite = false;
         }
         if(doDbWrite) {
-            for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-                ///se c'è un gap tra anni prendo il precedente
-                iterCourse->second.fillAcYearsEmpty();
-            }
+
             ///controlli che posso fare solo dopo aver inserito le info da file
             for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
                 ///controllo se i corsi raggruppati siano dello stesso semestre del principale e di corsi di studio differenti
@@ -2066,6 +2064,45 @@ void University::controlProfsAndHour() {
     }
 }
 
+void University::fillPerControlWithOldSpecificYear() {
+    for(auto iterCourse = _courses.begin(); iterCourse!= _courses.end(); iterCourse++){
+        int firstYear = iterCourse->second.getFirstYearOfActivity();
+        int lastYearInDb = iterCourse->second.getLastSpecificYearCourse().getStartYear();
+        int maxYear = lastYearInDb;
+        std::string idCourse = iterCourse->first;
+        iterCourse->second.fillAcYearsEmpty();
+        for (int year = firstYear; year <= lastYearInDb; year++) {
+            SpecificYearCourse sp = iterCourse->second.getThisYearCourse(year);
+            std::vector<std::string> grouped = sp.getIdGroupedCourses();
+            std::vector<Course> groupedCourse;
+            std::string acYear = std::to_string(year)+"-"+std::to_string(year+1);
+            std::vector<std::string> stringGrouped;
+            //prendo i raggruppati
+            //per ogni corso prendo l'anno massimo degli aggiornamenti tra raggruppati
+            //fillo per tutti i raggruppati fino all'anno considerato
+
+            for(int i = 0; i<grouped.size(); i++){
+                //se esiste ed esiste per quell'anno lo pusho
+                    int lastYearGrouped = _courses.at(grouped[i]).getLastSpecificYearCourse().getStartYear();
+
+                    if(lastYearGrouped > lastYearInDb){
+                        maxYear = lastYearGrouped;
+                    }
+                    groupedCourse.push_back(_courses.at(grouped[i]));
+                    groupedCourse[i].fillAcYearsEmpty();
+            }
+            //aggiungo il corso in considerazione
+            groupedCourse.push_back(iterCourse->second);
+            for(int i = 0; i<groupedCourse.size(); i++){
+                int last = groupedCourse[i].getLastSpecificYearCourse().getStartYear();
+
+                //devo riempire i gap fra anni
+                groupedCourse[i].fillAcYearsUntilStartAcYear(maxYear,last);
+            }
+            fillGroupedCourse(grouped,idCourse,acYear, false);
+        }
+    }
+}
 ///riscrive il database degli studenti
 void University::dbStudsWrite() {
     std::fstream fout;
@@ -2470,6 +2507,11 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
 
     ///faccio dei controlli di coerenza dei dataBase
     controlDatabase(startAcYear);
+
+    //se la sessione dovesse avere già dei voti assegnati non potrebbe essere rigenerata in quanto,
+    // se ci fossero dei voti assegnati agli studenti significherebbe che la sessione sia già stata effettuata
+    // prendo per ogni corso l'anno accademico e controllo per ogni studente se appealDate è diverso da 1900-01-01 in quel caso lancio l'eccezione
+    controlIfCanbeRigenerate(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare oppure si nota subito che non ci sono aule abbastanza capienti per un corso(eccezione)
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
@@ -2533,6 +2575,7 @@ void University::readOutputFileName() {
 void University::controlDatabase(int startAcYear) {
     ///controllo che i database non siano vuoti
     dataBaseIsEmpty(startAcYear);
+
 
     bool checkIsOK = true;
     std::string error;
@@ -3727,20 +3770,29 @@ void University::revertChanges3() {
 }
 
 ///riempie i corsi raggruppati
-void
-University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear) {
+void University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
+                              bool addCourses) {
     std::vector<std::string> allGroupedReciprocy;
     int year = Parse::getAcStartYear(acYear);
     for (int i = 0; i < idGroupedLetti.size(); i++) {
         //se il corso esiste
         if (_courses.count(idGroupedLetti[i]) != 0) {
             //Mi chiedo se il corso esiste anche in quell'anno e se è già raggruppato
+            if(addCourses == true){
             if (_courses.at(idGroupedLetti[i]).courseExistInThisYear(year) &&
                 _coursesGrouped.count(acYear + "-" + idGroupedLetti[i]) == 0) {
                 ///se il corso raggruppato già esiste per quell'anno e non ha raggruppati, POSSO QUINDI FILLARLO per quell'anno
                 SpecificYearCourse &specificYY = _courses.at(idGroupedLetti[i]).getThisYearCourseReference(
                         Parse::getAcStartYear(acYear));//corso per un anno specifico
                 specificYY.assignGrouped(idGroupedLetti, idCourse, idGroupedLetti[i]);
+            }
+            }else{
+                if (_courses.at(idGroupedLetti[i]).courseExistInThisSpecificYear(year) && _coursesGrouped.count(acYear + "-" + idGroupedLetti[i]) == 0) {
+                    ///se il corso raggruppato già esiste per quell'anno e non ha raggruppati, POSSO QUINDI FILLARLO per quell'anno
+                    SpecificYearCourse &specificYY = _courses.at(idGroupedLetti[i]).getThisYearCourseReference(
+                            Parse::getAcStartYear(acYear));//corso per un anno specifico
+                    specificYY.assignGrouped(idGroupedLetti, idCourse, idGroupedLetti[i]);
+                }
             }
         }
         if (_coursesGrouped.count(acYear + "-" + idGroupedLetti[i]) != 0) {
@@ -3789,10 +3841,16 @@ University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::str
         grouped.erase(iterPos);
 
         if (_courses.count(allGroupedReciprocy[i]) != 0) {
-            if (_courses.at(allGroupedReciprocy[i]).courseExistInThisYear(year)) {
-                //se esiste aggiorno lo specific year, altrimenti aggiorno solo la map
+            if(addCourses) {
+                if (_courses.at(allGroupedReciprocy[i]).courseExistInThisYear(year)) {
+                    //se esiste aggiorno lo specific year, altrimenti aggiorno solo la map
+                    SpecificYearCourse &specificYY = _courses.at(allGroupedReciprocy[i]).getThisYearCourseReference(
+                            Parse::getAcStartYear(acYear));//corso per un anno specifico
+                    specificYY.updateIdGroupedCourses(grouped);
+                }
+            } else if(_courses.at(allGroupedReciprocy[i]).courseExistInThisSpecificYear(year)){
                 SpecificYearCourse &specificYY = _courses.at(allGroupedReciprocy[i]).getThisYearCourseReference(
-                        Parse::getAcStartYear(acYear));//corso per un anno specifico
+                Parse::getAcStartYear(acYear));//corso per un anno specifico
                 specificYY.updateIdGroupedCourses(grouped);
             }
         }
@@ -4214,6 +4272,20 @@ void University::popOffCoursesFromGroupedString(std::vector<std::string> &course
         }
     }
 }
+
+void University::controlIfCanbeRigenerate(int year) {
+     for(auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++){
+         SpecificYearCourse sp = iterCourse->second.getThisYearCourse(year);
+         std::map<int, student> studentsEnrolled = sp.getStudentsEnrolled();
+         for(auto iterStudent = studentsEnrolled.begin(); iterStudent!= studentsEnrolled.end(); iterStudent++){
+             Date appealPassed = iterStudent->second._appealPassed;
+             if(appealPassed.toString() != "1900-01-01")
+                 throw std::logic_error("Ci sono studenti che hanno gia' sostenuto esami previsti per questa sessione\n");
+         }
+     }
+}
+
+
 
 
 

@@ -637,6 +637,10 @@ int SpecificYearCourse::getNumAppealsAssignedPerSession(int numSession)const {
     return _howManyTimesIAmAssignedInASession.at(numSession).size();
 }
 
+std::map<int, student> SpecificYearCourse::getStudentsEnrolled() const {
+    return _studentsEnrolled;
+}
+
 
 ///overload output operator
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

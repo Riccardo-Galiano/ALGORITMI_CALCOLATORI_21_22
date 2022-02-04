@@ -88,6 +88,7 @@ public:
     int getNumAppealFromNumSessNumAppealInSession(int numAppeal, int startExamHour)const;
     int getNumAppealsAssignedPerSession(int numSession)const;
     int getNumAppeal() const;
+    std::map<int, student> getStudentsEnrolled() const;
 
 
     ///setter
@@ -127,7 +128,6 @@ private:
     //key: student id
     //value: struct studente
     std::map<int, student> _studentsEnrolled;
-
     ///exam stuff
     //key: semester (session)
     //value: quante volte è stato programmato un suo esame in quel semestre

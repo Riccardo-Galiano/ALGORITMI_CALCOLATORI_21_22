@@ -63,7 +63,8 @@ public:
     void assignAppealsToClassroom(std::string appeal,int startSlotHour,std::vector<int>classrooms,int numSlot);
     void ifThereAreAlreadyCoursesFillYYSemesterVar(StudyCourse& sCourse);
     int whatIsMyStudyCourse(Course& course, int acStartYear);
-    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear);
+    void fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
+                           bool addCourses);
 
 
     ///Input (from DB)
@@ -127,6 +128,8 @@ public:
     void controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year);
     void controlGroupedExistenceInSameYears();
     void controlProfsAndHour();
+    void controlIfCanbeRigenerate(int year);
+    void fillPerControlWithOldSpecificYear();
 
 private:
     SystemLog _universityLog;

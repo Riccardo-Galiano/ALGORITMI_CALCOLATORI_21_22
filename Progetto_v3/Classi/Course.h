@@ -41,6 +41,7 @@ public:
     void fillAcYearsUntilStartAcYear(int startAcYear, int lastYear);
     void reassignAppealToSpecificYear(int acYear,int numAppeal,int numSession,Date date,int startSlot, std::vector<int>classroomsPerCourse);
     void updateStudyCourseInAllSpecYearCourse(int idStudyCourse);
+    bool courseExistInThisSpecificYear(int year);
 
     ///getter
     const std::string &getId() const;

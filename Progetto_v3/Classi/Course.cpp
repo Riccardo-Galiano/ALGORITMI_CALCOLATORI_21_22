@@ -527,6 +527,13 @@ bool Course::courseExistInThisYear(int year) {
     }
 }
 
+bool Course::courseExistInThisSpecificYear(int year) {
+    if(_courseOfTheYear.count(year) == 0){
+        return false;
+    }else
+        return true;
+}
+
 ///output operator overload
 std::ostream &operator<<(std::ostream &course, Course &c) {
     course << "c;" << c.getId() << ";" << c.getName() << ";" << c.getCfu() << ";" << c.getHours()._lec << ";"

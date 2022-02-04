@@ -126,6 +126,9 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
 
         if (_winter && _summer && _autumn) {
             bool requestChanges = false;
+            if(_fileNamePerAcSession.empty() == false){
+                _fileNamePerAcSession.erase(_fileNamePerAcSession.begin(),_fileNamePerAcSession.end());
+            }
             generateOutputFilesSession(fout, 1, courses, requestChanges);
             generateOutputFilesSession(fout, 2, courses, requestChanges);
             generateOutputFilesSession(fout, 3, courses, requestChanges);
@@ -415,6 +418,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
             ssFout << "_s3";
             numSession = 3;
         }
+
         _fileNamePerAcSession.insert(std::pair<int, std::string>(numSession, ssFout.str()));
         ssFout << ".txt";
         realFileName = ssFout.str();
