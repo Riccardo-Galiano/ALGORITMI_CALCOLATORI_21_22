@@ -94,7 +94,7 @@ void Course::fillSpecificYearCourse(std::vector<std::string> &specificYearCourse
 }
 
 ///modifica uno studente in un anno specifico con il suo voto
-void Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark,std::string appealsDate) {
+void Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int mark,std::string appealsDate) {
     SpecificYearCourse sp = getLastSpecificYearCourse();
     int lastYear = sp.getStartYear();
     //controllo che lo studente sia iscritto al corso

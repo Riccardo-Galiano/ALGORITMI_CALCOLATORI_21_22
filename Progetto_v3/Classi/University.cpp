@@ -4,7 +4,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <iomanip>
 #include "University.h"
 #include "DbException.h"
@@ -307,7 +306,7 @@ void University::readStudyCourse() {
         }
         ///creo un oggetto StudyCourse
         bool isBachelor = false;
-        if (levelCourse.compare("BS") == 0)//se corso di studi triennale
+        if (levelCourse=="BS")//se corso di studi triennale
             isBachelor = true;
 
         if ((isBachelor && semestri.size() != 6) || (!isBachelor && semestri.size() != 4)) {
@@ -567,8 +566,7 @@ void University::addStudyCourses(const std::string &fin) {
                     lineIsOk = false;
                 } else {
                     posSem = Parse::posCurlyBrackets(infoStudyCourse[1]);
-                    int prova = posSem.size();
-                    if (posSem.size() != 0) {
+                    if (!posSem.empty()) {
                         bool continueLoop = true;
                         for (i = 0; i < posSem.size() - 1 && continueLoop; i = i +
                                                                                2) { //metto +2 perchè, devo andare da una parentesi graffa che apre ad una che chiude
@@ -622,7 +620,7 @@ void University::addStudyCourses(const std::string &fin) {
                 if (lineIsOk) {
                     ///creo StudyCourse
                     bool isBachelor = false;
-                    if (levelCourse.compare("BS") == 0)
+                    if (levelCourse=="BS")
                         isBachelor = true;
                     StudyCourse SCourse(codCorso, isBachelor);
                     //carico corsi e semestri letti nello studycourse
@@ -975,7 +973,7 @@ void University::addCourses(const std::string &fin) {
                                         if (_courses.at(grouped[i]).courseExistInThisYear(year))
                                             groupedCourse.push_back(_courses.at(grouped[i]));
                                 }
-                                if (groupedCourse.size() != 0) {
+                                if (!groupedCourse.empty()) {
                                     groupedCourse.push_back(_courses.at(newIdCourse));
                                     try {
                                         controlHourAndProfGroupedCourse(groupedCourse, year);
@@ -1060,7 +1058,7 @@ void University::controlGroupedExistenceInSameYears() {
     }
 }
 
-///controllo sulal coerenza tra slot esami e professori tra i raggruppati
+///controllo coerenza tra slot esami e professori tra i raggruppati
 void University::controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year) {
     std::vector<int> profs;
     std::vector<int> slots;
@@ -1145,7 +1143,7 @@ const std::string University::getNewCourseId() const {
     std::stringstream Id(last->first);
     Id >> num >> cod;
 
-    for (int i = cod.size() - 1; i >= 0 && !noZ; i--) {
+    for (std::size_t i = cod.size() - 1; i >= 0 && !noZ; i--) {
         if (cod[i] != 'Z') {
             cod[i]++;
             noZ = true;
@@ -1890,7 +1888,7 @@ void University::controlProfsAndHour() {
                     if (_courses.at(grouped[i]).courseExistInThisYear(year))
                         groupedCourse.push_back(_courses.at(grouped[i]));
             }
-            if (groupedCourse.size() != 0) {
+            if (!groupedCourse.empty()) {
                 groupedCourse.push_back(iterCourse->second);
                 try {
                     controlHourAndProfGroupedCourse(groupedCourse, year);
@@ -2446,7 +2444,7 @@ void University::controlDatabase(int startAcYear) {
         StudyCourse sCourse = iter->second;
         std::vector<std::string> allCoursesOfThis = sCourse.getAllCoursesOfStudyCourse();
         for (int i = 0; i < allCoursesOfThis.size(); i++) {
-            int occ = _courses.count(allCoursesOfThis[i]);
+            std::size_t occ = _courses.count(allCoursesOfThis[i]);
             if (occ == 0) {
                 std::string settedId = Parse::setId('C', 3, iter->first);
                 error.append("Il corso " + allCoursesOfThis[i] + " presente nel corso di studio " + settedId +
@@ -2987,7 +2985,7 @@ void University::updateStudyPlan(const std::string &fin) {
                     } else {
                         Student &stud = _students.at(id);
                         std::vector<std::string> courses = Parse::splittedLine(allCourses, ';');
-                        if (allCourses.size() == 0) {
+                        if (allCourses.empty()) {
                             ///se non ho inserito alcun piano di studio da aggiornare
                             error.append("Al rigo " + std::to_string(line_counter) +
                                          "non e' stato dichiarato alcun corso da aggiornare \n");
@@ -3095,7 +3093,6 @@ void University::insertStudentsGrades(std::string fin) {
     //controllo che la data esista
     corso.controlAppeal(appealDate);
     std::string year(appealDate.substr(0, 4));
-    int appealYear;
     std::string line;
     int line_counter = 1;
     bool fileIsEmpty = true;
@@ -3167,7 +3164,7 @@ void University::insertStudentsGrades(std::string fin) {
                         //(perchè le info sull'esame fatto dallo studente sono salvate nello specifico anno di ogni corso a cui è iscritto il cui specifico anno è proprio l'anno di iscrizione dello studente)
                         int acYear = stud.getYearRegistration();
                         try {
-                            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud, appealYear,
+                            _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud,
                                                                                        mark,
                                                                                        appealDate);
                         } catch (std::invalid_argument &err) {
@@ -3288,7 +3285,7 @@ void University::readPassedAppeals() {
         std::string idCorso = appeal[0];
         std::string acYear = appeal[1];
         std::string appealDate = appeal[2];
-        int pos = appeal[3].find(']');
+        std::size_t pos = appeal[3].find(']');
         std::string allStudPassedExam = appeal[3].substr(1, pos - 1);
 
         _courses.at(idCorso).assignStudToAppealPerYear(acYear, appealDate,
@@ -3338,7 +3335,7 @@ void University::readExamAppealsPerAcSession(std::string acYear) {
                             int version = k;
                             int cicli = k + numParallelCourse;
                             for (version = k; version < cicli; version++) {
-                                int pos = appealsPerSlot[k].find('|');
+                                std::size_t pos = appealsPerSlot[k].find('|');
                                 std::string idClassroom = appealsPerSlot[version].substr(pos + 1,
                                                                                          appealsPerSlot[version].size() -
                                                                                          pos);

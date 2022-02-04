@@ -26,7 +26,7 @@ public:
 
     ///management SpecificYear
     void addSpecificYearCourses(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof, std::vector<std::string> exam, std::vector<std::string> idGrouped, std::string yy_semester, std::vector<int> studyCourse, int line_counter );
-    void modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int enrolYear, int mark, std::string appealsDate);
+    void modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, int mark, std::string appealsDate);
     void registerStudentsToSpecificYear(int acYearRegistration, Student& stud);
     void fillSpecificYearCourse(std::vector<std::string>& specificYearCourse, int line_counter);
     void fillAcYearsEmpty();
