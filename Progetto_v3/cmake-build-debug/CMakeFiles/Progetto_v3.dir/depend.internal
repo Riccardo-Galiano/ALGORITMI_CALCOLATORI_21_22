@@ -16,7 +16,6 @@ CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.cpp
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
@@ -28,9 +27,6 @@ CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj
 CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.obj
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.cpp
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
-CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.cpp
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
 CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.cpp
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
@@ -71,7 +67,6 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
@@ -104,9 +99,7 @@ CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.obj
 CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h
@@ -121,7 +114,6 @@ CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h
- C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h
  C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.h

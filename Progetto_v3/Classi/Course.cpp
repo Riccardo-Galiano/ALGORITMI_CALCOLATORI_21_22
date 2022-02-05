@@ -5,7 +5,6 @@
 #include <sstream>
 #include "Course.h"
 #include "Parse.hpp"
-#include "DbException.h"
 #include "InvalidDbException.h"
 #include "StudyCourse.h"
 #include <algorithm>
@@ -327,9 +326,6 @@ void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
     //se non lo trova è perchè il corso non era ancora attivo in quell'anno
     if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
         throw InvalidDbException("il seguente corso: " + getId() + " non era attivo quando si e' iscritto lo studente con matricola: " + settedId + " nel "+ acYear);
-    } else if (_courseOfTheYear.at(acYearRegistration).getIsActive() == false){
-        std::string firstAcYearOff = this->getFirstAcYearOff();
-        throw InvalidDbException("il seguente corso: " + getId() + " e' stato spento nel " + firstAcYearOff + ". Lo studente con matricola: " + settedId + " non puo' essere iscritto nel "+ acYear);
     }
     ///salviamo i suoi dati di iscrizione nell'anno di iscrizione
     /// ma dobbiamo ricordarci di aggiornare gli iscritti anche per gli anni successivi al suo

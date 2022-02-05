@@ -4,7 +4,7 @@
 #include <iomanip>
 #include "Date.h"
 #include "cmath"
-using namespace std;
+
 
 
 //costruttore
@@ -29,7 +29,7 @@ void Date::setDate(int yy, int mm, int dd) {
         _year = yy;
     }
     else {
-        throw invalid_argument{"l'anno deve essere >= 1900 e <= 2100\n"};
+        throw std::invalid_argument{"l'anno deve essere >= 1900 e <= 2100\n"};
     }
 
     if (mm >= 1 && mm <= 12) {
@@ -37,7 +37,7 @@ void Date::setDate(int yy, int mm, int dd) {
         _month = mm;
    }
    else {
-      throw invalid_argument{"Il mese deve essere tra 1-12\n"};
+      throw std::invalid_argument{"Il mese deve essere tra 1-12\n"};
    }
 
    // test se anno bisestile
@@ -50,7 +50,7 @@ void Date::setDate(int yy, int mm, int dd) {
    else if( dd >31) {
       throw std::invalid_argument("Il giorno non puo' essere maggiore di 31\n");
    }else{
-      throw invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene\n"};
+      throw std::invalid_argument{"Per questo anno e questo mese il giorno scelto non va bene\n"};
    }
 }
 
@@ -118,14 +118,14 @@ int Date::getDay() const {
 }
 
 
-ostream& operator<<(ostream& output, const Date& d){
+std::ostream& operator<<(std::ostream& output, const Date& d){
 
-    output << setfill('0') << d.getYear() << "-" << setw(2) << d.getMonth()<< "-" << setw(2) << d.getDay();
+    output <<std::setfill('0') << d.getYear() << "-" << std::setw(2) << d.getMonth()<< "-" << std::setw(2) << d.getDay();
     return output;
 }
 
 // overloaded input operator
-istream& operator>>(istream& input, Date& d){
+std::istream& operator>>(std::istream& input, Date& d){
     unsigned int month;
     unsigned int day;
     unsigned int year;

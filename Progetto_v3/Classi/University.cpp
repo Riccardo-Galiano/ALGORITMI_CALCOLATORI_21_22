@@ -6,7 +6,6 @@
 #include <iostream>
 #include <iomanip>
 #include "University.h"
-#include "DbException.h"
 #include "InvalidDbException.h"
 #include "Parse.hpp"
 #include <algorithm>
@@ -16,74 +15,74 @@ University::University() : _version(1) {
     try {
         readVersion();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readStudents();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readProfessor();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readClassroom();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readStudyCourse();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readCourse();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readSessionAcYear();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readProfsNoAvailability();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readCourseNotActive();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readStudyPlan();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readPassedAppeals();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         readAllMinDistanceRequest();
     }
-    catch (DbException &exc) {
+    catch (InvalidDbException &exc) {
     }
     try {
         //leggo e riempio la struttura con i nomi dei file stampati per le sessioni
         readOutputFileName();
-    } catch (DbException &exc) {
+    } catch (InvalidDbException &exc) {
     }
 }
 
 void University::readVersion() {
     std::ifstream file("versione.txt");
     if (!file.is_open()) {
-        throw DbException("file versione.txt non esistente. Non e' ancora stato usato il comando di versioning");
+        throw InvalidDbException("file versione.txt non esistente. Non e' ancora stato usato il comando di versioning");
     }
     std::string version;
     while (std::getline(file, version))
@@ -97,7 +96,7 @@ void University::readStudents() {
     std::ifstream fileIn("db_studenti.txt");
     ///leggi version
     if (!fileIn.is_open()) {
-        throw DbException("file db_studenti.txt non esistente");
+        throw InvalidDbException("file db_studenti.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> InteroStudente;    //accoglierà il vettore con la riga del file scissa
@@ -125,7 +124,7 @@ void University::readProfessor() {
     //dbprofessori
     std::ifstream fileIn("db_professori.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_professori.txt non esistente");
+        throw InvalidDbException("file db_professori.txt non esistente");
     }
     std::string line;
     std::vector<std::string> InteroProfessore;
@@ -153,7 +152,7 @@ void University::readClassroom() {
     //dbClassroom
     std::ifstream fileIn("db_aule.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_aule.txt non esistente");
+        throw InvalidDbException("file db_aule.txt non esistente");
     }
     std::string line;
     std::vector<std::string> InteraClasse;
@@ -184,7 +183,7 @@ void University::readClassroom() {
 void University::readCourse() {
     std::ifstream fileIn("db_corsi.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_corsi.txt non esistente");
+        throw InvalidDbException("file db_corsi.txt non esistente");
     }
     int line_counter = 1;
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
@@ -274,7 +273,7 @@ void University::readStudyCourse() {
     int i;
     std::ifstream fileIn("db_corsi_studio.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_corsi_studio.txt non esistente");
+        throw InvalidDbException("file db_corsi_studio.txt non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> InteroCorsoDiStudi;    //accoglierà il vettore con la riga del file scissa
@@ -310,7 +309,7 @@ void University::readStudyCourse() {
             isBachelor = true;
 
         if ((isBachelor && semestri.size() != 6) || (!isBachelor && semestri.size() != 4)) {
-            throw InvalidDbException(
+            throw std::invalid_argument(
                     "formato file corsi di studio non valido: ci sono semestri senza corsi o numero semestri incompatibile con tipo di laurea");
         }
 
@@ -486,7 +485,7 @@ void University::addClassrooms(const std::string &fileIn) {
                                                                                            " della capienza esame dell'aula "))));
                     } catch (std::exception &err) {
                         std::string generalError = err.what();
-                        error.append(generalError + " alla riga: " + std::to_string(line_counter) + "\n");
+                        error.append("Errore alla riga: " + std::to_string(line_counter)+". " + generalError);
                         doDbWrite = false;
                     }
                 } else {
@@ -500,7 +499,7 @@ void University::addClassrooms(const std::string &fileIn) {
                                                                         -1, -1, -1, -1)));
                     } catch (std::exception &err) {
                         std::string generalError = err.what();
-                        error.append(generalError + " alla riga: " + std::to_string(line_counter) + "\n");
+                        error.append("Errore alla riga: " + std::to_string(line_counter)+". " + generalError);
                         doDbWrite = false;
                     }
                 }
@@ -1374,7 +1373,7 @@ void University::updateClassroom(const std::string &fin) {
     std::vector<std::string> infoClassroom;
     bool fileIsEmpty = true;
     while (std::getline(fileIn, line)) {//finchè il file non sarà finito
-
+        bool lineIsOk = true;
         if (line.empty() == false) {
             fileIsEmpty = false;
             infoClassroom = Parse::splittedLine(line, ';');
@@ -1387,20 +1386,24 @@ void University::updateClassroom(const std::string &fin) {
                 //se versione base controllo che il suo formato sia di 5 campi
                 error.append("Errore formato file aule alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
+                lineIsOk = false;
             }
             if (infoClassroom[0].empty()) {
                 error.append("Manca il codice dell' aula alla riga: " + std::to_string(line_counter) + "\n");
                 doDbWrite = false;
+                lineIsOk = false;
             } else if (canBeAnId == false) {
                 error.append("Il primo campo alla riga " + std::to_string(line_counter) +
                              " non puo' essere un codice Id di una aula \n");
-                doDbWrite == false;
+                doDbWrite = false;
+                lineIsOk = false;
             } else if (_classrooms.find(nMatr) == _classrooms.end()) {//se non trovo il codice
                 error.append("L'aula " + infoClassroom[0] + " alla riga " + std::to_string(line_counter) +
                              " non e' presente nel database \n");
                 doDbWrite = false;
+                lineIsOk = false;
             }
-            if (doDbWrite) {
+            if (lineIsOk) {
                 auto iter = _classrooms.find(nMatr);//prendo la posizione della matricola
                 for (i = 1; i < infoClassroom.size(); i++) {
                     //se la stringa raccolta da infoClassroom è vuota vuol dire che l'utente ha scelto di caricare i dati con la possibilità di saltare i campi che non verranno cambiati
@@ -1444,8 +1447,8 @@ void University::updateClassroom(const std::string &fin) {
                                 } catch (std::invalid_argument &err) {
                                     // se non è un numero intero positivo non va bene, lo segnalo
                                     std::string genericError = err.what();
-                                    error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                    error.append("Errore alla riga " + std::to_string(line_counter) + ". "+
+                                            genericError);
                                     doDbWrite = false;
                                 }
                                 break;
@@ -1463,7 +1466,8 @@ void University::updateClassroom(const std::string &fin) {
                                     // se non è un numero intero positivo non va bene, lo segnalo
                                     std::string genericError = err.what();
                                     error.append(
-                                            genericError + " alla riga " + std::to_string(line_counter) + "\n");
+                                            "Errore alla riga " + std::to_string(line_counter) + ". "+
+                                            genericError);
                                     doDbWrite = false;
                                 }
                                 break;
@@ -1947,7 +1951,7 @@ void University::dbStudsWrite() {
     std::fstream fout;
     fout.open("db_studenti.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database studenti\n");
+        throw std::invalid_argument("Errore apertura database studenti\n");
     }
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
@@ -1970,7 +1974,7 @@ void University::dbProfsWrite() {
     std::fstream fout;
     fout.open("db_professori.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database professori\n");
+        throw std::invalid_argument("Errore apertura database professori\n");
     }
 
     for (auto iterProf = _professors.begin(); iterProf != _professors.end(); iterProf++) {
@@ -1990,7 +1994,7 @@ void University::dbClassRoomWrite() {
     std::fstream fout;
     fout.open("db_aule.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database aule\n");
+        throw std::invalid_argument("Errore apertura database aule\n");
     }
 
     for (auto iterClassRoom = _classrooms.begin(); iterClassRoom != _classrooms.end(); iterClassRoom++) {
@@ -2009,7 +2013,7 @@ void University::dbStudyCourseWrite() {
     std::fstream fout;
     fout.open("db_corsi_studio.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database corsi di studio\n");
+        throw std::invalid_argument("Errore apertura database corsi di studio\n");
     }
 
     for (auto iterStudyCourse = _studyCourse.begin(); iterStudyCourse != _studyCourse.end(); iterStudyCourse++) {
@@ -2026,7 +2030,7 @@ void University::dbCourseWrite() {
     std::fstream fout;
     fout.open("db_corsi.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database corsi\n");
+        throw std::invalid_argument("Errore apertura database corsi\n");
     }
 
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
@@ -2042,7 +2046,7 @@ void University::dbCourseWrite() {
 void University::readSessionAcYear() {
     std::ifstream fileIn("dateSessioni.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file dateSessioni.txt non esistente");
+        throw InvalidDbException("file dateSessioni.txt non esistente");
     }
     std::string line;
     while (std::getline(fileIn, line)) {
@@ -2060,7 +2064,7 @@ void University::readSessionAcYear() {
 void University::readProfsNoAvailability() {
     std::ifstream fileIn("tutte_le_indisponibilita.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file tutte_le_indisponibilita non esistente");
+        throw InvalidDbException("file tutte_le_indisponibilita non esistente");
     }
     std::string line;     //stringa di appoggio in cui mettere l'intero rigo
     std::vector<std::string> profAvailability;
@@ -2314,7 +2318,7 @@ void University::dbDateSessionsWrite() {
     std::fstream fout;
     fout.open("dateSessioni.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database delle date delle sessioni\n");
+        throw std::invalid_argument("Errore apertura database delle date delle sessioni\n");
     }
 
     for (auto iterAcYear = _acYearSessions.begin(); iterAcYear != _acYearSessions.end(); iterAcYear++) {
@@ -2331,7 +2335,7 @@ void University::dbNoAvailabilityWrite() {
     std::fstream fout;
     fout.open("tutte_le_indisponibilita.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database di tutte le indisponibilita'\n");
+        throw std::invalid_argument("Errore apertura database di tutte le indisponibilita'\n");
     }
     std::vector<std::string> allprofsAvailabilities = allProfsNoAvailabilities();//ritorna le indisponibilità per tutti gli anni per prof già sottoforma di stringhe da salvare sul file.txt
     for (int i = 0;
@@ -2377,7 +2381,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
             error.append("Non e' possibile generare la sessione estiva nonostante i vincoli rilassati\n");
         if (_acYearSessions.at(startAcYear).allExamAppealToDoIsEmpityAtSession("autumn") == false)
             error.append("Non e' possibile generare la sessione autunnale nonostante i vincoli rilassati\n");
-        throw std::invalid_argument(error);
+        throw std::logic_error(error);
     } else {
         generateOutputFileName();
     }
@@ -2388,7 +2392,7 @@ void University::generateOutputFileName() {
     std::fstream outputFile;
     outputFile.open("allFileNamePerSessionYear.txt", std::fstream::out | std::fstream::trunc);
     if (!outputFile.is_open()) {
-        throw DbException("Errore apertura database nomi file delle sessioni\n");
+        throw std::invalid_argument("Errore apertura database nomi file delle sessioni\n");
     }
     for (auto iterSession = _acYearSessions.begin(); iterSession != _acYearSessions.end(); iterSession++) {
         int acStart = iterSession->first;
@@ -2406,7 +2410,7 @@ void University::generateOutputFileName() {
 void University::readOutputFileName() {
     std::ifstream fileIn("allFileNamePerSessionYear.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file allFileNamePerSessionYear.txt non esistente");
+        throw InvalidDbException("file allFileNamePerSessionYear.txt non esistente");
     }
     std::string line;
     while (std::getline(fileIn, line)) {
@@ -2455,7 +2459,7 @@ void University::controlDatabase(int startAcYear) {
     }
 
     if (checkIsOK == false)
-        throw std::invalid_argument(error);
+        throw InvalidDbException(error);
 }
 
 ///i database sono vuoti?
@@ -2534,7 +2538,7 @@ void University::dataBaseIsEmpty(int startAcYear) {
         }
     }
     if (!isOk || !isAgainOk) {
-        throw std::invalid_argument(error);
+        throw InvalidDbException(error);
     }
 
 }
@@ -2592,7 +2596,7 @@ void University::dbCourseNotActive() {
     std::fstream fout;
     fout.open("offCourses_db.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database corsi spenti\n");
+        throw std::invalid_argument("Errore apertura database corsi spenti\n");
     }
     for (int i = 0; i < _tempInfoNotActiveCoursesToWriteInTheDB.size(); i++) {
         fout << _tempInfoNotActiveCoursesToWriteInTheDB[i] << std::endl;
@@ -2604,7 +2608,7 @@ void University::dbCourseNotActive() {
 void University::readCourseNotActive() {
     std::ifstream fileIn("offCourses_db.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file offCourses_db.txt non esistente");
+        throw InvalidDbException("file offCourses_db.txt non esistente");
     }
     std::string line;
     while (std::getline(fileIn, line)) {
@@ -2852,16 +2856,16 @@ void University::dbStudyPlanWrite() {
     std::fstream fout;
     fout.open("db_piano_studi.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database piani di studio\n");
+        throw std::invalid_argument("Errore apertura database piani di studio\n");
     }
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
         Student stud = _students.at(
                 iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
         if (stud.studyPlanIsEmpty() == false) {
-            std::string otherInfo = stud.getOtherInfoString();
+
             fout << "s" << std::setfill('0') << std::setw(6) << stud.getId() << ";" << stud.getYearRegistration()
                  << "-"
-                 << stud.getYearRegistration() - 1 << ";" << stud.getPlanStudyCourseString() << std::endl;
+                 << stud.getYearRegistration() + 1 << ";" << stud.getPlanStudyCourseString() << std::endl;
         }
     }
     fout.close();
@@ -2871,7 +2875,7 @@ void University::dbStudyPlanWrite() {
 void University::readStudyPlan() {
     std::ifstream fileIn("db_piano_studi.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_piano_studi.txt non esistente \n");
+        throw InvalidDbException("file db_piano_studi.txt non esistente \n");
     }
     std::string line;
     int line_counter = 1;
@@ -3213,7 +3217,7 @@ void University::registerStudentsToSpecificYearCourses(std::vector<std::string> 
         } else {
             try {
                 _courses.at(courses[i]).registerStudentsToSpecificYear(acStartYear, stud);
-            } catch (InvalidDbException &err) {
+            } catch (std::invalid_argument &err) {
                 std::string generalError = err.what();
                 error.append(generalError + ". Controllare alla riga: " + std::to_string(line_counter) + "\n");
                 thereIsNotAnError = false;
@@ -3261,7 +3265,7 @@ void University::dbAppealsWrite() {
     std::fstream fout;
     fout.open("db_appelli.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database appelli\n");
+        throw std::invalid_argument("Errore apertura database appelli\n");
     }
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         std::vector<std::string> acYearAppeals = iterCourse->second.getAcYearStudExam();
@@ -3276,7 +3280,7 @@ void University::dbAppealsWrite() {
 void University::readPassedAppeals() {
     std::ifstream fileIn("db_appelli.txt");
     if (!fileIn.is_open()) {
-        throw DbException("file db_appelli.txt non esistente");
+        throw InvalidDbException("file db_appelli.txt non esistente");
     }
     std::string line;
 
@@ -3308,7 +3312,7 @@ void University::readExamAppealsPerAcSession(std::string acYear) {
         ss << nameFile << ".txt";
         std::ifstream fileIn(ss.str());
         if (!fileIn.is_open()) {
-            throw DbException("file" + ss.str() + " non esistente\n");
+            throw std::invalid_argument("file" + ss.str() + " non esistente\n");
         }
         std::string line;
         while (std::getline(fileIn, line)) {
@@ -3405,7 +3409,7 @@ void University::writeVersion() {
     std::fstream fout;
     fout.open("versione.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database versioning\n");
+        throw std::invalid_argument("Errore apertura database versioning\n");
     }
     for(int i : _version)
         if(i!=0)
@@ -3417,7 +3421,7 @@ void University::writeVersion() {
 void University::readAllMinDistanceRequest() {
     std::ifstream fileIn("tutte_le_richieste.txt");
     if (!fileIn.is_open()) {
-        throw DbException(
+        throw InvalidDbException(
                 "file tutte_le_richieste.txt non esistente. Non e' ancora stato usato il comando set_min_distance");
     }
     std::string line;
@@ -3532,7 +3536,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
                     }
                     std::string matr_idC(infoRequest[0] + "_" + idCourse);
                     if (_acYearSessions.count(year) == 0) {
-                        error.append("Bisogna prima settare i periodi delle sessioni per il " + acYear + "\n");
+                        error.append("Mancano i periodi delle sessioni per il " + acYear + "\n");
                         doDbWrite = false;
                     }
                     if (doDbWrite)
@@ -3563,7 +3567,7 @@ void University::minDistanceRequestWrite() {
     //anno accademico;idProf;codiceCorso;distanza
     fout.open("tutte_le_richieste.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
-        throw DbException("Errore apertura database tutte le richieste minime\n");
+        throw std::invalid_argument("Errore apertura database tutte le richieste minime\n");
     }
     for (auto iterSession = _acYearSessions.begin(); iterSession != _acYearSessions.end(); iterSession++) {
         std::vector<std::string> profsOfSpecificSessionYear = iterSession->second.getProfsOfGapProfsString();
@@ -3614,13 +3618,13 @@ void University::revertChanges2() {
     char newname[] = "db_studenti.txt";
     result = rename(oldname, newname);
     if (result != 0)
-        throw InvalidDbException("file db_studenti_old.txt non rinominato adeguatamente");
+        throw std::invalid_argument("file db_studenti_old.txt non rinominato adeguatamente");
 
     char oldname2[] = "db_professori_old.txt";
     char newname2[] = "db_professori.txt";
     result = rename(oldname2, newname2);
     if (result != 0)
-        throw InvalidDbException("file db_studenti_old.txt non rinominato adeguatamente");
+        throw std::invalid_argument("file db_studenti_old.txt non rinominato adeguatamente");
 }
 
 void University::revertChanges3() {
@@ -3632,7 +3636,7 @@ void University::revertChanges3() {
     char newname2[] = "db_aule.txt";
     result = rename(oldname2, newname2);
     if (result != 0)
-        throw InvalidDbException("file db_studenti_old.txt non rinominato adeguatamente");
+        throw std::invalid_argument("file db_studenti_old.txt non rinominato adeguatamente");
 
 }
 
@@ -3754,7 +3758,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
     std::string error;
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw DbException("Errore apertura del file per le richieste del cambio data esami \n");
+        throw std::invalid_argument("Errore apertura del file per le richieste del cambio data esami \n");
     }
 
     if (Parse::controlItCanBeAnAcYear(acYear) == false)
@@ -3865,7 +3869,6 @@ void University::requestChanges(std::string acYear, std::string fin) {
                                     std::to_string(numSession) + " richiesta al rigo " +
                                     std::to_string(line_counter) +
                                     "\n");
-                            line_counter = false;
                             allChangesArePossible = false;
                             lineIsOk = false;
                         }
@@ -3906,7 +3909,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
                         std::string nameFileSessionWriting = nameFileSession + "_warnings.txt";
                         fout.open(nameFileSessionWriting, std::ios::app);
                         if (!fout.is_open()) {
-                            throw DbException("file warnings della sessione non esistente");
+                            throw std::invalid_argument("file warnings della sessione non esistente");
                         }
                         std::string genericError = err.what();
                         fout << idCourse << ";" << genericError;

@@ -20,7 +20,7 @@ s000019;Belen;Putignano;belen.putignano@web.de
 s000020;Neris;Okpako;neris.okpako@hotmail.com
 s000021;Ernesto;Frediani;ernesto.frediani@ig.com.br
 s000022;Matilde;Gilardino;matilde.gilardino@aim.com
-s000023;Desire;Galletto;desiregalletto@libero.it
+s000023;Corina;Morina;corina.morina@bellsouth.net
 s000024;Giangiacomo;Caramagna;giangiacomo.caramagna@blueyonder.co.uk
 s000025;Kleoparda;Vardaro;kleoparda.vardaro@libero.it
 s000026;Osariyekemwen;Arbuez;osariyekemwen.arbuez@hotmail.fr

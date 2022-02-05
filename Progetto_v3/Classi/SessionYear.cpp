@@ -8,7 +8,6 @@
 #include "Parse.hpp"
 #include "ExamDay.h"
 #include "StudyCourse.h"
-#include "DbException.h"
 #include "University.h"
 
 
@@ -328,8 +327,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                       while(otherCourse == false) {
                                           auto pos = find(_allExamAppealsToDo.at(sessName).begin(),_allExamAppealsToDo.at(sessName).end(),coursesToConsiderInThisLoop[j].getId());
                                           if (pos != _allExamAppealsToDo.at(sessName).end())
-                                              popAppealFromVector(_allExamAppealsToDo.at(sessName),
-                                                                  coursesToConsiderInThisLoop[j].getId());
+                                              popAppealFromVector(sessName,coursesToConsiderInThisLoop[j].getId());
                                           else
                                               otherCourse = true;
                                       }
@@ -354,7 +352,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
 
                                 assignTheExamToThisExamDay(startHourPerGroupedCourses, currentExamDay, profs,
                                                            allUniversityClassrooms, courseToConsider, sessName,
-                                                           _allExamAppealsToDo.at(sessName), rooms, requestChanges,
+                                                           rooms, requestChanges,
                                                            numAppealYear);
 
                                 std::vector<int> allProfsMatrThisCourse = sp.getAllProfMatr();
@@ -428,7 +426,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
     std::fstream outputSession;
     outputSession.open(realFileName, std::fstream::out | std::fstream::trunc);
     if (!outputSession.is_open()) {
-        throw DbException("Errore apertura file sessioni\n");
+        throw std::invalid_argument("Errore apertura file sessioni\n");
     }
     Date dayOne = _yearSessions.at(key).startDate;
     Date lastDay = _yearSessions.at(key).endDate;
@@ -702,6 +700,36 @@ int SessionYear::isPossibleToAssignThisExam(Course course, Date currentExamDay, 
             }
         }
     }
+    if(requestChanges){
+        //prendo l'ultimo giorno della sessione
+        Date lastDay = _yearSessions.at(_sessionNames[session - 1]).endDate;
+        // controllo il gap dal lastDay al currentDay
+        // se = 1 controllo solo il giorno in cui mi trovo e il giorno dopo
+        // se = 0 non devo controllare
+        int pos = currentExamDay.whatIsTheGap(lastDay);
+        auto iterCalendar = _yearCalendar.find(currentExamDay.toString());
+
+        //se sono ad un giorno precedente al terzultimo giorno della sessione devo controllare solo i due giorni successivi
+        if (pos > 2)
+            pos = 2;
+        //per tre volte
+        for (int i = 0; i <= pos; i++) {
+            ExamDay dayBefore = iterCalendar->second;//al primo ciclo prendo l'examday corrente, al secondo ciclo l'examDay successivo alla data in cui voglio inserire l'esame. Al secondo ciclo prendo l'examDay di due giorni dopo
+            bool same = dayBefore.sameStudyCourseAndYear(course, _acYear);
+            //iteratore al primo giorno della sessione
+            auto iterCalendarLastDaySession = _yearCalendar.find(lastDay.toString());
+            //continuo a decrementare l'iteratore fino a che non sia uguale al primo giorno della sessione
+            if (iterCalendar != iterCalendarLastDaySession) {
+                iterCalendar++;
+            }
+            if (same) {
+                //se sameStudyCourseAndYear ha trovato un esame già assegnato
+                //che appartenga allo stesso corso di studi e allo stesso anno da assegnare
+                throw std::logic_error("Il gap dei due giorni tra corsi dello stesso corso di studio e dello stesso anno non e' rispettato\n");
+
+            }
+        }
+    }
     ///controlliamo se ci sono slot liberi ed eventualmente se i prof in quegli slot sono liberi
     ///controllo disponibilità di aule
     ExamDay &examCurrentDay = _yearCalendar.at(currentExamDay.toString());
@@ -715,8 +743,7 @@ int SessionYear::isPossibleToAssignThisExam(Course course, Date currentExamDay, 
 ///assegna l'esame nella data considerata
 void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date &currentExamDay, std::map<int, Professor> &profs,
                                              std::map<int, Classroom> &allUniversityClassrooms, Course &course,
-                                             std::string sessName, std::vector<std::string> &allExamAppealsToDo,
-                                             std::vector<int> idRooms, bool requestChanges, int numAppealYear) {
+                                             std::string sessName,std::vector<int> idRooms, bool requestChanges, int numAppealYear) {
     Exam examToAssign = course.getExamSpecificYear(getAcYear());//tempi, aule o lab, modalità
     int numSlots = examToAssign.howManySlots();//numero di slot che servono per l'esame
     SpecificYearCourse &specificYY = course.getThisYearCourseReference(getAcYear());//corso per un anno specifico
@@ -737,14 +764,14 @@ void SessionYear::assignTheExamToThisExamDay(int startExamHour, Date &currentExa
     std::string codCurrentCourse = course.getId();
     ///AAA allExamAppealToDo sarebbe un variabile privata, secondo me non c'è bisogno di passarlo
     if (requestChanges == false)
-        popAppealFromVector(allExamAppealsToDo, codCurrentCourse);
+        popAppealFromVector(sessName, codCurrentCourse);
 }
 
 ///elimina dal vettore degli esami da effettuare l'esame già assegnato
-void SessionYear::popAppealFromVector(std::vector<std::string> &allExamAppealsToDo, std::string codExam) {
+void SessionYear::popAppealFromVector(std::string sessionName, std::string codExam) {
     ///se questo appello è stato assegnato, non lo dobbiamo più considerare!!
-    auto pos = find(allExamAppealsToDo.begin(), allExamAppealsToDo.end(), codExam);
-    allExamAppealsToDo.erase(pos);
+    auto pos = find(_allExamAppealsToDo.at(sessionName).begin(), _allExamAppealsToDo.at(sessionName).end(), codExam);
+    _allExamAppealsToDo.at(sessionName).erase(pos);
 }
 
 ///ritorna se il periodo delle sessioni è vuoto
@@ -924,7 +951,7 @@ void SessionYear::tryToSetThisExamInThisSession(University &myUniversity, Course
             int numAppealYear = sp.getNumAppealFromNumSessNumAppealInSession(numSession, numAppeal);
             std::vector<int> rooms = roomsFoundedPerCourse.at(idCourse);
             assignTheExamToThisExamDay(startHourPerGroupedCourses, tryDate, professors, allUniversityClassrooms,
-                                       courseToConsider, _sessionNames[numSession - 1], _allExamAppealsToDo.at(_sessionNames[numSession - 1]), rooms,
+                                       courseToConsider, _sessionNames[numSession - 1], rooms,
                                        requestChanges, numAppealYear);
 
         }

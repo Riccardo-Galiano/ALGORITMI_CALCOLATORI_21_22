@@ -203,33 +203,6 @@ Classi/Date.cpp.s:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.s
 .PHONY : Classi/Date.cpp.s
 
-Classi/DbException.obj: Classi/DbException.cpp.obj
-
-.PHONY : Classi/DbException.obj
-
-# target to build an object file
-Classi/DbException.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj
-.PHONY : Classi/DbException.cpp.obj
-
-Classi/DbException.i: Classi/DbException.cpp.i
-
-.PHONY : Classi/DbException.i
-
-# target to preprocess a source file
-Classi/DbException.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.i
-.PHONY : Classi/DbException.cpp.i
-
-Classi/DbException.s: Classi/DbException.cpp.s
-
-.PHONY : Classi/DbException.s
-
-# target to generate assembly for a file
-Classi/DbException.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.s
-.PHONY : Classi/DbException.cpp.s
-
 Classi/Exam.obj: Classi/Exam.cpp.obj
 
 .PHONY : Classi/Exam.obj
@@ -599,9 +572,6 @@ help:
 	@echo ... Classi/Date.obj
 	@echo ... Classi/Date.i
 	@echo ... Classi/Date.s
-	@echo ... Classi/DbException.obj
-	@echo ... Classi/DbException.i
-	@echo ... Classi/DbException.s
 	@echo ... Classi/Exam.obj
 	@echo ... Classi/Exam.i
 	@echo ... Classi/Exam.s

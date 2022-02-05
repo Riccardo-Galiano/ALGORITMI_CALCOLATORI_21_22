@@ -199,22 +199,9 @@ CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.s"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\Classroom.cpp -o CMakeFiles\Progetto_v3.dir\Classi\Classroom.cpp.s
 
-CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
-CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj: ../Classi/DbException.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\DbException.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\DbException.cpp
-
-CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.i"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\DbException.cpp > CMakeFiles\Progetto_v3.dir\Classi\DbException.cpp.i
-
-CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.s"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\DbException.cpp -o CMakeFiles\Progetto_v3.dir\Classi\DbException.cpp.s
-
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj: ../Classi/SessionYear.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\SessionYear.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionYear.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.i: cmake_force
@@ -227,7 +214,7 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.s: cmake_force
 
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i: cmake_force
@@ -240,7 +227,7 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s: cmake_force
 
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/ExamDay.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\ExamDay.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\ExamDay.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.i: cmake_force
@@ -253,7 +240,7 @@ CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.s: cmake_force
 
 CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj: ../Classi/InvalidDbException.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\InvalidDbException.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\InvalidDbException.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.i: cmake_force
@@ -266,7 +253,7 @@ CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.s: cmake_force
 
 CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj: ../Classi/SystemLog.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\SystemLog.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SystemLog.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.i: cmake_force
@@ -290,7 +277,6 @@ Progetto_v3_OBJECTS = \
 "CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj" \
-"CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj" \
@@ -311,7 +297,6 @@ Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj
-Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/DbException.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj
@@ -321,7 +306,7 @@ Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/build.make
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/linklibs.rsp
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/objects1.rsp
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable Progetto_v3.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable Progetto_v3.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\Progetto_v3.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

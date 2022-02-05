@@ -36,9 +36,9 @@ public:
                              bool sixHours, bool tryToSatisfyProfsMinDistance);
     void assignTheExamToThisExamDay(int startExamHour, Date &currentExamDay, std::map<int, Professor> &profs,
                                     std::map<int, Classroom> &allUniversityClassrooms, Course &course,
-                                    std::string sessName, std::vector<std::string> &allExamAppealsToDo,
+                                    std::string sessName,
                                     std::vector<int> idRooms, bool requestChanges, int numAppealYear);
-    static void popAppealFromVector(std::vector<std::string>& allExamAppealsToDo,std::string codExam);
+    void popAppealFromVector(std::string sessionName,std::string codExam);
     std::vector<std::string> getProfsOfGapProfsString();
     void assignAppealsToCalendar(std::string appeal, int startSlotHour, const Course &course, int numSlots);
     void removeThisAppealInfoFromCalendar(int numSlots,Date& date, int& startSlot, std::string& idCourse);

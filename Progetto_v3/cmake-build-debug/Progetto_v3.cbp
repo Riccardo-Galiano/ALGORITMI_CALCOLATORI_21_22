@@ -98,12 +98,6 @@
 		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.cpp">
-			<Option target="Progetto_v3"/>
-		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/DbException.h">
-			<Option target="Progetto_v3"/>
-		</Unit>
 		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>

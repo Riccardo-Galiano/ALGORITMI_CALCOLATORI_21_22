@@ -19,7 +19,7 @@ Classroom::Classroom(int id, std::string AorL, std::string name, int seats, int 
     } else if (AorL == "A") {
         _lab = false;
     }else {
-        throw std::invalid_argument("E' presente un carattere diverso da A o L ");
+        throw std::invalid_argument("E' presente un carattere diverso da A o L\n");
     }
     _othersInfoClassroom._blackBoard = -1;
     _othersInfoClassroom._computer = -1;

@@ -7,8 +7,7 @@
 #include <algorithm>
 #include "StudyCourse.h"
 #include "Parse.hpp"
-#include "DbException.h"
-#include "InvalidDbException.h"
+
 
 StudyCourse::StudyCourse(const int id, const bool &isBachelor) : _id{id}, _isBachelor{isBachelor} {}
 
