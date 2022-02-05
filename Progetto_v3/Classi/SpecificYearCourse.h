@@ -109,6 +109,14 @@ public:
 
 
 private:
+    bool createdToBeTemp;
+public:
+    bool isCreatedToBeTemp() const;
+
+public:
+    void setCreatedToBeTemp(bool createdToBeTemp);
+
+private:
     std::string _yy_semester;
     //unico per tutti i corsi!!!
     std::string _acYearOff;

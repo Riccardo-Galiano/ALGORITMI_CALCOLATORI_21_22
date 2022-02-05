@@ -38,10 +38,11 @@ public:
     void assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString);
     std::vector<std::pair<std::string, int>> splittAllStudPassedExamString(std::string allStudsPassedExamString);
     void updateYYSemesterInAllSpecYearCourse(std::string& yy_semester);
-    void fillAcYearsUntilStartAcYear(int startAcYear, int lastYear);
+    void fillAcYearsUntilStartAcYear(int startAcYear, int lastYear, bool tempData);
     void reassignAppealToSpecificYear(int acYear,int numAppeal,int numSession,Date date,int startSlot, std::vector<int>classroomsPerCourse);
     void updateStudyCourseInAllSpecYearCourse(int idStudyCourse);
     bool courseExistInThisSpecificYear(int year);
+    void eraseThisSpecificYear(int year);
 
     ///getter
     const std::string &getId() const;

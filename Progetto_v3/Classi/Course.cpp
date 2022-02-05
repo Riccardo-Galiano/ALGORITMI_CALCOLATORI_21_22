@@ -321,7 +321,7 @@ void Course::registerStudentsToSpecificYear(int acYearRegistration, Student &stu
     std::string acYear = std::to_string(acYearRegistration) + "-" + std::to_string(acYearRegistration+1);
     std::string settedId = Parse::setId('s',6,stud.getId());
     if(acYearRegistration > lastYear) {
-        fillAcYearsUntilStartAcYear(acYearRegistration, lastYear);
+        fillAcYearsUntilStartAcYear(acYearRegistration, lastYear, true);
     }
     //se non lo trova è perchè il corso non era ancora attivo in quell'anno
     if(_courseOfTheYear.find(acYearRegistration) == _courseOfTheYear.end()) {
@@ -341,7 +341,6 @@ std::vector<std::string> Course::getAcYearStudExam() const{
     std::vector<std::string> allAppealsPerYearToString;
     bool push = false;
   for(auto iterSpecific = _courseOfTheYear.begin();iterSpecific != _courseOfTheYear.end(); iterSpecific++){
-
       std::vector<Date> allAppealsPerYear = iterSpecific->second.getAllAppeals();
       for(int i = 0; i < allAppealsPerYear.size(); i++) {
           std::stringstream ss;
@@ -435,7 +434,7 @@ bool Course::profHaveThisCourse(int matr, int acStartYear) {
         throw std::invalid_argument("Il corso "+ getId() + " non era ancora attivo nel "+ std::to_string(acStartYear) + "-" + std::to_string(acStartYear+1)+ "\n");
     }else if(lastYear <acStartYear){
         ///se il corso semplicemente non è stato aggiornato
-        fillAcYearsUntilStartAcYear(acStartYear, lastYear);
+        fillAcYearsUntilStartAcYear(acStartYear, lastYear, false);
     }
     std::vector<int> profOfCourse = _courseOfTheYear.at(acStartYear).getAllProfMatr();
     return std::find(profOfCourse.begin(), profOfCourse.end(), matr) != profOfCourse.end();
@@ -461,12 +460,15 @@ int Course::getFirstYearOfActivity()const {
 }
 
 ///eredita per un corso le informazioni necessarie di anno in anno fino a lastYear
-void Course::fillAcYearsUntilStartAcYear(int startAcYear, int lastYear) {
+void Course::fillAcYearsUntilStartAcYear(int startAcYear, int lastYear, bool tempData) {
 
     for(int i = lastYear; i < startAcYear; i++){
         SpecificYearCourse nextSpecificYearCourse = _courseOfTheYear.at(lastYear);
         int newStartYear = ++lastYear;
         nextSpecificYearCourse.setNewYear(newStartYear);
+        if(tempData){
+            nextSpecificYearCourse.setCreatedToBeTemp(true);
+        }
         _courseOfTheYear.insert(std::pair<int, SpecificYearCourse>(newStartYear,nextSpecificYearCourse));
     }
 
@@ -520,7 +522,7 @@ bool Course::courseExistInThisYear(int year) {
         return false;
     else {
         if(lastYear < year)
-            fillAcYearsUntilStartAcYear(year, lastYear);
+            fillAcYearsUntilStartAcYear(year, lastYear, false);
         return true;
     }
 }
@@ -530,6 +532,11 @@ bool Course::courseExistInThisSpecificYear(int year) {
         return false;
     }else
         return true;
+}
+
+void Course::eraseThisSpecificYear(int year) {
+    auto pos = _courseOfTheYear.find(year);
+    _courseOfTheYear.erase(pos);
 }
 
 ///output operator overload

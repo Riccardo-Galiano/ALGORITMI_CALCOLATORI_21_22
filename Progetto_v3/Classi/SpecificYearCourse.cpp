@@ -656,6 +656,14 @@ std::map<int, student> SpecificYearCourse::getStudentsEnrolled() const {
     return _studentsEnrolled;
 }
 
+void SpecificYearCourse::setCreatedToBeTemp(bool createdToBeTemp) {
+    SpecificYearCourse::createdToBeTemp = createdToBeTemp;
+}
+
+bool SpecificYearCourse::isCreatedToBeTemp() const {
+    return createdToBeTemp;
+}
+
 
 ///overload output operator
 std::ostream &operator<<(std::ostream &output, const SpecificYearCourse &s) {

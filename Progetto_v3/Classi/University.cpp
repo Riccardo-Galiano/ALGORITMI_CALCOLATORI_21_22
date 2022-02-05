@@ -1582,11 +1582,29 @@ void University::insertCourses(const std::string &fin) {
                 if (lineFileIsOk) {
                     int year = Parse::getAcStartYear(acYear);
                     auto CourseToUpdate = _courses.find(specificYearCourse[0]);//iteratore al corso da aggiornare
-                    SpecificYearCourse sp = _courses.at(specificYearCourse[0]).getLastSpecificYearCourse();
-                    int lastYear = sp.getStartYear();
-
+                    Course course = _courses.at(specificYearCourse[0]);
+                    SpecificYearCourse sp_last = _courses.at(specificYearCourse[0]).getLastSpecificYearCourse();
+                    int lastYear = sp_last.getStartYear();
+                    bool wasCreatedToBeTemp = false;
+                    if(course.courseExistInThisSpecificYear(year)) {
+                        SpecificYearCourse sp_requestedYear = _courses.at(specificYearCourse[0]).getThisYearCourse(year);
+                        wasCreatedToBeTemp = sp_requestedYear.isCreatedToBeTemp();
+                    }
                     //se è minore o uguale all'anno dell'ultimo aggiornamento inserito non va bene!!
-                    if (lastYear < year) {
+                    if (lastYear < year || wasCreatedToBeTemp) {
+                        ///cancello anno temporaneo e salvo info
+                        std::map<int, student> studentsEnrolledTemp;
+                        int totStudentsEnrolledTemp;
+                        int totStudentsNotPassedTemp;
+                        if(wasCreatedToBeTemp){
+                            ///salvo
+                            SpecificYearCourse sp_requestedYear = _courses.at(specificYearCourse[0]).getThisYearCourse(year);
+                            totStudentsEnrolledTemp = sp_requestedYear.getTotStudentsEnrolled();
+                            totStudentsNotPassedTemp = sp_requestedYear.getTotStudentsExam();
+                            studentsEnrolledTemp = sp_requestedYear.getStudentsEnrolled();
+                            ///cancello
+                            course.eraseThisSpecificYear(year);
+                        }
                         //se l'anno del nuovo aggiornamento è maggiore dell'anno dell'ultimo aggiornamento posso procedere
                         ///fillSpecificYearCourse mi aggiorna il vettore specificYearCourse aggiungendo le info dell'anno accademico precedente negli spazi vuoti
                         try {
@@ -1849,7 +1867,6 @@ void University::insertCourses(const std::string &fin) {
             doDbWrite = false;
         }
         if (doDbWrite) {
-
             ///controlli che posso fare solo dopo aver inserito le info da file
             for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
                 ///controllo se i corsi raggruppati siano dello stesso semestre del principale e di corsi di studio differenti
@@ -1939,7 +1956,7 @@ void University::fillPerControlWithOldSpecificYear() {
                 int last = groupedCourse[i].getLastSpecificYearCourse().getStartYear();
                 std::string id = groupedCourse[i].getId();
                 //devo riempire i gap fra anni
-                _courses.at(id).fillAcYearsUntilStartAcYear(maxYear, last);
+                _courses.at(id).fillAcYearsUntilStartAcYear(maxYear, last, false);
             }
             fillGroupedCourse(grouped, idCourse, acYear, false);
         }
@@ -2363,7 +2380,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     //se la sessione dovesse avere già dei voti assegnati non potrebbe essere rigenerata in quanto,
     // se ci fossero dei voti assegnati agli studenti significherebbe che la sessione sia già stata effettuata
     // prendo per ogni corso l'anno accademico e controllo per ogni studente se appealDate è diverso da 1900-01-01 in quel caso lancio l'eccezione
-    controlIfCanbeRigenerate(startAcYear);
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!controlIfCanbeRigenerate(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare oppure si nota subito che non ci sono aule abbastanza capienti per un corso(eccezione)
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
@@ -2511,7 +2528,7 @@ void University::dataBaseIsEmpty(int startAcYear) {
                 isAgainOk = false;
             } else if (startAcYear > lastYear) {
                 ///se l'anno della sessione è maggiore dell'ultimo anno nel db vuol dire che magari non ci sono aggiornamenti e mi devo rifare all'ultimo anno
-                iterCourse->second.fillAcYearsUntilStartAcYear(startAcYear, lastYear);
+                iterCourse->second.fillAcYearsUntilStartAcYear(startAcYear, lastYear, false);
             }
         }
         if (isAgainOk) {
@@ -3312,7 +3329,7 @@ void University::readExamAppealsPerAcSession(std::string acYear) {
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         int lastYear = iterCourse->second.getLastSpecificYearCourse().getStartYear();
         if (lastYear < year) {
-            iterCourse->second.fillAcYearsUntilStartAcYear(year, lastYear);
+            iterCourse->second.fillAcYearsUntilStartAcYear(year, lastYear, false);
         }
     }
     for (int i = 1; i <= 3; i++) {
