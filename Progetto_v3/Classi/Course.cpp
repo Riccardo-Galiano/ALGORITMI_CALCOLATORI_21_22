@@ -354,7 +354,7 @@ std::vector<std::string> Course::getAcYearStudExam() const{
 
                        //l'appello è lui quindi deve essere scritto nel database
                        std::string settedId = Parse::setId('s',6,currentStud._studId);
-                       ss<< "{"<< settedId << "," << currentStud._grade << "}";
+                       ss<< "{"<< settedId << "," << currentStud._grade.at(allAppealsPerYear[i]) << "}";
                        push = true;
 
                        if(count<allStudentPassed.size()-1)
@@ -376,8 +376,10 @@ std::vector<std::string> Course::getAcYearStudExam() const{
 void Course::assignStudToAppealPerYear(std::string acYear, std::string appealDate, std::string allStudsPassedExamString) {
     std::vector<std::pair<std::string, int>> allStudPassedExam = splittAllStudPassedExamString(allStudsPassedExamString);
     int startAcYear = Parse::getAcStartYear(acYear);
-    _courseOfTheYear.at(startAcYear).assignAllStudsPassedExam(allStudPassedExam,appealDate);
 
+    for(auto pos = _courseOfTheYear.find(startAcYear); pos != _courseOfTheYear.end(); pos++) {
+        _courseOfTheYear.at(pos->first).assignAllStudsPassedExam(allStudPassedExam, appealDate);
+    }
 }
 
 ///splitta matricola e voto

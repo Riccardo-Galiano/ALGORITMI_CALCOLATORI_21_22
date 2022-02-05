@@ -3079,9 +3079,17 @@ void University::insertStudentsGrades(std::string fin) {
     int doDbWrite = true;
     //controllo possa essere una data
     Date d = Parse::controlItCanBeADate(appealDate);
-    if (_acYearSessions.count(d.getYear()) != 0) {
-        if (_acYearSessions.at(d.getYear()).fileNameIsEmpty() == false) {
-            readExamAppealsPerAcSession(std::to_string(d.getYear()) + "-" + std::to_string(d.getYear() + 1));
+    //controllo di che anno accademico si tratti
+    //se tra Gennaio e Ottobre l'anno sarà quello dell'appello-1
+    //se tra Novembre e Dicembre l'anno sarà quello dell'appello
+    int acYear;
+    if(d.getMonth() >= 1 && d.getMonth()<= 10){
+        acYear = d.getYear()-1;
+    }else if(d.getMonth() > 10 && d.getMonth() <= 12)
+        acYear = d.getYear();
+    if (_acYearSessions.count(acYear) != 0) {
+        if (_acYearSessions.at(acYear).fileNameIsEmpty() == false) {
+            readExamAppealsPerAcSession(std::to_string(acYear) + "-" + std::to_string(acYear+1));
         } else
             throw std::invalid_argument(
                     "Non e' stata programmata alcuna sessione per l'anno dell'appello richiesto\n");
@@ -3294,6 +3302,7 @@ void University::readPassedAppeals() {
 
         _courses.at(idCorso).assignStudToAppealPerYear(acYear, appealDate,
                                                        allStudPassedExam);///cambio _grade, _passed;appealPassed
+
     }
 }
 
@@ -3312,7 +3321,7 @@ void University::readExamAppealsPerAcSession(std::string acYear) {
         ss << nameFile << ".txt";
         std::ifstream fileIn(ss.str());
         if (!fileIn.is_open()) {
-            throw std::invalid_argument("file" + ss.str() + " non esistente\n");
+            throw std::invalid_argument("file " + ss.str() + " non esistente\n");
         }
         std::string line;
         while (std::getline(fileIn, line)) {

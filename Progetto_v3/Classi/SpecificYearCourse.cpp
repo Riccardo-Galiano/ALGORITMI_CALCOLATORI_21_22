@@ -279,13 +279,20 @@ void SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay, int se
 void SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark, std::string appealsDate, std::string idCourse) {
 
     student &studToUpdate = _studentsEnrolled.at(stud.getId());
-    studToUpdate._grade = mark;
+    Date dateDefault;
+    if(studToUpdate._grade.find(dateDefault) != studToUpdate._grade.end()){
+        //lo cancello
+        studToUpdate._grade.erase(studToUpdate._grade.begin(), studToUpdate._grade.end());
+    }
+    studToUpdate._grade.insert(std::pair<Date,int>(appealsDate,mark));
+    studToUpdate._appealMade.emplace_back(appealsDate);
     if (mark >= 18 && mark <= 32) {
         studToUpdate._passYear = passYear;
         _totStudentsNotPassed--;
         studToUpdate._passed = true;
         studToUpdate._appealPassed = appealsDate;
     }
+
 }
 
 ///assegna anno e semestre di un corso ad un anno specifico
@@ -336,7 +343,7 @@ void SpecificYearCourse::addStudent(int acYearRegistration, Student &stud) {
 
     student studToAdd;
     studToAdd._studId = stud.getId();
-    studToAdd._grade = -1;
+    studToAdd._grade.insert(std::pair<Date,int>("1900-01-01",-1));
     studToAdd._startEnrolYear = acYearRegistration;
     studToAdd._passYear = -1;
     studToAdd._appealPassed = appealsInitialization;
@@ -375,10 +382,19 @@ void SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::str
         int id = Parse::getMatr(allStudPassedExam[i].first);
         int passYear = stoi(appealDate.substr(0, 4));
         student &stud = _studentsEnrolled.at(id);
-        stud._passed = true;
-        stud._grade = allStudPassedExam[i].second;
-        stud._appealPassed = appealDate;
-        stud._passYear = passYear;
+        stud._appealMade.emplace_back(appealDate);
+        Date dateDefault;
+        if(stud._grade.find(dateDefault) != stud._grade.end()){
+            //lo cancello
+            stud._grade.erase(stud._grade.begin(), stud._grade.end());
+        }
+        stud._grade.insert(std::pair<Date,int>(appealDate,allStudPassedExam[i].second));
+        if(allStudPassedExam[i].second >= 18){
+            stud._appealPassed = appealDate;
+            stud._passed = true;
+            stud._passYear = passYear;
+            _totStudentsNotPassed --;
+        }
     }
 }
 
@@ -419,17 +435,16 @@ bool SpecificYearCourse::notExamsAssigned() {
     return _howManyTimesIAmAssignedInASession.empty();
 }
 
-///prende gli studenti che hanno passato l'esame in questo appello
+///prende gli studenti che hanno sostenuto l'esame
 std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) const{
     std::map<int, student> allStudentsPassed;
     for (auto iterStud = _studentsEnrolled.begin(); iterStud != _studentsEnrolled.end(); iterStud++) {
         student currentStud = iterStud->second;
-        if (currentStud._passed == true) {
-            Date appealPassed = currentStud._appealPassed;
-            if (appealPassed == dateAppeal) {
+        std::vector<Date> dateMade = currentStud._appealMade;
+            if(find(dateMade.begin(), dateMade.end(), dateAppeal) != dateMade.end())
                 allStudentsPassed.insert(std::pair<int, student>(currentStud._studId, currentStud));
-            }
-        }
+
+
     }
     return allStudentsPassed;
 }

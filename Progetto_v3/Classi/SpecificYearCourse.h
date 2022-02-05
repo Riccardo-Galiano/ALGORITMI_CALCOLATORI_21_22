@@ -27,9 +27,10 @@ typedef struct {
     int _studId;
     int _startEnrolYear; ///inizio corso
     int _passYear; ///fine corso
-    int _grade;   ///voto
+    std::map<Date,int> _grade;   ///voto
     bool _passed;
     Date _appealPassed;
+    std::vector<Date> _appealMade;
 } student;
 
 class SpecificYearCourse {
