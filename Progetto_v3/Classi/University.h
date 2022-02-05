@@ -95,7 +95,7 @@ public:
     void dbStudyPlanWrite();
     void dbDateSessionsWrite();
     void dbNoAvailabilityWrite();
-    void dbAppealsWrite();
+    void dbAppealsWrite(int year);
     void writeVersion();
 
     ///get new ID
@@ -105,6 +105,7 @@ public:
     const int getNewStudyCourseId() const;
     const std::string getNewCourseId()const;
     std::string getPotentialCourseString() const;
+    std::vector<std::string> getOldLine(int year);
 
     ///add
     void addStuds(const std::string &fileIn);

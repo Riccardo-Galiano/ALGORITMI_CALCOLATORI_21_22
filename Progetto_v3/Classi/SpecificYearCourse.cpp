@@ -280,17 +280,28 @@ void SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark
 
     student &studToUpdate = _studentsEnrolled.at(stud.getId());
     Date dateDefault;
-    if(studToUpdate._grade.find(dateDefault) != studToUpdate._grade.end()){
-        //lo cancello
-        studToUpdate._grade.erase(studToUpdate._grade.begin(), studToUpdate._grade.end());
+    Date appeal(appealsDate);
+    int acYear;
+    if (appeal.getMonth() >= 1 && appeal.getMonth() <= 10) {
+        acYear = appeal.getYear() - 1;
+    } else {
+        acYear = appeal.getYear();
     }
-    studToUpdate._grade.insert(std::pair<Date,int>(appealsDate,mark));
+    if (acYear == getStartYear()){
+        if (studToUpdate._grade.find(dateDefault) != studToUpdate._grade.end()) {
+            //lo cancello
+            studToUpdate._grade.erase(studToUpdate._grade.begin(), studToUpdate._grade.end());
+        }
+    studToUpdate._grade.insert(std::pair<Date, int>(appealsDate, mark));
     studToUpdate._appealMade.emplace_back(appealsDate);
+    if(mark>= 18 && mark <= 32){
+        studToUpdate._appealPassed = appealsDate;
+    }
+    }
     if (mark >= 18 && mark <= 32) {
         studToUpdate._passYear = passYear;
         _totStudentsNotPassed--;
         studToUpdate._passed = true;
-        studToUpdate._appealPassed = appealsDate;
     }
 
 }
@@ -379,18 +390,29 @@ std::vector<Date> SpecificYearCourse::getAllAppeals() const {
 void SpecificYearCourse::assignAllStudsPassedExam(std::vector<std::pair<std::string, int>> allStudPassedExam,
                                                   std::string appealDate) {
     for (int i = 0; i < allStudPassedExam.size(); i++) {
+
         int id = Parse::getMatr(allStudPassedExam[i].first);
-        int passYear = stoi(appealDate.substr(0, 4));
+        int passYear;
         student &stud = _studentsEnrolled.at(id);
-        stud._appealMade.emplace_back(appealDate);
-        Date dateDefault;
-        if(stud._grade.find(dateDefault) != stud._grade.end()){
-            //lo cancello
-            stud._grade.erase(stud._grade.begin(), stud._grade.end());
+        Date currentDate = Date(appealDate);
+        if(currentDate.getMonth()>=1 && currentDate.getMonth()<=10)
+            passYear = currentDate.getYear()-1;
+        else
+            passYear = currentDate.getYear();
+        if(passYear == getStartYear()){
+            //sono nell'anno dell'appello
+            stud._appealMade.emplace_back(appealDate);
+            Date dateDefault;
+            if(stud._grade.find(dateDefault) != stud._grade.end()){
+                //lo cancello
+                stud._grade.erase(stud._grade.begin(), stud._grade.end());
+            }
+            stud._grade.insert(std::pair<Date,int>(appealDate,allStudPassedExam[i].second));
+            if(allStudPassedExam[i].second >= 18){
+                stud._appealPassed = appealDate;
+            }
         }
-        stud._grade.insert(std::pair<Date,int>(appealDate,allStudPassedExam[i].second));
         if(allStudPassedExam[i].second >= 18){
-            stud._appealPassed = appealDate;
             stud._passed = true;
             stud._passYear = passYear;
             _totStudentsNotPassed --;

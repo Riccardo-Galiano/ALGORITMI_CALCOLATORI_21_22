@@ -3191,7 +3191,8 @@ void University::insertStudentsGrades(std::string fin) {
                         Student &stud = _students.at(id); //preso l'istanza dello studente di cui si parla
                         //prendiamo l'anno di iscrizione dello studente
                         //(perchè le info sull'esame fatto dallo studente sono salvate nello specifico anno di ogni corso a cui è iscritto il cui specifico anno è proprio l'anno di iscrizione dello studente)
-                        int acYear = stud.getYearRegistration();
+                        Date appeal(appealDate);
+
                         try {
                             _courses.at(idCorso).modifyStudentAsPassedToSpecYearCourse(acYear, stud,
                                                                                        mark,
@@ -3216,7 +3217,7 @@ void University::insertStudentsGrades(std::string fin) {
         doDbWrite = false;
     }
     if (doDbWrite)
-        dbAppealsWrite();
+        dbAppealsWrite(acYear);
     else
         throw std::invalid_argument(error);
 }
@@ -3286,20 +3287,56 @@ void University::controlUnicity(std::vector<std::string> &controlUnicityCourses,
 }
 
 ///scrive il database dei voti per gli appelli
-void University::dbAppealsWrite() {
+void University::dbAppealsWrite(int year) {
+
+    std::string line;
+    std::vector<std::string> differentAppeal;
+    try {
+        differentAppeal = getOldLine(year);
+    }catch (std::invalid_argument& err){
+
+    }
+
     std::fstream fout;
+
     fout.open("db_appelli.txt", std::fstream::out | std::fstream::trunc);
     if (!fout.is_open()) {
         throw std::invalid_argument("Errore apertura database appelli\n");
     }
-    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-        std::vector<std::string> acYearAppeals = iterCourse->second.getAcYearStudExam();
-        for (int i = 0; i < acYearAppeals.size(); i++) {
-            fout << acYearAppeals[i] << std::endl;
+     std::vector<std::string> other;
+        for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
+            std::vector<std::string> acYearAppeals = iterCourse->second.getAcYearStudExam();
+            for (int i = 0; i < acYearAppeals.size(); i++) {
+                other.push_back(acYearAppeals[i]);
+            }
+        }
+        differentAppeal.insert(differentAppeal.end(), other.begin(), other.end());
+        std::sort(differentAppeal.begin(), differentAppeal.end());
+        for (int i = 0; i < differentAppeal.size(); i++) {
+            fout << differentAppeal[i] << std::endl;
+        }
+        fout.close();
+}
+//prendo le vecchie linee del file
+std::vector<std::string> University::getOldLine(int year) {
+    std::string line;
+    std::vector<std::string> differentAppeal;
+    std::ifstream fileIn("db_appelli.txt");
+    if (!fileIn.is_open()) {
+        throw std::invalid_argument("Il file non esiste ancora\n");
+    }
+    while (std::getline(fileIn, line)) {
+        //tengo gli appelli per anni passati
+        //prendo l'anno dalla linea del file e se diverso da year mi salvo la riga che sarà poi riscritta
+        std::string yearFile = line.substr(8, 4);
+        if (std::stoi(yearFile) != year) {
+            differentAppeal.push_back(line);
         }
     }
-    fout.close();
+    fileIn.close();
+    return differentAppeal;
 }
+
 
 ///legge il database dei voti per gli appelli
 void University::readPassedAppeals() {
@@ -4223,6 +4260,8 @@ void University::updateStateVersioning(int newVer) {
         ///qui si possono aggiungere nuove versioni
     }
 }
+
+
 
 
 

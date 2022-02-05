@@ -153,13 +153,13 @@ public:
 
     ///prende la matricola prima di lettere identificative all'inizio
     static int getMatr(std::string& input){
-        if(!input.empty()) {
+
             std::string nMatr;
             char c;
             std::stringstream ss(input);
             ss >> c >> nMatr;
             return Parse::checkedStoi(nMatr, " della matricola");
-        }
+
     }
 
     ///setta l'id per un prof o studente
