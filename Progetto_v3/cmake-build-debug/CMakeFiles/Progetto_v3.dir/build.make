@@ -212,22 +212,9 @@ CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.s"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionYear.cpp -o CMakeFiles\Progetto_v3.dir\Classi\SessionYear.cpp.s
 
-CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
-CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp
-
-CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp > CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.i
-
-CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp -o CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.s
-
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj: ../Classi/ExamDay.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\ExamDay.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\ExamDay.cpp
 
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.i: cmake_force
@@ -237,6 +224,19 @@ CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.i: cmake_force
 CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.s"
 	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\ExamDay.cpp -o CMakeFiles\Progetto_v3.dir\Classi\ExamDay.cpp.s
+
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj: ../Classi/SessionLog.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.obj -c C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp
+
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp > CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.i
+
+CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\G__~1.EXE $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\andre\Documents\GitHub\ALGORITMI_CALCOLATORI_21_22\Progetto_v3\Classi\SessionLog.cpp -o CMakeFiles\Progetto_v3.dir\Classi\SessionLog.cpp.s
 
 CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj: CMakeFiles/Progetto_v3.dir/flags.make
 CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj: ../Classi/InvalidDbException.cpp
@@ -278,8 +278,8 @@ Progetto_v3_OBJECTS = \
 "CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj" \
-"CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj" \
+"CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj" \
 "CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj"
 
@@ -298,8 +298,8 @@ Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj
-Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj
+Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj
 Progetto_v3.exe: CMakeFiles/Progetto_v3.dir/build.make

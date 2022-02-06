@@ -88,7 +88,11 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     if (foundedStartHourSlot == -1)
         ///non ho trovato un buco abbastanza grande
         return -1;
-
+    std::cout << specificCourse.getTotStudentsEnrolled() <<" - ";
+    for(int i : idRoomsFounded){
+        std::cout << i << " ha " << allUniversityClassrooms.at(i).getNExamSeats()<< "posti, ";
+    }
+    std::cout << std::endl;
     _tempGroupedCourseClassrooms.insert(_tempGroupedCourseClassrooms.begin(),idRoomsFounded.begin(),idRoomsFounded.end());
     return foundedStartHourSlot;
 }
