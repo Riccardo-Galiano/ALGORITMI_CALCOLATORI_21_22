@@ -80,97 +80,97 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classroom.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Classroom.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classroom.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Course.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Course.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Course.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Date.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Date.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Date.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Exam.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Exam.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Exam.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/ExamDay.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/ExamDay.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/ExamDay.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/InvalidDbException.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/InvalidDbException.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/InvalidDbException.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Parse.hpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Parse.hpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Professor.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Professor.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Professor.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionLog.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SessionLog.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionLog.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SessionLog.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SessionYear.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SessionYear.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SessionYear.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SpecificYearCourse.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SpecificYearCourse.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SpecificYearCourse.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Student.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/Student.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Student.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/StudyCourse.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/StudyCourse.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/StudyCourse.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SystemLog.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/SystemLog.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SystemLog.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/University.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/University.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/University.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.cpp">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/UniversityMember.cpp">
 			<Option target="Progetto_v3"/>
 		</Unit>
-		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classi/UniversityMember.h">
+		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/UniversityMember.h">
 			<Option target="Progetto_v3"/>
 		</Unit>
 		<Unit filename="C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp">

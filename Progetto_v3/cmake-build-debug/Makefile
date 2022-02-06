@@ -122,410 +122,410 @@ Progetto_v3/fast:
 	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/build
 .PHONY : Progetto_v3/fast
 
-Classi/Classroom.obj: Classi/Classroom.cpp.obj
+Classroom.obj: Classroom.cpp.obj
 
-.PHONY : Classi/Classroom.obj
-
-# target to build an object file
-Classi/Classroom.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.obj
-.PHONY : Classi/Classroom.cpp.obj
-
-Classi/Classroom.i: Classi/Classroom.cpp.i
-
-.PHONY : Classi/Classroom.i
-
-# target to preprocess a source file
-Classi/Classroom.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.i
-.PHONY : Classi/Classroom.cpp.i
-
-Classi/Classroom.s: Classi/Classroom.cpp.s
-
-.PHONY : Classi/Classroom.s
-
-# target to generate assembly for a file
-Classi/Classroom.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Classroom.cpp.s
-.PHONY : Classi/Classroom.cpp.s
-
-Classi/Course.obj: Classi/Course.cpp.obj
-
-.PHONY : Classi/Course.obj
+.PHONY : Classroom.obj
 
 # target to build an object file
-Classi/Course.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.obj
-.PHONY : Classi/Course.cpp.obj
+Classroom.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classroom.cpp.obj
+.PHONY : Classroom.cpp.obj
 
-Classi/Course.i: Classi/Course.cpp.i
+Classroom.i: Classroom.cpp.i
 
-.PHONY : Classi/Course.i
+.PHONY : Classroom.i
 
 # target to preprocess a source file
-Classi/Course.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.i
-.PHONY : Classi/Course.cpp.i
+Classroom.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classroom.cpp.i
+.PHONY : Classroom.cpp.i
 
-Classi/Course.s: Classi/Course.cpp.s
+Classroom.s: Classroom.cpp.s
 
-.PHONY : Classi/Course.s
+.PHONY : Classroom.s
 
 # target to generate assembly for a file
-Classi/Course.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Course.cpp.s
-.PHONY : Classi/Course.cpp.s
+Classroom.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classroom.cpp.s
+.PHONY : Classroom.cpp.s
 
-Classi/Date.obj: Classi/Date.cpp.obj
+Course.obj: Course.cpp.obj
 
-.PHONY : Classi/Date.obj
+.PHONY : Course.obj
 
 # target to build an object file
-Classi/Date.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.obj
-.PHONY : Classi/Date.cpp.obj
+Course.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Course.cpp.obj
+.PHONY : Course.cpp.obj
 
-Classi/Date.i: Classi/Date.cpp.i
+Course.i: Course.cpp.i
 
-.PHONY : Classi/Date.i
+.PHONY : Course.i
 
 # target to preprocess a source file
-Classi/Date.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.i
-.PHONY : Classi/Date.cpp.i
+Course.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Course.cpp.i
+.PHONY : Course.cpp.i
 
-Classi/Date.s: Classi/Date.cpp.s
+Course.s: Course.cpp.s
 
-.PHONY : Classi/Date.s
+.PHONY : Course.s
 
 # target to generate assembly for a file
-Classi/Date.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Date.cpp.s
-.PHONY : Classi/Date.cpp.s
+Course.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Course.cpp.s
+.PHONY : Course.cpp.s
 
-Classi/Exam.obj: Classi/Exam.cpp.obj
+Date.obj: Date.cpp.obj
 
-.PHONY : Classi/Exam.obj
+.PHONY : Date.obj
 
 # target to build an object file
-Classi/Exam.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.obj
-.PHONY : Classi/Exam.cpp.obj
+Date.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Date.cpp.obj
+.PHONY : Date.cpp.obj
 
-Classi/Exam.i: Classi/Exam.cpp.i
+Date.i: Date.cpp.i
 
-.PHONY : Classi/Exam.i
+.PHONY : Date.i
 
 # target to preprocess a source file
-Classi/Exam.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.i
-.PHONY : Classi/Exam.cpp.i
+Date.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Date.cpp.i
+.PHONY : Date.cpp.i
 
-Classi/Exam.s: Classi/Exam.cpp.s
+Date.s: Date.cpp.s
 
-.PHONY : Classi/Exam.s
+.PHONY : Date.s
 
 # target to generate assembly for a file
-Classi/Exam.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Exam.cpp.s
-.PHONY : Classi/Exam.cpp.s
+Date.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Date.cpp.s
+.PHONY : Date.cpp.s
 
-Classi/ExamDay.obj: Classi/ExamDay.cpp.obj
+Exam.obj: Exam.cpp.obj
 
-.PHONY : Classi/ExamDay.obj
+.PHONY : Exam.obj
 
 # target to build an object file
-Classi/ExamDay.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.obj
-.PHONY : Classi/ExamDay.cpp.obj
+Exam.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Exam.cpp.obj
+.PHONY : Exam.cpp.obj
 
-Classi/ExamDay.i: Classi/ExamDay.cpp.i
+Exam.i: Exam.cpp.i
 
-.PHONY : Classi/ExamDay.i
+.PHONY : Exam.i
 
 # target to preprocess a source file
-Classi/ExamDay.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.i
-.PHONY : Classi/ExamDay.cpp.i
+Exam.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Exam.cpp.i
+.PHONY : Exam.cpp.i
 
-Classi/ExamDay.s: Classi/ExamDay.cpp.s
+Exam.s: Exam.cpp.s
 
-.PHONY : Classi/ExamDay.s
+.PHONY : Exam.s
 
 # target to generate assembly for a file
-Classi/ExamDay.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/ExamDay.cpp.s
-.PHONY : Classi/ExamDay.cpp.s
+Exam.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Exam.cpp.s
+.PHONY : Exam.cpp.s
 
-Classi/InvalidDbException.obj: Classi/InvalidDbException.cpp.obj
+ExamDay.obj: ExamDay.cpp.obj
 
-.PHONY : Classi/InvalidDbException.obj
+.PHONY : ExamDay.obj
 
 # target to build an object file
-Classi/InvalidDbException.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.obj
-.PHONY : Classi/InvalidDbException.cpp.obj
+ExamDay.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/ExamDay.cpp.obj
+.PHONY : ExamDay.cpp.obj
 
-Classi/InvalidDbException.i: Classi/InvalidDbException.cpp.i
+ExamDay.i: ExamDay.cpp.i
 
-.PHONY : Classi/InvalidDbException.i
+.PHONY : ExamDay.i
 
 # target to preprocess a source file
-Classi/InvalidDbException.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.i
-.PHONY : Classi/InvalidDbException.cpp.i
+ExamDay.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/ExamDay.cpp.i
+.PHONY : ExamDay.cpp.i
 
-Classi/InvalidDbException.s: Classi/InvalidDbException.cpp.s
+ExamDay.s: ExamDay.cpp.s
 
-.PHONY : Classi/InvalidDbException.s
+.PHONY : ExamDay.s
 
 # target to generate assembly for a file
-Classi/InvalidDbException.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/InvalidDbException.cpp.s
-.PHONY : Classi/InvalidDbException.cpp.s
+ExamDay.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/ExamDay.cpp.s
+.PHONY : ExamDay.cpp.s
 
-Classi/Professor.obj: Classi/Professor.cpp.obj
+InvalidDbException.obj: InvalidDbException.cpp.obj
 
-.PHONY : Classi/Professor.obj
+.PHONY : InvalidDbException.obj
 
 # target to build an object file
-Classi/Professor.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.obj
-.PHONY : Classi/Professor.cpp.obj
+InvalidDbException.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/InvalidDbException.cpp.obj
+.PHONY : InvalidDbException.cpp.obj
 
-Classi/Professor.i: Classi/Professor.cpp.i
+InvalidDbException.i: InvalidDbException.cpp.i
 
-.PHONY : Classi/Professor.i
+.PHONY : InvalidDbException.i
 
 # target to preprocess a source file
-Classi/Professor.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.i
-.PHONY : Classi/Professor.cpp.i
+InvalidDbException.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/InvalidDbException.cpp.i
+.PHONY : InvalidDbException.cpp.i
 
-Classi/Professor.s: Classi/Professor.cpp.s
+InvalidDbException.s: InvalidDbException.cpp.s
 
-.PHONY : Classi/Professor.s
+.PHONY : InvalidDbException.s
 
 # target to generate assembly for a file
-Classi/Professor.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Professor.cpp.s
-.PHONY : Classi/Professor.cpp.s
+InvalidDbException.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/InvalidDbException.cpp.s
+.PHONY : InvalidDbException.cpp.s
 
-Classi/SessionLog.obj: Classi/SessionLog.cpp.obj
+Professor.obj: Professor.cpp.obj
 
-.PHONY : Classi/SessionLog.obj
+.PHONY : Professor.obj
 
 # target to build an object file
-Classi/SessionLog.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.obj
-.PHONY : Classi/SessionLog.cpp.obj
+Professor.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Professor.cpp.obj
+.PHONY : Professor.cpp.obj
 
-Classi/SessionLog.i: Classi/SessionLog.cpp.i
+Professor.i: Professor.cpp.i
 
-.PHONY : Classi/SessionLog.i
+.PHONY : Professor.i
 
 # target to preprocess a source file
-Classi/SessionLog.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.i
-.PHONY : Classi/SessionLog.cpp.i
+Professor.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Professor.cpp.i
+.PHONY : Professor.cpp.i
 
-Classi/SessionLog.s: Classi/SessionLog.cpp.s
+Professor.s: Professor.cpp.s
 
-.PHONY : Classi/SessionLog.s
+.PHONY : Professor.s
 
 # target to generate assembly for a file
-Classi/SessionLog.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionLog.cpp.s
-.PHONY : Classi/SessionLog.cpp.s
+Professor.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Professor.cpp.s
+.PHONY : Professor.cpp.s
 
-Classi/SessionYear.obj: Classi/SessionYear.cpp.obj
+SessionLog.obj: SessionLog.cpp.obj
 
-.PHONY : Classi/SessionYear.obj
+.PHONY : SessionLog.obj
 
 # target to build an object file
-Classi/SessionYear.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.obj
-.PHONY : Classi/SessionYear.cpp.obj
+SessionLog.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SessionLog.cpp.obj
+.PHONY : SessionLog.cpp.obj
 
-Classi/SessionYear.i: Classi/SessionYear.cpp.i
+SessionLog.i: SessionLog.cpp.i
 
-.PHONY : Classi/SessionYear.i
+.PHONY : SessionLog.i
 
 # target to preprocess a source file
-Classi/SessionYear.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.i
-.PHONY : Classi/SessionYear.cpp.i
+SessionLog.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SessionLog.cpp.i
+.PHONY : SessionLog.cpp.i
 
-Classi/SessionYear.s: Classi/SessionYear.cpp.s
+SessionLog.s: SessionLog.cpp.s
 
-.PHONY : Classi/SessionYear.s
+.PHONY : SessionLog.s
 
 # target to generate assembly for a file
-Classi/SessionYear.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SessionYear.cpp.s
-.PHONY : Classi/SessionYear.cpp.s
+SessionLog.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SessionLog.cpp.s
+.PHONY : SessionLog.cpp.s
 
-Classi/SpecificYearCourse.obj: Classi/SpecificYearCourse.cpp.obj
+SessionYear.obj: SessionYear.cpp.obj
 
-.PHONY : Classi/SpecificYearCourse.obj
+.PHONY : SessionYear.obj
 
 # target to build an object file
-Classi/SpecificYearCourse.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.obj
-.PHONY : Classi/SpecificYearCourse.cpp.obj
+SessionYear.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SessionYear.cpp.obj
+.PHONY : SessionYear.cpp.obj
 
-Classi/SpecificYearCourse.i: Classi/SpecificYearCourse.cpp.i
+SessionYear.i: SessionYear.cpp.i
 
-.PHONY : Classi/SpecificYearCourse.i
+.PHONY : SessionYear.i
 
 # target to preprocess a source file
-Classi/SpecificYearCourse.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.i
-.PHONY : Classi/SpecificYearCourse.cpp.i
+SessionYear.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SessionYear.cpp.i
+.PHONY : SessionYear.cpp.i
 
-Classi/SpecificYearCourse.s: Classi/SpecificYearCourse.cpp.s
+SessionYear.s: SessionYear.cpp.s
 
-.PHONY : Classi/SpecificYearCourse.s
+.PHONY : SessionYear.s
 
 # target to generate assembly for a file
-Classi/SpecificYearCourse.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SpecificYearCourse.cpp.s
-.PHONY : Classi/SpecificYearCourse.cpp.s
+SessionYear.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SessionYear.cpp.s
+.PHONY : SessionYear.cpp.s
 
-Classi/Student.obj: Classi/Student.cpp.obj
+SpecificYearCourse.obj: SpecificYearCourse.cpp.obj
 
-.PHONY : Classi/Student.obj
+.PHONY : SpecificYearCourse.obj
 
 # target to build an object file
-Classi/Student.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.obj
-.PHONY : Classi/Student.cpp.obj
+SpecificYearCourse.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SpecificYearCourse.cpp.obj
+.PHONY : SpecificYearCourse.cpp.obj
 
-Classi/Student.i: Classi/Student.cpp.i
+SpecificYearCourse.i: SpecificYearCourse.cpp.i
 
-.PHONY : Classi/Student.i
+.PHONY : SpecificYearCourse.i
 
 # target to preprocess a source file
-Classi/Student.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.i
-.PHONY : Classi/Student.cpp.i
+SpecificYearCourse.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SpecificYearCourse.cpp.i
+.PHONY : SpecificYearCourse.cpp.i
 
-Classi/Student.s: Classi/Student.cpp.s
+SpecificYearCourse.s: SpecificYearCourse.cpp.s
 
-.PHONY : Classi/Student.s
+.PHONY : SpecificYearCourse.s
 
 # target to generate assembly for a file
-Classi/Student.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/Student.cpp.s
-.PHONY : Classi/Student.cpp.s
+SpecificYearCourse.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SpecificYearCourse.cpp.s
+.PHONY : SpecificYearCourse.cpp.s
 
-Classi/StudyCourse.obj: Classi/StudyCourse.cpp.obj
+Student.obj: Student.cpp.obj
 
-.PHONY : Classi/StudyCourse.obj
+.PHONY : Student.obj
 
 # target to build an object file
-Classi/StudyCourse.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.obj
-.PHONY : Classi/StudyCourse.cpp.obj
+Student.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Student.cpp.obj
+.PHONY : Student.cpp.obj
 
-Classi/StudyCourse.i: Classi/StudyCourse.cpp.i
+Student.i: Student.cpp.i
 
-.PHONY : Classi/StudyCourse.i
+.PHONY : Student.i
 
 # target to preprocess a source file
-Classi/StudyCourse.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.i
-.PHONY : Classi/StudyCourse.cpp.i
+Student.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Student.cpp.i
+.PHONY : Student.cpp.i
 
-Classi/StudyCourse.s: Classi/StudyCourse.cpp.s
+Student.s: Student.cpp.s
 
-.PHONY : Classi/StudyCourse.s
+.PHONY : Student.s
 
 # target to generate assembly for a file
-Classi/StudyCourse.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/StudyCourse.cpp.s
-.PHONY : Classi/StudyCourse.cpp.s
+Student.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Student.cpp.s
+.PHONY : Student.cpp.s
 
-Classi/SystemLog.obj: Classi/SystemLog.cpp.obj
+StudyCourse.obj: StudyCourse.cpp.obj
 
-.PHONY : Classi/SystemLog.obj
+.PHONY : StudyCourse.obj
 
 # target to build an object file
-Classi/SystemLog.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.obj
-.PHONY : Classi/SystemLog.cpp.obj
+StudyCourse.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/StudyCourse.cpp.obj
+.PHONY : StudyCourse.cpp.obj
 
-Classi/SystemLog.i: Classi/SystemLog.cpp.i
+StudyCourse.i: StudyCourse.cpp.i
 
-.PHONY : Classi/SystemLog.i
+.PHONY : StudyCourse.i
 
 # target to preprocess a source file
-Classi/SystemLog.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.i
-.PHONY : Classi/SystemLog.cpp.i
+StudyCourse.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/StudyCourse.cpp.i
+.PHONY : StudyCourse.cpp.i
 
-Classi/SystemLog.s: Classi/SystemLog.cpp.s
+StudyCourse.s: StudyCourse.cpp.s
 
-.PHONY : Classi/SystemLog.s
+.PHONY : StudyCourse.s
 
 # target to generate assembly for a file
-Classi/SystemLog.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/SystemLog.cpp.s
-.PHONY : Classi/SystemLog.cpp.s
+StudyCourse.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/StudyCourse.cpp.s
+.PHONY : StudyCourse.cpp.s
 
-Classi/University.obj: Classi/University.cpp.obj
+SystemLog.obj: SystemLog.cpp.obj
 
-.PHONY : Classi/University.obj
+.PHONY : SystemLog.obj
 
 # target to build an object file
-Classi/University.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/University.cpp.obj
-.PHONY : Classi/University.cpp.obj
+SystemLog.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SystemLog.cpp.obj
+.PHONY : SystemLog.cpp.obj
 
-Classi/University.i: Classi/University.cpp.i
+SystemLog.i: SystemLog.cpp.i
 
-.PHONY : Classi/University.i
+.PHONY : SystemLog.i
 
 # target to preprocess a source file
-Classi/University.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/University.cpp.i
-.PHONY : Classi/University.cpp.i
+SystemLog.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SystemLog.cpp.i
+.PHONY : SystemLog.cpp.i
 
-Classi/University.s: Classi/University.cpp.s
+SystemLog.s: SystemLog.cpp.s
 
-.PHONY : Classi/University.s
+.PHONY : SystemLog.s
 
 # target to generate assembly for a file
-Classi/University.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/University.cpp.s
-.PHONY : Classi/University.cpp.s
+SystemLog.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/SystemLog.cpp.s
+.PHONY : SystemLog.cpp.s
 
-Classi/UniversityMember.obj: Classi/UniversityMember.cpp.obj
+University.obj: University.cpp.obj
 
-.PHONY : Classi/UniversityMember.obj
+.PHONY : University.obj
 
 # target to build an object file
-Classi/UniversityMember.cpp.obj:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.obj
-.PHONY : Classi/UniversityMember.cpp.obj
+University.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/University.cpp.obj
+.PHONY : University.cpp.obj
 
-Classi/UniversityMember.i: Classi/UniversityMember.cpp.i
+University.i: University.cpp.i
 
-.PHONY : Classi/UniversityMember.i
+.PHONY : University.i
 
 # target to preprocess a source file
-Classi/UniversityMember.cpp.i:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.i
-.PHONY : Classi/UniversityMember.cpp.i
+University.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/University.cpp.i
+.PHONY : University.cpp.i
 
-Classi/UniversityMember.s: Classi/UniversityMember.cpp.s
+University.s: University.cpp.s
 
-.PHONY : Classi/UniversityMember.s
+.PHONY : University.s
 
 # target to generate assembly for a file
-Classi/UniversityMember.cpp.s:
-	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/Classi/UniversityMember.cpp.s
-.PHONY : Classi/UniversityMember.cpp.s
+University.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/University.cpp.s
+.PHONY : University.cpp.s
+
+UniversityMember.obj: UniversityMember.cpp.obj
+
+.PHONY : UniversityMember.obj
+
+# target to build an object file
+UniversityMember.cpp.obj:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/UniversityMember.cpp.obj
+.PHONY : UniversityMember.cpp.obj
+
+UniversityMember.i: UniversityMember.cpp.i
+
+.PHONY : UniversityMember.i
+
+# target to preprocess a source file
+UniversityMember.cpp.i:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/UniversityMember.cpp.i
+.PHONY : UniversityMember.cpp.i
+
+UniversityMember.s: UniversityMember.cpp.s
+
+.PHONY : UniversityMember.s
+
+# target to generate assembly for a file
+UniversityMember.cpp.s:
+	$(MAKE) -f CMakeFiles\Progetto_v3.dir\build.make CMakeFiles/Progetto_v3.dir/UniversityMember.cpp.s
+.PHONY : UniversityMember.cpp.s
 
 main.obj: main.cpp.obj
 
@@ -563,51 +563,51 @@ help:
 	@echo ... Progetto_v3
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... Classi/Classroom.obj
-	@echo ... Classi/Classroom.i
-	@echo ... Classi/Classroom.s
-	@echo ... Classi/Course.obj
-	@echo ... Classi/Course.i
-	@echo ... Classi/Course.s
-	@echo ... Classi/Date.obj
-	@echo ... Classi/Date.i
-	@echo ... Classi/Date.s
-	@echo ... Classi/Exam.obj
-	@echo ... Classi/Exam.i
-	@echo ... Classi/Exam.s
-	@echo ... Classi/ExamDay.obj
-	@echo ... Classi/ExamDay.i
-	@echo ... Classi/ExamDay.s
-	@echo ... Classi/InvalidDbException.obj
-	@echo ... Classi/InvalidDbException.i
-	@echo ... Classi/InvalidDbException.s
-	@echo ... Classi/Professor.obj
-	@echo ... Classi/Professor.i
-	@echo ... Classi/Professor.s
-	@echo ... Classi/SessionLog.obj
-	@echo ... Classi/SessionLog.i
-	@echo ... Classi/SessionLog.s
-	@echo ... Classi/SessionYear.obj
-	@echo ... Classi/SessionYear.i
-	@echo ... Classi/SessionYear.s
-	@echo ... Classi/SpecificYearCourse.obj
-	@echo ... Classi/SpecificYearCourse.i
-	@echo ... Classi/SpecificYearCourse.s
-	@echo ... Classi/Student.obj
-	@echo ... Classi/Student.i
-	@echo ... Classi/Student.s
-	@echo ... Classi/StudyCourse.obj
-	@echo ... Classi/StudyCourse.i
-	@echo ... Classi/StudyCourse.s
-	@echo ... Classi/SystemLog.obj
-	@echo ... Classi/SystemLog.i
-	@echo ... Classi/SystemLog.s
-	@echo ... Classi/University.obj
-	@echo ... Classi/University.i
-	@echo ... Classi/University.s
-	@echo ... Classi/UniversityMember.obj
-	@echo ... Classi/UniversityMember.i
-	@echo ... Classi/UniversityMember.s
+	@echo ... Classroom.obj
+	@echo ... Classroom.i
+	@echo ... Classroom.s
+	@echo ... Course.obj
+	@echo ... Course.i
+	@echo ... Course.s
+	@echo ... Date.obj
+	@echo ... Date.i
+	@echo ... Date.s
+	@echo ... Exam.obj
+	@echo ... Exam.i
+	@echo ... Exam.s
+	@echo ... ExamDay.obj
+	@echo ... ExamDay.i
+	@echo ... ExamDay.s
+	@echo ... InvalidDbException.obj
+	@echo ... InvalidDbException.i
+	@echo ... InvalidDbException.s
+	@echo ... Professor.obj
+	@echo ... Professor.i
+	@echo ... Professor.s
+	@echo ... SessionLog.obj
+	@echo ... SessionLog.i
+	@echo ... SessionLog.s
+	@echo ... SessionYear.obj
+	@echo ... SessionYear.i
+	@echo ... SessionYear.s
+	@echo ... SpecificYearCourse.obj
+	@echo ... SpecificYearCourse.i
+	@echo ... SpecificYearCourse.s
+	@echo ... Student.obj
+	@echo ... Student.i
+	@echo ... Student.s
+	@echo ... StudyCourse.obj
+	@echo ... StudyCourse.i
+	@echo ... StudyCourse.s
+	@echo ... SystemLog.obj
+	@echo ... SystemLog.i
+	@echo ... SystemLog.s
+	@echo ... University.obj
+	@echo ... University.i
+	@echo ... University.s
+	@echo ... UniversityMember.obj
+	@echo ... UniversityMember.i
+	@echo ... UniversityMember.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

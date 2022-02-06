@@ -67,8 +67,7 @@ std::vector<std::string> Professor::outputNoAvailabilities(int nMatr) {
                     output << iterDate->first << "|" << iterDate->second; //aaaa-mm-gg|aaaa-mm-gg
                     if (i < iterNoAvailab->second.size() - 1)//se è l'ultimo periodo non va messo il punto e virgola
                         output << ";";
-                    std::string prova = output.str();//lo stream diventa una stringa
-                    i++;//per capire se va messo il punto e virgola
+                         i++;//per capire se va messo il punto e virgola
                 }
         std::string tokens = output.str();
         allProfNoAvailabilities.push_back(tokens);

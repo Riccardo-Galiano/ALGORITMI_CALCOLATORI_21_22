@@ -131,7 +131,6 @@ public:
     void controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year);
     void controlGroupedExistenceInSameYears();
     void controlProfsAndHour();
-    void controlIfCanbeRigenerate(int year);
     void fillPerControlWithOldSpecificYear();
 
 private:

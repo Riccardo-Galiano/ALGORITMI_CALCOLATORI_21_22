@@ -21,7 +21,7 @@ public:
     Date operator++(int); // postfix increment operator
     Date &operator--(); // prefix decrement operator
     Date operator--(int); // postfix decrement operator
-    Date &operator+=(unsigned int);
+
 
     bool operator>(const Date & date) const;
     bool operator<(const Date & date) const;

@@ -2523,6 +2523,10 @@ void University::dataBaseIsEmpty(int startAcYear) {
         error.append("Il database dei corsi di studio e' vuoto \n");
         isOk = false;
     }
+    if(_classrooms.empty()){
+        error.append("Il database delle aule e' vuoto \n");
+        isOk = false;
+    }
     if (_acYearSessions.find(startAcYear) == _acYearSessions.end()) {
         error.append("Non ci sono informazioni sui periodi delle sessioni per questo anno accademico: " +
                      std::to_string(startAcYear) + "-" +
@@ -2942,7 +2946,7 @@ void University::readStudyPlan() {
 void University::updateStudyPlan(const std::string &fin) {
     std::ifstream fileIn(fin);
     if (!fileIn.is_open()) {
-        throw std::invalid_argument("errore apertura file inserimento nuovi piani di studio \n");
+        throw std::invalid_argument("Errore apertura file aggiornamento piani di studio \n");
     }
     std::string line;
     std::string error;
@@ -3599,7 +3603,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
                     distance = Parse::checkedStoi(infoRequest[2], " della distanza");
                 } catch (std::invalid_argument &err) {
                     std::string genericError = err.what();
-                    error.append(genericError + "  al rigo " + std::to_string(line_counter) + " \n");
+                    error.append("Errore al rigo "+std::to_string(line_counter)+". "+ genericError);
                     doDbWrite = false;
                     isOk = false;
                 }
@@ -3607,7 +3611,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
                 if (isOk) {
                     //controllo che il corso esista
                     if (_courses.find(idCourse) == _courses.end()) {
-                        error.append("Il corso " + idCourse + "alla riga: " + std::to_string(line_counter) +
+                        error.append("Il corso " + idCourse + " alla riga: " + std::to_string(line_counter) +
                                      " non esiste nel database dei corsi \n");
                         doDbWrite = false;
                         isOk = false;
@@ -3891,11 +3895,11 @@ void University::requestChanges(std::string acYear, std::string fin) {
                         "\n");
                 lineIsOk = false;
                 allChangesArePossible = false;
-            } else {
+            }else{
                 for (int i = 0; i < infoChanges.size(); i++) {
                     if (infoChanges[i].empty()) {
-                        error.append("Campo di informazione " + std::to_string(i) + " alla riga " +
-                                     std::to_string(line_counter) + "\n");
+                        error.append("Campo di informazione " + std::to_string(i+1) + " alla riga " +
+                                     std::to_string(line_counter) + " e' vuoto \n");
                         lineIsOk = false;
                         allChangesArePossible = false;
 
@@ -4255,18 +4259,6 @@ void University::popOffCoursesFromGroupedString(std::vector<std::string> &course
     }
 }
 
-void University::controlIfCanbeRigenerate(int year) {
-    for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
-        SpecificYearCourse sp = iterCourse->second.getThisYearCourse(year);
-        std::map<int, student> studentsEnrolled = sp.getStudentsEnrolled();
-        for (auto iterStudent = studentsEnrolled.begin(); iterStudent != studentsEnrolled.end(); iterStudent++) {
-            Date appealPassed = iterStudent->second._appealPassed;
-            if (appealPassed.toString() != "1900-01-01")
-                throw std::logic_error(
-                        "Ci sono studenti che hanno gia' sostenuto esami previsti per questa sessione\n");
-        }
-    }
-}
 
 ///check per capire se una versione esista già
 bool University::checkVersionContainsThis(int version) {
