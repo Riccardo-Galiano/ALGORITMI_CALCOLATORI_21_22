@@ -1,11 +1,11 @@
-Illary;Di;illary.di@sympatico.ca
+Illary;Di;illary.disympatico.ca
 Miriam;Benkhada;miriam.benkhada@centurytel.net
 
 Roberto;Cadoni;roberto.cadoni@orange.fr
 Rebeca;Feltrin;rebeca.feltrin@yahoo.fr
 Merj;Khramchenko;merj.khramchenko@live.it
 Renato;;renato.avramo@aliceadsl.fr
-Marie;marie.mostafa@t-online.de
+Marie;marie.mostafat-online.de
 Sereno;
 
 Salvatrice;Zolla

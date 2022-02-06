@@ -27,7 +27,16 @@ public:
         }
         return toReturn;
     }
-
+    ///controlla che ci sia una chiocciola nell'email
+    static bool controlSnailCharacter(std::string email){
+        int countSnailCharacter = 0;
+        for(int i = 0 ;i<email.size(); i++){
+            if(email[i] == '@'){
+                countSnailCharacter++;
+            }
+        }
+        return countSnailCharacter == 1;
+    }
     ///restituisce un vettore di stringhe con i prof di ciascun corso in parallelo
     static std::vector<std::string> getProfPar(std::string &input, int num_parallel_courses) {
         std::vector<std::string> profCorsiPar;

@@ -366,7 +366,11 @@ void University::addStuds(const std::string &fileIn) {
                 error.append("Uno o piu campi di informazione per l'aggiunta degli studenti e' vuoto alla riga: " +
                              std::to_string(line_counter) + "\n");
                 doDbWrite = false;
-            } else if (infoStud.size() == 3) {
+            } else if(infoStud.size() == 3 && Parse::controlSnailCharacter(infoStud[2]) == false){
+                error.append("Nell'email al rigo: " +
+                             std::to_string(line_counter) + " va una '@' "+"\n");
+                doDbWrite = false;
+            }else if (infoStud.size() == 3) {
                 if (checkVersionContainsThis(2)) {
                     //Se non ci sono campi vuoti e il formato è esatto inserisco le informazioni nella struttura dati
                     _students.insert(std::pair<int, Student>(matr, Student(matr, infoStud[0], infoStud[1],
@@ -421,6 +425,9 @@ void University::addProfessors(const std::string &fileIn) {
                 error.append("Uno o piu' campi di informazione per l'aggiunta dei professori e' vuoto alla riga: " +
                              std::to_string(line_counter) + "\n");
                 doDbWrite = false;
+            }else if(infoProf.size() == 3 && Parse::controlSnailCharacter(infoProf[2]) == false){
+                error.append("Nell'email al rigo: " + std::to_string(line_counter) + " va una '@' "+"\n");
+                doDbWrite = false;
             } else if (infoProf.size() == 3) {
                 if (checkVersionContainsThis(2)) {
                     _professors.insert(
@@ -451,7 +458,7 @@ void University::addProfessors(const std::string &fileIn) {
 void University::addClassrooms(const std::string &fileIn) {
     std::fstream fIn(fileIn, std::ios::in);
     if (!fIn.is_open()) {
-        throw std::invalid_argument("Errore apertura file di inserimento nuove aule");
+        throw std::invalid_argument("Errore apertura file di inserimento nuove aule\n");
     }
     std::string line;
     bool doDbWrite = true;
@@ -2395,10 +2402,6 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     ///faccio dei controlli di coerenza dei dataBase
     controlDatabase(startAcYear);
 
-    //se la sessione dovesse avere già dei voti assegnati non potrebbe essere rigenerata in quanto,
-    // se ci fossero dei voti assegnati agli studenti significherebbe che la sessione sia già stata effettuata
-    // prendo per ogni corso l'anno accademico e controllo per ogni studente se appealDate è diverso da 1900-01-01 in quel caso lancio l'eccezione
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!controlIfCanbeRigenerate(startAcYear);
     ///il ciclo sarà eseguito se le sessioni non sono ancora generate(result==false) e finchè ci saranno ancora vincoli da poter rilassare oppure si nota subito che non ci sono aule abbastanza capienti per un corso(eccezione)
     while (!esito && constraintRelaxParameter < 4) {
         //accedo all'anno accademico passato dal comando e genero le sessioni per un anno
@@ -3502,9 +3505,9 @@ void University::writeVersion() {
     if (!fout.is_open()) {
         throw std::invalid_argument("Errore apertura database versioning\n");
     }
-    for(int i : _version)
-        if(i!=0)
-            fout << i << "\n";
+    for(int i=0; i<_version.size(); i++)
+        if(_version[i]!=0)
+            fout << _version[i] << "\n";
     fout.close();
 }
 
@@ -4035,10 +4038,12 @@ void University::requestChanges(std::string acYear, std::string fin) {
             //ristampo la sessione
             bool requestChanges = true;
             //prendo il nome del file per quell'anno e per quella sessione
-            std::string fileName = _acYearSessions.at(acStart).getFileName(numSession);
-            //rigenero i file di output
-            //prima della generazione tutti i _numAppeal devono essere 0 per tutti gli specifcyearCourse
-            _acYearSessions.at(acStart).generateOutputFilesSession(fileName, numSession, _courses, requestChanges);
+            for(int i = 1; i<= 3; i++) {
+                std::string fileName = _acYearSessions.at(acStart).getFileName(i);
+                //rigenero i file di output
+                //prima della generazione tutti i _numAppeal devono essere 0 per tutti gli specifcyearCourse
+                _acYearSessions.at(acStart).generateOutputFilesSession(fileName, i, _courses, requestChanges);
+            }
         } else
             throw std::invalid_argument(error);
     } else

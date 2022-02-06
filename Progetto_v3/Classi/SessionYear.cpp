@@ -782,6 +782,10 @@ bool SessionYear::sessionsPeriodIsEmpty() {
 
 ///setta la minima distanza tra un appello e l'altro di uno stesso esame su richiesta del professore
 void SessionYear::addProfGap(const std::string &matr_idC, int gap) {
+    if(_gapProfs.count(matr_idC) != 0){
+        auto posProfsMinDistance = _gapProfs.find(matr_idC);
+        _gapProfs.erase(posProfsMinDistance);
+    }
     _gapProfs.insert(std::pair<std::string, int>(matr_idC, gap));
    
 }
