@@ -108,16 +108,17 @@ void Date::helpIncrement() {
    }
 }
 
-// overloaded output operator
+///prende il mese
 int Date::getMonth() const {
     return _month;
 }
 
+//prende il giorno
 int Date::getDay() const {
     return _day;
 }
 
-
+// overloaded output operator
 std::ostream& operator<<(std::ostream& output, const Date& d){
 
     output <<std::setfill('0') << d.getYear() << "-" << std::setw(2) << d.getMonth()<< "-" << std::setw(2) << d.getDay();
@@ -196,6 +197,7 @@ Date Date::add(int daysToAdd) {
     return toReturn;
 }
 
+//prende l'anno
 int Date::getYear() const {
     return _year;
 }

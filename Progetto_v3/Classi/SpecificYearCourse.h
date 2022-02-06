@@ -82,7 +82,6 @@ public:
     int getNumNextAppeal() const;
     const std::map<int, std::vector<Date>> &getHowManyTimesIAmAssignedInASession() const;
     std::map<int, student> getStudentsPassedInThisAppeal(Date dateAppeal)const;
-    std::string getAppealsForAllSession()const;
     std::string getRoomsPerAppealsString(int numAppeals)const;
     int getStartHourAppeal(int numAppeals)const;
     char getPlaceExam()const;
@@ -103,17 +102,9 @@ public:
 
     ///control
     bool canIBeAssigneToFirstTwoWeekOfExamSession(int semesterGiven) const;
-    bool notExamsAssigned();
     void setYySemester(const std::string &yySemester);
     bool studyCourseEmpty();
-
-
-private:
-    bool createdToBeTemp;
-public:
     bool isCreatedToBeTemp() const;
-
-public:
     void setCreatedToBeTemp(bool createdToBeTemp);
 
 private:
@@ -149,6 +140,7 @@ private:
     //value startSlot
     std::map<int,int> _startSlotPerEachAppeal;
     int _numAppeal;
+    bool createdToBeTemp;
 
 
 };

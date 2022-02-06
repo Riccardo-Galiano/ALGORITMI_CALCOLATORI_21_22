@@ -89,9 +89,11 @@ void StudyCourse::addSemesterCourses(const int year, const int semester, const s
 std::vector<std::string> StudyCourse::getAllCoursesOfStudyCourse() const {
     std::vector<std::string> allCourses;
     for (auto iterSemester = _semesters.begin(); iterSemester != _semesters.end(); iterSemester++) {
+        ///per ogni semestre mi salvo i corsi in allCourses
         std::vector<std::string> sem = iterSemester->second;
         allCourses.insert(allCourses.end(), sem.begin(), sem.end());
     }
+    //finiti i semestri devo prendere anche quelli spenti(fanno comunque parte del corso di studio)
     for (auto iterOffCourses = _offCourses.begin(); iterOffCourses != _offCourses.end(); iterOffCourses++) {
         allCourses.push_back(*iterOffCourses);
     }
@@ -104,7 +106,7 @@ void StudyCourse::addOffCourses(const std::vector<std::string> &offCourses) {
     for (int i = 0; i < offCourses.size(); i++) {
         _offCourses.push_back(offCourses[i]);
     }
-    std::sort(_offCourses.begin(), _offCourses.end());//se li vogliamo in ordine crescente;
+    std::sort(_offCourses.begin(), _offCourses.end());//ordine crescente (per un maggiore ordine)
 
 }
 

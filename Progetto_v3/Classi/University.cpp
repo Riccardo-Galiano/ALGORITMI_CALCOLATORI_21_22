@@ -86,6 +86,7 @@ void University::readVersion() {
     }
     std::string version;
     while (std::getline(file, version))
+        ///pusho nel vector_version le versioni del programma lette da file
         _version.push_back(Parse::checkedStoi(version, " del numero versioning"));
     file.close();
 }
@@ -251,7 +252,7 @@ void University::readCourse() {
                     yy_semester = result;
                 }
             }
-
+            ///aggiungo le informazioni per il corso ad uno specifico anno
             _courses.at(lastReadCourse).addSpecificYearCourses(acYear, isActive, num_parallel_courses,
                                                                profCorsoPar,
                                                                splittedExamData, idGrouped, yy_semester,
@@ -1041,10 +1042,13 @@ void University::controlGroupedExistenceInSameYears() {
         //potrei raccogliere i first year per ogni corso raggruppato  portarlo
         //per ogni anno in db
         for (int year = firstYear; year <= lastYearInDb; year++) {
+            //prendo i raggruppati relativi al corso per quell'anno
             SpecificYearCourse sp = iterCourse->second.getThisYearCourse(year);
             std::vector<std::string> grouped = sp.getIdGroupedCourses();
             for (int i = 0; i < grouped.size(); i++) {
                 Course groupedCourse = _courses.at(grouped[i]);
+                //per ogni raggruppato controllo che il primo anno in cui compare non sia maggiore del primo anno di attività
+                // del corso i cui raggruppati sto controllando
                 int firstYearGrouped = groupedCourse.getFirstYearOfActivity();
                 if (firstYearGrouped > firstYear) {
                     throw std::invalid_argument(
@@ -1061,6 +1065,7 @@ void University::controlGroupedExistenceInSameYears() {
 void University::controlHourAndProfGroupedCourse(std::vector<Course> groupedCourse, int year) {
     std::vector<int> profs;
     std::vector<int> slots;
+    ///prendo il numero di slot e le matricole dei professori per tutti i raggruppati
     for (int i = 0; i < groupedCourse.size(); i++) {
         SpecificYearCourse sp = groupedCourse[i].getThisYearCourse(year);
         Exam examPerCourse = sp.getExam();
@@ -1070,12 +1075,16 @@ void University::controlHourAndProfGroupedCourse(std::vector<Course> groupedCour
         profs.insert(profs.begin(), profsPerCourse.begin(), profsPerCourse.end());
     }
     //controllo sulle ore
+    ///devono avere tutti lo stesso numero di slot quindi togliendo i duplicati dal vector l'emento dovrebbe restare uno soltanto
+    ///da qui il controllo sulla sua ampiezza
     std::sort(slots.begin(), slots.end());
     slots.erase(std::unique(slots.begin(), slots.end()), slots.end());
     if (slots.size() != 1) {
         throw std::invalid_argument("Non si hanno gli stessi slot per l'esame per i raggruppati ");
     }
     //controllo che i prof siano univoci, altrimenti segnalo
+    //se uno stesso prof compare più volte vuol dire che uno stesso prof si ha in stessi corsi ragruppati
+    //potrebbero aversi problemi in fase di controllo della sessione
     for (int i = 0; i < profs.size(); i++) {
         if (count(profs.begin(), profs.end(), profs[i]) != 1) {
             throw std::invalid_argument("Ci sono professori in comune con i raggruppati");
@@ -1139,10 +1148,14 @@ const std::string University::getNewCourseId() const {
     if (_courses.empty())
         return "01AAAAA";
 
+    //separo la parte numerica dalla parte alfabetica
     std::stringstream Id(last->first);
     Id >> num >> cod;
 
     for (std::size_t i = cod.size() - 1; i >= 0 && !noZ; i--) {
+        //partendo dall'ultimo carattere si fa il controllo che questo sia o meno 'Z'
+        //1) è 'Z' lo cambio con 'A' e controllo il successivo
+        //2) non è 'Z' lo incremento con la lettera successiva ed esco dal for
         if (cod[i] != 'Z') {
             cod[i]++;
             noZ = true;
@@ -1151,6 +1164,7 @@ const std::string University::getNewCourseId() const {
         }
     }
 
+    //se alla fine di questo processo avrò 'AAAAA' dovrò incrementare la parte numerica
     if (cod == "AAAAA")
         num++;
 
@@ -1923,6 +1937,7 @@ void University::controlProfsAndHour() {
     }
 }
 
+///riempio la struttura dati dei corsi con anni specifici che non sono stati aggiornati prendendo l'ultimo aggiornamento
 void University::fillPerControlWithOldSpecificYear() {
     for (auto iterCourse = _courses.begin(); iterCourse != _courses.end(); iterCourse++) {
         int firstYear = iterCourse->second.getFirstYearOfActivity();
@@ -1937,7 +1952,7 @@ void University::fillPerControlWithOldSpecificYear() {
             std::string acYear = std::to_string(year) + "-" + std::to_string(year + 1);
             std::vector<std::string> stringGrouped;
             //prendo i raggruppati
-            //per ogni corso prendo l'anno massimo degli aggiornamenti tra raggruppati
+            //per ogni corso prendo l'anno massimo anno degli aggiornamenti tra raggruppati
             //fillo per tutti i raggruppati fino all'anno considerato
 
             for (int i = 0; i < grouped.size(); i++) {
@@ -1958,6 +1973,7 @@ void University::fillPerControlWithOldSpecificYear() {
                 //devo riempire i gap fra anni
                 _courses.at(id).fillAcYearsUntilStartAcYear(maxYear, last, false);
             }
+            ///controllo e in caso garantisco la reciprocità tra raggruppati
             fillGroupedCourse(grouped, idCourse, acYear, false);
         }
     }
@@ -1972,20 +1988,18 @@ void University::dbStudsWrite() {
     }
 
     for (auto iterStud = _students.begin(); iterStud != _students.end(); iterStud++) {
-        Student stud = _students.at(
-                iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
+        Student stud = _students.at( iterStud->first);//salvo in un oggetto Student temporaneo, l'intero oggetto puntato da iterStud
         if (checkVersionContainsThis(2)) {
             std::string otherInfo = stud.getOtherInfoString();
             fout << stud << ";" << otherInfo << std::endl;
         } else
-            fout << stud
-                 << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
+            fout << stud << std::endl;//grazie all'overload dell'operatore << scrivo su file l'oggetto stud(si rimanda all'overload dell'operatore in Student.cpp)
     }
     fout.close();
 
 }
 
-///riscrive il database dei professori
+///riscrive il database dei professori; stesso approccio della dbStudsWrite()
 void University::dbProfsWrite() {
 
     std::fstream fout;
@@ -2069,9 +2083,11 @@ void University::readSessionAcYear() {
     while (std::getline(fileIn, line)) {
         std::vector<std::string> infoSessions = Parse::splittedLine(line, ';');
         int acStartYear = Parse::getAcStartYear(infoSessions[0]);
+        //nome del file di default
         std::string output_file_name = std::string("output_file");
         SessionYear sessionYear(infoSessions[0], infoSessions[1], infoSessions[2], infoSessions[3],
                                 output_file_name);
+        ///inserisco l'oggetto SessionYear appena istanziato nella map per le sessioni accademiche
         _acYearSessions.insert(std::pair<int, SessionYear>(acStartYear, sessionYear));
     }
     fileIn.close();
@@ -2147,26 +2163,28 @@ void University::setSessionPeriod(std::string &acYear, std::string &winterSessio
         throw std::logic_error(error);
 }
 
-///controlli sulle sessioni
-void
-University::controlCoerenceSessionDate(std::string winterSession, std::string summerSession,
+///controlli di coerenza sulle sessioni
+void University::controlCoerenceSessionDate(std::string winterSession, std::string summerSession,
                                        std::string autumnSession,
                                        int acYear) {
     std::string error;
     bool isOk = true;
     try {
+        ///controlli sui periodi delle sessioni(invernale)
         controlOfASingleSessionPeriod("winter", winterSession, acYear);
     } catch (std::exception &err) {
         error.append(err.what());
         isOk = false;
     }
     try {
+        ///controlli sui periodi delle sessioni(estiva)
         controlOfASingleSessionPeriod("summer", summerSession, acYear);
     } catch (std::exception &err) {
         error.append(err.what());
         isOk = false;
     }
     try {
+        ///controlli sui periodi delle sessioni(autunnale)
         controlOfASingleSessionPeriod("autumn", autumnSession, acYear);
     } catch (std::exception &err) {
         error.append(err.what());
@@ -2185,6 +2203,7 @@ void University::controlOfASingleSessionPeriod(std::string name, std::string ses
     Date endSessionDate;
     bool isOk = true;
 
+    //prendo il tipo della sessione per eventuali errori
     if (name == "winter")
         session = "invernale";
     else if (name == "summer")
@@ -2246,7 +2265,6 @@ void University::setProfsNoAvailability(std::string acYear, const std::string &f
     bool fileIsEmpty = true;
 
     ///controllo possa essere un anno accademico
-
     bool canBeAnAcYear = Parse::controlItCanBeAnAcYear(acYear);
     if (canBeAnAcYear == false) {
         error.append("Il primo comando non puo' essere un anno accademico\n");
@@ -2337,7 +2355,7 @@ void University::dbDateSessionsWrite() {
     if (!fout.is_open()) {
         throw std::invalid_argument("Errore apertura database delle date delle sessioni\n");
     }
-
+    ///riscrivo per ogni sessione accademica i periodi delle singole sessioni secondo il formato da progetto
     for (auto iterAcYear = _acYearSessions.begin(); iterAcYear != _acYearSessions.end(); iterAcYear++) {
         SessionYear dateSessions = iterAcYear->second;
         fout << dateSessions << std::endl;
@@ -2404,7 +2422,7 @@ void University::setExamDate(std::string acYear, std::string outputNameFile) {
     }
 }
 
-///scrittura su file dei nomi delle sessioni per usarli nella request_changes
+///scrittura su file dei nomi delle sessioni per usarli nella request_changes e nella insertStudentsGrades
 void University::generateOutputFileName() {
     std::fstream outputFile;
     outputFile.open("allFileNamePerSessionYear.txt", std::fstream::out | std::fstream::trunc);
@@ -2437,6 +2455,7 @@ void University::readOutputFileName() {
         int acStart = Parse::checkedStoi(acStartString, "Errore anno accademico");
         int numSession = Parse::checkedStoi(numSessionString, "Errore anno accademico");
         std::string fileName = infoName[1];
+        ///setto i nomi dei file delle sessioni per l'anno accademico considerato
         _acYearSessions.at(acStart).setFileNamePerSession(numSession, fileName);
     }
 }
@@ -2466,6 +2485,7 @@ void University::controlDatabase(int startAcYear) {
         std::vector<std::string> allCoursesOfThis = sCourse.getAllCoursesOfStudyCourse();
         for (int i = 0; i < allCoursesOfThis.size(); i++) {
             std::size_t occ = _courses.count(allCoursesOfThis[i]);
+            //se un corso del corso di studio non esiste in _courses lancio l'eccezione
             if (occ == 0) {
                 std::string settedId = Parse::setId('C', 3, iter->first);
                 error.append("Il corso " + allCoursesOfThis[i] + " presente nel corso di studio " + settedId +
@@ -2608,7 +2628,7 @@ bool University::controlGroupedCoursesDifferentCds_C(std::vector<std::string> id
 }
 
 
-///tiene traccia delle info di corsi ormai spenti(per sessioni precedenti alla data di disattivazione)
+///tiene traccia delle info di corsi ormai spenti(per sessioni precedenti all'anno di disattivazione)
 void University::dbCourseNotActive() {
     std::fstream fout;
     fout.open("offCourses_db.txt", std::fstream::out | std::fstream::trunc);
@@ -2834,6 +2854,7 @@ void University::addStudyPlan(std::string fin) {
                         /// mi assicuro che lo studente non abbia già un piano di studio(posso cambiarlo solo con la update)
                         if (isOk) {
                             try {
+                                ///aggiungo per nell'oggetto studente i corsi del suo piano di studio e l'anno di immatricolazione
                                 stud.addStudyPlanPerStudent(acYearRegistration, courses, true);
                             } catch (std::invalid_argument &err) {
                                 std::string generalError = err.what();
@@ -3230,6 +3251,7 @@ void University::registerStudentsToSpecificYearCourses(std::vector<std::string> 
     std::string error;
 
     try {
+        //controllo che nel piano di studi non sia stato inserito più volte uno stesso corso
         controlUnicity(courses, line_counter);
     } catch (std::logic_error &err) {
         error.append(err.what());
@@ -3291,6 +3313,10 @@ void University::dbAppealsWrite(int year) {
 
     std::string line;
     std::vector<std::string> differentAppeal;
+    ///la lettura delle sessioni si ha solo per l'anno dell'appello i cui voti si stanno inserendo,
+    /// la struttura dati non verrebbe riempita con tutti gli appelli delle sessioni diverse dall'appello considerato,
+    /// per cui in scrittura si perderebbero le informazioni sugli appelli di altri anni accademici
+    ///si preferisce prendere queste informazioni e riscriverle alla fine
     try {
         differentAppeal = getOldLine(year);
     }catch (std::invalid_argument& err){
@@ -3360,6 +3386,7 @@ void University::readPassedAppeals() {
     }
 }
 
+///legge gli appelli per una sessione accademica richiesta
 void University::readExamAppealsPerAcSession(std::string acYear) {
     int year = Parse::getAcStartYear(acYear);
     ///per ogni sessione
@@ -3431,6 +3458,7 @@ void University::readExamAppealsPerAcSession(std::string acYear) {
 
 }
 
+///assegno l'appello al corso
 void University::assignAppealPerCourse(std::string acYear, std::string lastReadCourse, std::vector<int> classroom,
                                        Date appeal, int startSlotHour, int numSession) {
 
@@ -3495,6 +3523,7 @@ void University::readAllMinDistanceRequest() {
         std::string idCorso = infoRequest[2];
         int distance = Parse::checkedStoi(infoRequest[3], "Errore distanza");
         std::string matr_idC(matrString + "_" + idCorso);
+        ///aggiungo per la sessione considerata il gap richiesto dal professore in quell'anno
         _acYearSessions.at(acStartYear).addProfGap(matr_idC, distance);
     }
 }
@@ -3603,6 +3632,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
                         doDbWrite = false;
                     }
                     if (doDbWrite)
+                        ///aggiungo per la sessione considerata il gap richiesto dal professore in quell'anno
                         _acYearSessions.at(year).addProfGap(matr_idC, distance);
                 }
             } else {
@@ -3640,6 +3670,8 @@ void University::minDistanceRequestWrite() {
     fout.close();
 }
 
+///controlla che la versione richiesta sia nel range selezionato e variabile in University.h settando appositamente MAX_VERSIONING e MIN_VERSIONING
+//In seguito controllo che il programma non sia già in quella specifica versione
 bool University::checkVersioningRequest(int newVer) {
     ///controllo input
     if (newVer > MAX_VERSIONING || newVer < MIN_VERSIONING) {
@@ -3663,6 +3695,7 @@ void University::revertChanges(int newVersion) {
     ///qui si possono aggiungere nuove versioni
 }
 
+///ripristino il database degli studenti e profesori alla versione 1
 void University::revertChanges2() {
     ///rimuove il nuovo db degli studenti
     if (remove("db_studenti.txt") != 0)
@@ -3690,6 +3723,7 @@ void University::revertChanges2() {
         throw std::invalid_argument("file db_studenti_old.txt non rinominato adeguatamente");
 }
 
+///ripristino il database delle aule alla versione 1
 void University::revertChanges3() {
     ///rimuove il nuovo db delle aule
     if (remove("db_aule.txt") != 0)
@@ -3704,8 +3738,7 @@ void University::revertChanges3() {
 }
 
 ///riempie i corsi raggruppati
-void
-University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
+void University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::string &idCourse, std::string &acYear,
                               bool addCourses) {
     std::vector<std::string> allGroupedReciprocy;
     int year = Parse::getAcStartYear(acYear);
@@ -3806,8 +3839,7 @@ University::fillGroupedCourse(std::vector<std::string> &idGroupedLetti, std::str
 
 
 ///assegna gli appelli alle classi
-void
-University::assignAppealsToClassroom(std::string appeal, int startSlotHour, std::vector<int> classrooms,
+void University::assignAppealsToClassroom(std::string appeal, int startSlotHour, std::vector<int> classrooms,
                                      int numSlot) {
     Date appealDate(appeal);
     for (int i = 0; i < classrooms.size(); i++) {
@@ -3958,6 +3990,7 @@ void University::requestChanges(std::string acYear, std::string fin) {
                         tryDate = oldDate.add(numWeeks * 7);
                     }
                     try {
+                        ///prova a riassegnare l'esame nella data richiesta
                         thisSession.tryToSetThisExamInThisSession(*this, courseToConsider, numSession, numAppeal,
                                                                   tryDate);
                         //4
@@ -4062,8 +4095,7 @@ bool University::controlGroupedCoursesDifferentStudyCourse_Sc() {
 }
 
 ///rimuovo le info dell'appello che si vuole cambiare per il corso richiesto e i suoi raggruppati
-void
-University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal,
+void University::removeThisAppealAndGroupedInfo(int acYear, std::string idCourse, int numSession, int numAppeal,
                                            Date &date,
                                            int &startSlot, std::map<std::string, std::vector<int>> &classrooms) {
     SpecificYearCourse &sp = _courses.at(idCourse).getThisYearCourseReference(acYear);
@@ -4211,6 +4243,7 @@ void University::popOffCoursesFromGroupedString(std::vector<std::string> &course
     for (int i = 0; i < coursesToConsider.size(); i++) {
         Course course = _courses.at(coursesToConsider[i]);
         if (course.getThisYearCourse(year).getIsActive() == false) {
+            //se il corso è spento  lo toglie dal vettore dei corsi da considerare in quel loop
             auto iterCourse = find(coursesToConsider.begin(), coursesToConsider.end(), coursesToConsider[i]);
             coursesToConsider.erase(iterCourse);
         }
@@ -4230,6 +4263,7 @@ void University::controlIfCanbeRigenerate(int year) {
     }
 }
 
+///check per capire se una versione esista già
 bool University::checkVersionContainsThis(int version) {
     for (int i : _version)
         if (i == version)
@@ -4237,23 +4271,29 @@ bool University::checkVersionContainsThis(int version) {
     return false;
 }
 
+///aggiorno il vector _version
 void University::updateStateVersioning(int newVer) {
     //update struttura dati
     switch(newVer) {
         case 1:{
+            //se è stata richiamata la versione 1 ripristino e inserisco solo 1
             _version.clear();
             _version.push_back(1);
             break;
         }
         case 2:{
+            //se è stata richiamata la 2 ripristino solo se l'unica versione presente è 1
             if(checkVersionContainsThis(1))
                 _version.clear();
+            //assegno la versione 2
             _version.push_back(2);
             break;
         }
         case 3:{
+            //se è stata richiamata la 2 ripristino solo se l'unica versione presente è 1
             if(checkVersionContainsThis(1))
                 _version.clear();
+            //assegno 3
             _version.push_back(3);
             break;
         }

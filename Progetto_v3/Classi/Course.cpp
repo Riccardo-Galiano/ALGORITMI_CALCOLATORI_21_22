@@ -102,6 +102,7 @@ void Course::modifyStudentAsPassedToSpecYearCourse(int acYear, Student& stud, in
         throw std::invalid_argument(" non e' iscritto al corso " + getId() + "\n");
     }
     for(int year = acYear; year <= lastYear ; year++) {
+        ///aggiungo lo studente ad uno specifico anno
         _courseOfTheYear.at(year).addGradeToStudent(stud, acYear, mark, appealsDate,getId());
     }
 }
@@ -148,9 +149,8 @@ std::vector<SpecificYearCourse> Course::getSpecificYearsCourse() {
 
     for (auto iterSpecificYearCourse = _courseOfTheYear.begin();
          iterSpecificYearCourse != _courseOfTheYear.end(); iterSpecificYearCourse++) {//per ogni anno accademico
-        //std::stringstream tokens;
+
         SpecificYearCourse specific = iterSpecificYearCourse->second;//salvo le info puntate da iterSpecificYearCourse che contiene le info dello specifico anno accademico
-        //tokens << "a;" << specific; //overload dell'operatore. (si rimanda all'overload di << in SpecificYearCourse.cpp)
         specificYearsCourse.push_back(specific);//salvo la stringa con le info dell'anno
     }
 
@@ -239,6 +239,7 @@ hours Course::controlProfsOfSingleCourse(std::vector<professor> profsOfSingleCou
                                          const std::map<int, Professor> &professors, int line_counter) {
     hours h{0,0,0};
     ///per ogni prof del corso verifico se esista nel db_professori, in tal caso prendo le sue ore e le sommo
+    ///la somma totale deve essere uguale a quelle dichiarate alla prima attivazione del corso
     for (int i = 0; i < profsOfSingleCourse.size(); i++) {
         if (professors.find(profsOfSingleCourse[i].prof_id) == professors.end()) {
             std::string settedId = Parse::setId('d',6,profsOfSingleCourse[i].prof_id);
@@ -394,7 +395,7 @@ std::vector<std::pair<std::string, int>> Course::splittAllStudPassedExamString(s
 }
 
 
-///controllo che l'appello dia effettivamente una data e che esiat nella sessione
+///controllo che l'appello sia effettivamente una data e che esista nella sessione
 void Course::controlAppeal(std::string appealDate) {
     Date appeal = Parse::controlItCanBeADate(appealDate);
     int yearAppeal = appeal.getYear();
@@ -412,7 +413,7 @@ void Course::controlAppeal(std::string appealDate) {
                                     std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti \n");
     }
     std::vector<Date> allAppealsPerYear;
-    //DA DIMOSTRARE QUANDO SI GENERANO SESSIONI PER ANNI IN CUI NON ABBIAMO AGGIORNAMENTE DEL CORSO
+
     if(_courseOfTheYear.find(yearAppeal) == _courseOfTheYear.end()){
         throw std::invalid_argument(" Non e' stato assegnato alcun esame per il corso nell'anno accademico" + std::to_string(yearAppeal) + "_" +
                                     std::to_string(yearAppeal + 1) + ". Impossibile assegnare voti \n");
@@ -481,18 +482,6 @@ void Course::updateYYSemesterInAllSpecYearCourse(std::string& yy_semester) {
     }
 }
 
-///prend eil primo anno di spegnimento
-std::string Course::getFirstAcYearOff() const {
-    for(auto iterSpecificYear = _courseOfTheYear.begin(); iterSpecificYear != _courseOfTheYear.end(); iterSpecificYear++){
-        int startYear = iterSpecificYear->second.getStartYear();
-        int endYear = iterSpecificYear->second.getEndYear();
-        std::string acYear = std::to_string(startYear) + "-" + std::to_string(endYear);
-        if(iterSpecificYear->second.getIsActive() == false){
-            return acYear;
-        }
-    }
-    return  "";
-}
 
 ///prende gli id dei raggruppati per uno specifico anno
 std::vector<std::string> Course::getIdGroupedCourseFromYear(int acYear) const{

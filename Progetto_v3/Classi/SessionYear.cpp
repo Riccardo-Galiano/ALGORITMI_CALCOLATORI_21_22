@@ -368,6 +368,7 @@ bool SessionYear::generateThisSession(std::string sessName, std::map<std::string
                                 continueLoop = false;
                             }
                         } else{
+                            ///non considero più quel corso in quel giorno perchè non assegnabile in modo da velocizzare le operazioni
                             fillCoursesAlreadyControlledPerThisDay(coursesToConsiderInThisLoop,coursesAlreadyControlledPerThisDay);
                         }
                     }
@@ -441,7 +442,7 @@ void SessionYear::generateOutputFilesSession(std::string &outputFileName, int se
         if (examDay.allSLotsAreEmpty() ==
             false) {//se tutti gli slot sono vuoti vuol dire che non ho assegnato alcun esame in quella data, non lo stampo
             outputSession << day << std::endl;
-            ///prendo un vettore di stringhe, dell'intera giornata; una (stringa/riga) per ogni slot
+            ///prendo un vettore di stringhe dell'intera giornata; una (stringa/riga) per ogni slot
             std::vector<std::string> allSlots = examDay.getSlotsToString();
             for (int i = 0; i < allSlots.size(); i++) {
                 outputSession << allSlots[i] << std::endl;
@@ -1065,7 +1066,7 @@ void SessionYear::allGapProfsNoRespect(std::vector<std::pair<std::string, int>> 
     }
 }
 
-///elimina i corsi spenti dai raggrupapti in fase di genrazione della sessione
+///elimina i corsi spenti dai raggruppati in fase di generazione della sessione
 void SessionYear::popOffCoursesFromGrouped(std::vector<Course> &coursesToConsiderInThisLoop) {
     bool continueLoop = true;
     for(auto iter = coursesToConsiderInThisLoop.begin(); iter != coursesToConsiderInThisLoop.end() && continueLoop; iter++){

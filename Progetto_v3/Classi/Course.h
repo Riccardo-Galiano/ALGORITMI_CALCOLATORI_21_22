@@ -54,7 +54,6 @@ public:
     const hours &getHours() const;
     int getSpecificYearCourseSize() const;
     int getSemesterAtYear(int acStartYear,std::string name)const;
-    std::string getFirstAcYearOff()const;
     std::vector<std::string>getIdGroupedCourseFromYear(int acYear)const;
     int getFirstYearOfActivity()const;
     std::vector<int> getProfsPerYear(std::string acYear)const;

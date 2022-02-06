@@ -51,17 +51,23 @@ void SessionLog::generateWarnings(std::vector<Course> &courses, int relaxPar, in
     generateWarningGapProfs(gapProfsNoRespect,session);
     switch (relaxPar) {
         case (1): {
+            ///warnings gap dei due giorni
             generateWarningGapSameStudyCourse(courses, year,session);
             break;
         }
         case (2): {
+            ///warnings gap dei due giorni
             generateWarningGapSameStudyCourse(courses, year,session);
+            ///warnings gap tra appelli di uno stesso esame
             generateWarningGapAppeals(courses, gap, year,session);
             break;
         }
         case (3): {
+            ///gap due giorni
             generateWarningGapSameStudyCourse(courses, year,session);
+            ///warnings gap tra appelli di uno stesso esame
             generateWarningGapAppeals(courses, gap, year,session);
+            ///warnings gap indisponibilità dei prof
             generateWarningGapAvaibilityProfs(courses, year,session);
             break;
         }

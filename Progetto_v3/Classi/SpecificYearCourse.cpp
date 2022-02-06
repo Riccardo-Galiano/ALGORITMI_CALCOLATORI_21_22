@@ -9,7 +9,7 @@
 #include "InvalidDbException.h"
 #include "Parse.hpp"
 
-
+///costruttore
 SpecificYearCourse::SpecificYearCourse(std::string sY_eY, bool active, int nCrsiPar, std::vector<std::string> prof,
                                        std::vector<std::string> exam, std::vector<std::string> idGrouped,
                                        std::string yy_semester, std::vector<int> studyCourse, int line_counter) :
@@ -269,8 +269,10 @@ void SpecificYearCourse::assignExamInThisSpecificYearCourse(Date examDay, int se
     std::vector<Date> vectorOfExamDays;
     vectorOfExamDays.push_back(examDay);
     if (_howManyTimesIAmAssignedInASession.count(session) == 0) {
+        ///se per questo semestre non ho ancora assegnato appelli inserisco (insert)
         _howManyTimesIAmAssignedInASession.insert(std::pair<int, std::vector<Date>>(session, vectorOfExamDays));
     } else if (_howManyTimesIAmAssignedInASession.count(session) == 1) {
+        ///se ho già appelli aggiungo (at)
         _howManyTimesIAmAssignedInASession.at(session).push_back(examDay);
     }
 }
@@ -282,12 +284,15 @@ void SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark
     Date dateDefault;
     Date appeal(appealsDate);
     int acYear;
+    ///prendo l'anno accademico in base al fatto se questo sia tra Gennaio e Ottobre o tra Novembre e Dicembre
     if (appeal.getMonth() >= 1 && appeal.getMonth() <= 10) {
         acYear = appeal.getYear() - 1;
     } else {
         acYear = appeal.getYear();
     }
+    ///se l'anno considerato è lo stesso dell'appello
     if (acYear == getStartYear()){
+        //setto i voti, gli appelli fatti  e passati se il voto è maggiore di 18
         if (studToUpdate._grade.find(dateDefault) != studToUpdate._grade.end()) {
             //lo cancello
             studToUpdate._grade.erase(studToUpdate._grade.begin(), studToUpdate._grade.end());
@@ -298,6 +303,9 @@ void SpecificYearCourse::addGradeToStudent(Student &stud, int passYear, int mark
         studToUpdate._appealPassed = appealsDate;
     }
     }
+    ///per ogni anno setto, se il voto è maggiore di 18, l'anno in cui è stato passato
+    ///aggiorno il numero di studenti che dovranno far l'esame
+    ///aggiorno il booleano per capire se lo ha passato o no
     if (mark >= 18 && mark <= 32) {
         studToUpdate._passYear = passYear;
         _totStudentsNotPassed--;
@@ -316,6 +324,7 @@ void SpecificYearCourse::assignYY_SemToAllYear(std::string &acYYoff, std::string
 void SpecificYearCourse::setNewYear(int newStartYear) {
     _startYear = newStartYear;
     _endYear = newStartYear + 1;
+    ///pulisco gli appelli dell'anno precedente, le aule e gli slot occupati
     _howManyTimesIAmAssignedInASession.erase(_howManyTimesIAmAssignedInASession.begin(),_howManyTimesIAmAssignedInASession.end());
     _roomsEachAppeal.erase(_roomsEachAppeal.begin(),_roomsEachAppeal.end());
     _startSlotPerEachAppeal.erase(_startSlotPerEachAppeal.begin(),_startSlotPerEachAppeal.end());
@@ -452,10 +461,7 @@ std::vector<int> SpecificYearCourse::getRoomsAppeal() {
     return rooms;
 }
 
-///Ritorna se sono stati assegnati degli esami o meno
-bool SpecificYearCourse::notExamsAssigned() {
-    return _howManyTimesIAmAssignedInASession.empty();
-}
+
 
 ///prende gli studenti che hanno sostenuto l'esame
 std::map<int, student> SpecificYearCourse::getStudentsPassedInThisAppeal(Date dateAppeal) const{
@@ -602,42 +608,7 @@ void SpecificYearCourse::reassignAppeal(int numAppeal,int numSession, Date date,
         vectD.insert(vectD.begin(), date);
     }
 }
-std::string SpecificYearCourse::getAppealsForAllSession()const {
-    std::stringstream ss;
-    int numAppeals = 0;
-    for (auto iterSessionAppeals = _howManyTimesIAmAssignedInASession.begin();
-         iterSessionAppeals != _howManyTimesIAmAssignedInASession.end(); iterSessionAppeals++) {
-        std::vector<Date> appeals = iterSessionAppeals->second;
-        switch (iterSessionAppeals->first) {
-            case 1: {
-                ss << "winter[";
-                break;
-            }case 2: {
-                ss << "summer[";
-                break;
-            }
-            case 3: {
-                ss << "autumn[";
-                break;
-            }
-            default:
-                break;
-        }
-        for (int i = 0; i < appeals.size(); i++) {
-            ss << "{";
-            ss << appeals[i] << "," << getStartHourAppeal(numAppeals) << "," << getRoomsPerAppealsString(numAppeals);
-            ss << "}";
-            if (i < appeals.size() - 1)
-                ss << ",";
-            numAppeals++;
-        }
-        ss << "]";
-        if (iterSessionAppeals->first < 3)
-            ss << "%";
-    }
 
-    return ss.str();
-}
 
 ///pulisce la variabile privata _numAppeal
 void SpecificYearCourse::eraseNumAppeal() {
@@ -670,18 +641,22 @@ void SpecificYearCourse::setAcYearOff(std::string yearOff) {
     _acYearOff = yearOff;
 }
 
+///prende il numero di appelli assegnati
 int SpecificYearCourse::getNumAppealsAssignedPerSession(int numSession)const {
     return _howManyTimesIAmAssignedInASession.at(numSession).size();
 }
 
+///prende il numero di studenti iscritti
 std::map<int, student> SpecificYearCourse::getStudentsEnrolled() const {
     return _studentsEnrolled;
 }
 
+///setta il booleano per capire se è un corso creato solo per inserire gli studenti
 void SpecificYearCourse::setCreatedToBeTemp(bool createdToBeTemp) {
     SpecificYearCourse::createdToBeTemp = createdToBeTemp;
 }
 
+///prende il booleano citato prima
 bool SpecificYearCourse::isCreatedToBeTemp() const {
     return createdToBeTemp;
 }
