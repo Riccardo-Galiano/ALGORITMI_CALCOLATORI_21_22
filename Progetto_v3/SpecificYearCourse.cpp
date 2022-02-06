@@ -653,12 +653,12 @@ std::map<int, student> SpecificYearCourse::getStudentsEnrolled() const {
 
 ///setta il booleano per capire se è un corso creato solo per inserire gli studenti
 void SpecificYearCourse::setCreatedToBeTemp(bool createdToBeTemp) {
-    SpecificYearCourse::createdToBeTemp = createdToBeTemp;
+    _createdToBeTemp = createdToBeTemp;
 }
 
 ///prende il booleano citato prima
 bool SpecificYearCourse::isCreatedToBeTemp() const {
-    return createdToBeTemp;
+    return _createdToBeTemp;
 }
 
 

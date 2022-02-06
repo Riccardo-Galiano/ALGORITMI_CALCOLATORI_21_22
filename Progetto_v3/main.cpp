@@ -1,7 +1,7 @@
 #include <iostream>
-#include "./Classi/University.h"
+#include "University.h"
 #include <vector>
-#include "Classi/SystemLog.h"
+#include "SystemLog.h"
 
 using namespace std;
 

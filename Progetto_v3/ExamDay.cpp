@@ -88,11 +88,7 @@ int ExamDay::isPossibleToAssignThisExamToProfs(Course course, std::map<int, Prof
     if (foundedStartHourSlot == -1)
         ///non ho trovato un buco abbastanza grande
         return -1;
-    std::cout << specificCourse.getTotStudentsEnrolled() <<" - ";
-    for(int i : idRoomsFounded){
-        std::cout << i << " ha " << allUniversityClassrooms.at(i).getNExamSeats()<< "posti, ";
-    }
-    std::cout << std::endl;
+
     _tempGroupedCourseClassrooms.insert(_tempGroupedCourseClassrooms.begin(),idRoomsFounded.begin(),idRoomsFounded.end());
     return foundedStartHourSlot;
 }
@@ -212,7 +208,6 @@ std::string ExamDay::getFormattedCoursesPerSlot(std::vector<Course> &coursesOfTh
             }
             if (i < coursesOfThisSlot.size() - 1)
                 singleSlotSS << ";";
-            std::string ciao = singleSlotSS.str();
             ///push nel vettore di corsi finora considerati
             CoursesPrintedSoFar.push_back(coursesOfThisSlot[i]);
         } else {///se non è la prima volta scrivo ';' tante volte quanto è il numero dello sue versioni
@@ -372,11 +367,11 @@ void ExamDay::removeThisAppealInfo(int startSlot,int numSlots,std::string& idCou
 ///cerco di assegnare un numero di aule uguale al numero di corsi paralleli
 bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, std::vector<int> &idRoomsFounded,
                                         int numSeatsToSeach, int maxNumRooms) {
-    //ordino le aule in senso crescente di #posti
+    //ordino le aule in senso crescente di #posti -> conseguenza: troverò la combinazione di aule con il numero di posti
+    // disponibile > dei posti necessari (numSeatsToSeach) ma comunque minore rispetto ad altre combinazioni con lo stesso numero di aule
     std::sort (potentialRooms.begin(), potentialRooms.end(), comparatorFunction);
     //cerco di massimizzare numero aule (finestra più grande possibile) -> ciclo all'indietro
     for(int numTotRoomsToSearch = maxNumRooms; numTotRoomsToSearch >= 1; numTotRoomsToSearch--){
-        //cerco per finestra (sliding window)
         for(int index = numTotRoomsToSearch - 1; index < potentialRooms.size(); index++){
             int totSeats = 0;
             std::vector<int> tempRooms;
@@ -385,7 +380,7 @@ bool ExamDay::pickSomeOfTheseClassrooms(std::vector<Classroom> &potentialRooms, 
                 tempRooms.push_back(potentialRooms[j].getId());
             }
             if(totSeats >= numSeatsToSeach){
-                ///ho trovato ottimo = prima occorrenza
+                ///la combinazione di aule migliore è la prima occorrenza
                 idRoomsFounded = tempRooms;
                 return true;
             }
