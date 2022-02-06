@@ -497,21 +497,25 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
             break;
         }
         default:
-            throw std::invalid_argument("comando non trovato");
+            throw std::invalid_argument("Comando non trovato");
     }
     return errorString;
 };
 
 int main(int argc, char *argv[]){
-    University poliTo;
-    try {
-        program(poliTo, argv, argc);
-    }catch(std::invalid_argument &err){
-        std::cerr<<err.what();
+    if(argc<3){
+        cerr<<"Errore numero parametri \n";
+    }else {
+        University poliTo;
+        try {
+            program(poliTo, argv, argc);
+        } catch (std::invalid_argument &err) {
+            std::cerr << err.what();
+        }
+        if (sysLog.errorsOccurred())
+            std::cerr << sysLog.getLog();
+        else
+            std::cout << sysLog.getLog();
     }
-    if(sysLog.errorsOccurred())
-        std::cerr << sysLog.getLog();
-    else
-        std::cout << sysLog.getLog();
     return 0;
 }

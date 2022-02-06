@@ -50,24 +50,6 @@ C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Classroo
 map
 -
 
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/InvalidDbException.h
-exception
--
-string
--
-
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Parse.hpp
-vector
--
-string
--
-sstream
--
-iomanip
--
-Date.h
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Date.h
-
 C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Professor.h
 vector
 -
@@ -132,22 +114,6 @@ C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SystemLo
 string
 -
 
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/University.cpp
-fstream
--
-iostream
--
-iomanip
--
-University.h
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/University.h
-InvalidDbException.h
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/InvalidDbException.h
-Parse.hpp
-C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Parse.hpp
-algorithm
--
-
 C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/University.h
 Professor.h
 C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Professor.h
@@ -169,4 +135,14 @@ string
 -
 Date.h
 C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/Date.h
+
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/main.cpp
+iostream
+-
+University.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/University.h
+vector
+-
+SystemLog.h
+C:/Users/andre/Documents/GitHub/ALGORITMI_CALCOLATORI_21_22/Progetto_v3/SystemLog.h
 
