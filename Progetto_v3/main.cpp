@@ -504,7 +504,7 @@ std::vector<std::string> program(University &uni, char **argv,int argc) {
 
 int main(int argc, char *argv[]){
     if(argc<3){
-        cerr<<"Errore numero parametri \n";
+        cerr<<"Errore numero parametri insufficiente\n";
     }else {
         University poliTo;
         try {
