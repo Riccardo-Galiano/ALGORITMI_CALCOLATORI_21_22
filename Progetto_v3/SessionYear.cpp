@@ -597,11 +597,13 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
         /// se relaxPar>=2 ho il loop a monte che mi chiama la generateSession con un gap progressivamente più piccolo
         if (second == true) {
             //sono in presenza dell'assegnazione o del cambiamento di un secondo appello
-            if (lastDateAssignation.whatIsTheGap(newDate) < gapAppeals) {//dal primo appello sono passati 14 giorni?
-                if (requestChanges == true) {
-                    throw std::invalid_argument("Il gap di 14 giorni tra i due appelli non e' rispettato\n");
-                } else
-                    return false;
+            if(lastDateAssignation < newDate) {
+                if (lastDateAssignation.whatIsTheGap(newDate) < gapAppeals) {//dal primo appello sono passati 14 giorni?
+                    if (requestChanges == true) {
+                        throw std::invalid_argument("Il gap di 14 giorni tra i due appelli non e' rispettato\n");
+                    } else
+                        return false;
+                }
             }
         } else {
             //controllo gap tra nuovo primo appello e secondo
@@ -618,7 +620,7 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
             if (_gapProfs.count(keyToSearchProfsGap) != 0) {
                 int requiredGap = _gapProfs.at(keyToSearchProfsGap);
                 if (requiredGap > 14) {
-                    if (second == true) {
+                    if (second == true && lastDateAssignation<newDate) {
                         if (lastDateAssignation.whatIsTheGap(newDate) < requiredGap) { //dall'ultimo appello sono passati i giorni richiesti dal prof?
                             if (requestChanges == true) {
                                 std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
@@ -630,9 +632,8 @@ bool SessionYear::dateIsOK(Date &newDate, const Course &course, std::string &ses
                                 }
                             }
                         }
-                    } else {
-                        if (newDate.whatIsTheGap(lastDateAssignation) <
-                            requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
+                    } else if(requestChanges == true){
+                        if (newDate.whatIsTheGap(lastDateAssignation) <  requiredGap) { //dall'altro appello sono passati i giorni richiesti dal prof?
                             std::string settedId = Parse::setId('d', 6, allProfsMatrThisCourse[i]);
                             throw std::invalid_argument("Il Gap ulteriore del professore con matricola " + settedId +
                                                         " tra nuovo appello e quello esistente non e' rispettato\n");

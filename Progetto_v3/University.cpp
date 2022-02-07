@@ -1613,17 +1613,8 @@ void University::insertCourses(const std::string &fin) {
                     }
                     //se è minore o uguale all'anno dell'ultimo aggiornamento inserito non va bene!!
                     if (lastYear < year || wasCreatedToBeTemp) {
-                        ///cancello anno temporaneo e salvo info
-                        std::map<int, student> studentsEnrolledTemp;
-                        int totStudentsEnrolledTemp;
-                        int totStudentsNotPassedTemp;
+
                         if(wasCreatedToBeTemp){
-                            ///salvo
-                            SpecificYearCourse sp_requestedYear = _courses.at(specificYearCourse[0]).getThisYearCourse(year);
-                            totStudentsEnrolledTemp = sp_requestedYear.getTotStudentsEnrolled();
-                            totStudentsNotPassedTemp = sp_requestedYear.getTotStudentsExam();
-                            studentsEnrolledTemp = sp_requestedYear.getStudentsEnrolled();
-                            ///cancello
                             course.eraseThisSpecificYear(year);
                         }
                         //se l'anno del nuovo aggiornamento è maggiore dell'anno dell'ultimo aggiornamento posso procedere
@@ -2481,7 +2472,7 @@ void University::controlDatabase(int startAcYear) {
             checkIsOK = false;
         }
     }
-
+/*
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
         ///controllo che ogni studyCourse abbia i corsi specificati
         StudyCourse sCourse = iter->second;
@@ -2497,7 +2488,7 @@ void University::controlDatabase(int startAcYear) {
             }
         }
     }
-
+*/
     if (checkIsOK == false)
         throw InvalidDbException(error);
 }
@@ -2570,7 +2561,7 @@ void University::dataBaseIsEmpty(int startAcYear) {
                             error.append(
                                     "Il corso " + iter->second.getId() +
                                     " non ha studenti iscritti in questo anno: " +
-                                    std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1));
+                                    std::to_string(startAcYear) + "-" + std::to_string(startAcYear + 1)+"\n");
                             isOk = false;
                         }
                     }
@@ -3542,7 +3533,7 @@ void University::setMinDistance(std::string acYear, std::string name) {
     fin.open(name, std::ios::in);
     if (!fin.is_open()) {
         std::string base_filename = name.substr(name.find_last_of("/\\") + 1);
-        throw std::invalid_argument("Il file" + base_filename + "non esiste");
+        throw std::invalid_argument(" Il file " + base_filename + " non esiste\n");
     }
     std::string line;
     std::string error;
