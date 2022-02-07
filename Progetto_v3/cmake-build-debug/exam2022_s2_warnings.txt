@@ -1,0 +1,36 @@
+C004;01AAAAC;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C008;01AAAAC;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C013;01AAAAC;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C003;01AAAAD;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C009;01AAAAD;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C011;01AAAAD;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C004;01AAAAC;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C008;01AAAAC;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C013;01AAAAC;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C003;01AAAAD;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C009;01AAAAD;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C011;01AAAAD;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C004;01AAAAC;regola AVAIBILITY_PROFS non rispettata
+C008;01AAAAC;regola AVAIBILITY_PROFS non rispettata
+C013;01AAAAC;regola AVAIBILITY_PROFS non rispettata
+C003;01AAAAD;regola AVAIBILITY_PROFS non rispettata
+C009;01AAAAD;regola AVAIBILITY_PROFS non rispettata
+C011;01AAAAD;regola AVAIBILITY_PROFS non rispettata
+C004;01AAAAC;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C008;01AAAAC;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C013;01AAAAC;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C003;01AAAAD;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C009;01AAAAD;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C011;01AAAAD;regola GAP_CORSI_STESSO_CORSO_DI_STUDIO non rispettata
+C004;01AAAAC;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C008;01AAAAC;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C013;01AAAAC;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C003;01AAAAD;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C009;01AAAAD;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C011;01AAAAD;regola GAP_APPELLI: questo esame è stato programmato con uno scarto di 0 giorni
+C004;01AAAAC;regola AVAIBILITY_PROFS non rispettata
+C008;01AAAAC;regola AVAIBILITY_PROFS non rispettata
+C013;01AAAAC;regola AVAIBILITY_PROFS non rispettata
+C003;01AAAAD;regola AVAIBILITY_PROFS non rispettata
+C009;01AAAAD;regola AVAIBILITY_PROFS non rispettata
+C011;01AAAAD;regola AVAIBILITY_PROFS non rispettata

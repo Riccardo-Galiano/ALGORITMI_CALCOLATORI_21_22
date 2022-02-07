@@ -4,3 +4,6 @@
 2024-2025 "2025-01-11_2025-02-22" "2025-06-14_2025-07-26" "2025-08-30_2025-09-27"
 In base ai periodi delle sessioni gli appelli e i periodi di indisponibilità
 potrebbero variare per cui l'appello nei nomi dei file .csv potrebbero non coincidere con le date degli appelli effettivi
+
+//per i warnings
+si è impostata l'indisponibilità del professore d000009(corso 01AAAAC) per l'intero periodo della sessione estiva(anno 2021-2022) in modo da rilassare fino all'ultimo vincolo

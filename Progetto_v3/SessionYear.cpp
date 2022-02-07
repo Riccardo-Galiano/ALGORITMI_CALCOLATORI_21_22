@@ -148,7 +148,7 @@ bool SessionYear::generateNewYearSession(std::string &fout, int relaxPar, Univer
                 if (relaxPar < 2 ) {
                     ///se non ci sono vincoli rilassati oppure relaxPar=1 esco
                     exitloop = true;
-                }else if(relaxPar == 2){
+                }else if(relaxPar == 2 && gapAppealsSameCourse == 0){
                     //il vincolo di 0 giorni va mantenuto dopo relaxPar == 2 quindi ultima prova si ha rilassando il vincolo delle indisponibilità dei prof
                     // a 0 giorni tra un appello e l'altro
                     gapAppealsSameCourse++;

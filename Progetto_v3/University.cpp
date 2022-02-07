@@ -2472,7 +2472,7 @@ void University::controlDatabase(int startAcYear) {
             checkIsOK = false;
         }
     }
-/*
+
     for (auto iter = _studyCourse.begin(); iter != _studyCourse.end(); iter++) {
         ///controllo che ogni studyCourse abbia i corsi specificati
         StudyCourse sCourse = iter->second;
@@ -2488,7 +2488,7 @@ void University::controlDatabase(int startAcYear) {
             }
         }
     }
-*/
+
     if (checkIsOK == false)
         throw InvalidDbException(error);
 }
